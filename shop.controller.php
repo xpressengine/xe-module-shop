@@ -309,7 +309,7 @@
 
             if(in_array(Context::getRequestMethod(),array('XMLRPC','JSON'))) return new Object();
 
-			if($oModule->act == 'dispMemberLogout') return new Object();
+            if($oModule->act == 'dispMemberLogout') return new Object();
 
             $site_module_info = Context::get('site_module_info');
             if(!$site_module_info || !$site_module_info->site_srl || $site_module_info->mid != $this->shop_mid) return new Object();
@@ -322,7 +322,16 @@
             $oShopView = &getView('shop');
 
             Context::set('layout',null);
-            $oShopView->initService($oModule, true);
+
+            if($oShopModel->isAttachedMenu($oModule->act)) {
+                $oShopView->initTool($oModule, true);
+            } else {
+                if(Mobile::isFromMobilePhone())
+                {
+                    $oShopView = &getMobile('shop');
+                }
+                $oShopView->initService($oModule, true);
+            }
             return new Object();
         }
 

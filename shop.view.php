@@ -84,13 +84,9 @@
             $shop = $oShopModel->getShop($site_module_info->index_module_srl);
 
             $info = Context::getDBInfo();
-            if($info->use_mobile_vie=='Y'){
-                $custom_menu->hidden_menu[] = strtolower('dispShopToolLayoutConfigMobileSkin');
-            }
 
 
 
-            Context::set('act', $oModule->act= 'dispShopToolDashboard', true);
 
             if ($is_other_module){
                 $oModule->setLayoutPath($this->module_path.'tpl');
