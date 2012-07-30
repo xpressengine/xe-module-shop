@@ -1,0 +1,113 @@
+<!--%import("./filter/change_language.xml")-->
+<!--#include("_tool_header.html")-->
+
+			<!-- Content -->
+			<div id="content">
+
+				<!-- Dashboard Header -->
+				<div class="dashboardHeader">
+					<h3 class="h3">{$lang->shop_first_menus[0][1]}</h3>
+				</div>
+				<!-- /Dashboard Header -->
+
+                <!--@if($news)-->
+				<!-- Dashboard Notice -->
+				<div class="section dashboardNotice">
+					<h4 class="h4">Shop NEWS</h4>
+					<button type="button">{$lang->cmd_folding_xe_news}</button>
+					<ul>
+                        {@$i=0;}						
+                        <!--@foreach($news as $key => $val)-->
+                        <li<!--@if($i==0)--> class="first"<!--@end-->><a href="{$val->url}" onclick="window.open(this.href);return false;">{$val->title}</a> <span class="date">{zdate($val->date,"Y-m-d")}</span></li>
+                        {@$i++;}
+                        <!--@end-->
+					</ul>
+				</div>
+				<!-- /Dashboard Notice -->
+                <!--@end-->
+
+
+
+				<!-- Dashboard List -->
+				<div class="partitionContainer">
+
+					<div class="partition">
+
+
+						<!-- Visotors Graph -->
+						<div class="section">
+
+							<h4 class="dashboardH4">{$lang->visitor_count} <em>{date("Y.m.d")}</em></h4>
+							<div class="dashboardWire">
+								<dl class="legend">
+									<dt class="past"><img src="img/graphYesterday.gif" width="5" height="5" alt="{$lang->yesterday}" /></dt>
+									<dd>{$lang->last_week}</dd>
+									<dt class="today"><img src="img/graphToday.gif" width="5" height="5" alt="{$lang->today}" /></dt>
+									<dd>{$lang->this_week}</dd>
+
+								</dl>
+								<dl class="summary">
+									<dt>{$lang->today}</dt>
+									<dd>{number_format($status->visitor)}</dd>
+									<dt>{$lang->this_week}</dt>
+									<dd>{number_format($status->thisWeekSum)}</dd>
+									<dt>{$lang->total}</dt>
+									<dd>{number_format($status->total_visitor)}</dd>
+								</dl>
+								<div class="graph">
+									<!--object title="{$status->visitor}" height="170" width="350" align="middle" id="data2" class="F1239845427590201480_undefined" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=9,0,0,0" classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000">
+										<param value="{getUrl()}modules/shop/tpl/swf/MainContainer.swf" name="movie"/>
+										<param value="high" name="quality"/>
+										<param value="#FFFFFF" name="bgColor"/>
+										<param value="always" name="allowScriptAccess"/>
+										<param value="transparent" name="wmode"/>
+										<param value="false" name="menu"/>
+										<param value="true" name="allowFullScreen"/>
+										<param value="modules/shop/tpl/swf/common/flash/statistics/&base64Code={$xml}&width=350&dSet=02" name="flashVars"/>
+										<object title="{$status->visitor}" height="170" width="350" align="middle" name="count_red" class="F1239845427590201480_undefined" data="{getUrl()}modules/shop/tpl/swf/MainContainer.swf" type="application/x-shockwave-flash">
+											<param value="baseURL=modules/shop/tpl/swf/common/flash/statistics/&base64Code={$xml}&dSet=02&width=350" name="flashVars"/>
+											<param value="transparent" name="wmode"/>
+											{$status->visitor}
+										</object>
+									</object-->								
+<!--@if($flash)-->
+	<script type="text/javascript">
+		displayMultimedia('{getUrl()}modules/shop/tpl/swf/MainContainer.swf','100%','170',{
+				'menu':'false',
+				'wmode':'transparent',
+				'flashvars':"width=350&dSet=02&baseURL=modules/shop/tpl/swf/common/flash/statistics/&total={$detail_status->total}&base64Code="+encodeURIComponent('{$xml}')
+				});
+	</script>
+<!--@else-->
+									
+                                    <!--@foreach($status->week as $key => $val)-->
+									<dl>
+										<dt>{$key}</dt>
+										<dd class="past" style="height:{$val->last/$status->week_max * 100}%" title="{$lang->last_week}:{number_format($val->last)}"><span>{$lang->last_week}:{number_format($val->last)}</span></dd>
+										<dd class="today" style="height:{$val->this/$status->week_max * 100}%" title="{$lang->this_week}:{number_format($val->this)}"><span>{$lang->this_week}:{number_format($val->this)}</span></dd>
+
+									</dl>
+                                    <!--@end-->
+<!--@end-->
+								</div>
+							</div>
+							<a href="{getUrl('','act','dispShopToolStatisticsVisitor')}" class="dashboardMoreTop">{$lang->more}</a>
+						</div>
+
+						<!-- /Visotors Graph -->
+
+					</div>
+				</div>
+				<!-- Dashboard List -->
+
+			</div>
+			<hr />
+			<!-- /Content -->
+
+			<!-- Extension -->
+				<!--#include("_tool_menu.html")-->
+			<!-- Extension -->
+
+
+
+<!--#include("_tool_footer.html")-->

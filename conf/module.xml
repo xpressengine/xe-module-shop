@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<module>
+    <grants>
+        <grant name="create" default="member">
+            <title xml:lang="en">Create a shop</title>
+        </grant>
+    </grants>
+    <permissions>
+		<permission action="dispShopToolDashboard" target="manager" />
+		<permission action="dispShopToolLayoutConfigSkin" target="manager" />
+		<permission action="dispShopToolLayoutConfigEdit" target="manager" />
+		<permission action="dispShopToolConfigProfile" target="manager" />
+		<permission action="dispShopToolConfigInfo" target="manager" />
+		<permission action="dispShopToolConfigPostwrite" target="manager" />
+		<permission action="dispShopToolConfigEditorComponents" target="manager" />
+		<permission action="dispShopToolConfigCommunication" target="manager" />
+		<permission action="dispShopToolConfigAddon" target="manager" />
+		<permission action="dispShopToolConfigData" target="manager" />
+		<permission action="dispShopToolConfigChangePassword" target="manager" />
+
+		<permission action="procShopInfoUpdate" target="manager" />
+		<permission action="procShopToolLayoutConfigSkin" target="manager" />
+		<permission action="procShopToolLayoutConfigEdit" target="manager" />
+		<permission action="procShopToolLayoutResetConfigSkin" target="manager" />
+		<permission action="procShopToolInit" target="manager" />
+		<permission action="procShopToolUserSkinExport" target="manager" />
+		<permission action="procShopToolUserSkinImport" target="manager" />
+		<permission action="procShopToolLive" target="manager" />
+    </permissions>
+    <actions>
+        <action name="dispShop" type="view" index="true" />
+        <action name="dispShopToolLogin" type="view" />
+        <action name="dispShopProfile" type="view" />
+        <action name="dispShopLogin" type="view" />
+		<action name="dispShopToolLayoutConfigSkin" type="view" />
+		<action name="dispShopToolLayoutConfigEdit" type="view" />
+		
+
+		<action name="dispShopToolDashboard" type="view" />
+		<action name="dispShopMenu" type="view" />
+
+
+        <action name="procShopLogin" type="controller" />
+		<action name="procShopDenyDelete" type="controller" />
+		<action name="procShopProfileUpdate" type="controller" />
+		<action name="procShopProfileImageUpload" type="controller" />
+		<action name="procShopInfoUpdate" type="controller" />
+		<action name="procShopToolLayoutConfigSkin" type="controller" />
+		<action name="procShopToolLayoutConfigMobileSkin" type="controller" />
+		<action name="procShopToolLayoutConfigEdit" type="controller" />
+		<action name="procShopToolLayoutResetConfigSkin" type="controller" />
+		<action name="procShopToolInit" type="controller" />
+		<action name="procShopToolUserSkinExport" type="controller" />
+		<action name="procShopToolUserSkinImport" type="controller" />
+		<action name="procShopToolLive" type="controller" />
+
+        <action name="dispShopAdminList" type="view" standalone="true" admin_index="true" />
+        <action name="dispShopAdminInsert" type="view" standalone="true" />
+        <action name="dispShopAdminDelete" type="view" standalone="true" />
+
+		<action name="procShopAdminCreate" type="controller" standalone="true" />
+		<action name="procShopAdminUpdate" type="controller" standalone="true" />
+        <action name="procShopAdminDelete" type="controller" standalone="true" />
+        <action name="procShopAdminInsertCustomMenu" type="controller" standalone="true" />
+
+
+		<action name="dispShopPasswordForm" type="mobile" />
+    </actions>
+</module>

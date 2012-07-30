@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<skin version="0.2">
+	<title xml:lang="en">Default Shop Theme</title>
+    <description xml:lang="en">
+       Default theme of shop Module
+    </description>
+    <version>1.2.3</version>
+    <date>2010-02-03</date>
+
+    <author email_address="xe_dev@arnia.ro" link="http://www.xpressengine.org">
+		<name xml:lang="en">Arnia</name>
+    </author>
+
+</skin>

@@ -1,0 +1,10 @@
+<filter name="delete_shop" module="shop" act="procShopAdminDelete">
+    <form>
+        <node target="site_srl" required="true" />
+    </form>
+    <response callback_func="completeDeleteShop">
+        <tag name="error" />
+        <tag name="message" />
+        <tag name="page" />
+    </response>
+</filter>
