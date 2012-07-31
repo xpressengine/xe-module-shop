@@ -10,14 +10,14 @@
         /**
          * @brief Initialization
          **/
-        function init() {
+        public function init() {
         }
 
         /**
          * @brief Shop Admin Create
          **/
-        function procShopAdminCreate() {
-            $oModuleModel = &getModel('module');
+        public function procShopAdminCreate() {
+            $oModuleModel = getModel('module');
 
             $user_id = Context::get('user_id');
             $domain = preg_replace('/^(http|https):\/\//i','', trim(Context::get('domain')));
@@ -44,17 +44,17 @@
             $this->setMessage('msg_create_shop');
         }
 
-        function insertShop($domain, $user_id_list, $settings = null) {
+        public function insertShop($domain, $user_id_list, $settings = null) {
             if(!is_array($user_id_list)) $user_id_list = array($user_id_list);
 
-            $oAddonAdminController = &getAdminController('addon');
-            $oMemberModel = &getModel('member');
-            $oModuleModel = &getModel('module');
-            $oModuleController = &getController('module');
+            $oAddonAdminController = getAdminController('addon');
+            $oMemberModel = getModel('member');
+            $oModuleModel = getModel('module');
+            $oModuleController = getController('module');
 
-            $oShopModel = &getModel('shop');
-            $oShopController = &getController('shop');
-            $oDocumentController = &getController('document');
+            $oShopModel = getModel('shop');
+            $oShopController = getController('shop');
+            $oDocumentController = getController('document');
 			
             $memberConfig = $oMemberModel->getMemberConfig();
             foreach($memberConfig->signupForm as $item){
@@ -133,7 +133,7 @@
             if(!file_exists(FileHandler::getRealPath($file))){
                 $file = sprintf('%ssample/ko.html',$this->module_path);
             }
-            $oMemberModel = &getModel('member');
+            $oMemberModel = getModel('member');
             $member_info = $oMemberModel->getMemberInfoByEmailAddress($user_id_list[0]);
 
 
@@ -142,7 +142,7 @@
             return $output;
         }
 
-        function procShopAdminUpdate(){
+        public function procShopAdminUpdate(){
             $vars = Context::gets('site_srl','user_id','domain','access_type','vid','module_srl','member_srl');
             if(!$vars->site_srl) return new Object(-1,'msg_invalid_request');
 
@@ -150,7 +150,7 @@
             else $args->domain = $vars->vid;
             if(!$args->domain) return new Object(-1,'msg_invalid_request');
 
-            $oMemberModel = &getModel('member');
+            $oMemberModel = getModel('member');
 			$member_config = $oMemberModel->getMemberConfig();
 			
             $tmp_member_list = explode(',',$vars->user_id);
@@ -174,11 +174,11 @@
                 }
             }
 
-            $oModuleModel = &getModel('module');
+            $oModuleModel = getModel('module');
             $site_info = $oModuleModel->getSiteInfo($vars->site_srl);
             if(!$site_info) return new Object(-1,'msg_invalid_request');
 
-            $oModuleController = &getController('module');
+            $oModuleController = getController('module');
             $output = $oModuleController->insertSiteAdmin($vars->site_srl, $admin_list);
             if(!$output->toBool()) return $output;
 
@@ -206,13 +206,13 @@
             return $output;
         }
 
-        function procShopAdminDelete() {
-            $oModuleController = &getController('module');
-            $oCounterController = &getController('counter');
-            $oAddonController = &getController('addon');
-            $oEditorController = &getController('editor');
-            $oShopModel = &getModel('shop');
-            $oModuleModel = &getModel('module');
+        public function procShopAdminDelete() {
+            $oModuleController = getController('module');
+            $oCounterController = getController('counter');
+            $oAddonController = getController('addon');
+            $oEditorController = getController('editor');
+            $oShopModel = getModel('shop');
+            $oModuleModel = getModel('module');
 
             $site_srl = Context::get('site_srl');
             if(!$site_srl) return new Object(-1,'msg_invalid_request');
@@ -275,19 +275,17 @@
             $this->setMessage('success_deleted');
         }
 
-
-
-        function initShop($site_srl){
-            $oCounterController = &getController('counter');
-            $oDocumentController = &getController('document');
-            $oCommentController = &getController('comment');
-            $oTagController = &getController('tag');
-            $oAddonController = &getController('addon');
-            $oEditorController = &getController('editor');
-            $oTrackbackController = &getController('trackback');
-            $oModuleModel = &getModel('module');
-            $oShopModel = &getModel('shop');
-            $oMemberModel = &getModel('member');
+        public function initShop($site_srl){
+            $oCounterController = getController('counter');
+            $oDocumentController = getController('document');
+            $oCommentController = getController('comment');
+            $oTagController = getController('tag');
+            $oAddonController = getController('addon');
+            $oEditorController = getController('editor');
+            $oTrackbackController = getController('trackback');
+            $oModuleModel = getModel('module');
+            $oShopModel = getModel('shop');
+            $oMemberModel = getModel('member');
 
             $site_info = $oModuleModel->getSiteInfo($site_srl);
             $module_srl = $site_info->index_module_srl;

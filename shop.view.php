@@ -11,8 +11,8 @@
         /**
          * @brief Initialization
          **/
-        function init() {
-            $oShopModel = &getModel('shop');
+        public function init() {
+            $oShopModel = getModel('shop');
             if(preg_match("/ShopTool/",$this->act) ) {
                 $this->initTool($this);
 
@@ -24,12 +24,12 @@
         /**
          * @brief Shop common init
          **/
-        function initCommon($is_other_module = false){
+        public function initCommon($is_other_module = false){
             if(!$this->checkXECoreVersion('1.4.3')) return $this->stop(sprintf(Context::getLang('msg_requried_version'),'1.4.3'));
 
-            $oShopModel = &getModel('shop');
-            $oShopController = &getController('shop');
-            $oModuleModel = &getModel('module');
+            $oShopModel = getModel('shop');
+            $oShopController = getController('shop');
+            $oModuleModel = getModel('module');
 
             $site_module_info = Context::get('site_module_info');
             if(!$this->module_srl) {
@@ -73,12 +73,12 @@
         /**
          * @brief Shop init tool
          **/
-        function initTool(&$oModule, $is_other_module = false){
+        public function initTool(&$oModule, $is_other_module = false){
             if (!$oModule) $oModule = $this;
 
             $this->initCommon($is_other_module);
 
-            $oShopModel = &getModel('shop');
+            $oShopModel = getModel('shop');
 
             $site_module_info = Context::get('site_module_info');
             $shop = $oShopModel->getShop($site_module_info->index_module_srl);
@@ -107,10 +107,10 @@
         /**
          * @brief shop init service
          **/
-        function initService(&$oModule, $is_other_module = false, $isMobile = false){
+        public function initService(&$oModule, $is_other_module = false, $isMobile = false){
             if (!$oModule) $oModule = $this;
 
-            $oShopModel = &getModel('shop');
+            $oShopModel = getModel('shop');
 
             $this->initCommon($is_other_module);
 
@@ -157,15 +157,15 @@
         /**
          * @brief Tool dashboard
          **/
-        function dispShopToolDashboard(){
+        public function dispShopToolDashboard(){
             set_include_path(_XE_PATH_."libs/PEAR");
             require_once('PEAR.php');
             require_once('HTTP/Request.php');
 
-            $oCounterModel = &getModel('counter');
-            $oDocumentModel = &getModel('document');
-            $oCommentModel = &getModel('comment');
-            $oShopModel = &getModel('shop');
+            $oCounterModel = getModel('counter');
+            $oDocumentModel = getModel('document');
+            $oCommentModel = getModel('comment');
+            $oShopModel = getModel('shop');
 
             $url = sprintf("http://news.shop.kr/%s/news.php", Context::getLangType());
             $cache_file = sprintf("%sfiles/cache/shop/news/%s%s.cache.xml", _XE_PATH_,getNumberingPath($this->module_srl),Context::getLangType());
@@ -279,8 +279,8 @@
         /**
          * @brief Login
          **/
-        function dispShopToolLogin() {
-            $oModuleModel = &getModel('module');
+        public function dispShopToolLogin() {
+            $oModuleModel = getModel('module');
             $member_config = $oModuleModel->getModuleConfig('member');
             Context::set('enable_openid', $member_config->enable_openid);
 
@@ -288,8 +288,8 @@
         }
 
 
-        function dispShopToolLayoutConfigSkin() {
-            $oModuleModel = &getModel('module');
+        public function dispShopToolLayoutConfigSkin() {
+            $oModuleModel = getModel('module');
 
             $skins = $oModuleModel->getSkins($this->module_path);
             if(count($skins)) {
@@ -320,8 +320,8 @@
             Context::set('cur_skin', $output[$this->module_info->skin]);
         }
 
-        function dispShopToolLayoutConfigEdit() {
-            $oShopModel = &getModel('shop');
+        public function dispShopToolLayoutConfigEdit() {
+            $oShopModel = getModel('shop');
             $skin_path = $oShopModel->getShopPath($this->module_srl);
 
             $skin_file_list = $oShopModel->getShopUserSkinFileList($this->module_srl);
@@ -349,8 +349,7 @@
         /**
          * @brief Shop home
          **/
-    function dispShop()
-        {
+        public function dispShop() {
         }
 
 

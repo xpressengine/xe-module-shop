@@ -12,15 +12,15 @@
         /**
          * @berif default mid
          **/
-        var $shop_mid = 'shop';
+        public $shop_mid = 'shop';
 
         /**
          * @berif default skin
          **/
-        var $skin = 'default';
+        public $skin = 'default';
 
 
-        var $add_triggers = array(
+        public $add_triggers = array(
             array('display', 'shop', 'controller', 'triggerMemberMenu', 'before'),
             array('moduleHandler.proc', 'shop', 'controller', 'triggerApplyLayout', 'after')
         );
@@ -28,8 +28,8 @@
         /**
          * @brief module install
          **/
-        function moduleInstall() {
-            $oModuleController = &getController('module');
+        public function moduleInstall() {
+            $oModuleController = getController('module');
 
             foreach($this->add_triggers as $trigger) {
                 $oModuleController->insertTrigger($trigger[0], $trigger[1], $trigger[2], $trigger[3], $trigger[4]);
@@ -40,12 +40,12 @@
         /**
          * @brief check for update method
          **/
-        function checkUpdate() {
+        public function checkUpdate() {
             $oDB = &DB::getInstance();
-            $oModuleModel = &getModel('module');
+            $oModuleModel = getModel('module');
 
             foreach($this->add_triggers as $trigger) {
-                if(!$oModuleModel->getTrigger($trigger[0], $trigger[1], $trigger[2], $trigger[3], $trigger[4])) return true;
+                if (!$oModuleModel->getTrigger($trigger[0], $trigger[1], $trigger[2], $trigger[3], $trigger[4])) return true;
             }
             return false;
         }
@@ -53,13 +53,13 @@
         /**
          * @brief module update
          **/
-        function moduleUpdate() {
+        public function moduleUpdate() {
             $oDB = &DB::getInstance();
-            $oModuleModel = &getModel('module');
-            $oModuleController = &getController('module');
+            $oModuleModel = getModel('module');
+            $oModuleController = getController('module');
 
             foreach($this->add_triggers as $trigger) {
-                if(!$oModuleModel->getTrigger($trigger[0], $trigger[1], $trigger[2], $trigger[3], $trigger[4])) {
+                if (!$oModuleModel->getTrigger($trigger[0], $trigger[1], $trigger[2], $trigger[3], $trigger[4])) {
                     $oModuleController->insertTrigger($trigger[0], $trigger[1], $trigger[2], $trigger[3], $trigger[4]);
                 }
             }
@@ -69,14 +69,13 @@
         /**
          * @brief recompile cache
          **/
-        function recompileCache() {
+        public function recompileCache() {
         }
 
 
-        function checkXECoreVersion($requried_version){
-			$result = version_compare(__ZBXE_VERSION__,$requried_version,'>=');
-			if($result != 1) return false;
-
+        public function checkXECoreVersion($requried_version){
+			$result = version_compare(__XE_VERSION__, $requried_version, '>=');
+			if ($result != 1) return false;
 			return true;
         }
     }

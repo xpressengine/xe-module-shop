@@ -10,14 +10,14 @@
         /**
          * @brief Initialization
          **/
-        function init() {
+        public function init() {
         }
 
 
         /**
          * @brief get member shop
          **/
-        function getMemberShop($member_srl = 0) {
+        public function getMemberShop($member_srl = 0) {
             if(!$member_srl && !Context::get('is_logged')) return new ShopInfo();
 
             if(!$member_srl) {
@@ -41,7 +41,7 @@
         /**
          * @brief Shop return list
          **/
-        function getShopList($args) {
+        public function getShopList($args) {
             $output = executeQueryArray('shop.getShopList', $args);
             if(!$output->toBool()) return $output;
 
@@ -60,7 +60,7 @@
         /**
          * @brief Shop return
          **/
-        function getShop($module_srl=0) {
+        public function getShop($module_srl=0) {
             static $shops = array();
             if(!isset($shops[$module_srl])) $shops[$module_srl] = new ShopInfo($module_srl);
             return $shops[$module_srl];
@@ -69,7 +69,7 @@
         /**
          * @brief return shop count
          **/
-        function getShopCount($member_srl = null) {
+        public function getShopCount($member_srl = null) {
             if(!$member_srl) {
                 $logged_info = Context::get('logged_info');
                 $member_srl = $logged_info->member_srl;
@@ -83,33 +83,30 @@
         }
 
 
-
-
-
-        function getShopPath($module_srl) {
+        public function getShopPath($module_srl) {
             return sprintf("./files/attach/shop/%s",getNumberingPath($module_srl));
         }
 
         function checkShopPath($module_srl, $skin = null) {
             $path = $this->getShopPath($module_srl);
             if(!file_exists($path)){
-                $oShopController = &getController('shop');
+                $oShopController = getController('shop');
                 $oShopController->resetSkin($module_srl, $skin);
             }
             return true;
         }
 
-        function getShopUserSkinFileList($module_srl){
+        public function getShopUserSkinFileList($module_srl){
             $skin_path = $this->getShopPath($module_srl);
             $skin_file_list = FileHandler::readDir($skin_path,'/(\.html|\.htm|\.css)$/');
             return $skin_file_list;
         }
 
 
-		function getModulePartConfig($module_srl=0){
+        public function getModulePartConfig($module_srl=0){
 			static $configs = array();
 
-            $oModuleModel = &getModel('module');
+            $oModuleModel = getModel('module');
 			$config = $oModuleModel->getModuleConfig('shop');
 			if(!$config || !$config->allow_service) {
 				$config->allow_service = array('board'=>1,'page'=>1);

@@ -9,9 +9,9 @@
         /**
          * @brief Initialization
          **/
-        function init() {
-            $oShopModel = &getModel('shop');
-            $oModuleModel = &getModel('module');
+        public function init() {
+            $oShopModel = getModel('shop');
+            $oModuleModel = getModel('module');
 
             $site_module_info = Context::get('site_module_info');
             $site_srl = $site_module_info->site_srl;
@@ -29,8 +29,8 @@
 
         }
 
-        function procShopLogin() {
-            $oMemberController = &getController('member');
+        public function procShopLogin() {
+            $oMemberController = getController('member');
 
             if(!$user_id) $user_id = Context::get('user_id');
             $user_id = trim($user_id);
@@ -64,22 +64,21 @@
         }
 
 
-
-        function updateShop($args){
+        public function updateShop($args){
             $output = executeQuery('shop.updateShop', $args);
             return $output;
         }
 
-        function updateShopInfo($module_srl,$args){
+        public function updateShopInfo($module_srl,$args){
             $args->module_srl = $module_srl;
             $output = executeQuery('shop.updateShop', $args);
             return $output;
         }
 
-        function procShopInfoUpdate(){
-            $oModuleController = &getController('module');
-            $oModuleModel = &getModel('module');
-            $oShopModel = &getModel('shop');
+        public function procShopInfoUpdate(){
+            $oModuleController = getController('module');
+            $oModuleModel = getModel('module');
+            $oShopModel = getModel('shop');
 
             if(in_array(strtolower('dispShopToolConfigInfo'),$this->custom_menu->hidden_menu)) return new Object(-1,'msg_invalid_request');
 
@@ -113,8 +112,8 @@
         /**
          * @brief shop colorset modify
          **/
-        function procShopColorsetModify() {
-            $oShopModel = &getModel('shop');
+        public function procShopColorsetModify() {
+            $oShopModel = getModel('shop');
             $myshop = $oShopModel->getMemberShop();
             if(!$myshop->isExists()) return new Object(-1, 'msg_not_permitted');
 
@@ -127,10 +126,10 @@
             $this->setTemplateFile('move_myshop');
         }
 
-        function procShopToolLayoutConfigSkin() {
-            $oModuleModel = &getModel('module');
-            $oModuleController = &getController('module');
-            $oShopModel = &getModel('shop');
+        public function procShopToolLayoutConfigSkin() {
+            $oModuleModel = getModel('module');
+            $oModuleController = getController('module');
+            $oShopModel = getModel('shop');
 
             if(in_array(strtolower('dispShopToolLayoutConfigSkin'),$this->custom_menu->hidden_menu)) return new Object(-1,'msg_invalid_request');
 
@@ -147,27 +146,27 @@
         }
 
 
-        function procShopToolLayoutResetConfigSkin() {
-            $oModuleModel = &getModel('module');
+        public function procShopToolLayoutResetConfigSkin() {
+            $oModuleModel = getModel('module');
             $module_info  = $oModuleModel->getModuleInfoByModuleSrl($this->module_srl);
             $skin = $module_info->skin;
 
             $this->resetSkin($this->module_srl,$skin);
         }
 
-        function resetSkin($module_srl,$skin=null){
+        public function resetSkin($module_srl,$skin=null){
             if(!$skin) $skin = $this->skin;
             if(!file_exists($this->module_path.'skins/'.$skin)) $skin = $this->skin;
-            $oShopModel = &getModel('shop');
+            $oShopModel = getModel('shop');
             FileHandler::removeDir($oShopModel->getShopPath($module_srl));
             FileHandler::copyDir($this->module_path.'skins/'.$skin, $oShopModel->getShopPath($module_srl));
         }
 
 
-        function procShopToolLayoutConfigEdit() {
+        public function procShopToolLayoutConfigEdit() {
             if(in_array(strtolower('dispShopToolLayoutConfigEdit'),$this->custom_menu->hidden_menu)) return new Object(-1,'msg_invalid_request');
 
-            $oShopModel = &getModel('shop');
+            $oShopModel = getModel('shop');
             $skin_path = $oShopModel->getShopPath($this->module_srl);
 
             $skin_file_list = $oShopModel->getShopUserSkinFileList($this->module_srl);
@@ -178,10 +177,10 @@
             }
         }
 
-         function procShopToolUserSkinExport(){
+        public function procShopToolUserSkinExport(){
             if(!$this->module_srl) return new Object('-1','msg_invalid_request');
 
-            $oShopModel = &getModel('shop');
+            $oShopModel = getModel('shop');
             $skin_path = FileHandler::getRealPath($oShopModel->getShopPath($this->module_srl));
 
             $tar_list = FileHandler::readDir($skin_path,'/(\.css|\.html|\.htm|\.js)$/');
@@ -213,7 +212,7 @@
             exit();
          }
 
-         function procShopToolUserSkinImport(){
+        public function procShopToolUserSkinImport(){
             if(!$this->module_srl) exit();
 
             // check upload
@@ -222,7 +221,7 @@
             if(!is_uploaded_file($file['tmp_name'])) exit();
             if(!preg_match('/\.(tar)$/i', $file['name'])) exit();
 
-            $oShopModel = &getModel('shop');
+            $oShopModel = getModel('shop');
             $skin_path = FileHandler::getRealPath($oShopModel->getShopPath($this->module_srl));
 
             $tar_file = $skin_path . 'shop_skin.tar';
@@ -248,9 +247,7 @@
         }
 
 
-
-
-        function _checkDisabledFunction($str){
+        public function _checkDisabledFunction($str){
             if(preg_match('!<\?.*\?>!is',$str,$match)) return true;
 
             $disabled = array(
@@ -285,15 +282,15 @@
         /**
          * @brief shop insert config
          **/
-        function insertShopConfig($shop) {
-            $oModuleController = &getController('module');
+        public function insertShopConfig($shop) {
+            $oModuleController = getController('module');
             $oModuleController->insertModuleConfig('shop', $shop);
         }
 
         /**
          * @brief shop update browser title
          **/
-        function updateShopBrowserTitle($module_srl, $browser_title) {
+        public function updateShopBrowserTitle($module_srl, $browser_title) {
             $args->module_srl = $module_srl;
             $args->browser_title = $browser_title;
             return executeQuery('shop.updateShopBrowserTitle', $args);
@@ -302,7 +299,7 @@
         /**
          * @brief action forward apply layout
          **/
-        function triggerApplyLayout(&$oModule) {
+        public function triggerApplyLayout(&$oModule) {
             if(!$oModule || $oModule->getLayoutFile()=='popup_layout.html') return new Object();
 
             if(Context::get('module')=='admin') return new Object();
@@ -314,12 +311,12 @@
             $site_module_info = Context::get('site_module_info');
             if(!$site_module_info || !$site_module_info->site_srl || $site_module_info->mid != $this->shop_mid) return new Object();
 
-            $oModuleModel = &getModel('module');
+            $oModuleModel = getModel('module');
             $xml_info = $oModuleModel->getModuleActionXml('shop');
             if($oModule->mid == $this->shop_mid && isset($xml_info->action->{$oModule->act})) return new Object();
 
-            $oShopModel = &getModel('shop');
-            $oShopView = &getView('shop');
+            $oShopModel = getModel('shop');
+            $oShopView = getView('shop');
 
             Context::set('layout',null);
 
@@ -328,7 +325,7 @@
             } else {
                 if(Mobile::isFromMobilePhone())
                 {
-                    $oShopView = &getMobile('shop');
+                    $oShopView = getMobile('shop');
                 }
                 $oShopView->initService($oModule, true);
             }
@@ -336,15 +333,15 @@
         }
 
 
-        function procShopToolInit(){
+        public function procShopToolInit(){
             if(!$this->site_srl) return new Object(-1,'msg_invalid_request');
 
-            $oShopAdminController = &getAdminController('shop');
+            $oShopAdminController = getAdminController('shop');
             $output = $oShopAdminController->initShop($this->site_srl);
             return $output;
         }
 
-		function procShopToolLive(){
+        public function procShopToolLive(){
 			$_SESSION['live'] = time();
 		}
     }

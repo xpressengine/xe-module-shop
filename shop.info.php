@@ -7,27 +7,27 @@
 
     class ShopInfo extends Object {
 
-        var $site_srl = null;
-        var $domain = null;
-        var $shop_srl = null;
-        var $module_srl = null;
-        var $member_srl = null;
-        var $shop_title = null;
-        var $colorset = null;
-        var $timezone = null;
+        public $site_srl = null,
+            $domain = null,
+            $shop_srl = null,
+            $module_srl = null,
+            $member_srl = null,
+            $shop_title = null,
+            $colorset = null,
+            $timezone = null;
 
-        function ShopInfo($shop_srl = 0) {
+        public function ShopInfo($shop_srl = 0) {
             if(!$shop_srl) return;
             $this->setShop($shop_srl);
         }
 
-        function setShop($shop_srl) {
+        public function setShop($shop_srl) {
             $this->module_srl = $this->shop_srl = $shop_srl;
             $this->_loadFromDB();
         }
 
-        function _loadFromDB() {
-            $oShopModel = &getModel('shop');
+        public function _loadFromDB() {
+            $oShopModel = getModel('shop');
 
             if(!$this->shop_srl) return;
             $args->module_srl = $this->shop_srl;
@@ -43,7 +43,7 @@
             }
         }
 
-        function setAttribute($attribute) {
+        public function setAttribute($attribute) {
             if(!$attribute->module_srl) {
                 $this->shop_srl = null;
                 return;
@@ -59,92 +59,95 @@
             $this->adds($attribute);
         }
 
-        function isHome() {
+        public function isHome() {
             $module_info = Context::get('module_info');
             if($this->getModuleSrl() == $module_info->module_srl) return true;
             return false;
         }
 
-        function getBrowserTitle() {
+        public function getBrowserTitle() {
             if(!$this->isExists()) return;
             return $this->get('browser_title');
         }
 
-        function getShopTitle() {
+        public function getShopTitle() {
             if(!$this->isExists()) return;
             return $this->get('shop_title');
         }
 
-        function getMid() {
+        public function getMid() {
             if(!$this->isExists()) return;
             return $this->get('mid');
         }
 
-        function getMemberSrl() {
+        public function getMemberSrl() {
             if(!$this->isExists()) return;
             return $this->get('member_srl');
         }
 
-        function getModuleSrl() {
+        public function getModuleSrl() {
             if(!$this->isExists()) return;
             return $this->getShopSrl();
         }
 
-        function getShopSrl() {
+        public function getShopSrl() {
             if(!$this->isExists()) return;
             return $this->shop_srl;
         }
 
-        function getShopMid() {
+        public function getShopMid() {
             if(!$this->isExists()) return;
             return $this->get('mid');
         }
 
-        function getNickName() {
+        public function getNickName() {
             if(!$this->isExists()) return;
             $nick_name = $this->get('nick_name');
             if(!$nick_name) $nick_name = $this->getUserId();
             return $nick_name;
         }
 
-        function getUserName() {
+        public function getUserName() {
             if(!$this->isExists()) return;
             return $this->get('user_name');
         }
-        function getProfileContent() {
+
+        public function getProfileContent() {
             if(!$this->isExists()) return;
             return $this->get('profile_content');
         }
-        function getShopContent() {
+
+        public function getShopContent() {
             if(!$this->isExists()) return;
             return $this->get('shop_content');
         }
-        function getEmail() {
+
+        public function getEmail() {
             if(!$this->isExists()) return;
             return $this->get('email_address');
         }
 
-        function getInputEmail(){
+        public function getInputEmail(){
             if(!$this->isExists()) return;
             return $this->get('input_email');
         }
 
-        function getInputWebsite(){
+        public function getInputWebsite(){
             if(!$this->isExists()) return;
             return $this->get('input_website');
         }
 
-        function getUserID() {
+        public function getUserID() {
             if(!$this->isExists()) return;
             return $this->get('user_id');
         }
 
 
-        function isExists() {
+        public function isExists() {
             return $this->shop_srl?true:false;
         }
 
-        function getPermanentUrl() {
+        public function getPermanentUrl() {
             if(!$this->isExists()) return;
             return getUrl('','mid',$this->getMid());
         }

@@ -10,17 +10,17 @@
         /**
          * @brief Initialization
          **/
-        function init() {
-            $oShopModel = &getModel('shop');
+        public function init() {
+            $oShopModel = getModel('shop');
 
             $this->setTemplatePath($this->module_path."/tpl/");
             $template_path = sprintf("%stpl/",$this->module_path);
             $this->setTemplatePath($template_path);
         }
 
-        function dispShopAdminList() {
+        public function dispShopAdminList() {
             $vars = Context::getRequestVars();
-            $oShopModel = &getModel('shop');
+            $oShopModel = getModel('shop');
 
             $page = Context::get('page');
             if(!$page) $page = 1;
@@ -41,9 +41,9 @@
             $this->setTemplateFile('list');
         }
 
-        function dispShopAdminInsert() {
-            $oModuleModel = &getModel('module');
-            $oMemberModel = &getModel('member');
+        public function dispShopAdminInsert() {
+            $oModuleModel = getModel('module');
+            $oMemberModel = getModel('member');
 			
             //set identifier type of admin
         	$memberConfig = $oMemberModel->getMemberConfig();
@@ -54,7 +54,7 @@
             
             $module_srl = Context::get('module_srl');
             if($module_srl) {
-                $oShopModel = &getModel('shop');
+                $oShopModel = getModel('shop');
                 $shop = $oShopModel->getShop($module_srl);
                 Context::set('shop', $shop);
 
@@ -77,15 +77,15 @@
             $this->setTemplateFile('insert');
         }
 
-        function dispShopAdminDelete() {
+        public function dispShopAdminDelete() {
             if(!Context::get('module_srl')) return $this->dispShopAdminList();
             $module_srl = Context::get('module_srl');
 
-            $oShopModel = &getModel('shop');
+            $oShopModel = getModel('shop');
             $oShop = $oShopModel->getShop($module_srl);
             $shop_info = $oShop->getObjectVars();
 
-            $oDocumentModel = &getModel('document');
+            $oDocumentModel = getModel('document');
             $document_count = $oDocumentModel->getDocumentCount($shop_info->module_srl);
             $shop_info->document_count = $document_count;
 
