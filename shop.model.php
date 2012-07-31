@@ -47,10 +47,10 @@
 
             if(count($output->data)) {
                 foreach($output->data as $key => $val) {
-                    $oShop = null;
+                    $oShop = NULL;
                     $oShop = new ShopInfo();
                     $oShop->setAttribute($val);
-                    $output->data[$key] = null;
+                    $output->data[$key] = NULL;
                     $output->data[$key] = $oShop;
                 }
             }
@@ -74,7 +74,7 @@
                 $logged_info = Context::get('logged_info');
                 $member_srl = $logged_info->member_srl;
             }
-            if(!$member_srl) return null;
+            if(!$member_srl) return NULL;
 
             $args->member_srl = $member_srl;
             $output = executeQuery('shop.getShopCount',$args);
@@ -87,13 +87,13 @@
             return sprintf("./files/attach/shop/%s",getNumberingPath($module_srl));
         }
 
-        function checkShopPath($module_srl, $skin = null) {
+        function checkShopPath($module_srl, $skin = NULL) {
             $path = $this->getShopPath($module_srl);
             if(!file_exists($path)){
                 $oShopController = getController('shop');
                 $oShopController->resetSkin($module_srl, $skin);
             }
-            return true;
+            return TRUE;
         }
 
         public function getShopUserSkinFileList($module_srl){
@@ -130,5 +130,25 @@
 
 			return $configs[$module_srl];
 		}
+
+		# region Product categories
+		/**
+		 * Insert a new Product category; returns the ID of the newly created record
+		 * @param $args
+		 * @return int
+		 */
+		public function insertProductCategory($args)
+		{
+			$args->product_category_srl = getNextSequence();
+			$output = executeQuery('shop.insertProductCategory', $args);
+			if(!$output->toBool())
+			{
+				throw new Exception($output->getMessage(), $output->getError());
+			}
+			return $args->product_category_srl;
+		}
+
+		# endregion
+
 	}
 ?>
