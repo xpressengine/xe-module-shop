@@ -345,6 +345,19 @@
             Context::set('user_image_list',$user_image_list);
         }
 
+        /**
+         * @brief Shop display product tool page
+         */
+        public function dispShopToolManageProducts(){
+            $oShopModel = getModel('shop');
+        }
+
+        /**
+         * @brief Shop display product add page
+         */
+        public function dispShopToolAddProduct(){
+            $oShopModel = getModel('shop');
+        }
 
         /**
          * @brief Shop home

@@ -9,14 +9,9 @@
 		<permission action="dispShopToolDashboard" target="manager" />
 		<permission action="dispShopToolLayoutConfigSkin" target="manager" />
 		<permission action="dispShopToolLayoutConfigEdit" target="manager" />
-		<permission action="dispShopToolConfigProfile" target="manager" />
-		<permission action="dispShopToolConfigInfo" target="manager" />
-		<permission action="dispShopToolConfigPostwrite" target="manager" />
-		<permission action="dispShopToolConfigEditorComponents" target="manager" />
-		<permission action="dispShopToolConfigCommunication" target="manager" />
-		<permission action="dispShopToolConfigAddon" target="manager" />
-		<permission action="dispShopToolConfigData" target="manager" />
-		<permission action="dispShopToolConfigChangePassword" target="manager" />
+        <permission action="dispShopToolManageProducts" target="manager" />
+        <permission action="dispShopToolAddProduct" target="manager" />
+
 
 		<permission action="procShopInfoUpdate" target="manager" />
 		<permission action="procShopToolLayoutConfigSkin" target="manager" />
@@ -34,6 +29,8 @@
         <action name="dispShopLogin" type="view" />
 		<action name="dispShopToolLayoutConfigSkin" type="view" />
 		<action name="dispShopToolLayoutConfigEdit" type="view" />
+        <action name="dispShopToolManageProducts" type="view" />
+        <action name="dispShopToolAddProduct" type="view" />
 		
 
 		<action name="dispShopToolDashboard" type="view" />

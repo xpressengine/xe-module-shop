@@ -3,7 +3,7 @@
 
 			<!-- Content -->
 			<div id="content">
-				
+
 				<!-- contentHeader -->
 				<div class="contentHeader editHeader">
 					<h3 class="h3">{$lang->shop_second_menus[4]['dispShopToolLayoutConfigEdit']}</h3>
@@ -14,14 +14,14 @@
 				function tab(i){
 					var tab = i.parentNode.className;
 					document.getElementById('codeEdit').className='codeEdit'+' '+tab;
-				} 
+				}
 				</script>
-				
+
 				<form action="./" method="post" id="codeEdit" class="codeEdit" onsubmit="return procFilter(this,insert_layout_edit);">
 					<span class="btnGray medium widgetCreator"><a href="{getUrl('','module','widget','act','dispWidgetGenerateCode')}" onclick="popopen(this.href); return false">{$lang->cmd_generate_widget_code}</a></span>
 					<input type="hidden" name="mid" value="{$mid}" />
 					<input type="hidden" name="vid" value="{$vid}" />
-					
+
 					<ul>
 						{@$i=0;}
 						<!--@foreach($skin_file_content as $file => $content)-->
@@ -29,10 +29,10 @@
 							<a href="#" onclick="tab(this)">{$file}</a>
 							<textarea name="{$file}" rows="8" cols="42">{htmlspecialchars($content)}</textarea>
 						</li>
-						{@$i++;}						
+						{@$i++;}
 						<!--@end-->
 					</ul>
-	
+
 					<!-- Button Area -->
 					<div class="btnArea">
 						<span class="btn"><input type="submit" value="{$lang->cmd_save}" /></span>
@@ -86,7 +86,7 @@
 			<input type="hidden" name="vid" value="{$vid}" />
 			<input type="file" name="file" /> <em>{$lang->about_shop_skin_import}</em>
 			<span class="btnGray medium"><button type="submit">{$lang->cmd_submit}</button></span>
-		</form>	
+		</form>
 	</div>
 </div>
 

@@ -320,15 +320,8 @@
 
             Context::set('layout',null);
 
-            if($oShopModel->isAttachedMenu($oModule->act)) {
-                $oShopView->initTool($oModule, true);
-            } else {
-                if(Mobile::isFromMobilePhone())
-                {
-                    $oShopView = getMobile('shop');
-                }
-                $oShopView->initService($oModule, true);
-            }
+            $oShopView->initTool($oModule, true);
+            // $oShopView->initService($oModule, true);
             return new Object();
         }
 
