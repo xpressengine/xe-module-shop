@@ -1,8 +1,3 @@
-function completeInsertShop(ret_obj, response_tags) {
-	alert(ret_obj['message']);
-	location.href=current_url.setQuery('act','dispShopAdminList');
-}
-
 function completeInsertGrant(ret_obj) {
 	var error = ret_obj['error'];
 	var message = ret_obj['message'];
@@ -29,8 +24,8 @@ function toggleAccessType(target) {
 				xGetElementById('accessDomain').style.display = 'block';
 				xGetElementById('accessVid').style.display = 'none';
 			break;
-		case 'vid' :
-				xGetElementById('shopFo').vid.value = '';
+		case 'site_id' :
+				xGetElementById('shopFo').site_id.value = '';
 				xGetElementById('accessDomain').style.display = 'none';
 				xGetElementById('accessVid').style.display = 'block';
 			break;

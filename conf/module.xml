@@ -55,7 +55,7 @@
         <action name="dispShopAdminInsert" type="view" standalone="true" />
         <action name="dispShopAdminDelete" type="view" standalone="true" />
 
-		<action name="procShopAdminCreate" type="controller" standalone="true" />
+		<action name="procShopAdminCreate" type="controller" standalone="true" ruleset="insert_shop" />
 		<action name="procShopAdminUpdate" type="controller" standalone="true" />
         <action name="procShopAdminDelete" type="controller" standalone="true" />
         <action name="procShopAdminInsertCustomMenu" type="controller" standalone="true" />

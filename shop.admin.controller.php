@@ -42,6 +42,9 @@
 
             $this->add('module_srl', $output->get('module_srl'));
             $this->setMessage('msg_create_shop');
+
+			$returnUrl = Context::get('success_return_url') ? Context::get('success_return_url') : getNotEncodedUrl('', 'module', 'admin', 'module_srl', $output->get('module_srl'), 'act', 'dispShopAdminInsert');
+			$this->setRedirectUrl($returnUrl);
         }
 
         public function insertShop($domain, $user_id_list, $settings = null) {
