@@ -226,6 +226,26 @@ class shopModel extends shop
 		return $args->product_category_srl;
 	}
 
+	/**
+	 * Deletes a product category by $product_category_srl or $module_srl
+	 *
+	 * @author Corina Udrescu (dev@xpressengine.org)
+	 * @param $args array
+	 */
+	public function deleteProductCategory($args)
+	{
+		if(!isset($args->product_category_srl) && !isset($args->module_srl))
+			throw new Exception("Missing arguments for Product category delete: please provide [product_category_srl] or [module_srl]");
+
+		$output = executeQuery('shop.deleteProductCategory', $args);
+		if(!$output->toBool())
+		{
+			throw new Exception($output->getMessage(), $output->getError());
+		}
+
+		return true;
+	}
+
 }
 
 ?>

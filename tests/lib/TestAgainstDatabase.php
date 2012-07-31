@@ -14,6 +14,12 @@ class TestAgainstDatabase extends PHPUnit_Framework_TestCase
 	protected $backupStaticAttributes = FALSE;
 	protected $preserveGlobalState = FALSE;
 
+	public static function setUpBeforeClass()
+	{
+		// remove cache dir
+		FileHandler::removeDir(_XE_PATH_ . 'files/cache');
+	}
+
 	/**
 	 * Prepare runtime context - tell DB class about current db connection info
 	 *
@@ -29,9 +35,6 @@ class TestAgainstDatabase extends PHPUnit_Framework_TestCase
 		$db->master_db = $db_info;
 		$db->slave_db = array($db_info);
 		$oContext->setDbInfo($db);
-
-		// remove cache dir
-		FileHandler::removeDir(_XE_PATH_ . 'files/cache');
 
 		DB::getParser(TRUE);
 	}
