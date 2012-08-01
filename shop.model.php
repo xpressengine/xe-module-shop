@@ -217,6 +217,24 @@ class shopModel extends shop
 
         return $objects[$document_srl];
     }
+	
+    /**
+     * Insert a new Product; returns the ID of the newly created record
+     *
+     * @author Dan Dragan (dev@xpressengine.org)
+     * @param $args array
+     * @return int
+     */
+    public function insertProduct($args)
+    {
+        $args->product_srl = getNextSequence();
+        $output = executeQuery('shop.insertProduct', $args);
+        if(!$output->toBool())
+        {
+            throw new Exception($output->getMessage(), $output->getError());
+        }
+        return $args->product_srl;
+    }
 
 	/**
 	 * Insert a new Product category; returns the ID of the newly created record

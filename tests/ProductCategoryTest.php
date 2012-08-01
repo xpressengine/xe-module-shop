@@ -17,7 +17,67 @@ class ProductCategoryTest extends TestAgainstDatabase
 	{
 		parent::setUp();
 	}
+    /**
+     * Tests inserting a new Product - makes sure all fields are properly persisted
+     * @author Dan dragan (dev@xpressengine.org)
+     */
+    public function testInsertProduct_ValidData()
+    {
+        // Create new Product object
+        $args = new stdClass();
+        $args->module_srl = 201;
+        $args->member_srl = 4;
+        $args->product_type = "simple";
+        $args->title = "Product 1";
+        $args->description = "Lorem ipsum dolor sit amet, te amet scaevola volutpat eum, ius an decore recteque patrioque, mel sint epicurei ut. Ea lorem noluisse est, ea sed nisl libris electram. Cu vivendum facilisis scribentur mel, bonorum elaboraret no per. Nec eu vidit omittantur, ei putant timeam detraxit quo, urbanitas efficiendi sit id. Mei putent eirmod voluptua ut, at dictas invenire delicata duo.
 
+Patrioque conceptam in mea. Est ad ullum ceteros, pro quem accumsan appareat id, pro nominati electram no. Duo lorem maiorum urbanitas te, cu eum dicunt laoreet, etiam sententiae scriptorem at mel. Vix tamquam epicurei et, quo tota iudicabit an. Duo ea agam antiopam. Et per diam percipitur.";
+        $args->short_description = "short_description";
+        $args->sku = "SKU1";
+        $args->status = '1';
+        $args->friendly_url = "product1";
+        $args->price = 10.5;
+        $args->qty = 0;
+        $args->in_stock = "Y";
+
+        $shopModel = getModel('shop');
+        try
+        {
+            // Try to insert the new Product
+
+            $product_srl = $shopModel->insertProduct($args);
+
+            // Check that a srl was returned
+            $this->assertNotNull($product_srl);
+
+            // Read the newly created object from the database, to compare it with the source object
+            $output = Database::executeQuery("SELECT * FROM xe_shop_products WHERE product_srl = $product_srl");
+            $this->assertEquals(1, count($output));
+
+            $product = $output[0];
+            $this->assertEquals($args->module_srl, $product->module_srl);
+            $this->assertEquals($args->member_srl, $product->member_srl);
+            $this->assertEquals($args->product_type, $product->product_type);
+            $this->assertEquals($args->title, $product->title);
+            $this->assertEquals($args->description, $product->description);
+            $this->assertEquals($args->short_description, $product->short_description);
+            $this->assertEquals($args->sku, $product->sku);
+            $this->assertEquals($args->status, $product->status);
+            $this->assertEquals($args->friendly_url, $product->friendly_url);
+            $this->assertEquals($args->price, $product->price);
+            $this->assertEquals($args->qty, $product->qty);
+            $this->assertEquals($args->in_stock, $product->in_stock);
+            $this->assertNotNull($product->regdate);
+            $this->assertNotNull($product->last_update);
+
+            // Delete product we just added after test is finished
+            Database::executeNonQuery("DELETE FROM xe_shop_products WHERE product_srl = $product_srl");
+        }
+        catch(Exception $e)
+        {
+            $this->fail($e->getMessage());
+        }
+    }
 	/**
 	 * Tests inserting a new Product category - makes sure all fields are properly persisted
 	 * @author Corina Udrescu (dev@xpressengine.org)
@@ -33,6 +93,7 @@ class ProductCategoryTest extends TestAgainstDatabase
 		try
 		{
 			// Try to insert the new Category
+
 			$product_category_srl = $shopModel->insertProductCategory($args);
 
 			// Check that a srl was returned
