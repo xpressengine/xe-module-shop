@@ -384,7 +384,13 @@
 		// region Product category
 		public function dispShopToolManageCategories()
 		{
+			$shopModel = getModel('shop');
+			$repository = $shopModel->getProductCategoryRepository();
+			$tree = $repository->getProductCategoriesTree($this->module_srl);
 
+			// Prepare tree for display
+			$flat_tree = $tree->toFlatStructure();
+			Context::set('tree', $flat_tree);
 		}
 
 		public function dispShopToolAddProductCategory()

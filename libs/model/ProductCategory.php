@@ -28,7 +28,7 @@ class ProductCategory extends BaseItem
 	 * @author Corina Udrescu (dev@xpressengine.org)
 	 * @param $args array
 	 */
-	public function __construct($args = null)
+	public function __construct($args = NULL)
 	{
 		if(isset($args))
 		{
@@ -73,6 +73,67 @@ class ProductCategory extends BaseItem
 
 		$this->include_in_navigation_menu = $include_in_navigation_menu;
 	}
+}
+
+/**
+ * Models a Product category tree hierarchy
+ *
+ * @author Corina Udrescu (dev@xpressengine.org)
+ */
+class ProductCategoryTreeNode
+{
+	public $product_category;
+	public $children = array();
+
+	/**
+	 * @author Corina Udrescu (dev@xpressengine.org)
+	 * @param $pc ProductCategory
+	 */
+	public function __construct(ProductCategory $pc = NULL)
+	{
+		$this->product_category = $pc;
+	}
+
+	/**
+	 * @author Corina Udrescu (dev@xpressengine.org)
+	 * @param $node ProductCategoryTreeNode
+	 */
+	public function addChild(ProductCategoryTreeNode $node)
+	{
+		$this->children[$node->product_category->product_category_srl] = $node;
+	}
+
+	/**
+	 * @author Corina Udrescu (dev@xpressengine.org)
+	 * @param $node ProductCategoryTreeNode
+	 */
+	public function removeChild(ProductCategoryTreeNode $node)
+	{
+		unset($this->children[$node->product_category->product_category_srl]);
+	}
+
+	/**
+	 *  Converts tree to flat structure easily iterable in template files
+	 *
+	 * @author Corina Udrescu (dev@xpressengine.org)
+	 * @param $level int
+	 * @param $index 0
+	 */
+	public function toFlatStructure($level = 0, $index = 0)
+	{
+		$flat_structure = array();
+		foreach($this->children as $node)
+		{
+			$flat_structure[$index++] = $node;
+			if(count($node->children))
+			{
+				$children_flat_structure = $node->toFlatStructure($level + 1, $index);
+				$flat_structure = array_merge($flat_structure, $children_flat_structure);
+			}
+		}
+		return $flat_structure;
+	}
+
 }
 
 /* End of file ProductCategory.php */

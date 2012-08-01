@@ -88,4 +88,35 @@ class ProductCategoryRepository extends BaseRepository
 		}
 		return TRUE;
 	}
+
+	/**
+	 * Get all product categories for a module as a tree
+	 * Returns root node
+	 *
+	 * @author Corina Udrescu (dev@xpressengine.org)
+	 * @param $module_srl int
+	 */
+	public function getProductCategoriesTree($module_srl)
+	{
+		$args = new stdClass();
+		$args->module_srl = $module_srl;
+
+		// Retrieve categories from database
+		$output = executeQuery('shop.getProductCategories', $args);
+		if(!$output->toBool())
+		{
+			throw new Exception($output->getMessage(), $output->getError());
+		}
+
+		// Arrange hierarchically
+		$nodes = array();
+		$nodes[0] = new ProductCategoryTreeNode();
+		foreach($output->data as $pc)
+		{
+			$nodes[$pc->product_category_srl] = new ProductCategoryTreeNode(new ProductCategory($pc));
+			$nodes[$pc->parent_srl]->addChild($nodes[$pc->product_category_srl]);
+		}
+
+		return $nodes[0];
+	}
 }

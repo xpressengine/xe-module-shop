@@ -20,16 +20,24 @@ class ProductCategoryTest extends TestAgainstDatabase
 		parent::setUp();
 		// Insert a few product categories in the database, so that we will have what to delete
 		Database::executeNonQuery("
-			INSERT INTO xe_shop_product_categories (product_category_srl, module_srl, title)
-				VALUES(1000, 1001, 'Dummy category 1000')
+			INSERT INTO xe_shop_product_categories (product_category_srl, module_srl, title, parent_srl)
+				VALUES(1000, 1001, 'Dummy category 1000', 0)
 			");
 		Database::executeNonQuery("
-			INSERT INTO xe_shop_product_categories (product_category_srl, module_srl, title)
-				VALUES(1002, 1001, 'Dummy category 1002')
+			INSERT INTO xe_shop_product_categories (product_category_srl, module_srl, title, parent_srl)
+				VALUES(1002, 1001, 'Dummy category 1002', 1000)
 			");
 		Database::executeNonQuery("
-			INSERT INTO xe_shop_product_categories (product_category_srl, module_srl, title)
-				VALUES(1004, 1003, 'Dummy category 1002')
+			INSERT INTO xe_shop_product_categories (product_category_srl, module_srl, title, parent_srl)
+				VALUES(1004, 1003, 'Dummy category 1002', 0)
+			");
+		Database::executeNonQuery("
+			INSERT INTO xe_shop_product_categories (product_category_srl, module_srl, title, parent_srl)
+				VALUES(1006, 1001, 'Dummy category 1006', 0)
+			");
+		Database::executeNonQuery("
+			INSERT INTO xe_shop_product_categories (product_category_srl, module_srl, title, parent_srl)
+				VALUES(1008, 1001, 'Dummy category 1008', 1000)
 			");
 	}
     /**
@@ -247,7 +255,7 @@ Patrioque conceptam in mea. Est ad ullum ceteros, pro quem accumsan appareat id,
 		{
 			$output = $repository->updateProductCategory($product_category);
 
-			$this->assertEquals(true, $output);
+			$this->assertEquals(TRUE, $output);
 
 			// Check that properties were updated
 			$new_product_category = $repository->getProductCategory($product_category->product_category_srl);
@@ -260,6 +268,44 @@ Patrioque conceptam in mea. Est ad ullum ceteros, pro quem accumsan appareat id,
 	}
 
 
+	/**
+	 * Test that tree hierarchy is properly returned
+	 *
+	 * @author Corina Udrescu (dev@xpressengine.org)
+	 */
+	public function testProductCategoryTreeHierarchy()
+	{
+		// Retrieve tree
+		$shopModel = &getModel('shop');
+		$repository = $shopModel->getProductCategoryRepository();
+
+		$tree = $repository->getProductCategoriesTree(1001);
+
+		var_dump($tree->toFlatStructure());
+
+		// Check hierarchy
+		$this->assertNotNull($tree);
+		$this->assertNull($tree->product_category); // Root node should not have any product category associated
+
+		foreach($tree->children as $id => $node)
+		{
+			if($id == 1000)
+			{
+				$this->assertEquals(1000, $node->product_category->product_category_srl);
+				$this->assertEquals(2, count($node->children));
+			}
+			elseif($id = 1006)
+			{
+				$this->assertEquals(1006, $node->product_category->product_category_srl);
+				$this->assertEquals(0, count($node->children));
+			}
+			else
+			{
+				$this->fail("Unexpected node found as root: " . $id);
+			}
+		}
+	}
+
 
 	/**
 	 * Clean-up testing environment after every test method
@@ -268,7 +314,7 @@ Patrioque conceptam in mea. Est ad ullum ceteros, pro quem accumsan appareat id,
 	public function tearDown()
 	{
 		// Revert changes: delete the product categories added previously
-		Database::executeNonQuery("DELETE FROM xe_shop_product_categories WHERE product_category_srl IN (1000, 1002, 1004)");
+		Database::executeNonQuery("DELETE FROM xe_shop_product_categories WHERE product_category_srl IN (1000, 1002, 1004, 1006, 1008)");
 
 		parent::tearDown();
 	}
