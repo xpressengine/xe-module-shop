@@ -173,7 +173,7 @@ Patrioque conceptam in mea. Est ad ullum ceteros, pro quem accumsan appareat id,
 	 */
 	public function testDeleteProductCategoryByModuleSrl_ValidData()
 	{
-		// Insert two product category in the database, so that we will have what to delete
+		// Insert a few product categories in the database, so that we will have what to delete
 		Database::executeNonQuery("
 			INSERT INTO xe_shop_product_categories (product_category_srl, module_srl, title)
 				VALUES(1000, 1001, 'Dummy category 1000')
@@ -208,7 +208,47 @@ Patrioque conceptam in mea. Est ad ullum ceteros, pro quem accumsan appareat id,
 			$count = Database::executeQuery("SELECT COUNT(*) as count FROM xe_shop_product_categories WHERE module_srl = 1003");
 			$this->assertEquals(1, $count[0]->count);
 
-			// Revert changes: delete the two product categories added previously
+			// Revert changes: delete the product categories added previously
+			Database::executeNonQuery("DELETE FROM xe_shop_product_categories WHERE product_category_srl IN (1000, 1002, 1004)");
+		}
+		catch(Exception $e)
+		{
+			$this->fail($e->getMessage());
+		}
+	}
+
+	/**
+	 * Test retrieving a ProductCategory object from the database
+	 */
+	public function testGetProductCategory_ValidData()
+	{
+		// Insert a few product categories
+		Database::executeNonQuery("
+			INSERT INTO xe_shop_product_categories (product_category_srl, module_srl, title)
+				VALUES(1000, 1001, 'Dummy category 1000')
+			");
+		Database::executeNonQuery("
+			INSERT INTO xe_shop_product_categories (product_category_srl, module_srl, title)
+				VALUES(1002, 1001, 'Dummy category 1002')
+			");
+		Database::executeNonQuery("
+			INSERT INTO xe_shop_product_categories (product_category_srl, module_srl, title)
+				VALUES(1004, 1003, 'Dummy category 1002')
+			");
+
+		// Try to retieve
+		$shopModel = getModel('shop');
+		$repository = $shopModel->getProductCategoryRepository();
+		try
+		{
+			$product_category = $repository->getProductCategory(1000);
+
+			$this->assertNotNull($product_category);
+			$this->assertEquals(1000, $product_category->product_category_srl);
+			$this->assertEquals(1001, $product_category->module_srl);
+			$this->assertEquals("Dummy category 1000", $product_category->title);
+
+			// Revert changes: delete the product categories added previously
 			Database::executeNonQuery("DELETE FROM xe_shop_product_categories WHERE product_category_srl IN (1000, 1002, 1004)");
 		}
 		catch(Exception $e)
