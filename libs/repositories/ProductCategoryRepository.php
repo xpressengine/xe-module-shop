@@ -1,5 +1,6 @@
 <?php
 
+require_once dirname(__FILE__) . '/BaseRepository.php';
 require_once dirname(__FILE__) . '/../model/ProductCategory.php';
 
 /**
@@ -65,18 +66,7 @@ class ProductCategoryRepository extends BaseRepository
 			throw new Exception($output->getMessage(), $output->getError());
 		}
 
-		$product_category = new ProductCategory();
-		$product_category->product_category_srl = $output->data->product_category_srl;
-		$product_category->module_srl = $output->data->module_srl;
-		$product_category->parent_srl = $output->data->parent_srl;
-		$product_category->file_srl = $output->data->file_srl;
-		$product_category->title = $output->data->title;
-		$product_category->description = $output->data->description;
-		$product_category->product_count = $output->data->product_count;
-		$product_category->friendly_url = $output->data->friendly_url;
-		$product_category->include_in_navigation_menu = $output->data->include_in_navigation_menu;
-		$product_category->regdate = $output->data->regdate;
-		$product_category->last_update = $output->data->last_update;
+		$product_category = new ProductCategory($output->data);
 
 		return $product_category;
 	}

@@ -3,7 +3,7 @@
 require dirname(__FILE__) . '/lib/Bootstrap.php';
 require dirname(__FILE__) . '/lib/TestAgainstDatabase.php';
 
-require_once dirname(__FILE__) . '/../libs/model/ProductCategory.class.php';
+require_once dirname(__FILE__) . '/../libs/model/ProductCategory.php';
 
 /**
  *  Test features related to Product categories
@@ -56,11 +56,12 @@ Patrioque conceptam in mea. Est ad ullum ceteros, pro quem accumsan appareat id,
         $args->in_stock = "Y";
 
         $shopModel = getModel('shop');
+		$repository = $shopModel->getProductRepository();
         try
         {
             // Try to insert the new Product
 
-            $product_srl = $shopModel->insertProduct($args);
+            $product_srl = $repository->insertProduct($args);
 
             // Check that a srl was returned
             $this->assertNotNull($product_srl);

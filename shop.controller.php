@@ -379,5 +379,39 @@
         public function procShopToolLive(){
 			$_SESSION['live'] = time();
 		}
+
+		// region Product Category
+		public function procShopToolInsertProductCategory()
+		{
+			$args = Context::gets('product_category_srl', 'module_srl', 'parent_srl', 'file_srl', 'title', 'description', 'friendly_url', 'include_in_navigation_menu');
+
+			require_once('libs/model/ProductCategory.php');
+			$product_category = new ProductCategory($args);
+			$shopModel = getModel('shop');
+			$repository = $shopModel->getProductCategoryRepository();
+			try
+			{
+				if($product_category->product_category_srl === null)
+				{
+					$repository->insertProductCategory($product_category);
+					$this->setMessage("success_registed");
+				}
+				else
+				{
+					$repository->updateProductCategory($product_category);
+					$this->setMessage("success_updated");
+				}
+			}
+			catch(Exception $e)
+			{
+				return new Object(-1, $e->getMessage());
+			}
+
+			$vid = Context::get('vid');
+			$returnUrl = getNotEncodedUrl('', 'vid', $vid, 'act', 'dispShopToolManageCategories');
+			$this->setRedirectUrl($returnUrl);
+		}
+
+		// endregion
     }
 ?>

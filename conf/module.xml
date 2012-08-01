@@ -12,6 +12,8 @@
         <permission action="dispShopToolManageProducts" target="manager" />
         <permission action="dispShopToolAddProduct" target="manager" />
         <permission action="dispShopToolManageAttributes" target="manager"/>
+        <permission action="dispShopToolManageCategories" target="manager" />
+        <permission action="dispShopToolAddProductCategory" target="manager" />
         
 		<permission action="procShopInfoUpdate" target="manager" />
 		<permission action="procShopToolLayoutConfigSkin" target="manager" />
@@ -21,6 +23,7 @@
 		<permission action="procShopToolUserSkinExport" target="manager" />
 		<permission action="procShopToolUserSkinImport" target="manager" />
 		<permission action="procShopToolLive" target="manager" />
+        <permission action="procShopToolInsertProductCategory" target="manager" />
     </permissions>
     <actions>
         <action name="dispShop" type="view" index="true" />
@@ -32,6 +35,8 @@
         <action name="dispShopToolManageProducts" type="view" />
         <action name="dispShopToolAddProduct" type="view" />
         <action name="dispShopToolManageAttributes" type="view"/>
+        <action name="dispShopToolAddProductCategory" type="view" />
+        <action name="dispShopToolManageCategories" type="view"/>
 
 		<action name="dispShopToolDashboard" type="view" />
 		<action name="dispShopMenu" type="view" />
@@ -50,7 +55,7 @@
 		<action name="procShopToolUserSkinExport" type="controller" />
 		<action name="procShopToolUserSkinImport" type="controller" />
 		<action name="procShopToolLive" type="controller" />
-        <action name="procShopToolInsertProduct" type="controller" ruleset="insert_product" />
+        <action name="procShopToolInsertProductCategory" type="controller" />
 
         <action name="dispShopAdminList" type="view" standalone="true" admin_index="true" />
         <action name="dispShopAdminInsert" type="view" standalone="true" />

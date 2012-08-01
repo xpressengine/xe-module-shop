@@ -381,6 +381,24 @@
         public function dispShop() {
         }
 
+		// region Product category
+		public function dispShopToolManageCategories()
+		{
+
+		}
+
+		public function dispShopToolAddProductCategory()
+		{
+			require_once('libs/model/ProductCategory.php');
+
+			$product_category = new ProductCategory();
+			$product_category->module_srl = $this->module_srl;
+
+			Context::set('category', $product_category);
+		}
+
+		// endregion
+
 
     }
 ?>
