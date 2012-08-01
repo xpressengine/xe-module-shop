@@ -1,6 +1,6 @@
 <query id="insertProductCategory" action="insert">
     <tables>
-        <table name="product_categories" />
+        <table name="shop_product_categories" />
     </tables>
     <columns>
         <column name="product_category_srl" var="product_category_srl" filter="number" notnull="notnull" />
