@@ -37,7 +37,7 @@
 		<action name="dispShopMenu" type="view" />
 
 
-        <action name="procShopLogin" type="controller" />
+        <action name="procShopLogin" type="controller" ruleset="shop_login" />
 		<action name="procShopDenyDelete" type="controller" />
 		<action name="procShopProfileUpdate" type="controller" />
 		<action name="procShopProfileImageUpload" type="controller" />
