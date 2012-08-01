@@ -43,7 +43,7 @@
             $this->add('module_srl', $output->get('module_srl'));
             $this->setMessage('msg_create_shop');
 
-			$returnUrl = Context::get('success_return_url') ? Context::get('success_return_url') : getNotEncodedUrl('', 'module', 'admin', 'module_srl', $output->get('module_srl'), 'act', 'dispShopAdminInsert');
+			$returnUrl = Context::get('success_return_url') ? Context::get('success_return_url') : getNotEncodedUrl('', 'module', 'admin', 'act', 'dispShopAdminList');
 			$this->setRedirectUrl($returnUrl);
         }
 
@@ -276,6 +276,9 @@
             $this->add('module','shop');
             $this->add('page',Context::get('page'));
             $this->setMessage('success_deleted');
+
+			$returnUrl = Context::get('success_return_url') ? Context::get('success_return_url') : getNotEncodedUrl('', 'module', 'admin', 'act', 'dispShopAdminList');
+			$this->setRedirectUrl($returnUrl);
         }
 
         public function initShop($site_srl){

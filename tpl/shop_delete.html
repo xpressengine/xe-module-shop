@@ -1,10 +1,16 @@
-<!--%import("filter/delete_shop.xml")-->
 <!--%import("js/textle.js")-->
 <!--#include("header.html")-->
 
-<form action="./" method="get" onsubmit="return procFilter(this, delete_shop)">
-<input type="hidden" name="page" value="{$page}" />
-<input type="hidden" name="site_srl" value="{$shop_info->site_srl}" />
+<div cond="$XE_VALIDATOR_MESSAGE" class="message {$XE_VALIDATOR_MESSAGE_TYPE}">
+<p>{$XE_VALIDATOR_MESSAGE}</p>
+</div>
+
+<form action="./" method="get" ruleset="delete_shop">
+    <input type="hideen" name="module" value="shop" />
+	<input type="hidden" name="act" value="procShopAdminDelete" />
+	<input type="hidden" name="error_return_url" value="{getUrl('module', 'admin', 'act', 'dispShopAdminDelete', 'module_srl', $module_srl)}" />
+	<input type="hidden" name="page" value="{$page}" />
+	<input type="hidden" name="site_srl" value="{$shop_info->site_srl}" />
 
     <h4 class="xeAdmin">{$lang->confirm_delete}</h4>
     <table cellspacing="0" class="rowTable">

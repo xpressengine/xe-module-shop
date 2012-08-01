@@ -1,5 +1,10 @@
 <!--#include("./header.html")-->
 
+<div cond="$XE_VALIDATOR_MESSAGE" class="message {$XE_VALIDATOR_MESSAGE_TYPE}">
+<p>{$XE_VALIDATOR_MESSAGE}</p>
+</div>
+
+
 <form action="./" method="get">
     <input type="hidden" value="{$module}" name="module"/>
     <input type="hidden" value="{$act}" name="act"/>

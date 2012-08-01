@@ -11,12 +11,6 @@ function completeInsertConfig(ret_obj, response_tags) {
 	location.reload();
 }
 
-function completeDeleteShop(ret_obj) {
-	alert(ret_obj['message']);
-	location.href=current_url.setQuery('act','dispShopAdminList').setQuery('module_srl','');
-}
-
-
 function toggleAccessType(target) {
 	switch(target) {
 		case 'domain' :
