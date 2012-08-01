@@ -80,4 +80,22 @@ class ProductCategoryRepository
 
 		return $product_category;
 	}
+
+	/**
+	 * Update a product category
+	 *
+	 * @author   Corina Udrescu (dev@xpressengine.org)
+	 * @param $product_category ProductCategory
+	 * @throws Exception
+	 * @return boolean
+	 */
+	public function updateProductCategory(ProductCategory $product_category)
+	{
+		$output = executeQuery('shop.updateProductCategory', $product_category);
+		if(!$output->toBool())
+		{
+			throw new Exception($output->getMessage(), $output->getError());
+		}
+		return TRUE;
+	}
 }

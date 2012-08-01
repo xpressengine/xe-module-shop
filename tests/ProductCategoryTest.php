@@ -18,6 +18,19 @@ class ProductCategoryTest extends TestAgainstDatabase
 	protected function setUp()
 	{
 		parent::setUp();
+		// Insert a few product categories in the database, so that we will have what to delete
+		Database::executeNonQuery("
+			INSERT INTO xe_shop_product_categories (product_category_srl, module_srl, title)
+				VALUES(1000, 1001, 'Dummy category 1000')
+			");
+		Database::executeNonQuery("
+			INSERT INTO xe_shop_product_categories (product_category_srl, module_srl, title)
+				VALUES(1002, 1001, 'Dummy category 1002')
+			");
+		Database::executeNonQuery("
+			INSERT INTO xe_shop_product_categories (product_category_srl, module_srl, title)
+				VALUES(1004, 1003, 'Dummy category 1002')
+			");
 	}
     /**
      * Tests inserting a new Product - makes sure all fields are properly persisted
@@ -127,16 +140,6 @@ Patrioque conceptam in mea. Est ad ullum ceteros, pro quem accumsan appareat id,
 	 */
 	public function testDeleteProductCategoryBySrl_ValidData()
 	{
-		// Insert two product category in the database, so that we will have what to delete
-		Database::executeNonQuery("
-			INSERT INTO xe_shop_product_categories (product_category_srl, module_srl, title)
-				VALUES(1000, 1001, 'Dummy category 1000')
-			");
-		Database::executeNonQuery("
-			INSERT INTO xe_shop_product_categories (product_category_srl, module_srl, title)
-				VALUES(1002, 1001, 'Dummy category 1002')
-			");
-
 		// Delete Product category 1000
 		$shopModel = &getModel('shop');
 		$repository = $shopModel->getProductCategoryRepository();
@@ -156,9 +159,6 @@ Patrioque conceptam in mea. Est ad ullum ceteros, pro quem accumsan appareat id,
 			// Check that the other record was not also deleted by mistake
 			$count = Database::executeQuery("SELECT COUNT(*) as count FROM xe_shop_product_categories WHERE product_category_srl = 1002");
 			$this->assertEquals(1, $count[0]->count);
-
-			// Revert changes: delete the two product categories added previously
-			Database::executeNonQuery("DELETE FROM xe_shop_product_categories WHERE product_category_srl IN (1000, 1002)");
 		}
 		catch(Exception $e)
 		{
@@ -173,20 +173,6 @@ Patrioque conceptam in mea. Est ad ullum ceteros, pro quem accumsan appareat id,
 	 */
 	public function testDeleteProductCategoryByModuleSrl_ValidData()
 	{
-		// Insert a few product categories in the database, so that we will have what to delete
-		Database::executeNonQuery("
-			INSERT INTO xe_shop_product_categories (product_category_srl, module_srl, title)
-				VALUES(1000, 1001, 'Dummy category 1000')
-			");
-		Database::executeNonQuery("
-			INSERT INTO xe_shop_product_categories (product_category_srl, module_srl, title)
-				VALUES(1002, 1001, 'Dummy category 1002')
-			");
-		Database::executeNonQuery("
-			INSERT INTO xe_shop_product_categories (product_category_srl, module_srl, title)
-				VALUES(1004, 1003, 'Dummy category 1002')
-			");
-
 		// Delete Product category 1000
 		$shopModel = &getModel('shop');
 		$repository = $shopModel->getProductCategoryRepository();
@@ -207,9 +193,6 @@ Patrioque conceptam in mea. Est ad ullum ceteros, pro quem accumsan appareat id,
 			// Check that the other record was not also deleted by mistake
 			$count = Database::executeQuery("SELECT COUNT(*) as count FROM xe_shop_product_categories WHERE module_srl = 1003");
 			$this->assertEquals(1, $count[0]->count);
-
-			// Revert changes: delete the product categories added previously
-			Database::executeNonQuery("DELETE FROM xe_shop_product_categories WHERE product_category_srl IN (1000, 1002, 1004)");
 		}
 		catch(Exception $e)
 		{
@@ -219,23 +202,11 @@ Patrioque conceptam in mea. Est ad ullum ceteros, pro quem accumsan appareat id,
 
 	/**
 	 * Test retrieving a ProductCategory object from the database
+	 *
+	 * @author Corina Udrescu (dev@xpressengine.org)
 	 */
 	public function testGetProductCategory_ValidData()
 	{
-		// Insert a few product categories
-		Database::executeNonQuery("
-			INSERT INTO xe_shop_product_categories (product_category_srl, module_srl, title)
-				VALUES(1000, 1001, 'Dummy category 1000')
-			");
-		Database::executeNonQuery("
-			INSERT INTO xe_shop_product_categories (product_category_srl, module_srl, title)
-				VALUES(1002, 1001, 'Dummy category 1002')
-			");
-		Database::executeNonQuery("
-			INSERT INTO xe_shop_product_categories (product_category_srl, module_srl, title)
-				VALUES(1004, 1003, 'Dummy category 1002')
-			");
-
 		// Try to retieve
 		$shopModel = getModel('shop');
 		$repository = $shopModel->getProductCategoryRepository();
@@ -247,9 +218,39 @@ Patrioque conceptam in mea. Est ad ullum ceteros, pro quem accumsan appareat id,
 			$this->assertEquals(1000, $product_category->product_category_srl);
 			$this->assertEquals(1001, $product_category->module_srl);
 			$this->assertEquals("Dummy category 1000", $product_category->title);
+		}
+		catch(Exception $e)
+		{
+			$this->fail($e->getMessage());
+		}
+	}
 
-			// Revert changes: delete the product categories added previously
-			Database::executeNonQuery("DELETE FROM xe_shop_product_categories WHERE product_category_srl IN (1000, 1002, 1004)");
+	/**
+	 * Test updating a product category
+	 *
+	 * @author Corina Udrescu (dev@xpressengine.org)
+	 * @depends testGetProductCategory_ValidData
+	 */
+	public function testUpdateProductCategory_ValidData()
+	{
+		// Retrieve an object from the database
+		$shopModel = getModel('shop');
+		$repository = $shopModel->getProductCategoryRepository();
+		$product_category = $repository->getProductCategory(1000);
+
+		// Update some of its properties
+		$product_category->title = "A whole new title!";
+
+		// Try to update
+		try
+		{
+			$output = $repository->updateProductCategory($product_category);
+
+			$this->assertEquals(true, $output);
+
+			// Check that properties were updated
+			$new_product_category = $repository->getProductCategory($product_category->product_category_srl);
+			$this->assertEquals($product_category->title, $new_product_category->title);
 		}
 		catch(Exception $e)
 		{
@@ -258,12 +259,16 @@ Patrioque conceptam in mea. Est ad ullum ceteros, pro quem accumsan appareat id,
 	}
 
 
+
 	/**
 	 * Clean-up testing environment after every test method
 	 * @author Corina Udrescu (dev@xpressengine.org)
 	 */
 	public function tearDown()
 	{
+		// Revert changes: delete the product categories added previously
+		Database::executeNonQuery("DELETE FROM xe_shop_product_categories WHERE product_category_srl IN (1000, 1002, 1004)");
+
 		parent::tearDown();
 	}
 
