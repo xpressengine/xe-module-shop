@@ -3,6 +3,8 @@
 require dirname(__FILE__) . '/lib/Bootstrap.php';
 require dirname(__FILE__) . '/lib/TestAgainstDatabase.php';
 
+require_once dirname(__FILE__) . '/../libs/model/ProductCategory.class.php';
+
 /**
  *  Test features related to Product categories
  *  @author Corina Udrescu (dev@xpressengine.org)
@@ -85,16 +87,16 @@ Patrioque conceptam in mea. Est ad ullum ceteros, pro quem accumsan appareat id,
 	public function testInsertProductCategory_ValidData()
 	{
 		// Create new Product category object
-		$args = new stdClass();
-		$args->module_srl = 2;
-		$args->title = "Product category 1";
+		$product_category = new ProductCategory();
+		$product_category->module_srl = 2;
+		$product_category->title = "Product category 1";
 
 		$shopModel = getModel('shop');
+		$repository = $shopModel->getProductCategoryRepository();
 		try
 		{
 			// Try to insert the new Category
-
-			$product_category_srl = $shopModel->insertProductCategory($args);
+			$product_category_srl = $repository->insertProductCategory($product_category);
 
 			// Check that a srl was returned
 			$this->assertNotNull($product_category_srl);
@@ -103,11 +105,11 @@ Patrioque conceptam in mea. Est ad ullum ceteros, pro quem accumsan appareat id,
 			$output = Database::executeQuery("SELECT * FROM xe_shop_product_categories WHERE product_category_srl = $product_category_srl");
 			$this->assertEquals(1, count($output));
 
-			$product_category = $output[0];
-			$this->assertEquals($args->module_srl, $product_category->module_srl);
-			$this->assertEquals($args->title, $product_category->title);
-			$this->assertNotNull($product_category->regdate);
-			$this->assertNotNull($product_category->last_update);
+			$new_product_category = $output[0];
+			$this->assertEquals($product_category->module_srl, $new_product_category->module_srl);
+			$this->assertEquals($product_category->title, $new_product_category->title);
+			$this->assertNotNull($new_product_category->regdate);
+			$this->assertNotNull($new_product_category->last_update);
 
 			// Delete product we just added after test is finished
 			Database::executeNonQuery("DELETE FROM xe_shop_product_categories WHERE product_category_srl = $product_category_srl");
@@ -137,11 +139,12 @@ Patrioque conceptam in mea. Est ad ullum ceteros, pro quem accumsan appareat id,
 
 		// Delete Product category 1000
 		$shopModel = &getModel('shop');
+		$repository = $shopModel->getProductCategoryRepository();
 		$args = new stdClass();
 		$args->product_category_srl = 1000;
 		try
 		{
-			$output = $shopModel->deleteProductCategory($args);
+			$output = $repository->deleteProductCategory($args);
 
 			// Check that deleting was successful
 			$this->assertTrue($output);
@@ -186,11 +189,13 @@ Patrioque conceptam in mea. Est ad ullum ceteros, pro quem accumsan appareat id,
 
 		// Delete Product category 1000
 		$shopModel = &getModel('shop');
+		$repository = $shopModel->getProductCategoryRepository();
+
 		$args = new stdClass();
 		$args->module_srl = 1001;
 		try
 		{
-			$output = $shopModel->deleteProductCategory($args);
+			$output = $repository->deleteProductCategory($args);
 
 			// Check that deleting was successful
 			$this->assertTrue($output);
