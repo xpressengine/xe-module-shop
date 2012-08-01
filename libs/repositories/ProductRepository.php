@@ -57,7 +57,7 @@ class ProductRepository
 	public function getProduct($product_srl)
 	{
 		$args = new stdClass();
-		$args->product_category_srl = $product_srl;
+		$args->product_srl = $product_srl;
 
 		$output = executeQuery('shop.getProduct', $args);
 		if(!$output->toBool())
