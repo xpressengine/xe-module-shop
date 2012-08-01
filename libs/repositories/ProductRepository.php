@@ -7,7 +7,7 @@ require_once dirname(__FILE__) . '/../model/Product.php';
  *
  * @author Dan Dragan (dev@xpressengine.org)
  */
-class ProductRepository extends BaseRepository
+class ProductRepository
 {
 	/**
 	 * Insert a new Product  returns the ID of the newly created record

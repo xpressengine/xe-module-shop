@@ -402,3 +402,28 @@ jQuery(function($){
 		})
 		.blur();
 });
+
+jQuery(function($){
+    // Label Text Clear
+    var iTextarea = $('.fItem>.iLabel').next('.iTextarea');
+    $('.fItem>.iLabel').css('position','absolute');
+    iTextarea
+        .focus(function(){
+        $(this).prev('.iLabel').css('visibility','hidden');
+    })
+        .blur(function(){
+            if($(this).val() == ''){
+                $(this).prev('.iLabel').css('visibility','visible');
+            } else {
+                $(this).prev('.iLabel').css('visibility','hidden');
+            }
+        })
+        .change(function(){
+            if($(this).val() == ''){
+                $(this).prev('.iLabel').css('visibility','visible');
+            } else {
+                $(this).prev('.iLabel').css('visibility','hidden');
+            }
+        })
+        .blur();
+});

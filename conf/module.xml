@@ -50,7 +50,7 @@
 		<action name="procShopToolUserSkinExport" type="controller" />
 		<action name="procShopToolUserSkinImport" type="controller" />
 		<action name="procShopToolLive" type="controller" />
-        <action name="procShopToolInsertProduct" type="controller" />
+        <action name="procShopToolInsertProduct" type="controller" ruleset="insert_product" />
 
         <action name="dispShopAdminList" type="view" standalone="true" admin_index="true" />
         <action name="dispShopAdminInsert" type="view" standalone="true" />
