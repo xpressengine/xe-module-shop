@@ -209,13 +209,9 @@ class shopModel extends shop
 	}
 
     public function getAttributesModel() {
-        static $objects = array();
-
         require_once $this->module_path . 'libs/model/Attributes.class.php';
-
-        if (!isset($objects[$document_srl])) $objects[$document_srl] = new publishObject($module_srl, $document_srl);
-
-        return $objects[$document_srl];
+        $o = new Attributes();
+        return $o;
     }
 	
     /**

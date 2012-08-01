@@ -1,13 +1,13 @@
 <?php
 
-require_once dirname(__FILE__) . '/../model/Product.class.php';
+require_once dirname(__FILE__) . '/../model/Product.php';
 
 /**
  * Handles database operations for Product
  *
  * @author Dan Dragan (dev@xpressengine.org)
  */
-class ProductRepository
+class ProductRepository extends BaseRepository
 {
 	/**
 	 * Insert a new Product  returns the ID of the newly created record
@@ -67,7 +67,7 @@ class ProductRepository
 
 		$product = new Product();
 		$product->product_srl = $output->data->product_srl;
-        $product->member_srl = $output->data->member_srl
+        $product->member_srl = $output->data->member_srl;
 		$product->module_srl = $output->data->module_srl;
 		$product->parent_product_srl = $output->data->parent_product_srl;
 		$product->product_type = $output->data->product_type;

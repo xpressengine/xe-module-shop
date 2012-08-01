@@ -1,13 +1,13 @@
 <?php
 
-require dirname(__FILE__) . '/ShopItem.class.php';
+require_once dirname(__FILE__) . '/BaseItem.php';
 
 /**
  * Model class for Product Category
  *
  * @author Corina Udrescu (dev@xpressengine.org)
  */
-class ProductCategory extends ShopItem
+class ProductCategory extends BaseItem
 {
 	public $product_category_srl;
 	public $module_srl;

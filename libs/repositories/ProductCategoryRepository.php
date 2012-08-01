@@ -1,13 +1,13 @@
 <?php
 
-require_once dirname(__FILE__) . '/../model/ProductCategory.class.php';
+require_once dirname(__FILE__) . '/../model/ProductCategory.php';
 
 /**
  * Handles database operations for Product Category
  *
  * @author Corina Udrescu (dev@xpressengine.org)
  */
-class ProductCategoryRepository
+class ProductCategoryRepository extends BaseRepository
 {
 	/**
 	 * Insert a new Product category; returns the ID of the newly created record

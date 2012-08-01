@@ -343,7 +343,22 @@
 
         public function dispShopToolManageAttributes()
         {
+            $args->page = Context::get('page');
+            $args->search_keyword = Context::get('search_keyword');
+            $args->search_target = Context::get('search_target');
 
+            $args->list_count = 30;
+            $args->page_count = 10;
+
+            $args->sort_index = 'list_order';
+
+            $args->module_srl = $this->textyle->module_srl;
+
+            $oCommentModel = &getModel('comment');
+            $output = $oCommentModel->getTotalCommentList($args);
+            Context::set('comment_list', $output->data);
+            Context::set('page_navigation', $output->page_navigation);
+            Context::set('page', $output->page);
         }
 
         /**
