@@ -146,11 +146,11 @@
         }
 
         public function procShopAdminUpdate(){
-            $vars = Context::gets('site_srl','user_id','domain','access_type','vid','module_srl','member_srl');
+            $vars = Context::gets('site_srl','user_id','domain','access_type','site_id','module_srl','member_srl');
             if(!$vars->site_srl) return new Object(-1,'msg_invalid_request');
 
             if($vars->access_type == 'domain') $args->domain = strtolower($vars->domain);
-            else $args->domain = $vars->vid;
+            else $args->domain = $vars->site_id;
             if(!$args->domain) return new Object(-1,'msg_invalid_request');
 
             $oMemberModel = getModel('member');
@@ -204,9 +204,9 @@
             $output = executeQuery('shop.updateShop', $args);
             if(!$output->toBool()) return $output;
 
-            $output = new Object(1,'success_updated');
-            $output->add('module_srl',$vars->module_srl);
-            return $output;
+			$this->setMessage('success_updated');
+			$returnUrl = Context::get('success_return_url') ? Context::get('success_return_url') : getNotEncodedUrl('', 'module', 'admin', 'act', 'dispShopAdminList');
+			$this->setRedirectUrl($returnUrl);
         }
 
         public function procShopAdminDelete() {

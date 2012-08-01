@@ -5,10 +5,12 @@
 </div>
 
 <!--@if($shop)-->
-	<!--%import("filter/update_shop.xml")-->
-	<form action="./" method="post" onsubmit="return procFilter(this, update_shop)" id="shopFo">
-	<input type="hidden" name="site_srl" value="{$shop->site_srl}" />
-	<input type="hidden" name="module_srl" value="{$module_srl}" />
+	<form action="./" method="post" id="shopFo" ruleset="update_shop">
+		<input type="hidden" name="site_srl" value="{$shop->site_srl}" />
+		<input type="hidden" name="module_srl" value="{$module_srl}" />
+		<input type="hidden" name="module" value="shop" />
+		<input type="hidden" name="act" value="procShopAdminUpdate" />
+		<input type="hidden" name="error_return_url" value="{getUrl('module', 'admin', 'act', 'dispShopAdminInsert', 'module_srl', $module_srl)}" />
 <!--@else-->
 	<form action="./" method="post" ruleset="insert_shop" id="shopFo">
 		<input type="hidden" name="module" value="shop" />
