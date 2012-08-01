@@ -341,6 +341,11 @@
             Context::set('user_image_list',$user_image_list);
         }
 
+        public function dispShopToolManageAttributes()
+        {
+
+        }
+
         /**
          * @brief Shop display product tool page
          */

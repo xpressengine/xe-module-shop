@@ -208,6 +208,16 @@ class shopModel extends shop
 		return $configs[$module_srl];
 	}
 
+    public function getAttributesModel() {
+        static $objects = array();
+
+        require_once $this->module_path . 'libs/model/Attributes.class.php';
+
+        if (!isset($objects[$document_srl])) $objects[$document_srl] = new publishObject($module_srl, $document_srl);
+
+        return $objects[$document_srl];
+    }
+
 	/**
 	 * Insert a new Product category; returns the ID of the newly created record
 	 *

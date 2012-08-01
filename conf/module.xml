@@ -11,8 +11,8 @@
 		<permission action="dispShopToolLayoutConfigEdit" target="manager" />
         <permission action="dispShopToolManageProducts" target="manager" />
         <permission action="dispShopToolAddProduct" target="manager" />
-
-
+        <permission action="dispShopToolManageAttributes" target="manager"/>
+        
 		<permission action="procShopInfoUpdate" target="manager" />
 		<permission action="procShopToolLayoutConfigSkin" target="manager" />
 		<permission action="procShopToolLayoutConfigEdit" target="manager" />
@@ -31,7 +31,7 @@
 		<action name="dispShopToolLayoutConfigEdit" type="view" />
         <action name="dispShopToolManageProducts" type="view" />
         <action name="dispShopToolAddProduct" type="view" />
-		
+        <action name="dispShopToolManageAttributes" type="view"/>
 
 		<action name="dispShopToolDashboard" type="view" />
 		<action name="dispShopMenu" type="view" />
@@ -55,9 +55,9 @@
         <action name="dispShopAdminInsert" type="view" standalone="true" />
         <action name="dispShopAdminDelete" type="view" standalone="true" />
 
-		<action name="procShopAdminCreate" type="controller" standalone="true" ruleset="insert_shop" />
+		<action name="procShopAdminCreate" type="controller" standalone="true" />
 		<action name="procShopAdminUpdate" type="controller" standalone="true" />
-        <action name="procShopAdminDelete" type="controller" standalone="true" ruleset="delete_shop" />
+        <action name="procShopAdminDelete" type="controller" standalone="true" />
         <action name="procShopAdminInsertCustomMenu" type="controller" standalone="true" />
 
 
