@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ruleset version="1.5.0">
+    <customrules>
+    </customrules>
+    <fields>
+        <field name="title" required="true" length="3:250" />
+        <field name="description" required="true" />
+        <field name="short_description" required="true" length="3:500" />
+        <field name="sku" required="true" length="3:11" />
+        <field name="price" required="true" length="3:20" />
+    </fields>
+</ruleset>

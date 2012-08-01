@@ -219,21 +219,14 @@ class shopModel extends shop
     }
 	
     /**
-     * Insert a new Product; returns the ID of the newly created record
+     * Returns an instance of the Product repository
      *
-     * @author Dan Dragan (dev@xpressengine.org)
-     * @param $args array
-     * @return int
+     * @author Dan Dragan(dev@xpressengine.org)
      */
-    public function insertProduct($args)
+    function getProductRepository()
     {
-        $args->product_srl = getNextSequence();
-        $output = executeQuery('shop.insertProduct', $args);
-        if(!$output->toBool())
-        {
-            throw new Exception($output->getMessage(), $output->getError());
-        }
-        return $args->product_srl;
+        require_once dirname(__FILE__) . '/libs/repositories/ProductRepository.php';
+        return new ProductRepository();
     }
 
 	/**

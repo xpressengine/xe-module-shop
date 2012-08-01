@@ -603,6 +603,7 @@ a.skipToContent{text-align:center;color:#fff;position:absolute;width:100%;font-s
 .wOption .addCategory.open{display:inline}
 .wOption .addCategory .iText{width:140px;margin:-1px 0 0 0}
 .wOption .iText{border:1px solid #c6c6c6;height:17px;width:96%;padding:3px 5px 0 5px;font-size:12px;vertical-align:middle;color:#767676}
+.wOption .iTextArea{border:1px solid #c6c6c6;font-size:12px;padding:10px;width:400px;height:100px}
 .wOption .usedTag{display:none;width:96%;list-style:none;margin:0;padding:0;background:#f8f8f8;border:1px solid #e9e9e9;line-height:1.6;padding:5px 10px;margin:5px 0;text-align:justify}
 .wOption .usedTag.open{display:block}
 .wOption .usedTag li{display:inline;margin-right:5px}

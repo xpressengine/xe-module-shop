@@ -129,6 +129,13 @@
             $this->setTemplateFile('move_myshop');
         }
 
+        /*
+         * brief function for product insert
+         */
+        public function procShopToolInsertProduct(){
+
+        }
+
         public function procShopToolLayoutConfigSkin() {
             $oModuleModel = getModel('module');
             $oModuleController = getController('module');

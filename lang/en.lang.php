@@ -20,6 +20,28 @@
     $lang->about_shop = 'Shop is a e-shop module running on XpressEngine.';
     $lang->msg_requried_version = "Shop requires XE core version equal to or greater than %s.";
 
+    $lang->title = 'Title';
+    $lang->about_title = 'Product name/title';
+    $lang->about_description= 'Enter description';
+    $lang->short_description = 'Short description';
+    $lang->about_short_description = 'Enter short description';
+    $lang->sku = 'SKU';
+    $lang->about_sku = 'Enter unique id code';
+    $lang->weight = 'Weight';
+    $lang->about_weight = 'Enter product weight';
+    $lang->status = 'Status';
+    $lang->enabled = 'Enabled';
+    $lang->disabled = 'Disabled';
+    $lang->friendly_url = 'Friendly URL';
+    $lang->about_friendly_url = 'Enter unique friendly url';
+    $lang->price = 'Price';
+    $lang->about_price = 'Product price';
+    $lang->qty = 'Quantity';
+    $lang->about_qty = 'Product qty';
+    $lang->in_stock = 'In stock';
+    $lang->yes = 'Yes';
+    $lang->no = 'No';
+
 	$lang->cmd_open_id = 'Open ID Login';
 	$lang->cmd_common_id = 'Default Login';
 	$lang->msg_create_shop = 'Shop is created';

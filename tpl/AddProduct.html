@@ -8,6 +8,129 @@
         <h3 class="h3">Add product</h3>
     </div>
     <!-- /contentHeader -->
+    <form action="./" method="post" ruleset="insert_product" class="">
+        <div class="wOption">
+            <fieldset class="visualFieldset">
+                <legend class="visualLabel">Add simple product</legend>
+                <table border="1" cellspacing="0" class="tableData">
+                    <tr class="first">
+                        <th scope="row">
+                            <label for="title">{$lang->title}</label>
+                        </th>
+                        <td class="title">
+                            <div class="fItem">
+                                <label class="iLabel" for="title">{$lang->about_title}</label>
+                                <input type="text" id="title" name="title" style="width:200px" class="iText iText" title="{$lang->about_title}" value="" />
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">
+                            <label for="description">{$lang->description}</label>
+                        </th>
+                        <td class="title">
+                            <div class="fItem">
+                                <label class="iLabel" for="description">{$lang->about_description}</label>
+                                <textarea name="description" rows="8" cols="100" class="iTextarea" id="description" value="{$lang->about_description}"></textarea>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">
+                            <label for="short_description">{$lang->short_description}</label>
+                        </th>
+                        <td class="title">
+                            <div class="fItem">
+                                <label class="iLabel" for="short_description">{$lang->about_short_description}</label>
+                                <textarea name="short_description" rows="8" cols="100" class="iTextarea" id="short_description" value="{$lang->about_short_description}"></textarea>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">
+                            <label for="sku">{$lang->sku}</label>
+                        </th>
+                        <td class="title">
+                            <div class="fItem">
+                                <label class="iLabel" for="sku">{$lang->about_sku}</label>
+                                <input type="text" id="sku" name="sku" style="width:200px" class="iText iText" title="{$lang->about_sku}" value="" />
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">
+                            <label for="weight">{$lang->weight}</label>
+                        </th>
+                        <td class="title">
+                            <div class="fItem">
+                                <label class="iLabel" for="weight">{$lang->about_weight}</label>
+                                <input type="text" id="weight" name="weight" style="width:200px" class="iText iText" title="{$lang->about_weight}" value="" />
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">
+                            <label for="status">{$lang->status}</label>
+                        </th>
+                        <td class="title">
+                            <div class="fItem">
+                                <select name="status" id="status">
+                                    <option value="enabled">{$lang->enabled}</option>
+                                    <option value="disabled">{$lang->disabled}</option>
+                                </select>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">
+                            <label for="friendly_url">{$lang->friendly_url}</label>
+                        </th>
+                        <td class="title">
+                            <div class="fItem">
+                                <label class="iLabel" for="friendly_url">{$lang->about_friendly_url}</label>
+                                <input type="text" id="friendly_url" name="friendly_url" style="width:200px" class="iText iText" title="{$lang->about_friendly_url}" value="" />
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">
+                            <label for="price">{$lang->price}</label>
+                        </th>
+                        <td class="title">
+                            <div class="fItem">
+                                <label class="iLabel" for="price">{$lang->about_price}</label>
+                                <input type="text" id="price" name="price" style="width:200px" class="iText iText" title="{$lang->about_price}" value="" />
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">
+                            <label for="qty">{$lang->qty}</label>
+                        </th>
+                        <td class="title">
+                            <div class="fItem">
+                                <label class="iLabel" for="qty">{$lang->about_qty}</label>
+                                <input type="text" id="qty" name="qty" style="width:200px" class="iText iText" title="{$lang->about_qty}" value="" />
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">
+                            <label for="in_stock">{$lang->in_stock}</label>
+                        </th>
+                        <td class="title">
+                            <div class="fItem">
+                                <select name="in_stock" id="in_stock">
+                                    <option value="Y">{$lang->yes}</option>
+                                    <option value="N">{$lang->no}</option>
+                                </select>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </fieldset>
+        </div>
+    </form>
 
 </div>
 <!-- /Content -->
