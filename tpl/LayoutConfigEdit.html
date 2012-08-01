@@ -1,5 +1,4 @@
 <!--#include("_tool_header.html")-->
-<!--%import("filter/insert_layout_edit.xml")-->
 
 			<!-- Content -->
 			<div id="content">
@@ -17,10 +16,13 @@
 				}
 				</script>
 
-				<form action="./" method="post" id="codeEdit" class="codeEdit" onsubmit="return procFilter(this,insert_layout_edit);">
+				<form action="./" method="post" id="codeEdit" class="codeEdit">
 					<span class="btnGray medium widgetCreator"><a href="{getUrl('','module','widget','act','dispWidgetGenerateCode')}" onclick="popopen(this.href); return false">{$lang->cmd_generate_widget_code}</a></span>
 					<input type="hidden" name="mid" value="{$mid}" />
 					<input type="hidden" name="vid" value="{$vid}" />
+					<input type="hidden" name="module" value="shop" />
+					<input type="hidden" name="act" value="procShopToolLayoutConfigEdit" />
+
 
 					<ul>
 						{@$i=0;}

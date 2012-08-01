@@ -171,10 +171,17 @@
 
             $skin_file_list = $oShopModel->getShopUserSkinFileList($this->module_srl);
             foreach($skin_file_list as $file){
-                $content = Context::get($file);
+				// Replace . with _
+				// Request variable names that contain . are modified by PHP to replace the . with _
+				// see http://php.net/manual/en/language.variables.external.php
+                $content = Context::get(str_replace('.', '_', $file));
                 if($this->_checkDisabledFunction($content)) return new Object(-1,'msg_used_disabled_function');
                 FileHandler::writeFile($skin_path.$file, $content);
             }
+
+			$vid = Context::get('vid');
+			$returnUrl = Context::get('success_return_url') ? Context::get('success_return_url') : getNotEncodedUrl('', 'vid', $vid, 'act', 'dispShopToolLayoutConfigEdit');
+			$this->setRedirectUrl($returnUrl);
         }
 
         public function procShopToolUserSkinExport(){
