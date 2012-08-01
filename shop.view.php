@@ -280,10 +280,6 @@
          * @brief Login
          **/
         public function dispShopToolLogin() {
-            $oModuleModel = getModel('module');
-            $member_config = $oModuleModel->getModuleConfig('member');
-            Context::set('enable_openid', $member_config->enable_openid);
-
             Context::addBodyClass('logOn');
         }
 

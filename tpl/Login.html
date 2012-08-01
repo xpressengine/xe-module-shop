@@ -4,9 +4,7 @@
 <!--%import("css/button.css")-->
 <!--%import("js/tool_shop.js")-->
 <!--%import("filter/shop_login.xml")-->
-<!--@if($enable_openid=='Y')-->
-    <!--%import("filter/openid_login.xml")-->
-<!--@end-->
+
 <div id="shopAdmin" class="shopAdmin hybrid">
 	<div id="container" class="c">
 		<!-- Header -->
@@ -38,21 +36,7 @@
 								<p class="keep"><input type="checkbox" name="keep_signed" class="iCheck" value="Y" id="keepUid" /> <label for="keepUid">{$lang->keep_signed}</label></p> 
 								<p class="keepDesc">{$lang->about_keep_warning}</p>
 								<span class="btn"><input name="" type="submit" value="{$lang->cmd_login}" /></span>
-								<a href="#openidLogOn" cond="$enable_openid=='Y'" class="toggleID" onclick="jQuery('#logOnInterface').attr('class','logOnInterface openid');">{$lang->cmd_open_id}</a>
 							</div>
-						</fieldset>
-					</form>
-                    <form action="" method="post" cond="$enable_openid=='Y'" onsubmit="return procFilter(this, openid_login)" id="openidLogOn">
-						<fieldset>
-							<legend>Open ID {$lang->cmd_login}</legend>
-							<dl>
-								<dt><label for="oid">Open ID</label></dt>
-								<dd><input id="oid" name="openid" type="text" /></dd>
-							</dl>
-							<p class="btnArea">
-								<span class="btn"><input name="" type="submit" value="{$lang->cmd_login}" /></span>
-								<a href="#defaultLogOn" class="toggleID" onclick="jQuery('#logOnInterface').attr('class','logOnInterface default')">{$lang->cmd_common_id}</a>
-							</p>
 						</fieldset>
 					</form>
 				</div>
