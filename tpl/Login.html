@@ -3,7 +3,6 @@
 <!--%import("css/logon.css")-->
 <!--%import("css/button.css")-->
 <!--%import("js/tool_shop.js")-->
-<!--%import("filter/shop_login.xml")-->
 
 <div id="shopAdmin" class="shopAdmin hybrid">
 	<div id="container" class="c">
@@ -19,11 +18,18 @@
 		
 			<!-- Content -->
 			<div id="content">
-			
+				<div cond="$XE_VALIDATOR_MESSAGE" class="message {$XE_VALIDATOR_MESSAGE_TYPE}">
+					<p>{$XE_VALIDATOR_MESSAGE}</p>
+				</div>
+
 				<!-- Log On -->
 				<div id="logOnInterface" class="logOnInterface default">
 					<h2><img src="img/hShopLogOn.gif" width="92" height="28" alt="shop" /></h2>
-                    <form action="./" method="post" onsubmit="return procFilter(this, shop_login)" id="defaultLogOn">
+                    <form action="./" method="post"  id="defaultLogOn" ruleset="shop_login">
+						<input type="hidden" name="module" value="shop" />
+						<input type="hidden" name="act" value="procShopLogin" />
+						<input type="hidden" name="vid" value="{$vid}" />
+
 						<fieldset>
 							<legend>{$lang->cmd_login}</legend>
 							<dl>

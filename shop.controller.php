@@ -59,8 +59,11 @@
                 }
             }
 
-            $this->add('stat',$stat);
-            $this->setMessage($msg);
+			if($stat == -1) return new Object(-1, $msg);
+
+			$vid = Context::get('vid');
+			$returnUrl = Context::get('success_return_url') ? Context::get('success_return_url') : getNotEncodedUrl('', 'act', 'dispShopToolDashboard', 'vid', $vid);
+			$this->setRedirectUrl($returnUrl);
         }
 
 

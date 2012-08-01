@@ -240,23 +240,6 @@ jQuery("div#tool_navigation > ul > li").hover(
 	});
 });
 
-function completeShopLogin(ret_obj, response_tags, params, fo_obj) {
-    var stat = ret_obj['stat'];
-    var msg = ret_obj['message'];
-    if(stat == -1) {
-        alert(msg);
-        return;
-    }
-    if(fo_obj.remember_user_id && fo_obj.remember_user_id.checked) {
-        var expire = new Date();
-        expire.setTime(expire.getTime()+ (7000 * 24 * 3600000));
-        xSetCookie('user_id', fo_obj.user_id.value, expire);
-    }
-
-    location.href = current_url.setQuery('act','dispShopToolDashboard');
-}
-
-
 addNode = function(node,e) {
     var params ={ "category_srl":0,"parent_srl":node,"module_srl":jQuery("#fo_category [name=module_srl]").val() };
     jQuery.exec_json('document.getDocumentCategoryTplInfo', params, function(data){
