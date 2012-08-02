@@ -84,6 +84,7 @@ class ProductCategoryTreeNode
 {
 	public $product_category;
 	public $children = array();
+	public $depth = 0;
 
 	/**
 	 * @author Corina Udrescu (dev@xpressengine.org)
@@ -116,18 +117,19 @@ class ProductCategoryTreeNode
 	 *  Converts tree to flat structure easily iterable in template files
 	 *
 	 * @author Corina Udrescu (dev@xpressengine.org)
-	 * @param $level int
+	 * @param $depth int
 	 * @param $index 0
 	 */
-	public function toFlatStructure($level = 0, $index = 0)
+	public function toFlatStructure($depth = 0, $index = 0)
 	{
 		$flat_structure = array();
 		foreach($this->children as $node)
 		{
+			$node->depth = $depth;
 			$flat_structure[$index++] = $node;
 			if(count($node->children))
 			{
-				$children_flat_structure = $node->toFlatStructure($level + 1, $index);
+				$children_flat_structure = $node->toFlatStructure($depth + 1, $index);
 				$flat_structure = array_merge($flat_structure, $children_flat_structure);
 			}
 		}

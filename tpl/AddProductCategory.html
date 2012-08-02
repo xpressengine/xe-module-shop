@@ -1,13 +1,5 @@
-<include target="_tool_header.html" />
-<load target="css/product_categories.css" />
-
 <!-- Content -->
-<div id="content" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html"
-	 xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
-	<!-- contentHeader -->
-	<div class="contentHeader postListHeader">
-<h3 class="h3">Add product category</h3>
-</div>
+	<h4>Add product category</h4>
 	<!-- /contentHeader -->
 
     <form action="./" >
@@ -17,49 +9,53 @@
 	    <input type="hidden" name="product_category_srl" value="{$category->product_category_srl}" />
 	    <input type="hidden" name="module_srl" value="{$category->module_srl}" />
 
-		<label for="title">Title:</label>
-		<input type="text" id="title" name="title" value="{$category->title}" class="iText" />
+		<p>
+		<label for="parent_srl">Parent</label>
+		<select id="parent_srl" name="parent_srl">
+		<option value="0" <!--@if($category->parent_srl == 0)-->selected="selected"<!--@endif-->>None</option>
+		<!-- TODO Add categories tree here -->
+		</select>
+		</p>
 
-		<label for="description">Description:</label>
-		<textarea rows="5" cols="10" id="description" name="description" class="iTextarea">{$category->description}</textarea>
+		<p>
+			<label for="title">Title</label>
+			<input type="text" id="title" name="title" value="{$category->title}" class="text" />
+		</p>
 
-		<label for="parent_srl">Parent:</label>
-	    <select id="parent_srl" name="parent_srl">
-			<option value="0" <!--@if($category->parent_srl == 0)-->selected="selected"<!--@endif-->>None</option>
-		    <!-- TODO Add categories tree here -->
-	    </select>
+		<p>
+			<label for="description">Description</label>
+			<textarea rows="5" cols="10" id="description" name="description" class="iTextarea">{$category->description}</textarea>
+		</p>
 
-		<label for="friendly_url">Friendly URL:</label>
-		<input type="text" id="friendly_url" name="friendly_url" value="{$category->friendly_url}" />
+		<p>
+			<label for="friendly_url">Friendly URL</label>
+			<input type="text" id="friendly_url" name="friendly_url" value="{$category->friendly_url}" class="text" />
+		</p>
 
-		<label for="file_srl">Image:</label>
-		<input type="hidden" id="file_srl" name="file_srl" value="{$category->file_srl}" />
-		<!-- TODO Add image -->
+		<p>
+			<label for="file_srl">Image</label>
+			<input type="hidden" id="file_srl" name="file_srl" value="{$category->file_srl}" />
+			<!-- TODO Add image -->
+		</p>
 
-		<label for="include_in_navigation_menu">Include in navigation menu:</label>
+		<p>
+		<label for="include_in_navigation_menu">Include in navigation menu</label>
 		<input type="checkbox"
 			   id="include_in_navigation_menu"
 			   name="include_in_mavigation_menu"
+			   class="checkbox"
 			   value="{$category->getIncludeInNavigationMenu()}"
 		<!--@if($category->getIncludeInNavigationMenu() == 'Y')-->checked="checked"<!--@endif-->
 		/>
+		</p>
 
-		<input type="submit" value="Submit" class="submit" />
+		<p class="submit">
+			<span class="btnGray medium">
+				<input type="submit" value="Submit" class="submit" />
+			</span>
+		</p>
 
 		<span cond="$category->regdate">Created at: {$category->regdate}</span>
 		<span cond="$category->last_update">Last update: {$category->last_update}</span>
 	</form>
-
-
-
-
-</div>
 <!-- /Content -->
-
-
-<!-- Extension -->
-<!--#include("_tool_menu.html")-->
-<!-- Extension -->
-
-<!--#include("_tool_footer.html")-->
-

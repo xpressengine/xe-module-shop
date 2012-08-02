@@ -941,7 +941,7 @@ a.skipToContent{text-align:center;color:#fff;position:absolute;width:100%;font-s
 #menu .simpleTree li span.active{background-color:#f5f5f5;border:0}
 #menu .simpleTree li ul{position:relative;z-index:2;zoom:1}
 #menu .simpleTree li li{border-top:1px solid #e3e5e7;background:none;z-index:1;zoom:1;overflow:hidden}
-#menu .simpleTree li li span{padding:10px;padding-left:45px;margin:0;background-color:#fff;background-image:url(../img/iconFolderCategory.gif);background-repeat:no-repeat;background-position:19px 10px;font-size:12px;font-weight:normal;cursor:move}
+#menu .simpleTree li li span{padding:10px;padding-left:45px;margin:0;background-color:#fff;background-image:url(../img/iconFolderCategory.gif);background-repeat:no-repeat;background-position:19px 10px;font-size:12px;font-weight:normal;}
 #menu .simpleTree li li li span{background-image:url(../img/bgHierarchy.gif);background-repeat:no-repeat;background-position:35px 11px}
 #menu .simpleTree li li li span{padding-left:60px;background-position:50px 11px}
 #menu .simpleTree li li li li span{padding-left:75px;background-position:65px 11px}

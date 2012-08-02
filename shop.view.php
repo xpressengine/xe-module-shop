@@ -390,23 +390,24 @@
 		// region Product category
 		public function dispShopToolManageCategories()
 		{
+			// Retrieve existing categories
 			$shopModel = getModel('shop');
 			$repository = $shopModel->getProductCategoryRepository();
 			$tree = $repository->getProductCategoriesTree($this->module_srl);
 
 			// Prepare tree for display
 			$flat_tree = $tree->toFlatStructure();
-			Context::set('tree', $flat_tree);
+			Context::set('flat_tree', $flat_tree);
+
+			// Initialize new empty ProductCategory object
+			require_once('libs/model/ProductCategory.php');
+			$product_category = new ProductCategory();
+			$product_category->module_srl = $this->module_srl;
+			Context::set('category', $product_category);
 		}
 
 		public function dispShopToolAddProductCategory()
 		{
-			require_once('libs/model/ProductCategory.php');
-
-			$product_category = new ProductCategory();
-			$product_category->module_srl = $this->module_srl;
-
-			Context::set('category', $product_category);
 		}
 
 		// endregion
