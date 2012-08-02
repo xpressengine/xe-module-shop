@@ -88,9 +88,11 @@
                     <td class="small">{number_format($product->qty,2)}</td>
                     <td class="small">{$product->status}</td>
                     <td>
+                        <span class="btnGray small"><a href="{getUrl('act','dispShopToolEditProduct','product_srl',$product->product_srl)}">{$lang->cmd_edit}</a></span>
+
                     </td>
                     <td>
-
+                        <button type="button" class="btnTableData" onclick="trashProductItem({$product->product_srl})"><span>{$lang->cmd_delete}</span></button>
                     </td>
                 </tr>
                 <!--@end-->
@@ -104,49 +106,6 @@
                 <!-- Change-->
                 <div class="change">
                     <p class="p1">{$lang->selected_articles}</p>
-
-                    <!-- Category -->
-                    <div class="select">
-                        <span class="btnSelect"><button type="button" onclick="jQuery('ul.category_list').toggleClass('open')">{$lang->cmd_change_category}</button></span>
-
-
-                        <ul class="category_list">
-                            <!-- ul class="" | ul class="open" -->
-                            <!--@foreach($category_list as $key => $val)-->
-                            <!--@if($val->text)-->
-
-                            <!--@if($_pDepth > $val->depth)-->
-                            <!--@for($i=$val->depth; $i<$_pDepth; $i++)-->
-                        </ul>
-                        <!--@end-->
-                        {@ $_pDepth = $val->depth}
-                        <!--@end-->
-                        <li><button type="button" onclick="updatePostItemsCategory('{$mid}',{$val->category_srl},{$page})">{$val->text}</button>
-                            <!--@if($val->child_count)-->
-                            {@$_pDepth++}
-                            <ul>
-                                <!--@else-->
-                        </li>
-                        <!--@end-->
-                        <!--@end-->
-                        <!--@end-->
-                        </ul>
-
-
-                    </div>
-                    <!-- /Category -->
-
-                    <!-- opening -->
-                    <div class="select">
-                        <span class="btnSelect"><button type="button" onclick="jQuery('ul.secret_list').toggleClass('open')">{$lang->set_publish}</button></span>
-                        <ul class="secret_list"> <!-- ul class="" | ul class="open" -->
-                            <li><button type="button" onclick="updatePostItemsSecret('N',{$page})">{$lang->document_open}</button></li>
-                            <li><button type="button" onclick="updatePostItemsSecret('Y',{$page})">{$lang->document_close}</button></li>
-                        </ul>
-                    </div>
-                    <!-- /opening -->
-
-                    <span class="btnGray large"><button type="button" onclick="openLayerCommuicationConfig()">{$lang->comm_management}</button></span>
                     <span class="btnGray large"><button type="button" onclick="trashPostItems({$page})"><img src="img/buttonTableDataX.gif" width="7" height="7" alt="" class="icon" />{$lang->cmd_delete}</button></span>
 
                 </div>

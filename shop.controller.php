@@ -136,24 +136,14 @@
         public function procShopToolInsertProduct(){
             $shopModel = getModel('shop');
             $repository = $shopModel->getProductRepository();
-            $product = new Product();
 
             $args = Context::getRequestVars();
-
             $logged_info = Context::get('logged_info');
-            $product->member_srl = $logged_info->member_srl;
-            $product->module_srl = $this->module_info->module_srl;
-            $product->product_type = 'simple';
-            $product->title = $args->title;
-            $product->description = $args->description;
-            $product->short_description = $args->short_description;
-            $product->sku = $args->sku;
-            $product->weight = $args->weight;
-            $product->status = $args->status;
-            $product->friendly_url = $args->friendly_url;
-            $product->price = $args->price;
-            $product->qty = $args->qty;
-            $product->in_stock = $args->in_stock;
+            $args->member_srl = $logged_info->member_srl;
+            $args->module_srl = $this->module_info->module_srl;
+            $args->product_type = 'simple';
+
+            $product = new Product($args);
 
             $product_srl = $repository->insertProduct($product);
 
