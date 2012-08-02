@@ -10,7 +10,7 @@
     </conditions>
     <navigation>
         <index var="product_srl" default="product_srl" order="order_type" />
-        <list_count var="list_count" default="20" />
+        <list_count var="list_count" default="10" />
         <page_count var="page_count" default="10" />
         <page var="page" default="1" />
     </navigation>

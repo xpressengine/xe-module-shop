@@ -96,6 +96,9 @@ class ProductRepository extends BaseRepository
      * @return Product List
      */
     public function getProductList($module_srl){
+        $args->page = Context::get('page');
+        if(!$args->page) $args->page = 1;
+        Context::set('page',$args->page);
 
         $args->module_srl = $module_srl;
         if(!isset($args->module_srl))

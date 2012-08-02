@@ -19,6 +19,7 @@ input{font-family:Tahoma, Sans-serif}
 .logOn .logOnInterface h2{margin:0 0 10px 0}
 .logOn .logOnInterface form{display:none;border:1px solid #f2f2f2;background:#fcfcfc;font-size:12px}
 .logOn .logOnInterface.default form#defaultLogOn,
+.logOn .logOnInterface.openid form#openidLogOn{display:block}
 .logOn .logOnInterface dl{margin:0;padding:30px 0 0 30px}
 .logOn .logOnInterface dt{margin-bottom:3px;font-weight:bold;color:#868d95}
 .logOn .logOnInterface dd{margin:0 0 19px 0}
