@@ -144,12 +144,28 @@
             $args->product_type = 'simple';
 
             $product = new Product($args);
-
-            $product_srl = $repository->insertProduct($product);
+            try
+            {
+                if($product->product_srl === null)
+                {
+                    $product_srl = $repository->insertProduct($product);
+                    $this->setMessage("success_registed");
+                }
+                else
+                {
+                    $repository->updateProduct($product);
+                    $this->setMessage("success_updated");
+                }
+            }
+            catch(Exception $e)
+            {
+                return new Object(-1, $e->getMessage());
+            }
 
             $returnUrl = getNotEncodedUrl('', 'act', 'dispShopToolManageProducts');
             $this->setRedirectUrl($returnUrl);
         }
+
 
         /*
         * brief function for product delete
@@ -162,7 +178,7 @@
             $args->product_srl = Context::get('product_srl');
 
             $repository->deleteProduct($args);
-
+            $this->setMessage("success_deleted");
             $returnUrl = getNotEncodedUrl('', 'act', 'dispShopToolManageProducts');
             $this->setRedirectUrl($returnUrl);
         }
@@ -177,7 +193,7 @@
 
             $args->product_srls = explode(',',Context::get('product_srls'));
             $repository->deleteProducts($args);
-
+            $this->setMessage("success_deleted");
             $returnUrl = getNotEncodedUrl('', 'act', 'dispShopToolManageProducts');
             $this->setRedirectUrl($returnUrl);
         }

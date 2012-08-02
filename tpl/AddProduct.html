@@ -5,14 +5,27 @@
 <div id="content">
     <!-- contentHeader -->
     <div class="contentHeader postListHeader">
+        <!--@if(!$product)-->
         <h3 class="h3">Add product</h3>
+        <!--@else-->
+        <h3 class="h3">Edit product</h3>
+        <!--@endif-->
     </div>
     <!-- /contentHeader -->
     <form action="./" method="post" ruleset="insert_product" class="">
         <input type="hidden" name="act" value="procShopToolInsertProduct" />
+        <!--@if($product)-->
+        <input type="hidden" name="product_srl" value="{$product->product_srl}" />
+        <!--@endif-->
+
         <div class="wOption">
             <fieldset class="visualFieldset">
+                <!--@if(!$product)-->
                 <legend class="visualLabel">Add simple product</legend>
+                <!--@else-->
+                <legend class="visualLabel">Edit simple product</legend>
+                <!--@endif-->
+
                 <table border="1" cellspacing="0" class="tableData">
                     <tr class="first">
                         <th scope="row">
@@ -21,7 +34,7 @@
                         <td class="title">
                             <div class="fItem">
                                 <label class="iLabel" for="title">{$lang->about_title}</label>
-                                <input type="text" id="title" name="title" style="width:200px" class="iText iText" title="{$lang->about_title}" value="" />
+                                <input type="text" id="title" name="title" style="width:200px" class="iText iText" title="{$lang->about_title}" <!--@if($product->title)-->value="{$product->title}"<!--@end--> />
                             </div>
                         </td>
                     </tr>
@@ -32,7 +45,7 @@
                         <td class="title">
                             <div class="fItem">
                                 <label class="iLabel" for="description">{$lang->about_description}</label>
-                                <textarea name="description" rows="8" cols="100" class="iTextarea" id="description" title="{$lang->about_description}"></textarea>
+                                <textarea name="description" rows="8" cols="100" class="iTextarea" id="description" title="{$lang->about_description}"><!--@if($product->title)-->{$product->description}<!--@end--></textarea>
                             </div>
                         </td>
                     </tr>
@@ -43,7 +56,7 @@
                         <td class="title">
                             <div class="fItem">
                                 <label class="iLabel" for="short_description">{$lang->about_short_description}</label>
-                                <textarea name="short_description" rows="8" cols="100" class="iTextarea" id="short_description" title="{$lang->about_short_description}"></textarea>
+                                <textarea name="short_description" rows="8" cols="100" class="iTextarea" id="short_description" title="{$lang->about_short_description}"><!--@if($product->short_description)-->{$product->title}<!--@end--></textarea>
                             </div>
                         </td>
                     </tr>
@@ -54,7 +67,7 @@
                         <td class="title">
                             <div class="fItem">
                                 <label class="iLabel" for="sku">{$lang->about_sku}</label>
-                                <input type="text" id="sku" name="sku" style="width:200px" class="iText iText" title="{$lang->about_sku}" value="" />
+                                <input type="text" id="sku" name="sku" style="width:200px" class="iText iText" title="{$lang->about_sku}" <!--@if($product->title)-->value="{$product->sku}"<!--@end--> />
                             </div>
                         </td>
                     </tr>
@@ -65,7 +78,7 @@
                         <td class="title">
                             <div class="fItem">
                                 <label class="iLabel" for="weight">{$lang->about_weight}</label>
-                                <input type="text" id="weight" name="weight" style="width:200px" class="iText iText" title="{$lang->about_weight}" value="" />
+                                <input type="text" id="weight" name="weight" style="width:200px" class="iText iText" title="{$lang->about_weight}" <!--@if($product->title)-->value="{number_format($product->weight,2)}"<!--@end--> />
                             </div>
                         </td>
                     </tr>
@@ -76,8 +89,8 @@
                         <td class="title">
                             <div class="fItem">
                                 <select name="status" id="status">
-                                    <option value="enabled">{$lang->enabled}</option>
-                                    <option value="disabled">{$lang->disabled}</option>
+                                    <option value="enabled" <!--@if($product->status=='enabled')-->selected<!--@end-->>{$lang->enabled}</option>
+                                    <option value="disabled" <!--@if($product->status=='disabled')-->selected<!--@end-->>{$lang->disabled}</option>
                                 </select>
                             </div>
                         </td>
@@ -89,7 +102,7 @@
                         <td class="title">
                             <div class="fItem">
                                 <label class="iLabel" for="friendly_url">{$lang->about_friendly_url}</label>
-                                <input type="text" id="friendly_url" name="friendly_url" style="width:200px" class="iText iText" title="{$lang->about_friendly_url}" value="" />
+                                <input type="text" id="friendly_url" name="friendly_url" style="width:200px" class="iText iText" title="{$lang->about_friendly_url}" <!--@if($product->title)-->value="{$product->friendly_url}"<!--@end--> />
                             </div>
                         </td>
                     </tr>
@@ -100,7 +113,7 @@
                         <td class="title">
                             <div class="fItem">
                                 <label class="iLabel" for="price">{$lang->about_price}</label>
-                                <input type="text" id="price" name="price" style="width:200px" class="iText iText" title="{$lang->about_price}" value="" />
+                                <input type="text" id="price" name="price" style="width:200px" class="iText iText" title="{$lang->about_price}" <!--@if($product->title)-->value="{number_format($product->price,2)}"<!--@end--> />
                             </div>
                         </td>
                     </tr>
@@ -111,7 +124,7 @@
                         <td class="title">
                             <div class="fItem">
                                 <label class="iLabel" for="qty">{$lang->about_qty}</label>
-                                <input type="text" id="qty" name="qty" style="width:200px" class="iText iText" title="{$lang->about_qty}" value="" />
+                                <input type="text" id="qty" name="qty" style="width:200px" class="iText iText" title="{$lang->about_qty}" <!--@if($product->title)-->value="{number_format($product->qty,2)}"<!--@end--> />
                             </div>
                         </td>
                     </tr>
@@ -122,8 +135,8 @@
                         <td class="title">
                             <div class="fItem">
                                 <select name="in_stock" id="in_stock">
-                                    <option value="Y">{$lang->yes}</option>
-                                    <option value="N">{$lang->no}</option>
+                                    <option value="Y" <!--@if($product->in_stock=='Y')-->selected<!--@end-->>{$lang->yes}</option>
+                                    <option value="N" <!--@if($product->in_stock=='N')-->selected<!--@end-->>{$lang->no}</option>
                                 </select>
                             </div>
                         </td>
@@ -132,7 +145,11 @@
                         <th scope="row">
                         </th>
                         <td class="title">
+                            <!--@if(!$product)-->
                             <span class="btn"><input type="submit" value="{$lang->cmd_submit}" /></span>
+                            <!--@else-->
+                            <span class="btn"><input type="submit" value="{$lang->cmd_update}" /></span>
+                            <!--@endif-->
                         </td>
                     </tr>
                 </table>

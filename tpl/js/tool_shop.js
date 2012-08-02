@@ -322,6 +322,7 @@ function deleteUserImage(filename){
 }
 
 function deleteProductItem(srl){
+    if(!confirm(xe.lang.msg_confirm_delete_product)) return false;
     var params = new Array();
     params['product_srl'] = srl;
     var response_tags = new Array('error','message','page','mid');
@@ -329,7 +330,7 @@ function deleteProductItem(srl){
 }
 
 function deleteProductItems(page){
-
+    if(!confirm(xe.lang.msg_confirm_delete_products)) return false;
     var val, srls = [];
     jQuery("input[name=product_srl]:checked").each(function(){
         val = jQuery(this).val();
