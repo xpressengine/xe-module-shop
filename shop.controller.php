@@ -151,6 +151,37 @@
             $this->setRedirectUrl($returnUrl);
         }
 
+        /*
+        * brief function for product delete
+        * @author Dan Dragan (dev@xpressengine.org)
+        */
+        public function procShopToolDeleteProduct(){
+            $shopModel = getModel('shop');
+            $repository = $shopModel->getProductRepository();
+
+            $args->product_srl = Context::get('product_srl');
+
+            $repository->deleteProduct($args);
+
+            $returnUrl = getNotEncodedUrl('', 'act', 'dispShopToolManageProducts');
+            $this->setRedirectUrl($returnUrl);
+        }
+
+        /*
+        * brief function for multiple products delete
+        * @author Dan Dragan (dev@xpressengine.org)
+        */
+        public function procShopToolDeleteProducts(){
+            $shopModel = getModel('shop');
+            $repository = $shopModel->getProductRepository();
+
+            $args->product_srls = explode(',',Context::get('product_srls'));
+            $repository->deleteProducts($args);
+
+            $returnUrl = getNotEncodedUrl('', 'act', 'dispShopToolManageProducts');
+            $this->setRedirectUrl($returnUrl);
+        }
+
         public function procShopToolLayoutConfigSkin() {
             $oModuleModel = getModel('module');
             $oModuleController = getController('module');

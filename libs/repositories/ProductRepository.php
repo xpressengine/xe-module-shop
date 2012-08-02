@@ -48,6 +48,26 @@ class ProductRepository extends BaseRepository
 		return TRUE;
 	}
 
+    /**
+     * Deletes more products by $product_srls
+     *
+     * @author Dan Dragan (dev@xpressengine.org)
+     * @param $args array
+     */
+    public function deleteProducts($args)
+    {
+        if(!isset($args->product_srls))
+            throw new Exception("Missing arguments for Products delete: please provide [product_srls]");
+
+        $output = executeQuery('shop.deleteProducts', $args);
+        if(!$output->toBool())
+        {
+            throw new Exception($output->getMessage(), $output->getError());
+        }
+
+        return TRUE;
+    }
+
 	/**
 	 * Retrieve a Product object from the database given a srl
 	 *
@@ -67,25 +87,6 @@ class ProductRepository extends BaseRepository
 		}
 
 		$product = new Product($output->data);
-        /*
-		$product->product_srl = $output->data->product_srl;
-        $product->member_srl = $output->data->member_srl;
-		$product->module_srl = $output->data->module_srl;
-		$product->parent_product_srl = $output->data->parent_product_srl;
-		$product->product_type = $output->data->product_type;
-		$product->title = $output->data->title;
-		$product->description = $output->data->description;
-		$product->short_description = $output->data->short_description;
-		$product->sku = $output->data->sku;
-		$product->weight = $output->data->weight;
-		$product->friendly_url = $output->data->friendly_url;
-        $product->price = $output->data->price;
-        $product->qty = $output->data->qty;
-        $product->in_stock = $output->data->in_stock;
-		$product->regdate = $output->data->regdate;
-        $product->last_updated = $output->data->last_updated;
-        $product->related_products = $output->data->related_products;
-        */
 		return $product;
 	}
 

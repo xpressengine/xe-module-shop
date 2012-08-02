@@ -321,6 +321,29 @@ function deleteUserImage(filename){
     });
 }
 
+function deleteProductItem(srl){
+    var params = new Array();
+    params['product_srl'] = srl;
+    var response_tags = new Array('error','message','page','mid');
+    exec_xml('shop', 'procShopToolDeleteProduct', params, completeReload, response_tags);
+}
+
+function deleteProductItems(page){
+
+    var val, srls = [];
+    jQuery("input[name=product_srl]:checked").each(function(){
+        val = jQuery(this).val();
+        if(val) srls.push(val);
+    });
+    if(srls.length<1) return;
+    var params = new Array();
+    params['product_srls'] = srls.join(',');
+    params['page'] = page;
+    var response_tags = new Array('error','message','page','mid');
+    exec_xml('shop', 'procShopToolDeleteProducts', params, completeReload, response_tags);
+}
+
+
 
 (function($){
 

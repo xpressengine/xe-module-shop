@@ -25,6 +25,9 @@
 		<permission action="procShopToolLive" target="manager" />
         <permission action="procShopToolInsertProductCategory" target="manager" />
         <permission action="procShopToolInsertProduct" target="manager" />
+        <permission action="procShopToolDeleteProduct" target="manager" />
+        <permission action="procShopToolDeleteProducts" target="manager" />
+
     </permissions>
     <actions>
         <action name="dispShop" type="view" index="true" />
@@ -58,6 +61,8 @@
 		<action name="procShopToolLive" type="controller" />
         <action name="procShopToolInsertProductCategory" type="controller" />
         <action name="procShopToolInsertProduct" type="controller" />
+        <action name="procShopToolDeleteProduct" type="controller" />
+        <action name="procShopToolDeleteProducts" type="controller" />
 
         <action name="dispShopAdminList" type="view" standalone="true" admin_index="true" />
         <action name="dispShopAdminInsert" type="view" standalone="true" />

@@ -92,7 +92,7 @@
 
                     </td>
                     <td>
-                        <button type="button" class="btnTableData" onclick="trashProductItem({$product->product_srl})"><span>{$lang->cmd_delete}</span></button>
+                        <button type="button" class="btnTableData" onclick="deleteProductItem({$product->product_srl})"><span>{$lang->cmd_delete}</span></button>
                     </td>
                 </tr>
                 <!--@end-->
@@ -106,7 +106,7 @@
                 <!-- Change-->
                 <div class="change">
                     <p class="p1">{$lang->selected_articles}</p>
-                    <span class="btnGray large"><button type="button" onclick="trashPostItems({$page})"><img src="img/buttonTableDataX.gif" width="7" height="7" alt="" class="icon" />{$lang->cmd_delete}</button></span>
+                    <span class="btnGray large"><button type="button" onclick="deleteProductItems({$page})"><img src="img/buttonTableDataX.gif" width="7" height="7" alt="" class="icon" />{$lang->cmd_delete}</button></span>
 
                 </div>
                 <!-- /Change -->
