@@ -60,7 +60,8 @@ form select {
 
 form input,
 form textarea,
-form select {
+form select,
+#parent_title {
     margin: 8px;
 }
 

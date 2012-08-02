@@ -1,5 +1,6 @@
 <include target="_tool_header.html" />
 <load target="css/product_categories.css" />
+<load target="js/product_categories.js" />
 
 <!-- Content -->
 <div id="content">
@@ -21,26 +22,28 @@
 <ul class="simpleTree">
 	<li class="root" id="tree_0">
 	    <span>Category</span>
-		<a href="#" class="add">
+		<a href="#" class="add root">
 			<img src="./common/js/plugins/ui.tree/images/iconAdd.gif">
 		</a>
 
 		<ul>
 		<!--@foreach($flat_tree as $node)-->
+		    <!--@if($previous_depth == $node->depth)-->
+				</li>
+			<!--@endif-->
 		    <!--@if($previous_depth < $node->depth)-->
 		    	<ul>
 			<!--@endif-->
-			<li>
+			<!--@if($previous_depth > $node->depth)-->
+				</ul></li>
+			<!--@endif-->
+			<li id="tree_{$node->product_category->product_category_srl}">
 				<span>{$node->product_category->title}</span>
 				<a href="#" class="add"><img src="./common/js/plugins/ui.tree/images/iconAdd.gif"></a>
 				<a href="#" class="modify"><img src="./common/js/plugins/ui.tree/images/iconModify.gif"></a>
 		    	<!--@if(count($node->children) == 0)-->
 					<a href="#" class="delete"><img src="./common/js/plugins/ui.tree/images/iconDel.gif"></a>
 				<!--@endif-->
-			</li>
-			<!--@if($previous_depth > $node->depth)-->
-				</ul>
-			<!--@endif-->
 			{@ $previous_depth = $node->depth; }
 		<!--@end-->
 		</ul>
@@ -48,9 +51,7 @@
 </ul>
 </div>
 
-<div id="categoryFormContainer">
-    <!--#include("AddProductCategory.html")-->
-</div>
+<!--#include("AddProductCategory.html")-->
 
 </div>
 <!-- /Content -->

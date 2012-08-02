@@ -1,20 +1,20 @@
+<div id="categoryFormContainer" style="display: none">
 <!-- Content -->
 	<h4>Add product category</h4>
 	<!-- /contentHeader -->
 
-    <form action="./" >
+    <form id="categoryForm" action="./" >
 		<input type="hidden" name="module" value="shop" />
 		<input type="hidden" name="vid" value="{$vid}" />
 		<input type="hidden" name="act" value="procShopToolInsertProductCategory" />
 	    <input type="hidden" name="product_category_srl" value="{$category->product_category_srl}" />
 	    <input type="hidden" name="module_srl" value="{$category->module_srl}" />
 
-		<p>
-		<label for="parent_srl">Parent</label>
-		<select id="parent_srl" name="parent_srl">
-		<option value="0" <!--@if($category->parent_srl == 0)-->selected="selected"<!--@endif-->>None</option>
-		<!-- TODO Add categories tree here -->
-		</select>
+		<p <!--@if($category->parent_srl == 0)-->style="display:none"<!--@endif-->>
+ 			<label for="parent_srl">Parent</label>
+			<span id="parent_title">Parent title</span>
+			<input type="hidden" id="parent_srl" name="parent_srl" value="{$category->parent_srl}" />
+			</select>
 		</p>
 
 		<p>
@@ -59,3 +59,4 @@
 		<span cond="$category->last_update">Last update: {$category->last_update}</span>
 	</form>
 <!-- /Content -->
+</div>
