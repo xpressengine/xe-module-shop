@@ -383,9 +383,9 @@ a.skipToContent{text-align:center;color:#fff;position:absolute;width:100%;font-s
 .tableData a:hover,
 .tableData a:active,
 .tableData a:focus{text-decoration:underline}
-.tableData td.postTitle,
-.tableData td.postTitle a{color:#648ab9}
-.tableData a.postTitle{color:#648ab9;font-weight:bold}
+.tableData td.productTitle,
+.tableData td.productTitle a{color:#648ab9}
+.tableData a.productTitle{color:#648ab9;font-weight:bold}
 .tableData .title{width:100%}
 .tableData .half{width:50%}
 .tableData .quarter{width:25%}
@@ -445,7 +445,7 @@ a.skipToContent{text-align:center;color:#fff;position:absolute;width:100%;font-s
 .tableData .fullBarReferer img{position:relative;display:inline-block;height:5px;width:0;border:1px solid #dc3835;margin:-1px;zoom:1}
 .tableData .fullBarDirect{position:relative;display:inline-block;overflow:visible;width:200px;background:#f2f2f2;border:1px solid #dcdee0;height:5px;vertical-align:middle;margin-left:10px;font-size:0;line-height:0;text-align:left;zoom:1}
 .tableData .fullBarDirect img{position:relative;display:inline-block;height:5px;width:0;border:1px solid #3585dc;margin:-1px;zoom:1}
-.tableData .top3 td.postTitle{color:#648ab9;font-weight:bold}
+.tableData .top3 td.productTitle{color:#648ab9;font-weight:bold}
 .tableData .sum{color:#ea3f22}
 .tableData .top3 .sum{font-weight:bold}
 .tableData .user{white-space:nowrap}

@@ -41,6 +41,10 @@
     $lang->in_stock = 'In stock';
     $lang->yes = 'Yes';
     $lang->no = 'No';
+    $lang->id = 'Id';
+    $lang->name = 'Name';
+    $lang->product_type = 'Product Type';
+    $lang->no_product = 'There is no product added, <a href="%s">Add a product!</a>';
 
 	$lang->cmd_open_id = 'Open ID Login';
 	$lang->cmd_common_id = 'Default Login';

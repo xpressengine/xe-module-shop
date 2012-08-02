@@ -364,8 +364,14 @@
         /**
          * @brief Shop display product tool page
          */
-        public function dispShopToolManageProducts(){
-            $oShopModel = getModel('shop');
+        public function dispShopToolManageProducts(){$oShopModel = getModel('shop');
+            $shopModel = getModel('shop');
+            $repository = $shopModel->getProductRepository();
+            $module_srl = $this->module_info->module_srl;
+            $output = $repository->getProductList($module_srl);
+
+            Context::set('product_list',$output->products);
+            Context::set('page_navigation',$output->page_navigation);
         }
 
         /**

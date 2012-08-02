@@ -1,6 +1,7 @@
 <?php
 
 require_once dirname(__FILE__) . '/../model/Product.php';
+require_once dirname(__FILE__) . '/BaseRepository.php';
 
 /**
  * Handles database operations for Product
@@ -65,7 +66,8 @@ class ProductRepository extends BaseRepository
 			throw new Exception($output->getMessage(), $output->getError());
 		}
 
-		$product = new Product();
+		$product = new Product($output->data);
+        /*
 		$product->product_srl = $output->data->product_srl;
         $product->member_srl = $output->data->member_srl;
 		$product->module_srl = $output->data->module_srl;
@@ -83,9 +85,31 @@ class ProductRepository extends BaseRepository
 		$product->regdate = $output->data->regdate;
         $product->last_updated = $output->data->last_updated;
         $product->related_products = $output->data->related_products;
-
+        */
 		return $product;
 	}
+
+    /**
+     * Retrieve a Product List object from the database given a modul_srl
+     * @author Dan Dragan (dev@xpressengine.org)
+     * @param $module_srl int
+     * @return Product List
+     */
+    public function getProductList($module_srl){
+
+        $args->module_srl = $module_srl;
+        if(!isset($args->module_srl))
+            throw new Exception("Missing arguments for get product list : please provide [module_srl]");
+
+        $output = executeQuery('shop.getProductList', $args);
+        foreach ($output->data as $product){
+            $product_object = new Product($product);
+            $products[] = $product_object;
+        }
+        $output->products = $products;
+        return $output;
+    }
+
 
 	/**
 	 * Update a product
