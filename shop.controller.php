@@ -449,6 +449,20 @@
 			$this->setRedirectUrl($returnUrl);
 		}
 
+
+		public function procShopServiceGetProductCategory()
+		{
+			$category_srl = Context::get('product_category_srl');
+			if(!isset($category_srl)) return new Object(-1, 'msg_invalid_request');
+
+			$shopModel = getModel('shop');
+			$repository = $shopModel->getProductCategoryRepository();
+			$product_category = $repository->getProductCategory($category_srl);
+
+			$this->add('product_category', $product_category);
+			// return $product_category;
+		}
+
 		// endregion
     }
 ?>
