@@ -209,8 +209,8 @@ class shopModel extends shop
 	}
 
     public function getAttributesModel() {
-        require_once $this->module_path . 'libs/model/Attributes.class.php';
-        $o = new Attributes();
+        require_once _XE_PATH_ . $this->module_path . 'libs/model/Attribute.php';
+        $o = new Attribute();
         return $o;
     }
 	
@@ -237,5 +237,3 @@ class shopModel extends shop
 	}
 
 }
-
-?>

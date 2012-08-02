@@ -15,8 +15,9 @@ class Attribute extends BaseItem
         $regdate,
         $last_update;
 
-    public function getList()
+    public function save()
     {
-
+        AttributeRepository::insertAttribute($this);
     }
+
 }
