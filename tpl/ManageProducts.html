@@ -83,7 +83,7 @@
                         <input type="checkbox" name="product_srl" value="{$product->product_srl}" class="inputCheck boxlist" />
                     </td>
                     <td class="small">{$product->product_srl}</td>
-                    <td class="title"><a href="#" class="productTitle">{$product->title}</a></td>
+                    <td class="title"><a href="{getUrl('act','dispShopToolEditProduct','product_srl',$product->product_srl)}" class="productTitle">{$product->title}</a></td>
                     <td class="small">{$product->product_type}</td>
                     <td class="small">{$product->sku}</td>
                     <td class="small">{number_format($product->price,2)}</td>

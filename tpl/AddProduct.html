@@ -11,6 +11,9 @@
         <h3 class="h3">Edit product</h3>
         <!--@endif-->
     </div>
+    <div cond="$XE_VALIDATOR_MESSAGE" class="message {$XE_VALIDATOR_MESSAGE_TYPE}">
+        <p>{$XE_VALIDATOR_MESSAGE}</p>
+    </div>
     <!-- /contentHeader -->
     <form action="./" method="post" ruleset="insert_product" class="">
         <input type="hidden" name="act" value="procShopToolInsertProduct" />
