@@ -1,0 +1,9 @@
+<query id="insertShop" action="insert">
+    <tables>
+        <table name="shop_payment_gateways" />
+    </tables>
+    <columns>
+        <column name="name" var="name" filter="varchar" />
+        <column name="props" var="props" filter="text" />
+    </columns>
+</query>

@@ -424,6 +424,41 @@
 
 		// endregion
 
+        // startregion Payment Gateways
+
+        /*
+         * Displays the PG management page
+         */
+        public function dispShopToolManagePaymentGateways()
+        {
+
+            //base directory
+            $baseDir = dirname(__FILE__) . "/payment_gateways/";
+            $dirHandle = opendir($baseDir);
+
+            // Payment gateway list
+            $payment_gateways = array();
+
+            while( $file = readdir($dirHandle) ) {
+                if(is_dir($baseDir.$file) && $file != '.' && $file != '..') {
+                    $payment_gateways[] = $file;
+                }
+            }
+
+            Context::set('payment_gateways',$payment_gateways);
+
+            /*$shopModel = getModel('shop');
+            $gateways = $shopModel->getProductRepository();
+            $module_srl = $this->module_info->module_srl;
+            $output = $repository->getProductList($module_srl);
+
+            Context::set('product_list',$output->products);
+            Context::set('page_navigation',$output->page_navigation);*/
+
+        }
+
+        // endregion
+
 
     }
 ?>

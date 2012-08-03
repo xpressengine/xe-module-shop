@@ -15,6 +15,7 @@
         <permission action="dispShopToolManageAttributes" target="manager"/>
         <permission action="dispShopToolManageCategories" target="manager" />
         <permission action="dispShopToolAddProductCategory" target="manager" />
+		<permission action="dispShopToolManagePaymentGateways" target="manager" />
 
 		<permission action="procShopInfoUpdate" target="manager" />
 		<permission action="procShopToolLayoutConfigSkin" target="manager" />
@@ -43,6 +44,7 @@
         <action name="dispShopToolManageAttributes" type="view"/>
         <action name="dispShopToolAddProductCategory" type="view" />
         <action name="dispShopToolManageCategories" type="view"/>
+		<action name="dispShopToolManagePaymentGateways" type="view" />
 
 		<action name="dispShopToolDashboard" type="view" />
 		<action name="dispShopMenu" type="view" />
