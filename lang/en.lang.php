@@ -117,6 +117,24 @@
     $lang->about_change_password = 'Input new password again to check correctness.';
     $lang->name_nick = 'Name(Nickname)';
     $lang->type = 'Type';
+
+    $lang->types = array(
+        'text_field' => 'Text field',
+        'textarea' => 'Textarea',
+        'date' => 'Date',
+        'boolean' => 'Yes / no',
+        'select' => 'Select',
+        'select_multiple' => 'Multiple select'
+    );
+    $lang->no_attribute = 'No attributes, <a href="%s">add one!</a>';
+    $lang->new_attribute = 'New attribute';
+    $lang->edit_attribute = 'Edit attribute';
+    $lang->attribute_about_title = 'Attribute name/title';
+    $lang->attribute_values = 'Values';
+    $lang->about_attribute_values = 'Possible values, separated by *|*. I.e. one*|*two*|*three';
+    $lang->attribute_default_value = 'Selected value';
+    $lang->about_attribute_default_value = 'Must be one of *values*';
+
     $lang->total_result_count = 'Total <strong>%d</strong> Items';
     $lang->search_result_count = '<strong>%d</strong> results are found.';
     $lang->no_result_count = 'There is no result';

@@ -1,0 +1,125 @@
+<!--#include("_tool_header.html")-->
+<!--%import("css/pagination.css",optimized=false)-->
+
+<!-- Content -->
+<div id="content">
+    <!-- contentHeader -->
+    <div class="contentHeader postListHeader">
+        <h3 class="h3">{$attribute ? $lang->edit_attribute : $lang->new_attribute}</h3>
+    </div>
+    <!-- /contentHeader -->
+    <form action="./" method="post" ruleset="insert_attribute" class="">
+        <input type="hidden" name="act" value="procShopToolInsertAttribute" />
+        <div class="wOption">
+            <fieldset class="visualFieldset">
+                <legend class="visualLabel">{$attribute ? $lang->edit_attribute : $lang->new_attribute}</legend>
+                <table border="1" cellspacing="0" class="tableData">
+
+                    <tr class="first">
+                        <th scope="row">
+                            <label for="title">{$lang->title}</label>
+                        </th>
+                        <td class="title">
+                            <div class="fItem">
+                                <label class="iLabel" for="title">{$lang->attribute_about_title}</label>
+                                <input type="text" id="title" name="title" style="width:200px" class="iText iText" title="{$lang->attribute_about_title}" value="{$attribute->title}"/>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th scope="row">
+                            <label for="status">{$lang->type}</label>
+                        </th>
+                        <td class="type">
+                            <div class="fItem">
+                                <select name="type" id="type">
+                                    <!--@foreach ($types as $val => $text)-->
+                                    <option value="{$val}"<!--@if ($attribute->type == $val)--> selected<!--@end-->>{$text}</option>
+                                    <!--@end-->
+                                </select>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th scope="row">
+                            <label for="required">{$lang->required}</label>
+                        </th>
+                        <td class="type">
+                            <div class="fItem">
+                                <select name="required" id="required">
+                                    <option value="Y"<!--@if ($attribute->required == 'Y')--> selected<!--@end-->>{$lang->yes}</option>
+                                    <option value="N"<!--@if ($attribute->required == 'N')--> selected<!--@end-->>{$lang->no}</option>
+                                </select>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th scope="row">
+                            <label for="status">{$lang->status}</label>
+                        </th>
+                        <td class="title">
+                            <div class="fItem">
+                                <select name="status" id="status">
+                                    <option value="Y"<!--@if($attribute->status == 'Y')--> selected<!--@end-->>{$lang->enabled}</option>
+                                    <option value="N"<!--@if($attribute->status == 'N')--> selected<!--@end-->>{$lang->disabled}</option>
+                                </select>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th scope="row">
+                            <label for="values">{$lang->attribute_values}</label>
+                        </th>
+                        <td class="title">
+                            <div class="fItem">
+                                <label class="iLabel" for="values">{$lang->about_attribute_values}</label>
+                                <textarea name="values" rows="8" cols="100" class="iTextarea" id="values" title="{$lang->about_attribute_values}">{$attribute->values}</textarea>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th scope="row">
+                            <label for="default_value">{$lang->attribute_default_value}</label>
+                        </th>
+                        <td class="title">
+                            <div class="fItem">
+                                <label class="iLabel" for="default_value">{$lang->about_attribute_default_value}</label>
+                                <input type="text" id="default_value" name="default_value" style="width:200px" class="iText iText" title="{$lang->about_attribute_default_value}" value="{$attribute->default_value}"/>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <tr class="last">
+                        <th scope="row">
+                        </th>
+                        <td class="title">
+                            <a cond="$attribute->attribute_srl" title="delete attribute '{$attribute->title}'" href="{getNotEncodedUrl('', 'act', 'procShopToolDeleteAttributes', 'attribute_srls', $attribute->attribute_srl)}" onclick="if (!confirm('Are you sure?')) return false;" style="display: block; float: right; margin-right: 100px;">
+                                {$lang->cmd_delete}
+                            </a>
+                            <span class="btn"><input type="submit" value="{$lang->cmd_save}"/></span>
+                        </td>
+                    </tr>
+
+                </table>
+
+            </fieldset>
+            <div id="regdate" cond="$attribute->regdate">Created at: {date('D, d M Y H:i:s', $attribute->regdate)}</div>
+            <div id="last_update" cond="$attribute->last_update">Last update: {date('D, d M Y H:i:s', $attribute->last_update)}</div>
+        </div>
+    </form>
+
+</div>
+<!-- /Content -->
+
+
+<!-- Extension -->
+<!--#include("_tool_menu.html")-->
+<!-- Extension -->
+
+<!--#include("_tool_footer.html")-->
+

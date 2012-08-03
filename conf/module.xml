@@ -13,6 +13,8 @@
         <permission action="dispShopToolAddProduct" target="manager" />
         <permission action="dispShopToolEditProduct" target="manager" />
         <permission action="dispShopToolManageAttributes" target="manager"/>
+        <permission action="dispShopToolAddAttribute" target="manager"/>
+        <permission action="dispShopToolEditAttribute" target="manager"/>
         <permission action="dispShopToolManageCategories" target="manager" />
         <permission action="dispShopToolAddProductCategory" target="manager" />
 		<permission action="dispShopToolManagePaymentGateways" target="manager" />
@@ -27,8 +29,10 @@
 		<permission action="procShopToolLive" target="manager" />
         <permission action="procShopToolInsertProductCategory" target="manager" />
         <permission action="procShopToolInsertProduct" target="manager" />
+        <permission action="procShopToolInsertAttribute" target="manager" />
         <permission action="procShopToolDeleteProduct" target="manager" />
         <permission action="procShopToolDeleteProducts" target="manager" />
+        <permission action="procShopToolDeleteAttributes" target="manager" />
 
     </permissions>
     <actions>
@@ -42,9 +46,11 @@
         <action name="dispShopToolAddProduct" type="view" />
         <action name="dispShopToolEditProduct" type="view" />
         <action name="dispShopToolManageAttributes" type="view"/>
-        <action name="dispShopToolAddProductCategory" type="view" />
+        <action name="dispShopToolAddAttribute" type="view" />
+        <action name="dispShopToolEditAttribute" type="view" />
         <action name="dispShopToolManageCategories" type="view"/>
 		<action name="dispShopToolManagePaymentGateways" type="view" />
+        <action name="dispShopToolAddProductCategory" type="view"/>
 
 		<action name="dispShopToolDashboard" type="view" />
 		<action name="dispShopMenu" type="view" />
@@ -78,7 +84,6 @@
         <action name="procShopAdminInsertCustomMenu" type="controller" standalone="true" />
 
         <action name="procShopServiceGetProductCategory" type="controller" standalone="true" />
-        <action name="procShopServiceDeleteProductCategory" type="controller" standalone="true" />
 
 		<action name="dispShopPasswordForm" type="mobile" />
     </actions>

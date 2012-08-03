@@ -343,22 +343,33 @@
 
         public function dispShopToolManageAttributes()
         {
-            $args->page = Context::get('page');
-            $args->search_keyword = Context::get('search_keyword');
-            $args->search_target = Context::get('search_target');
+            $shopModel = getModel('shop');
+            $shopModel->requireAttributesModel();
+            $output = AttributeRepository::getAttributesList($this->module_info->module_srl);
 
-            $args->list_count = 30;
-            $args->page_count = 10;
-
-            $args->sort_index = 'list_order';
-
-            $args->module_srl = $this->textyle->module_srl;
-
-            $oCommentModel = &getModel('comment');
-            $output = $oCommentModel->getTotalCommentList($args);
-            Context::set('comment_list', $output->data);
+            Context::set('attributes_list', $output->attributes);
             Context::set('page_navigation', $output->page_navigation);
-            Context::set('page', $output->page);
+        }
+
+        /**
+         * @brief attribute add page
+         */
+        public function dispShopToolAddAttribute()
+        {
+            $model = getModel('shop');
+            $model->requireAttributesModel();
+            Context::set('types', AttributeRepository::getTypes(Context::get('lang')));
+        }
+
+        public function dispShopToolEditAttribute()
+        {
+            $shopModel = getModel('shop');
+            $repository = $shopModel->requireAttributesModel();
+            $srl = Context::get('attribute_srl');
+            if (!$attribute = AttributeRepository::getAttributes(array($srl))) throw new Exception("Attribute doesn't exist");
+            Context::set('attribute', $attribute[0]);
+            Context::set('types', AttributeRepository::getTypes(Context::get('lang')));
+            $this->setTemplateFile('AddAttribute');
         }
 
         /**

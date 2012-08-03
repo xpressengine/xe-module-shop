@@ -10,9 +10,13 @@ abstract class BaseItem
         if ($data) $this->loadFromArray((array) $data);
     }
 
-    protected function loadFromArray(array $data)
+    public function loadFromArray(array $data)
     {
-        foreach ($data as $field=>$value) if (isset($this->$field)) $this->$field = $value;
+        foreach ($data as $field=>$value) {
+            if (property_exists(get_called_class(), $field)) {
+                $this->$field = $value;
+            }
+        }
     }
 
 }

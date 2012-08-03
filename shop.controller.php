@@ -166,6 +166,39 @@
             $this->setRedirectUrl($returnUrl);
         }
 
+        /*
+         * brief function for product insert
+         * @author Dan Dragan (dev@xpressengine.org)
+         */
+        public function procShopToolInsertAttribute() {
+            $shopModel = getModel('shop');
+            $shopModel->requireAttributesModel();
+
+            $args = Context::getRequestVars();
+            $logged_info = Context::get('logged_info');
+            $args->member_srl = $logged_info->member_srl;
+
+            $attribute = new Attribute($args);
+            try
+            {
+                if ($attribute->attribute_srl) {
+                    $output = AttributeRepository::updateAttribute($attribute);
+                    $this->setMessage("success_updated");
+                }
+                else {
+                    $output = AttributeRepository::insertAttribute($attribute);
+                    $this->setMessage("success_registed");
+                }
+            }
+            catch(Exception $e) {
+                return new Object(-1, $e->getMessage());
+            }
+
+//            $returnUrl = getNotEncodedUrl('', 'act', 'dispShopToolManageAttributes');
+            $returnUrl = getNotEncodedUrl('', 'act', 'dispShopToolEditAttribute', 'attribute_srl', $attribute->attribute_srl);
+            $this->setRedirectUrl($returnUrl);
+        }
+
 
         /*
         * brief function for product delete
@@ -196,6 +229,20 @@
             $this->setMessage("success_deleted");
             $returnUrl = getNotEncodedUrl('', 'act', 'dispShopToolManageProducts');
             $this->setRedirectUrl($returnUrl);
+        }
+
+        /*
+        * brief function for multiple products delete
+        * @author Dan Dragan (dev@xpressengine.org)
+        */
+        public function procShopToolDeleteAttributes(){
+            $shopModel = getModel('shop');
+            $shopModel->requireAttributesModel();
+            $args = new stdClass();
+            $args->attribute_srls = explode(',', Context::get('attribute_srls'));
+            AttributeRepository::deleteAttributes($args);
+            $this->setMessage("success_deleted");
+            $this->setRedirectUrl(getNotEncodedUrl('', 'act', 'dispShopToolManageAttributes'));
         }
 
         public function procShopToolLayoutConfigSkin() {

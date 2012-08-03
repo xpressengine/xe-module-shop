@@ -208,10 +208,9 @@ class shopModel extends shop
 		return $configs[$module_srl];
 	}
 
-    public function getAttributesModel() {
+    public function requireAttributesModel() {
         require_once _XE_PATH_ . $this->module_path . 'libs/model/Attribute.php';
-        $o = new Attribute();
-        return $o;
+        require_once _XE_PATH_ . $this->module_path . 'libs/repositories/AttributeRepository.php';
     }
 	
     /**
