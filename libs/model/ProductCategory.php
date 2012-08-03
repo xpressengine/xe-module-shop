@@ -15,7 +15,7 @@ class ProductCategory extends BaseItem
 	public $file_srl;
 	public $title;
 	public $description;
-	public $product_count;
+	public $product_count = 0;
 	public $friendly_url;
 	private $include_in_navigation_menu = 'Y';
 	public $regdate;

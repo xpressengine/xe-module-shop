@@ -38,7 +38,7 @@
 				</ul></li>
 			<!--@endif-->
 			<li id="tree_{$node->product_category->product_category_srl}">
-				<span>{$node->product_category->title}</span>
+				<span>{$node->product_category->title} ({$node->product_category->product_count})</span>
 				<a href="#" class="add"><img src="./common/js/plugins/ui.tree/images/iconAdd.gif"></a>
 				<a href="#" class="modify"><img src="./common/js/plugins/ui.tree/images/iconModify.gif"></a>
 		    	<!--@if(count($node->children) == 0)-->
