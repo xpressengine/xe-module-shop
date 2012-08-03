@@ -129,7 +129,8 @@ class ProductCategoryTreeNode
 			$flat_structure[$index++] = $node;
 			if(count($node->children))
 			{
-				$children_flat_structure = $node->toFlatStructure($depth + 1, $index++);
+				$children_flat_structure = $node->toFlatStructure($depth + 1, $index);
+				$index += count($children_flat_structure);
 				$flat_structure = array_merge($flat_structure, $children_flat_structure);
 			}
 		}

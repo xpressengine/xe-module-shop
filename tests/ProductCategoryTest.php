@@ -281,8 +281,6 @@ Patrioque conceptam in mea. Est ad ullum ceteros, pro quem accumsan appareat id,
 
 		$tree = $repository->getProductCategoriesTree(1001);
 
-		var_dump($tree->toFlatStructure());
-
 		// Check hierarchy
 		$this->assertNotNull($tree);
 		$this->assertNull($tree->product_category); // Root node should not have any product category associated
@@ -304,6 +302,39 @@ Patrioque conceptam in mea. Est ad ullum ceteros, pro quem accumsan appareat id,
 				$this->fail("Unexpected node found as root: " . $id);
 			}
 		}
+	}
+
+	/**
+	 * Test product category tree as flat structure
+	 * Used for UI, when printing nested lists
+	 *
+	 * @author Corina Udrescu (dev@xpressengine.org)
+	 */
+	public function testProductCategoryFlatTreeHierarchy()
+	{
+		// Retrieve tree
+		$shopModel = &getModel('shop');
+		$repository = $shopModel->getProductCategoryRepository();
+
+		$tree = $repository->getProductCategoriesTree(1001);
+		$flat_tree = $tree->toFlatStructure();
+		foreach($flat_tree as $node)
+		{
+			echo $node->depth . ' ' . $node->product_category->product_category_srl . PHP_EOL;
+		}
+
+		// Test flat structure
+		$this->assertTrue(is_array($flat_tree));
+		$this->assertEquals(4, count($flat_tree));
+
+		$this->assertEquals(1000, $flat_tree[0]->product_category->product_category_srl);
+		$this->assertEquals(0, $flat_tree[0]->depth);
+		$this->assertEquals(1002, $flat_tree[1]->product_category->product_category_srl);
+		$this->assertEquals(1, $flat_tree[1]->depth);
+		$this->assertEquals(1008, $flat_tree[2]->product_category->product_category_srl);
+		$this->assertEquals(1, $flat_tree[2]->depth);
+		$this->assertEquals(1006, $flat_tree[3]->product_category->product_category_srl);
+		$this->assertEquals(0, $flat_tree[3]->depth);
 	}
 
 
