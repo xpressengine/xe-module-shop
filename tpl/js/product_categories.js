@@ -16,9 +16,19 @@ function ProductCategory()
 function fillFormWithProductCategory($category, $parent_title)
 {
     jQuery("#product_category_srl").val($category.product_category_srl);
-    jQuery("#module_srl").val($category.module_srl);
     jQuery("#parent_srl").val($category.parent_srl);
-    jQuery("#file_srl").val($category.file_srl);
+
+    jQuery("#filename").val($category.filename);
+    jQuery("#category_image").attr("src", $category.filename);
+    if($category.filename)
+    {
+        jQuery("#image_container").show();
+    }
+    else
+    {
+        jQuery("#image_container").hide();
+    }
+
     jQuery("#title").val($category.title);
     jQuery("#description").val($category.description);
     jQuery("#friendly_url").val($category.friendly_url);

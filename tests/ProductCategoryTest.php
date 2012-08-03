@@ -20,8 +20,8 @@ class ProductCategoryTest extends TestAgainstDatabase
 		parent::setUp();
 		// Insert a few product categories in the database, so that we will have what to delete
 		Database::executeNonQuery("
-			INSERT INTO xe_shop_product_categories (product_category_srl, module_srl, title, parent_srl)
-				VALUES(1000, 1001, 'Dummy category 1000', 0)
+			INSERT INTO xe_shop_product_categories (product_category_srl, module_srl, title, parent_srl, filename)
+				VALUES(1000, 1001, 'Dummy category 1000', 0, 'files/attach/picture.jpg')
 			");
 		Database::executeNonQuery("
 			INSERT INTO xe_shop_product_categories (product_category_srl, module_srl, title, parent_srl)
@@ -335,6 +335,40 @@ Patrioque conceptam in mea. Est ad ullum ceteros, pro quem accumsan appareat id,
 		$this->assertEquals(1, $flat_tree[2]->depth);
 		$this->assertEquals(1006, $flat_tree[3]->product_category->product_category_srl);
 		$this->assertEquals(0, $flat_tree[3]->depth);
+	}
+
+	/**
+	 * Test that Product category image gets updated
+	 *
+	 * @author Corina Udrescu (dev@xpressengine.org)
+	 */
+	public function testRemoveProductCategoryFilename()
+	{
+		$shopModel = &getModel('shop');
+		$repository = $shopModel->getProductCategoryRepository();
+
+		$product_category = $repository->getProductCategory(1000);
+		$product_category->filename = '';
+
+		// Try to update
+		try
+		{
+			$output = $repository->updateProductCategory($product_category);
+
+			$this->assertEquals(TRUE, $output);
+
+			// Check that properties were updated
+			$new_product_category = $repository->getProductCategory($product_category->product_category_srl);
+			$this->assertEquals($product_category->filename, $new_product_category->filename);
+
+		}
+		catch(Exception $e)
+		{
+			$this->fail($e->getMessage());
+		}
+
+
+
 	}
 
 

@@ -468,14 +468,45 @@
 		}
 
 		// region Product Category
+		/**
+		 * Inserts or updates a product category
+		 *
+		 * @author Corina Udrescu (dev@xpressengine.org)
+		 * @return Object
+		 */
 		public function procShopToolInsertProductCategory()
 		{
-			$args = Context::gets('product_category_srl', 'module_srl', 'parent_srl', 'file_srl', 'title', 'description', 'friendly_url', 'include_in_navigation_menu');
+			$args = Context::gets('product_category_srl', 'module_srl', 'parent_srl', 'filename', 'title', 'description', 'friendly_url', 'include_in_navigation_menu');
+			$file_info = Context::get('file_info');
 
-			require_once('libs/model/ProductCategory.php');
-			$product_category = new ProductCategory($args);
+			$delete_image = Context::get('delete_image');
+			$vid = Context::get('vid');
+
 			$shopModel = getModel('shop');
 			$repository = $shopModel->getProductCategoryRepository();
+
+			// Upload image
+			if($file_info)
+			{
+				// If a previous picture exists, we delete it
+				if($args->filename)
+				{
+					$repository->deleteProductCategoryImage($args->filename);
+				}
+				// Then we add the new one and update the filename
+				$args->filename = $repository->saveProductCategoryImage(
+					$args->module_srl
+					, $file_info['name']
+					, $file_info['tmp_name']
+				);
+			}
+			else if($delete_image && $args->filename)
+			{
+				$repository->deleteProductCategoryImage($args->filename);
+				$args->filename = '';
+			}
+
+			$product_category = new ProductCategory($args);
 			try
 			{
 				if($product_category->product_category_srl === NULL)
@@ -494,7 +525,6 @@
 				return new Object(-1, $e->getMessage());
 			}
 
-			$vid = Context::get('vid');
 			$returnUrl = getNotEncodedUrl('', 'vid', $vid, 'act', 'dispShopToolManageCategories');
 			$this->setRedirectUrl($returnUrl);
 		}

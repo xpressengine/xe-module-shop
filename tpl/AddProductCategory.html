@@ -3,7 +3,7 @@
 	<h4>Add product category</h4>
 	<!-- /contentHeader -->
 
-    <form id="categoryForm" action="./" >
+    <form id="categoryForm" action="./" method="post" enctype="multipart/form-data" >
 		<input type="hidden" id="module" name="module" value="shop" />
 		<input type="hidden" id="vid" name="vid" value="{$vid}" />
 		<input type="hidden" id="act" name="act" value="procShopToolInsertProductCategory" />
@@ -33,9 +33,16 @@
 		</p>
 
 		<p>
-			<label for="file_srl">Image</label>
-			<input type="hidden" id="file_srl" name="file_srl" value="{$category->file_srl}" />
-			<!-- TODO Add image -->
+			<label for="file_info">Image</label>
+			<input type="file" id="file_info" name="file_info" />
+			<input type="hidden" id="filename" name="filename" value="{$category->filename}" />
+
+			<br />
+			<span id="image_container" style="display: none;" >
+				<img id="category_image" src="{$category->filename}" width="50px" height="50px" />
+				<input type="checkbox" id="delete_image" name="delete_image" />
+				Delete
+			</span>
 		</p>
 
 		<p>

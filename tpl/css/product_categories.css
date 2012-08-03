@@ -58,9 +58,9 @@ form select {
     width: 200px;
 }
 
-form input,
-form textarea,
-form select,
+form p input,
+form p textarea,
+form p select,
 #parent_title {
     margin: 8px;
 }
@@ -70,3 +70,11 @@ ul {
     margin: 0;
 }
 
+#category_image {
+    margin-top: 8px;
+    margin-left: 8px;
+}
+
+#image_container {
+    margin-left: 240px;
+}

@@ -5,7 +5,7 @@
     <columns>
         <column name="module_srl" var="module_srl" filter="number" />
         <column name="parent_srl" var="parent_srl" filter="number" />
-        <column name="file_srl" var="parent_srl" filter="number" />
+        <column name="filename" var="filename" />
         <column name="title" var="title" />
         <column name="description" var="description" />
         <column name="product_count" var="product_count" />

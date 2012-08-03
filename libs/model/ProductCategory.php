@@ -12,7 +12,7 @@ class ProductCategory extends BaseItem
 	public $product_category_srl;
 	public $module_srl;
 	public $parent_srl = 0;
-	public $file_srl;
+	public $filename;
 	public $title;
 	public $description;
 	public $product_count = 0;
@@ -35,7 +35,7 @@ class ProductCategory extends BaseItem
 			if(isset($args->product_category_srl)) $this->product_category_srl = $args->product_category_srl;
 			if(isset($args->module_srl)) $this->module_srl = $args->module_srl;
 			if(isset($args->parent_srl)) $this->parent_srl = $args->parent_srl;
-			if(isset($args->file_srl)) $this->file_srl = $args->file_srl;
+			if(isset($args->filename)) $this->filename = $args->filename;
 			if(isset($args->title)) $this->title = $args->title;
 			if(isset($args->description)) $this->description = $args->description;
 			if(isset($args->product_count)) $this->product_count = $args->product_count;

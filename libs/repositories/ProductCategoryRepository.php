@@ -119,4 +119,33 @@ class ProductCategoryRepository extends BaseRepository
 
 		return $nodes[0];
 	}
+
+	/**
+	 * Save category image to disc
+	 *
+	 * @author Corina Udrescu (dev@xpressengine.org)
+	 */
+	public function saveProductCategoryImage($module_srl, $original_filename, $tmp_name)
+	{
+		$tmp_arr = explode('.', $original_filename);
+		$extension = $tmp_arr[count($tmp_arr) - 1];
+
+		$path = sprintf('./files/attach/shop/%d/product-categories/', $module_srl);
+		$filename = sprintf('%s%s.%s', $path, uniqid('product-category-'), $extension);
+		FileHandler::copyFile($tmp_name, $filename);
+
+		return $filename;
+	}
+
+	/**
+	 * Delete category image from disc
+	 *
+	 * @author Corina Udrescu (dev@xpressengine.org)
+	 */
+	public function deleteProductCategoryImage($filename)
+	{
+		FileHandler::removeFile($filename);
+
+	}
+
 }
