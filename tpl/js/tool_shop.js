@@ -322,7 +322,7 @@ function deleteUserImage(filename){
 }
 
 function deleteProductItem(srl){
-    if(!confirm(xe.lang.msg_confirm_delete_product)) return false;
+    if (!confirm(xe.lang.msg_confirm_delete_product)) return false;
     var params = new Array();
     params['product_srl'] = srl;
     var response_tags = new Array('error','message','page','mid');
@@ -342,6 +342,28 @@ function deleteProductItems(page){
     params['page'] = page;
     var response_tags = new Array('error','message','page','mid');
     exec_xml('shop', 'procShopToolDeleteProducts', params, completeReload, response_tags);
+}
+
+function deleteAttributeItem(srl){
+    if (!confirm(xe.lang.msg_confirm_delete_attribute)) return false;
+    var response_tags = new Array('error','message','page','mid');
+    exec_xml('shop', 'procShopToolDeleteAttributes', { attribute_srls: srl }, completeReload, response_tags);
+}
+
+function deleteAttributeItems(page){
+    if (!confirm(xe.lang.msg_confirm_delete_attributes)) return false;
+    var val, srls = [];
+    jQuery("input[name=attribute_srl]:checked").each(function(){
+        val = jQuery(this).val();
+        if(val) srls.push(val);
+    });
+    if (srls.length < 1) return;
+    var response_tags = new Array('error','message','page','mid');
+    var params = {
+        attribute_srls: srls.join(','),
+        page: page
+    }
+    exec_xml('shop', 'procShopToolDeleteAttributes', params, completeReload, response_tags);
 }
 
 

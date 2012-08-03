@@ -61,10 +61,8 @@
                     </th>
                     <th scope="col">{$lang->id}</th>
                     <th scope="col" class="title">{$lang->name}</th>
-                    <th scope="col">{$lang->attribute_type}</th>
-                    <th scope="col">{$lang->sku}</th>
-                    <th scope="col">{$lang->price}</th>
-                    <th scope="col">{$lang->qty}</th>
+                    <th scope="col">{$lang->type}</th>
+                    <th scope="col">{$lang->required}</th>
                     <th scope="col">{$lang->status}</th>
                     <th scope="col">&nbsp;</th>
                     <th scope="col">&nbsp;</th>
@@ -72,7 +70,7 @@
                 </thead>
                 <tbody>
 
-                <tr>
+                <tr cond="empty($attributes_list)">
                     <td class="noData" colspan="9"><p>{sprintf($lang->no_attribute, getUrl('', 'act', 'dispShopToolAddAttribute'))}</p></td>
                 </tr>
                 <!--@foreach($attributes_list as $no => $attribute)-->
@@ -82,10 +80,8 @@
                     </td>
                     <td class="small">{$attribute->attribute_srl}</td>
                     <td class="title"><a href="{getUrl('act','dispShopToolEditAttribute','attribute_srl',$attribute->attribute_srl)}" class="attributeTitle">{$attribute->title}</a></td>
-                    <td class="small">{$attribute->attribute_type}</td>
-                    <td class="small">{$attribute->sku}</td>
-                    <td class="small">{number_format($attribute->price,2)}</td>
-                    <td class="small">{number_format($attribute->qty,2)}</td>
+                    <td class="small">{$attribute->getType($lang)}</td>
+                    <td class="small">{$attribute->required}</td>
                     <td class="small">{$attribute->status}</td>
                     <td>
                         <span class="btnGray small"><a href="{getUrl('act','dispShopToolEditAttribute','attribute_srl',$attribute->attribute_srl)}">{$lang->cmd_edit}</a></span>
@@ -143,7 +139,7 @@
 <!--#include("_tool_footer.html")-->
 
 <script type="text/javascript">
-    if(!xe.lang) xe.lang = {};
-    xe.lang.msg_confirm_delete_attribute = '{$lang->msg_confirm_delete_attribute}';
+    if (!xe.lang) xe.lang = {};
+    xe.lang.msg_confirm_delete_attribute = "{$lang->msg_confirm_delete_attribute}";
     xe.lang.msg_confirm_delete_attributes = '{$lang->msg_confirm_delete_attributes}';
 </script>

@@ -46,7 +46,9 @@
     $lang->product_type = 'Product Type';
     $lang->no_product = 'There is no product added, <a href="%s">Add a product!</a>';
     $lang->msg_confirm_delete_product = "Are you sure you want to delete this product?";
-    $lang->msg_confirm_delete_products = "Are you sure you want to delete this product(s)?";
+    $lang->msg_confirm_delete_attribute = "Are you sure you want to delete this attribute?";
+    $lang->msg_confirm_delete_products = "Are you sure you want to delete these products?";
+    $lang->msg_confirm_delete_attributes = "Are you sure you want to delete these attributes?";
 
 	$lang->cmd_open_id = 'Open ID Login';
 	$lang->cmd_common_id = 'Default Login';

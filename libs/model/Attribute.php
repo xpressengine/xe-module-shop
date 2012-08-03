@@ -6,6 +6,7 @@ class Attribute extends BaseItem
 
     public
         $attribute_srl,
+        $module_srl,
         $member_srl,
         $title,
         $type,
@@ -19,6 +20,11 @@ class Attribute extends BaseItem
     public function save()
     {
         AttributeRepository::insertAttribute($this);
+    }
+
+    public function getType($lang)
+    {
+        return AttributeRepository::getTypes($lang, $this->type);
     }
 
 }

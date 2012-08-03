@@ -7,6 +7,9 @@
     <div class="contentHeader postListHeader">
         <h3 class="h3">{$attribute ? $lang->edit_attribute : $lang->new_attribute}</h3>
     </div>
+    <div cond="$XE_VALIDATOR_MESSAGE" class="message {$XE_VALIDATOR_MESSAGE_TYPE}">
+        <p>{$XE_VALIDATOR_MESSAGE}</p>
+    </div>
     <!-- /contentHeader -->
     <form action="./" method="post" ruleset="insert_attribute" class="">
         <input type="hidden" name="act" value="procShopToolInsertAttribute" />
@@ -29,7 +32,7 @@
 
                     <tr>
                         <th scope="row">
-                            <label for="status">{$lang->type}</label>
+                            <label for="type">{$lang->type}</label>
                         </th>
                         <td class="type">
                             <div class="fItem">

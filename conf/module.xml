@@ -51,7 +51,6 @@
         <action name="dispShopToolManageCategories" type="view"/>
 		<action name="dispShopToolManagePaymentGateways" type="view" />
         <action name="dispShopToolAddProductCategory" type="view"/>
-
 		<action name="dispShopToolDashboard" type="view" />
 		<action name="dispShopMenu" type="view" />
 
@@ -71,8 +70,10 @@
 		<action name="procShopToolLive" type="controller" />
         <action name="procShopToolInsertProductCategory" type="controller" />
         <action name="procShopToolInsertProduct" type="controller" ruleset="insert_product" />
+        <action name="procShopToolInsertAttribute" type="controller" ruleset="insert_attribute"/>
         <action name="procShopToolDeleteProduct" type="controller" />
         <action name="procShopToolDeleteProducts" type="controller" />
+        <action name="procShopToolDeleteAttributes" type="controller" />
 
         <action name="dispShopAdminList" type="view" standalone="true" admin_index="true" />
         <action name="dispShopAdminInsert" type="view" standalone="true" />

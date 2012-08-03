@@ -96,6 +96,7 @@ class AttributeRepository extends BaseRepository
      */
     public static function getAttributesList($module_srl)
     {
+        if (!is_numeric($module_srl)) throw new Exception('module_srl must be a valid int');
         $args = new stdClass();
         $args->page = Context::get('page');
         if (!$args->page) $args->page = 1;
@@ -115,9 +116,9 @@ class AttributeRepository extends BaseRepository
     }
 
 
-    public static function getTypes($lang)
+    public static function getTypes($lang, $id=null)
     {
-        return array(
+        $arr = array(
             self::TYPE_TEXTFIELD       => $lang->types['text_field'],
             self::TYPE_TEXTAREA        => $lang->types['textarea'],
             self::TYPE_DATE            => $lang->types['date'],
@@ -125,6 +126,9 @@ class AttributeRepository extends BaseRepository
             self::TYPE_SELECT          => $lang->types['select'],
             self::TYPE_SELECT_MULTIPLE => $lang->types['select_multiple']
         );
+        if (!$id) return $arr;
+        if (!array_key_exists($id, $arr)) throw new Exception('Invalid type');
+        return $arr[$id];
     }
 
 }

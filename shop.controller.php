@@ -167,18 +167,20 @@
         }
 
         /*
-         * brief function for product insert
-         * @author Dan Dragan (dev@xpressengine.org)
+         * @brief function for attribute insert
+         * @author Florin Ercus (dev@xpressengine.org)
          */
         public function procShopToolInsertAttribute() {
             $shopModel = getModel('shop');
             $shopModel->requireAttributesModel();
 
             $args = Context::getRequestVars();
+            $args->module_srl = $this->module_info->module_srl;
             $logged_info = Context::get('logged_info');
             $args->member_srl = $logged_info->member_srl;
 
             $attribute = new Attribute($args);
+            $attribute->module_srl = $this->module_srl;
             try
             {
                 if ($attribute->attribute_srl) {
@@ -201,13 +203,14 @@
 
 
         /*
-        * brief function for product delete
+        * @brief function for product delete
         * @author Dan Dragan (dev@xpressengine.org)
         */
         public function procShopToolDeleteProduct(){
             $shopModel = getModel('shop');
             $repository = $shopModel->getProductRepository();
 
+            $args = new stdClass();
             $args->product_srl = Context::get('product_srl');
 
             $repository->deleteProduct($args);
@@ -217,7 +220,7 @@
         }
 
         /*
-        * brief function for multiple products delete
+        * @brief function for multiple products delete
         * @author Dan Dragan (dev@xpressengine.org)
         */
         public function procShopToolDeleteProducts(){
@@ -232,8 +235,8 @@
         }
 
         /*
-        * brief function for multiple products delete
-        * @author Dan Dragan (dev@xpressengine.org)
+        * @brief function for multiple attributes delete
+        * @author Florin Ercus (dev@xpressengine.org)
         */
         public function procShopToolDeleteAttributes(){
             $shopModel = getModel('shop');
