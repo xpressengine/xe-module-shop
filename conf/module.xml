@@ -78,6 +78,7 @@
         <action name="procShopAdminInsertCustomMenu" type="controller" standalone="true" />
 
         <action name="procShopServiceGetProductCategory" type="controller" standalone="true" />
+        <action name="procShopServiceDeleteProductCategory" type="controller" standalone="true" />
 
 		<action name="dispShopPasswordForm" type="mobile" />
     </actions>

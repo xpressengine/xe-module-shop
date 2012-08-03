@@ -96,14 +96,26 @@ jQuery(document).ready(function($)
                 showProductCategoryForm();
             }
         );
+    });
 
-//        var $category = new ProductCategory();
-//
-//        var $category_title = $(this).parent().find("span:first").text().trim();
-//        $category.$parent_srl = $category_srl;
-//
-//        fillFormWithProductCategory($category, $category_title);
-//        $("#categoryFormContainer").show();
+    // Delete behaviour
+    $("#tree_0 ul a.delete").click(function(){
+        if(!confirm(xe.lang.confirm_delete)) return false;
+
+        var $id = $(this).parent().attr("id");
+        var $category_srl = $id.replace("tree_", "");
+
+        $.exec_json('shop.procShopServiceDeleteProductCategory'
+            , { product_category_srl : $category_srl}
+            , function(data){
+                if(data.error != 0)
+                {
+                    alert("Error " + data.error + " " + data.message);
+                    return;
+                }
+                location.reload();
+            }
+        )
     });
 
 });

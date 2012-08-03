@@ -52,7 +52,7 @@
             }
 
             if(!$stat) {
-                $output = $oMemberController->doLogin($user_id, $password, $keep_signed=='Y'?true:false);
+                $output = $oMemberController->doLogin($user_id, $password, $keep_signed=='Y'?TRUE:FALSE);
                 if(!$output->toBool()) {
                     $stat = -1;
                     $msg = $output->getMessage();
@@ -146,7 +146,7 @@
             $product = new Product($args);
             try
             {
-                if($product->product_srl === null)
+                if($product->product_srl === NULL)
                 {
                     $product_srl = $repository->insertProduct($product);
                     $this->setMessage("success_registed");
@@ -226,7 +226,7 @@
             $this->resetSkin($this->module_srl,$skin);
         }
 
-        public function resetSkin($module_srl,$skin=null){
+        public function resetSkin($module_srl,$skin=NULL){
             if(!$skin) $skin = $this->skin;
             if(!file_exists($this->module_path.'skins/'.$skin)) $skin = $this->skin;
             $oShopModel = getModel('shop');
@@ -327,7 +327,7 @@
 
 
         public function _checkDisabledFunction($str){
-            if(preg_match('!<\?.*\?>!is',$str,$match)) return true;
+            if(preg_match('!<\?.*\?>!is',$str,$match)) return TRUE;
 
             $disabled = array(
                     // file
@@ -353,9 +353,9 @@
             preg_match($disabled, implode('|', $match1), $matches1);
             preg_match($disabled, implode('|', $match2), $matches2);
 
-            if(count($matches1) || count($matches2)) return true;
+            if(count($matches1) || count($matches2)) return TRUE;
 
-            return false;
+            return FALSE;
         }
 
         /**
@@ -397,9 +397,9 @@
             $oShopModel = getModel('shop');
             $oShopView = getView('shop');
 
-            Context::set('layout',null);
+            Context::set('layout',NULL);
 
-            $oShopView->initTool($oModule, true);
+            $oShopView->initTool($oModule, TRUE);
             // $oShopView->initService($oModule, true);
             return new Object();
         }
@@ -428,7 +428,7 @@
 			$repository = $shopModel->getProductCategoryRepository();
 			try
 			{
-				if($product_category->product_category_srl === null)
+				if($product_category->product_category_srl === NULL)
 				{
 					$repository->insertProductCategory($product_category);
 					$this->setMessage("success_registed");
@@ -449,7 +449,13 @@
 			$this->setRedirectUrl($returnUrl);
 		}
 
-
+		/**
+		 * Returns product category details
+		 * Called through AJAX
+		 *
+		 * @author Corina Udrescu (dev@xpressengine.org)
+		 * @return Object
+		 */
 		public function procShopServiceGetProductCategory()
 		{
 			$category_srl = Context::get('product_category_srl');
@@ -460,7 +466,34 @@
 			$product_category = $repository->getProductCategory($category_srl);
 
 			$this->add('product_category', $product_category);
-			// return $product_category;
+		}
+
+		/**
+		 * Deletes a product category
+		 * Called through AJAX
+		 *
+		 * @author Corina Udrescu (dev@xpressengine.org)
+		 * @return Object
+		 */
+		public function procShopServiceDeleteProductCategory()
+		{
+			$category_srl = Context::get('product_category_srl');
+			if(!isset($category_srl)) return new Object(-1, 'msg_invalid_request');
+
+			$shopModel = getModel('shop');
+			$repository = $shopModel->getProductCategoryRepository();
+			$args = new stdClass();
+			$args->product_category_srl = $category_srl;
+
+			try{
+				$repository->deleteProductCategory($args);
+				$this->setMessage('success_deleted');
+			}
+			catch(Exception $e)
+			{
+				$this->setError(-1);
+				$this->setMessage($e->getMessage());
+			}
 		}
 
 		// endregion
