@@ -22,30 +22,53 @@ class ProductCategory extends BaseItem
 	public $last_update;
 
 	/**
-	 * Constructor
-	 * Can create a new empty object or from properties array
+	 * Calls getters for private properties when accessed directly
 	 *
 	 * @author Corina Udrescu (dev@xpressengine.org)
-	 * @param $args array
+	 * @param $name
+	 * @return null|string
 	 */
-	public function __construct($args = NULL)
+	public function __get($name)
 	{
-		if(isset($args))
+		if($name == 'include_in_navigation_menu')
 		{
-			if(isset($args->product_category_srl)) $this->product_category_srl = $args->product_category_srl;
-			if(isset($args->module_srl)) $this->module_srl = $args->module_srl;
-			if(isset($args->parent_srl)) $this->parent_srl = $args->parent_srl;
-			if(isset($args->filename)) $this->filename = $args->filename;
-			if(isset($args->title)) $this->title = $args->title;
-			if(isset($args->description)) $this->description = $args->description;
-			if(isset($args->product_count)) $this->product_count = $args->product_count;
-			if(isset($args->friendly_url)) $this->friendly_url = $args->friendly_url;
-			if(isset($args->include_in_navigation_menu)) $this->setIncludeInNvaigationMenu($args->include_in_navigation_menu);
-			if(isset($args->regdate)) $this->regdate = $args->regdate;
-			if(isset($args->last_update)) $this->last_update = $args->last_update;
+			return $this->getIncludeInNavigationMenu();
 		}
 
+		return NULL;
 	}
+
+	/**
+	 * Calls setters for private properties when accessed directly
+	 *
+	 * @author Corina Udrescu (dev@xpressengine.org)
+	 * @param $name
+	 * @param $value
+	 * @return null|void
+	 */
+	public function __set($name, $value)
+	{
+		if($name == 'include_in_navigation_menu')
+		{
+			$this->setIncludeInNavigationMenu($value);
+		}
+	}
+
+	/**
+	 * Isset check for private properties accessed directly
+	 *
+	 * @author Corina Udrescu (dev@xpressengine.org)
+	 * @param $name
+	 * @return bool
+	 */
+	public function __isset($name)
+	{
+		if($name == 'include_in_navigation_menu')
+		{
+			return isset($this->include_in_navigation_menu);
+		}
+	}
+
 
 	/**
 	 * Getter for [include_in_navigation_menu]
@@ -63,7 +86,7 @@ class ProductCategory extends BaseItem
 	 * @author Corina Udrescu (dev@xpressengine.org)
 	 * @param $include_in_navigation_menu char
 	 */
-	public function setIncludeInNvaigationMenu($include_in_navigation_menu)
+	public function setIncludeInNavigationMenu($include_in_navigation_menu)
 	{
 		if(!isset($include_in_navigation_menu) || !in_array($include_in_navigation_menu, array('Y', 'N')))
 		{

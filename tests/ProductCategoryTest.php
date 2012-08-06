@@ -373,6 +373,46 @@ Patrioque conceptam in mea. Est ad ullum ceteros, pro quem accumsan appareat id,
 
 
 	/**
+	 * Test that Product category [include_in_navigation_menu] gets updated
+	 *
+	 * @author Corina Udrescu (dev@xpressengine.org)
+	 */
+	public function testUpdateProductCategoryIncludeInNavigationMenu()
+	{
+		$shopModel = &getModel('shop');
+		$repository = $shopModel->getProductCategoryRepository();
+
+		$product_category = $repository->getProductCategory(1000);
+		$product_category->include_in_navigation_menu = 'N';
+
+		// Try to update
+		try
+		{
+			$output = $repository->updateProductCategory($product_category);
+
+			$this->assertEquals(TRUE, $output);
+
+			// Check that properties were updated
+			$new_product_category = $repository->getProductCategory($product_category->product_category_srl);
+
+			echo "Expected: " . $product_category->getIncludeInNavigationMenu() . PHP_EOL;
+			echo "Actual: " . $new_product_category->getIncludeInNavigationMenu() . PHP_EOL;
+
+			$this->assertEquals($product_category->include_in_navigation_menu
+									, $new_product_category->include_in_navigation_menu);
+
+		}
+		catch(Exception $e)
+		{
+			$this->fail($e->getMessage());
+		}
+
+
+
+	}
+
+
+	/**
 	 * Clean-up testing environment after every test method
 	 * @author Corina Udrescu (dev@xpressengine.org)
 	 */
