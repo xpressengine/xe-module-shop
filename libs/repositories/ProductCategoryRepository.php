@@ -102,7 +102,7 @@ class ProductCategoryRepository extends BaseRepository
 		$args->module_srl = $module_srl;
 
 		// Retrieve categories from database
-		$output = executeQuery('shop.getProductCategories', $args);
+		$output = executeQueryArray('shop.getProductCategories', $args);
 		if(!$output->toBool())
 		{
 			throw new Exception($output->getMessage(), $output->getError());
