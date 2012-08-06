@@ -35,7 +35,9 @@
 		    	<ul>
 			<!--@endif-->
 			<!--@if($previous_depth > $node->depth)-->
-				</ul></li>
+				<!--@for($i = $node->depth; $i < $previous_depth; $i++)-->
+					</ul></li>
+				<!--@end-->
 			<!--@endif-->
 			<li id="tree_{$node->product_category->product_category_srl}">
 				<span>{$node->product_category->title} ({$node->product_category->product_count})</span>
