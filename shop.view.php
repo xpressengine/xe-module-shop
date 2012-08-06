@@ -344,8 +344,8 @@
         public function dispShopToolManageAttributes()
         {
             $shopModel = getModel('shop');
-            $shopModel->requireAttributesModel();
-            $output = AttributeRepository::getAttributesList($this->module_info->module_srl);
+            $repository = $shopModel->getAttributeRepository();
+            $output = $repository->getAttributesList($this->module_info->module_srl);
 
             Context::set('attributes_list', $output->attributes);
             Context::set('page_navigation', $output->page_navigation);
@@ -356,19 +356,19 @@
          */
         public function dispShopToolAddAttribute()
         {
-            $model = getModel('shop');
-            $model->requireAttributesModel();
-            Context::set('types', AttributeRepository::getTypes(Context::get('lang')));
+            $shopModel = getModel('shop');
+            $repository = $shopModel->getAttributeRepository();
+            Context::set('types', $repository->getTypes(Context::get('lang')));
         }
 
         public function dispShopToolEditAttribute()
         {
             $shopModel = getModel('shop');
-            $repository = $shopModel->requireAttributesModel();
+            $repository = $shopModel->getAttributeRepository();
             $srl = Context::get('attribute_srl');
-            if (!$attribute = AttributeRepository::getAttributes(array($srl))) throw new Exception("Attribute doesn't exist");
+            if (!$attribute = $repository->getAttributes(array($srl))) throw new Exception("Attribute doesn't exist");
             Context::set('attribute', $attribute[0]);
-            Context::set('types', AttributeRepository::getTypes(Context::get('lang')));
+            Context::set('types', $repository->getTypes(Context::get('lang')));
             $this->setTemplateFile('AddAttribute');
         }
 
@@ -402,6 +402,8 @@
          */
         public function dispShopToolAddProduct(){
             $oShopModel = getModel('shop');
+            $attributeRepository = $oShopModel->getAttributeRepository();
+            $attributes = $attributeRepository->getRequiredAttributesList($this->module_info->module_srl);
         }
 
         /**

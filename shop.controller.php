@@ -172,7 +172,7 @@
          */
         public function procShopToolInsertAttribute() {
             $shopModel = getModel('shop');
-            $shopModel->requireAttributesModel();
+            $repository = $shopModel->getAttributeRepository();
 
             $args = Context::getRequestVars();
             $args->module_srl = $this->module_info->module_srl;
@@ -184,11 +184,11 @@
             try
             {
                 if ($attribute->attribute_srl) {
-                    $output = AttributeRepository::updateAttribute($attribute);
+                    $output = $repository->updateAttribute($attribute);
                     $this->setMessage("success_updated");
                 }
                 else {
-                    $output = AttributeRepository::insertAttribute($attribute);
+                    $output = $repository->insertAttribute($attribute);
                     $this->setMessage("success_registed");
                 }
             }
@@ -196,8 +196,7 @@
                 return new Object(-1, $e->getMessage());
             }
 
-//            $returnUrl = getNotEncodedUrl('', 'act', 'dispShopToolManageAttributes');
-            $returnUrl = getNotEncodedUrl('', 'act', 'dispShopToolEditAttribute', 'attribute_srl', $attribute->attribute_srl);
+            $returnUrl = getNotEncodedUrl('', 'act', 'dispShopToolManageAttributes');
             $this->setRedirectUrl($returnUrl);
         }
 
@@ -240,10 +239,10 @@
         */
         public function procShopToolDeleteAttributes(){
             $shopModel = getModel('shop');
-            $shopModel->requireAttributesModel();
+            $repository = $shopModel->getAttributeRepository();
             $args = new stdClass();
             $args->attribute_srls = explode(',', Context::get('attribute_srls'));
-            AttributeRepository::deleteAttributes($args);
+            $repository->deleteAttributes($args);
             $this->setMessage("success_deleted");
             $this->setRedirectUrl(getNotEncodedUrl('', 'act', 'dispShopToolManageAttributes'));
         }

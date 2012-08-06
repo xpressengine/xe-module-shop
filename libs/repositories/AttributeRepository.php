@@ -25,10 +25,11 @@ class AttributeRepository extends BaseRepository
 	 * @param $attribute Attribute
 	 * @return int
 	 */
-	public static function insertAttribute(Attribute &$attribute)
+	public function insertAttribute(Attribute &$attribute)
 	{
         if ($attribute->attribute_srl) throw new Exception('A srl must NOT be specified');
         $attribute->attribute_srl = getNextSequence();
+        if(count($attribute->values ) == 0) unset($attribute->values);
 		$output = executeQuery('shop.insertAttribute', $attribute);
 		if (!$output->toBool()) throw new Exception($output->getMessage(), $output->getError());
         return $output;
@@ -42,9 +43,10 @@ class AttributeRepository extends BaseRepository
      * @throws Exception
      * @return mixed
      */
-    public static function updateAttribute(Attribute $attribute)
+    public function updateAttribute(Attribute $attribute)
     {
         if (!$attribute->attribute_srl) throw new Exception('Target srl must be specified');
+        if(count($attribute->values ) == 0) unset($attribute->values);
         $output = executeQuery('shop.updateAttribute', $attribute);
         if (!$output->toBool()) throw new Exception($output->getMessage(), $output->getError());
         return $output;
@@ -57,7 +59,7 @@ class AttributeRepository extends BaseRepository
 	 * @author Florin Ercus (dev@xpressengine.org)
 	 * @param $args array
 	 */
-	public static function deleteAttributes($args)
+	public function deleteAttributes($args)
 	{
         if (!isset($args->attribute_srls)) {
             if (!isset($args->module_srl)) throw new Exception("Please provide attribute_srls or module_srl.");
@@ -75,7 +77,7 @@ class AttributeRepository extends BaseRepository
 	 * @param $srls array
 	 * @return boolean|array of attribute objects
 	 */
-	public static function getAttributes(array $srls)
+	public function getAttributes(array $srls)
 	{
 		$args = new stdClass();
 		$args->attribute_srls = $srls;
@@ -94,7 +96,7 @@ class AttributeRepository extends BaseRepository
      * @param $module_srl int
      * @return Attribute list
      */
-    public static function getAttributesList($module_srl)
+    public function getAttributesList($module_srl)
     {
         if (!is_numeric($module_srl)) throw new Exception('module_srl must be a valid int');
         $args = new stdClass();
@@ -115,8 +117,32 @@ class AttributeRepository extends BaseRepository
         return $output;
     }
 
+    /**
+     * Retrieve a list of required Attributes object from the database by modul_srl
+     * @author Dan Dragan (dev@xpressengine.org)
+     * @param $module_srl int
+     * @return Attribute list
+     */
+    public function getRequiredAttributesList($module_srl)
+    {
+        if (!is_numeric($module_srl)) throw new Exception('module_srl must be a valid int');
+        $args = new stdClass();
+        $args->module_srl = $module_srl;
+        if (!isset($args->module_srl)) throw new Exception("Missing arguments for attributes list : please provide module_srl");
+        $args->required = 'Y';
 
-    public static function getTypes($lang, $id=null)
+        $output = executeQuery('shop.getAttributesList', $args);
+        $attributes = array();
+        foreach ($output->data as $properties) {
+            $o = new Attribute($properties);
+            $attributes[] = $o;
+        }
+        $output->attributes = $attributes;
+        return $output;
+    }
+
+
+    public function getTypes($lang, $id=null)
     {
         $arr = array(
             self::TYPE_TEXTFIELD       => $lang->types['text_field'],

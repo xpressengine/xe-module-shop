@@ -208,11 +208,6 @@ class shopModel extends shop
 		return $configs[$module_srl];
 	}
 
-    public function requireAttributesModel() {
-        require_once _XE_PATH_ . $this->module_path . 'libs/model/Attribute.php';
-        require_once _XE_PATH_ . $this->module_path . 'libs/repositories/AttributeRepository.php';
-    }
-	
     /**
      * Returns an instance of the Product repository
      *
@@ -222,6 +217,17 @@ class shopModel extends shop
     {
         require_once dirname(__FILE__) . '/libs/repositories/ProductRepository.php';
         return new ProductRepository();
+    }
+
+    /**
+     * Returns an instance of the Attribute repository
+     *
+     * @author Dan Dragan(dev@xpressengine.org)
+     */
+    function getAttributeRepository()
+    {
+        require_once dirname(__FILE__) . '/libs/repositories/AttributeRepository.php';
+        return new AttributeRepository();
     }
 
 	/**

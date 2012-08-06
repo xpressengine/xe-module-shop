@@ -1,4 +1,4 @@
-<query id="insertProduct" action="insert">
+<query id="insertAttribute" action="insert">
     <tables>
         <table name="shop_attributes" />
     </tables>
