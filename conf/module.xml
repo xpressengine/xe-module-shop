@@ -15,8 +15,6 @@
         <permission action="dispShopToolManageAttributes" target="manager"/>
         <permission action="dispShopToolAddAttribute" target="manager"/>
         <permission action="dispShopToolEditAttribute" target="manager"/>
-        <permission action="dispShopToolManageCategories" target="manager" />
-        <permission action="dispShopToolAddProductCategory" target="manager" />
 		<permission action="dispShopToolManagePaymentGateways" target="manager" />
 
 		<permission action="procShopInfoUpdate" target="manager" />
@@ -27,12 +25,17 @@
 		<permission action="procShopToolUserSkinExport" target="manager" />
 		<permission action="procShopToolUserSkinImport" target="manager" />
 		<permission action="procShopToolLive" target="manager" />
-        <permission action="procShopToolInsertProductCategory" target="manager" />
         <permission action="procShopToolInsertProduct" target="manager" />
         <permission action="procShopToolInsertAttribute" target="manager" />
         <permission action="procShopToolDeleteProduct" target="manager" />
         <permission action="procShopToolDeleteProducts" target="manager" />
         <permission action="procShopToolDeleteAttributes" target="manager" />
+
+        <!-- Product categories -->
+        <permission action="dispShopToolManageCategories" target="manager" />
+        <permission action="dispShopToolAddProductCategory" target="manager" />
+        <permission action="procShopToolInsertProductCategory" target="manager" />
+        <permission action="procShopServiceDeleteProductCategory" target="manager" />
 
     </permissions>
     <actions>
@@ -48,10 +51,8 @@
         <action name="dispShopToolManageAttributes" type="view"/>
         <action name="dispShopToolAddAttribute" type="view" />
         <action name="dispShopToolEditAttribute" type="view" />
-        <action name="dispShopToolManageCategories" type="view"/>
-		<action name="dispShopToolManagePaymentGateways" type="view" />
-        <action name="dispShopToolAddProductCategory" type="view"/>
-		<action name="dispShopToolDashboard" type="view" />
+        <action name="dispShopToolManagePaymentGateways" type="view" />
+    	<action name="dispShopToolDashboard" type="view" />
 		<action name="dispShopMenu" type="view" />
 
 
@@ -68,7 +69,6 @@
 		<action name="procShopToolUserSkinExport" type="controller" />
 		<action name="procShopToolUserSkinImport" type="controller" />
 		<action name="procShopToolLive" type="controller" />
-        <action name="procShopToolInsertProductCategory" type="controller" />
         <action name="procShopToolInsertProduct" type="controller" ruleset="insert_product" />
         <action name="procShopToolInsertAttribute" type="controller" ruleset="insert_attribute"/>
         <action name="procShopToolDeleteProduct" type="controller" />
@@ -84,8 +84,18 @@
         <action name="procShopAdminDelete" type="controller" standalone="true" ruleset="delete_shop"  />
         <action name="procShopAdminInsertCustomMenu" type="controller" standalone="true" />
 
-        <action name="procShopServiceGetProductCategory" type="controller" standalone="true" />
 
 		<action name="dispShopPasswordForm" type="mobile" />
+
+        <!-- Product categories -->
+        <action name="dispShopToolManageCategories" type="view"/>
+        <action name="dispShopToolAddProductCategory" type="view"/>
+        <action name="procShopToolInsertProductCategory" type="controller" />
+        <action name="procShopServiceDeleteProductCategory" type="controller" standalone="true" />
+        <action name="procShopServiceGetProductCategory" type="controller" standalone="true" />
+
+
+
+
     </actions>
 </module>
