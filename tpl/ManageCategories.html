@@ -28,7 +28,7 @@
 
 		<ul>
 		<!--@foreach($flat_tree as $node)-->
-		    <!--@if($previous_depth == $node->depth)-->
+		    <!--@if($previous_depth === $node->depth)-->
 				</li>
 			<!--@endif-->
 		    <!--@if($previous_depth < $node->depth)-->
@@ -36,8 +36,9 @@
 			<!--@endif-->
 			<!--@if($previous_depth > $node->depth)-->
 				<!--@for($i = $node->depth; $i < $previous_depth; $i++)-->
-					</ul></li>
+					</li></ul>
 				<!--@end-->
+				</li>
 			<!--@endif-->
 			<li id="tree_{$node->product_category->product_category_srl}">
 				<span>{$node->product_category->title} ({$node->product_category->product_count})</span>
@@ -48,6 +49,12 @@
 				<!--@endif-->
 			{@ $previous_depth = $node->depth; }
 		<!--@end-->
+		<!--@if($previous_depth > 0)-->
+				<!--@for($i = 0; $i < $previous_depth; $i++)-->
+					</li></ul>
+				<!--@end-->
+		<!--@endif-->
+			</li>
 		</ul>
 	</li>
 </ul>
