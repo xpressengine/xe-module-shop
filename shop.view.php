@@ -361,8 +361,8 @@
             Context::set('types', $attributeRepository->getTypes(Context::get('lang')));
 
             // Retrieve existing categories
-            $categoryRepository = $shopModel->getProductCategoryRepository();
-            $tree = $categoryRepository->getProductCategoriesTree($this->module_srl);
+            $categoryRepository = $shopModel->getCategoryRepository();
+            $tree = $categoryRepository->getCategoriesTree($this->module_srl);
 
             // Prepare tree for display
             $flat_tree = $tree->toFlatStructure();
@@ -380,8 +380,8 @@
             Context::set('types', $attributeRepository->getTypes(Context::get('lang')));
 
             // Retrieve existing categories
-            $categoryRepository = $shopModel->getProductCategoryRepository();
-            $tree = $categoryRepository->getProductCategoriesTree($this->module_srl);
+            $categoryRepository = $shopModel->getCategoryRepository();
+            $tree = $categoryRepository->getCategoriesTree($this->module_srl);
 
             // Prepare tree for display
             $flat_tree = $tree->toFlatStructure();
@@ -401,8 +401,8 @@
             $output = $product_repository->getProductList($module_srl);
             Context::set('product_list',$output->products);
 
-			$category_repository = $shopModel->getProductCategoryRepository();
-			$tree = $category_repository->getProductCategoriesTree($module_srl);
+			$category_repository = $shopModel->getCategoryRepository();
+			$tree = $category_repository->getCategoriesTree($module_srl);
 			$flat_tree = $tree->toFlatStructure();
 			Context::set('category_list', $flat_tree);
 
@@ -441,21 +441,21 @@
 		{
 			// Retrieve existing categories
 			$shopModel = getModel('shop');
-			$repository = $shopModel->getProductCategoryRepository();
-			$tree = $repository->getProductCategoriesTree($this->module_srl);
+			$repository = $shopModel->getCategoryRepository();
+			$tree = $repository->getCategoriesTree($this->module_srl);
 
 			// Prepare tree for display
 			$flat_tree = $tree->toFlatStructure();
 			Context::set('flat_tree', $flat_tree);
 
-			// Initialize new empty ProductCategory object
-			require_once('libs/model/ProductCategory.php');
-			$product_category = new ProductCategory();
-			$product_category->module_srl = $this->module_srl;
-			Context::set('category', $product_category);
+			// Initialize new empty Category object
+			require_once('libs/model/Category.php');
+			$category = new Category();
+			$category->module_srl = $this->module_srl;
+			Context::set('category', $category);
 		}
 
-		public function dispShopToolAddProductCategory()
+		public function dispShopToolAddCategory()
 		{
 		}
 

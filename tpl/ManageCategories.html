@@ -1,6 +1,6 @@
 <include target="_tool_header.html" />
-<load target="css/product_categories.css" />
-<load target="js/product_categories.js" />
+<load target="css/categories.css" />
+<load target="js/categories.js" />
 
 <!-- Content -->
 <div id="content">
@@ -10,7 +10,7 @@
 </div>
 
 <!--<div class="approach">-->
-	<!--<span class="btnNewPost"><a href="{getUrl('act','dispShopToolAddProductCategory')}">Add a new product category</a></span>-->
+	<!--<span class="btnNewPost"><a href="{getUrl('act','dispShopToolAddCategory')}">Add a new product category</a></span>-->
 <!--</div>-->
 
 <div cond="$XE_VALIDATOR_MESSAGE" class="message {$XE_VALIDATOR_MESSAGE_TYPE}">
@@ -40,8 +40,8 @@
 				<!--@end-->
 				</li>
 			<!--@endif-->
-			<li id="tree_{$node->product_category->product_category_srl}">
-				<span>{$node->product_category->title} ({$node->product_category->product_count})</span>
+			<li id="tree_{$node->category->category_srl}">
+				<span>{$node->category->title} ({$node->category->product_count})</span>
 				<a href="#" class="add"><img src="./common/js/plugins/ui.tree/images/iconAdd.gif"></a>
 				<a href="#" class="modify"><img src="./common/js/plugins/ui.tree/images/iconModify.gif"></a>
 		    	<!--@if(count($node->children) == 0)-->
@@ -60,7 +60,7 @@
 </ul>
 </div>
 
-<!--#include("AddProductCategory.html")-->
+<!--#include("AddCategory.html")-->
 
 </div>
 <!-- /Content -->

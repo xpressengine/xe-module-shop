@@ -1,45 +1,45 @@
 <?php
 
 require_once dirname(__FILE__) . '/BaseRepository.php';
-require_once dirname(__FILE__) . '/../model/ProductCategory.php';
+require_once dirname(__FILE__) . '/../model/Category.php';
 
 /**
  * Handles database operations for Product Category
  *
  * @author Corina Udrescu (dev@xpressengine.org)
  */
-class ProductCategoryRepository extends BaseRepository
+class CategoryRepository extends BaseRepository
 {
 	/**
 	 * Insert a new Product category; returns the ID of the newly created record
 	 *
 	 * @author Corina Udrescu (dev@xpressengine.org)
-	 * @param $product_category ProductCategory
+	 * @param $category Category
 	 * @return int
 	 */
-	public function insertProductCategory(ProductCategory $product_category)
+	public function insertCategory(Category $category)
 	{
-		$product_category->product_category_srl = getNextSequence();
-		$output = executeQuery('shop.insertProductCategory', $product_category);
+		$category->category_srl = getNextSequence();
+		$output = executeQuery('shop.insertCategory', $category);
 		if(!$output->toBool())
 		{
 			throw new Exception($output->getMessage(), $output->getError());
 		}
-		return $product_category->product_category_srl;
+		return $category->category_srl;
 	}
 
 	/**
-	 * Deletes a product category by $product_category_srl or $module_srl
+	 * Deletes a product category by $category_srl or $module_srl
 	 *
 	 * @author Corina Udrescu (dev@xpressengine.org)
 	 * @param $args array
 	 */
-	public function deleteProductCategory($args)
+	public function deleteCategory($args)
 	{
-		if(!isset($args->product_category_srl) && !isset($args->module_srl))
-			throw new Exception("Missing arguments for Product category delete: please provide [product_category_srl] or [module_srl]");
+		if(!isset($args->category_srl) && !isset($args->module_srl))
+			throw new Exception("Missing arguments for Product category delete: please provide [category_srl] or [module_srl]");
 
-		$output = executeQuery('shop.deleteProductCategory', $args);
+		$output = executeQuery('shop.deleteCategory', $args);
 		if(!$output->toBool())
 		{
 			throw new Exception($output->getMessage(), $output->getError());
@@ -55,39 +55,39 @@ class ProductCategoryRepository extends BaseRepository
 	}
 
 	/**
-	 * Retrieve a ProductCategory object from the database given a srl
+	 * Retrieve a Category object from the database given a srl
 	 *
 	 * @author Corina Udrescu (dev@xpressengine.org)
-	 * @param $product_category_srl int
-	 * @return ProductCategory
+	 * @param $category_srl int
+	 * @return Category
 	 */
-	public function getProductCategory($product_category_srl)
+	public function getCategory($category_srl)
 	{
 		$args = new stdClass();
-		$args->product_category_srl = $product_category_srl;
+		$args->category_srl = $category_srl;
 
-		$output = executeQuery('shop.getProductCategory', $args);
+		$output = executeQuery('shop.getCategory', $args);
 		if(!$output->toBool())
 		{
 			throw new Exception($output->getMessage(), $output->getError());
 		}
 
-		$product_category = new ProductCategory($output->data);
+		$category = new Category($output->data);
 
-		return $product_category;
+		return $category;
 	}
 
 	/**
 	 * Update a product category
 	 *
 	 * @author   Corina Udrescu (dev@xpressengine.org)
-	 * @param $product_category ProductCategory
+	 * @param $category Category
 	 * @throws Exception
 	 * @return boolean
 	 */
-	public function updateProductCategory(ProductCategory $product_category)
+	public function updateCategory(Category $category)
 	{
-		$output = executeQuery('shop.updateProductCategory', $product_category);
+		$output = executeQuery('shop.updateCategory', $category);
 		if(!$output->toBool())
 		{
 			throw new Exception($output->getMessage(), $output->getError());
@@ -102,13 +102,13 @@ class ProductCategoryRepository extends BaseRepository
 	 * @author Corina Udrescu (dev@xpressengine.org)
 	 * @param $module_srl int
 	 */
-	public function getProductCategoriesTree($module_srl)
+	public function getCategoriesTree($module_srl)
 	{
 		$args = new stdClass();
 		$args->module_srl = $module_srl;
 
 		// Retrieve categories from database
-		$output = executeQueryArray('shop.getProductCategories', $args);
+		$output = executeQueryArray('shop.getCategories', $args);
 		if(!$output->toBool())
 		{
 			throw new Exception($output->getMessage(), $output->getError());
@@ -116,11 +116,11 @@ class ProductCategoryRepository extends BaseRepository
 
 		// Arrange hierarchically
 		$nodes = array();
-		$nodes[0] = new ProductCategoryTreeNode();
+		$nodes[0] = new CategoryTreeNode();
 		foreach($output->data as $pc)
 		{
-			$nodes[$pc->product_category_srl] = new ProductCategoryTreeNode(new ProductCategory($pc));
-			$nodes[$pc->parent_srl]->addChild($nodes[$pc->product_category_srl]);
+			$nodes[$pc->category_srl] = new CategoryTreeNode(new Category($pc));
+			$nodes[$pc->parent_srl]->addChild($nodes[$pc->category_srl]);
 		}
 
 		return $nodes[0];
@@ -131,7 +131,7 @@ class ProductCategoryRepository extends BaseRepository
 	 *
 	 * @author Corina Udrescu (dev@xpressengine.org)
 	 */
-	public function saveProductCategoryImage($module_srl, $original_filename, $tmp_name)
+	public function saveCategoryImage($module_srl, $original_filename, $tmp_name)
 	{
 		$tmp_arr = explode('.', $original_filename);
 		$extension = $tmp_arr[count($tmp_arr) - 1];
@@ -148,7 +148,7 @@ class ProductCategoryRepository extends BaseRepository
 	 *
 	 * @author Corina Udrescu (dev@xpressengine.org)
 	 */
-	public function deleteProductCategoryImage($filename)
+	public function deleteCategoryImage($filename)
 	{
 		FileHandler::removeFile($filename);
 

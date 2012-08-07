@@ -1,6 +1,6 @@
-function ProductCategory()
+function Category()
 {
-    this.product_category_srl = null;
+    this.category_srl = null;
     this.module_srl = null;
     this.parent_srl = 0;
     this.file_srl = null;
@@ -13,9 +13,9 @@ function ProductCategory()
     this.last_update = null;
 }
 
-function fillFormWithProductCategory($category, $parent_title)
+function fillFormWithCategory($category, $parent_title)
 {
-    jQuery("#product_category_srl").val($category.product_category_srl);
+    jQuery("#category_srl").val($category.category_srl);
     jQuery("#parent_srl").val($category.parent_srl);
 
     jQuery("#filename").val($category.filename);
@@ -51,7 +51,7 @@ function fillFormWithProductCategory($category, $parent_title)
     }
 }
 
-function showProductCategoryForm()
+function showCategoryForm()
 {
     if(jQuery("#categoryFormContainer").is(":visible"))
     {
@@ -67,22 +67,22 @@ function showProductCategoryForm()
 jQuery(document).ready(function($)
 {
     $("#tree_0 a.add.root").click(function(){
-        fillFormWithProductCategory(new ProductCategory());
+        fillFormWithCategory(new Category());
         $("#categoryFormContainer h4").text("Add product category");
-        showProductCategoryForm();
+        showCategoryForm();
     });
 
     // Add behaviour
     $("#tree_0 ul a.add").click(function(){
-        var $category = new ProductCategory();
+        var $category = new Category();
         var $id = $(this).parent().attr("id");
         var $category_srl = $id.replace("tree_", "");
         var $category_title = $(this).parent().find("span:first").text().trim();
         $category.parent_srl = $category_srl;
 
-        fillFormWithProductCategory($category, $category_title);
+        fillFormWithCategory($category, $category_title);
         $("#categoryFormContainer h4").text("Add product category");
-        showProductCategoryForm();
+        showCategoryForm();
     });
 
     // Edit behaviour
@@ -92,18 +92,18 @@ jQuery(document).ready(function($)
         var $parent_node = $(this).parent("li").parent("ul").parent("li");
         var $parent_category_title = $parent_node.find("span:first").text().trim();
 
-        $.exec_json('shop.procShopServiceGetProductCategory'
-            , { product_category_srl : $category_srl}
+        $.exec_json('shop.procShopServiceGetCategory'
+            , { category_srl : $category_srl}
             , function(data){
                 if(data.error != 0)
                 {
                     alert("Error " + data.error + " " + data.message);
                     return;
                 }
-                $category = data.product_category;
-                fillFormWithProductCategory($category, $parent_category_title);
+                $category = data.category;
+                fillFormWithCategory($category, $parent_category_title);
                 $("#categoryFormContainer h4").text("Edit product category");
-                showProductCategoryForm();
+                showCategoryForm();
             }
         );
     });
@@ -115,8 +115,8 @@ jQuery(document).ready(function($)
         var $id = $(this).parent().attr("id");
         var $category_srl = $id.replace("tree_", "");
 
-        $.exec_json('shop.procShopServiceDeleteProductCategory'
-            , { product_category_srl : $category_srl}
+        $.exec_json('shop.procShopServiceDeleteCategory'
+            , { category_srl : $category_srl}
             , function(data){
                 if(data.error != 0)
                 {

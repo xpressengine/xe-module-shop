@@ -1,9 +1,0 @@
-<query id="deleteProductCategory" action="delete">
-    <tables>
-        <table name="shop_product_categories" />
-    </tables>
-    <conditions>
-        <condition operation="equal" column="product_category_srl" var="product_category_srl" filter="number" />
-        <condition operation="equal" column="module_srl" var="module_srl" filter="number" pipe="or"/>
-    </conditions>
-</query>

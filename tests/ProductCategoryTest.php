@@ -3,13 +3,13 @@
 require dirname(__FILE__) . '/lib/Bootstrap.php';
 require dirname(__FILE__) . '/lib/TestAgainstDatabase.php';
 
-require_once dirname(__FILE__) . '/../libs/model/ProductCategory.php';
+require_once dirname(__FILE__) . '/../libs/model/Category.php';
 
 /**
  *  Test features related to Product categories
  *  @author Corina Udrescu (dev@xpressengine.org)
  */
-class ProductCategoryTest extends TestAgainstDatabase
+class CategoryTest extends TestAgainstDatabase
 {
 	/**
 	 * Set up environment for testing before each test method
@@ -20,23 +20,23 @@ class ProductCategoryTest extends TestAgainstDatabase
 		parent::setUp();
 		// Insert a few product categories in the database, so that we will have what to delete
 		Database::executeNonQuery("
-			INSERT INTO xe_shop_product_categories (product_category_srl, module_srl, title, parent_srl, filename)
+			INSERT INTO xe_shop_categories (category_srl, module_srl, title, parent_srl, filename)
 				VALUES(1000, 1001, 'Dummy category 1000', 0, 'files/attach/picture.jpg')
 			");
 		Database::executeNonQuery("
-			INSERT INTO xe_shop_product_categories (product_category_srl, module_srl, title, parent_srl)
+			INSERT INTO xe_shop_categories (category_srl, module_srl, title, parent_srl)
 				VALUES(1002, 1001, 'Dummy category 1002', 1000)
 			");
 		Database::executeNonQuery("
-			INSERT INTO xe_shop_product_categories (product_category_srl, module_srl, title, parent_srl)
+			INSERT INTO xe_shop_categories (category_srl, module_srl, title, parent_srl)
 				VALUES(1004, 1003, 'Dummy category 1002', 0)
 			");
 		Database::executeNonQuery("
-			INSERT INTO xe_shop_product_categories (product_category_srl, module_srl, title, parent_srl)
+			INSERT INTO xe_shop_categories (category_srl, module_srl, title, parent_srl)
 				VALUES(1006, 1001, 'Dummy category 1006', 0)
 			");
 		Database::executeNonQuery("
-			INSERT INTO xe_shop_product_categories (product_category_srl, module_srl, title, parent_srl)
+			INSERT INTO xe_shop_categories (category_srl, module_srl, title, parent_srl)
 				VALUES(1008, 1001, 'Dummy category 1008', 1000)
 			");
 	}
@@ -106,35 +106,35 @@ Patrioque conceptam in mea. Est ad ullum ceteros, pro quem accumsan appareat id,
 	 * Tests inserting a new Product category - makes sure all fields are properly persisted
 	 * @author Corina Udrescu (dev@xpressengine.org)
 	 */
-	public function testInsertProductCategory_ValidData()
+	public function testInsertCategory_ValidData()
 	{
 		// Create new Product category object
-		$product_category = new ProductCategory();
-		$product_category->module_srl = 2;
-		$product_category->title = "Product category 1";
+		$category = new Category();
+		$category->module_srl = 2;
+		$category->title = "Product category 1";
 
 		$shopModel = getModel('shop');
-		$repository = $shopModel->getProductCategoryRepository();
+		$repository = $shopModel->getCategoryRepository();
 		try
 		{
 			// Try to insert the new Category
-			$product_category_srl = $repository->insertProductCategory($product_category);
+			$category_srl = $repository->insertCategory($category);
 
 			// Check that a srl was returned
-			$this->assertNotNull($product_category_srl);
+			$this->assertNotNull($category_srl);
 
 			// Read the newly created object from the database, to compare it with the source object
-			$output = Database::executeQuery("SELECT * FROM xe_shop_product_categories WHERE product_category_srl = $product_category_srl");
+			$output = Database::executeQuery("SELECT * FROM xe_shop_categories WHERE category_srl = $category_srl");
 			$this->assertEquals(1, count($output));
 
-			$new_product_category = $output[0];
-			$this->assertEquals($product_category->module_srl, $new_product_category->module_srl);
-			$this->assertEquals($product_category->title, $new_product_category->title);
-			$this->assertNotNull($new_product_category->regdate);
-			$this->assertNotNull($new_product_category->last_update);
+			$new_category = $output[0];
+			$this->assertEquals($category->module_srl, $new_category->module_srl);
+			$this->assertEquals($category->title, $new_category->title);
+			$this->assertNotNull($new_category->regdate);
+			$this->assertNotNull($new_category->last_update);
 
 			// Delete product we just added after test is finished
-			Database::executeNonQuery("DELETE FROM xe_shop_product_categories WHERE product_category_srl = $product_category_srl");
+			Database::executeNonQuery("DELETE FROM xe_shop_categories WHERE category_srl = $category_srl");
 		}
 		catch(Exception $e)
 		{
@@ -147,26 +147,26 @@ Patrioque conceptam in mea. Est ad ullum ceteros, pro quem accumsan appareat id,
 	 *
 	 * @author Corina Udrescu (dev@xpressengine.org)
 	 */
-	public function testDeleteProductCategoryBySrl_ValidData()
+	public function testDeleteCategoryBySrl_ValidData()
 	{
 		// Delete Product category 1000
 		$shopModel = &getModel('shop');
-		$repository = $shopModel->getProductCategoryRepository();
+		$repository = $shopModel->getCategoryRepository();
 		$args = new stdClass();
-		$args->product_category_srl = 1000;
+		$args->category_srl = 1000;
 		try
 		{
-			$output = $repository->deleteProductCategory($args);
+			$output = $repository->deleteCategory($args);
 
 			// Check that deleting was successful
 			$this->assertTrue($output);
 
 			// Check that the record is no longer in the database
-			$count = Database::executeQuery("SELECT COUNT(*) as count FROM xe_shop_product_categories WHERE product_category_srl = 1000");
+			$count = Database::executeQuery("SELECT COUNT(*) as count FROM xe_shop_categories WHERE category_srl = 1000");
 			$this->assertEquals(0, $count[0]->count);
 
 			// Check that the other record was not also deleted by mistake
-			$count = Database::executeQuery("SELECT COUNT(*) as count FROM xe_shop_product_categories WHERE product_category_srl = 1002");
+			$count = Database::executeQuery("SELECT COUNT(*) as count FROM xe_shop_categories WHERE category_srl = 1002");
 			$this->assertEquals(1, $count[0]->count);
 		}
 		catch(Exception $e)
@@ -180,27 +180,27 @@ Patrioque conceptam in mea. Est ad ullum ceteros, pro quem accumsan appareat id,
 	 *
 	 * @author Corina Udrescu (dev@xpressengine.org)
 	 */
-	public function testDeleteProductCategoryByModuleSrl_ValidData()
+	public function testDeleteCategoryByModuleSrl_ValidData()
 	{
 		// Delete Product category 1000
 		$shopModel = &getModel('shop');
-		$repository = $shopModel->getProductCategoryRepository();
+		$repository = $shopModel->getCategoryRepository();
 
 		$args = new stdClass();
 		$args->module_srl = 1001;
 		try
 		{
-			$output = $repository->deleteProductCategory($args);
+			$output = $repository->deleteCategory($args);
 
 			// Check that deleting was successful
 			$this->assertTrue($output);
 
 			// Check that the record is no longer in the database
-			$count = Database::executeQuery("SELECT COUNT(*) as count FROM xe_shop_product_categories WHERE module_srl = 1001");
+			$count = Database::executeQuery("SELECT COUNT(*) as count FROM xe_shop_categories WHERE module_srl = 1001");
 			$this->assertEquals(0, $count[0]->count);
 
 			// Check that the other record was not also deleted by mistake
-			$count = Database::executeQuery("SELECT COUNT(*) as count FROM xe_shop_product_categories WHERE module_srl = 1003");
+			$count = Database::executeQuery("SELECT COUNT(*) as count FROM xe_shop_categories WHERE module_srl = 1003");
 			$this->assertEquals(1, $count[0]->count);
 		}
 		catch(Exception $e)
@@ -210,23 +210,23 @@ Patrioque conceptam in mea. Est ad ullum ceteros, pro quem accumsan appareat id,
 	}
 
 	/**
-	 * Test retrieving a ProductCategory object from the database
+	 * Test retrieving a Category object from the database
 	 *
 	 * @author Corina Udrescu (dev@xpressengine.org)
 	 */
-	public function testGetProductCategory_ValidData()
+	public function testGetCategory_ValidData()
 	{
 		// Try to retieve
 		$shopModel = getModel('shop');
-		$repository = $shopModel->getProductCategoryRepository();
+		$repository = $shopModel->getCategoryRepository();
 		try
 		{
-			$product_category = $repository->getProductCategory(1000);
+			$category = $repository->getCategory(1000);
 
-			$this->assertNotNull($product_category);
-			$this->assertEquals(1000, $product_category->product_category_srl);
-			$this->assertEquals(1001, $product_category->module_srl);
-			$this->assertEquals("Dummy category 1000", $product_category->title);
+			$this->assertNotNull($category);
+			$this->assertEquals(1000, $category->category_srl);
+			$this->assertEquals(1001, $category->module_srl);
+			$this->assertEquals("Dummy category 1000", $category->title);
 		}
 		catch(Exception $e)
 		{
@@ -238,28 +238,28 @@ Patrioque conceptam in mea. Est ad ullum ceteros, pro quem accumsan appareat id,
 	 * Test updating a product category
 	 *
 	 * @author Corina Udrescu (dev@xpressengine.org)
-	 * @depends testGetProductCategory_ValidData
+	 * @depends testGetCategory_ValidData
 	 */
-	public function testUpdateProductCategory_ValidData()
+	public function testUpdateCategory_ValidData()
 	{
 		// Retrieve an object from the database
 		$shopModel = getModel('shop');
-		$repository = $shopModel->getProductCategoryRepository();
-		$product_category = $repository->getProductCategory(1000);
+		$repository = $shopModel->getCategoryRepository();
+		$category = $repository->getCategory(1000);
 
 		// Update some of its properties
-		$product_category->title = "A whole new title!";
+		$category->title = "A whole new title!";
 
 		// Try to update
 		try
 		{
-			$output = $repository->updateProductCategory($product_category);
+			$output = $repository->updateCategory($category);
 
 			$this->assertEquals(TRUE, $output);
 
 			// Check that properties were updated
-			$new_product_category = $repository->getProductCategory($product_category->product_category_srl);
-			$this->assertEquals($product_category->title, $new_product_category->title);
+			$new_category = $repository->getCategory($category->category_srl);
+			$this->assertEquals($category->title, $new_category->title);
 		}
 		catch(Exception $e)
 		{
@@ -273,28 +273,28 @@ Patrioque conceptam in mea. Est ad ullum ceteros, pro quem accumsan appareat id,
 	 *
 	 * @author Corina Udrescu (dev@xpressengine.org)
 	 */
-	public function testProductCategoryTreeHierarchy()
+	public function testCategoryTreeHierarchy()
 	{
 		// Retrieve tree
 		$shopModel = &getModel('shop');
-		$repository = $shopModel->getProductCategoryRepository();
+		$repository = $shopModel->getCategoryRepository();
 
-		$tree = $repository->getProductCategoriesTree(1001);
+		$tree = $repository->getCategoriesTree(1001);
 
 		// Check hierarchy
 		$this->assertNotNull($tree);
-		$this->assertNull($tree->product_category); // Root node should not have any product category associated
+		$this->assertNull($tree->category); // Root node should not have any product category associated
 
 		foreach($tree->children as $id => $node)
 		{
 			if($id == 1000)
 			{
-				$this->assertEquals(1000, $node->product_category->product_category_srl);
+				$this->assertEquals(1000, $node->category->category_srl);
 				$this->assertEquals(2, count($node->children));
 			}
 			elseif($id = 1006)
 			{
-				$this->assertEquals(1006, $node->product_category->product_category_srl);
+				$this->assertEquals(1006, $node->category->category_srl);
 				$this->assertEquals(0, count($node->children));
 			}
 			else
@@ -310,30 +310,30 @@ Patrioque conceptam in mea. Est ad ullum ceteros, pro quem accumsan appareat id,
 	 *
 	 * @author Corina Udrescu (dev@xpressengine.org)
 	 */
-	public function testProductCategoryFlatTreeHierarchy()
+	public function testCategoryFlatTreeHierarchy()
 	{
 		// Retrieve tree
 		$shopModel = &getModel('shop');
-		$repository = $shopModel->getProductCategoryRepository();
+		$repository = $shopModel->getCategoryRepository();
 
-		$tree = $repository->getProductCategoriesTree(1001);
+		$tree = $repository->getCategoriesTree(1001);
 		$flat_tree = $tree->toFlatStructure();
 		foreach($flat_tree as $node)
 		{
-			echo $node->depth . ' ' . $node->product_category->product_category_srl . PHP_EOL;
+			echo $node->depth . ' ' . $node->category->category_srl . PHP_EOL;
 		}
 
 		// Test flat structure
 		$this->assertTrue(is_array($flat_tree));
 		$this->assertEquals(4, count($flat_tree));
 
-		$this->assertEquals(1000, $flat_tree[0]->product_category->product_category_srl);
+		$this->assertEquals(1000, $flat_tree[0]->category->category_srl);
 		$this->assertEquals(0, $flat_tree[0]->depth);
-		$this->assertEquals(1002, $flat_tree[1]->product_category->product_category_srl);
+		$this->assertEquals(1002, $flat_tree[1]->category->category_srl);
 		$this->assertEquals(1, $flat_tree[1]->depth);
-		$this->assertEquals(1008, $flat_tree[2]->product_category->product_category_srl);
+		$this->assertEquals(1008, $flat_tree[2]->category->category_srl);
 		$this->assertEquals(1, $flat_tree[2]->depth);
-		$this->assertEquals(1006, $flat_tree[3]->product_category->product_category_srl);
+		$this->assertEquals(1006, $flat_tree[3]->category->category_srl);
 		$this->assertEquals(0, $flat_tree[3]->depth);
 	}
 
@@ -342,24 +342,24 @@ Patrioque conceptam in mea. Est ad ullum ceteros, pro quem accumsan appareat id,
 	 *
 	 * @author Corina Udrescu (dev@xpressengine.org)
 	 */
-	public function testRemoveProductCategoryFilename()
+	public function testRemoveCategoryFilename()
 	{
 		$shopModel = &getModel('shop');
-		$repository = $shopModel->getProductCategoryRepository();
+		$repository = $shopModel->getCategoryRepository();
 
-		$product_category = $repository->getProductCategory(1000);
-		$product_category->filename = '';
+		$category = $repository->getCategory(1000);
+		$category->filename = '';
 
 		// Try to update
 		try
 		{
-			$output = $repository->updateProductCategory($product_category);
+			$output = $repository->updateCategory($category);
 
 			$this->assertEquals(TRUE, $output);
 
 			// Check that properties were updated
-			$new_product_category = $repository->getProductCategory($product_category->product_category_srl);
-			$this->assertEquals($product_category->filename, $new_product_category->filename);
+			$new_category = $repository->getCategory($category->category_srl);
+			$this->assertEquals($category->filename, $new_category->filename);
 
 		}
 		catch(Exception $e)
@@ -377,29 +377,29 @@ Patrioque conceptam in mea. Est ad ullum ceteros, pro quem accumsan appareat id,
 	 *
 	 * @author Corina Udrescu (dev@xpressengine.org)
 	 */
-	public function testUpdateProductCategoryIncludeInNavigationMenu()
+	public function testUpdateCategoryIncludeInNavigationMenu()
 	{
 		$shopModel = &getModel('shop');
-		$repository = $shopModel->getProductCategoryRepository();
+		$repository = $shopModel->getCategoryRepository();
 
-		$product_category = $repository->getProductCategory(1000);
-		$product_category->include_in_navigation_menu = 'N';
+		$category = $repository->getCategory(1000);
+		$category->include_in_navigation_menu = 'N';
 
 		// Try to update
 		try
 		{
-			$output = $repository->updateProductCategory($product_category);
+			$output = $repository->updateCategory($category);
 
 			$this->assertEquals(TRUE, $output);
 
 			// Check that properties were updated
-			$new_product_category = $repository->getProductCategory($product_category->product_category_srl);
+			$new_category = $repository->getCategory($category->category_srl);
 
-			echo "Expected: " . $product_category->getIncludeInNavigationMenu() . PHP_EOL;
-			echo "Actual: " . $new_product_category->getIncludeInNavigationMenu() . PHP_EOL;
+			echo "Expected: " . $category->getIncludeInNavigationMenu() . PHP_EOL;
+			echo "Actual: " . $new_category->getIncludeInNavigationMenu() . PHP_EOL;
 
-			$this->assertEquals($product_category->include_in_navigation_menu
-									, $new_product_category->include_in_navigation_menu);
+			$this->assertEquals($category->include_in_navigation_menu
+									, $new_category->include_in_navigation_menu);
 
 		}
 		catch(Exception $e)
@@ -419,12 +419,12 @@ Patrioque conceptam in mea. Est ad ullum ceteros, pro quem accumsan appareat id,
 	public function tearDown()
 	{
 		// Revert changes: delete the product categories added previously
-		Database::executeNonQuery("DELETE FROM xe_shop_product_categories WHERE product_category_srl IN (1000, 1002, 1004, 1006, 1008)");
+		Database::executeNonQuery("DELETE FROM xe_shop_categories WHERE category_srl IN (1000, 1002, 1004, 1006, 1008)");
 
 		parent::tearDown();
 	}
 
 }
 
-/* End of file ProductCategoryTest.php */
-/* Location: ./modules/shop/tests/ProductCategoryTest.php */
+/* End of file CategoryTest.php */
+/* Location: ./modules/shop/tests/CategoryTest.php */

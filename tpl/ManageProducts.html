@@ -32,8 +32,8 @@
                 <select name="search_category_srl">
                     <option>categories</option>
                     <!--@foreach($category_list as $node)-->
-					 {@ $val = $node->product_category }
-                    <option value="{$val->product_category_srl}" <!--@if($search_category_srl==$val->product_category_srl)-->selected="selected"<!--@end-->>
+					 {@ $val = $node->category }
+                    <option value="{$val->category_srl}" <!--@if($search_category_srl==$val->category_srl)-->selected="selected"<!--@end-->>
 					    <!--@for($i = 0; $i < $node->depth; $i++)-->
 					    	-
 						<!--@end-->

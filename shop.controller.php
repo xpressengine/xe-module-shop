@@ -473,16 +473,16 @@
 		 * @author Corina Udrescu (dev@xpressengine.org)
 		 * @return Object
 		 */
-		public function procShopToolInsertProductCategory()
+		public function procShopToolInsertCategory()
 		{
-			$args = Context::gets('product_category_srl', 'module_srl', 'parent_srl', 'filename', 'title', 'description', 'friendly_url', 'include_in_navigation_menu');
+			$args = Context::gets('category_srl', 'module_srl', 'parent_srl', 'filename', 'title', 'description', 'friendly_url', 'include_in_navigation_menu');
 			$file_info = Context::get('file_info');
 
 			$delete_image = Context::get('delete_image');
 			$vid = Context::get('vid');
 
 			$shopModel = getModel('shop');
-			$repository = $shopModel->getProductCategoryRepository();
+			$repository = $shopModel->getCategoryRepository();
 
 			// Upload image
 			if($file_info)
@@ -490,10 +490,10 @@
 				// If a previous picture exists, we delete it
 				if($args->filename)
 				{
-					$repository->deleteProductCategoryImage($args->filename);
+					$repository->deleteCategoryImage($args->filename);
 				}
 				// Then we add the new one and update the filename
-				$args->filename = $repository->saveProductCategoryImage(
+				$args->filename = $repository->saveCategoryImage(
 					$args->module_srl
 					, $file_info['name']
 					, $file_info['tmp_name']
@@ -501,21 +501,21 @@
 			}
 			else if($delete_image && $args->filename)
 			{
-				$repository->deleteProductCategoryImage($args->filename);
+				$repository->deleteCategoryImage($args->filename);
 				$args->filename = '';
 			}
 
-			$product_category = new ProductCategory($args);
+			$category = new Category($args);
 			try
 			{
-				if($product_category->product_category_srl === NULL)
+				if($category->category_srl === NULL)
 				{
-					$repository->insertProductCategory($product_category);
+					$repository->insertCategory($category);
 					$this->setMessage("success_registed");
 				}
 				else
 				{
-					$repository->updateProductCategory($product_category);
+					$repository->updateCategory($category);
 					$this->setMessage("success_updated");
 				}
 			}
@@ -535,16 +535,16 @@
 		 * @author Corina Udrescu (dev@xpressengine.org)
 		 * @return Object
 		 */
-		public function procShopServiceGetProductCategory()
+		public function procShopServiceGetCategory()
 		{
-			$category_srl = Context::get('product_category_srl');
+			$category_srl = Context::get('category_srl');
 			if(!isset($category_srl)) return new Object(-1, 'msg_invalid_request');
 
 			$shopModel = getModel('shop');
-			$repository = $shopModel->getProductCategoryRepository();
-			$product_category = $repository->getProductCategory($category_srl);
+			$repository = $shopModel->getCategoryRepository();
+			$category = $repository->getCategory($category_srl);
 
-			$this->add('product_category', $product_category);
+			$this->add('category', $category);
 		}
 
 		/**
@@ -554,18 +554,18 @@
 		 * @author Corina Udrescu (dev@xpressengine.org)
 		 * @return Object
 		 */
-		public function procShopServiceDeleteProductCategory()
+		public function procShopServiceDeleteCategory()
 		{
-			$category_srl = Context::get('product_category_srl');
+			$category_srl = Context::get('category_srl');
 			if(!isset($category_srl)) return new Object(-1, 'msg_invalid_request');
 
 			$shopModel = getModel('shop');
-			$repository = $shopModel->getProductCategoryRepository();
+			$repository = $shopModel->getCategoryRepository();
 			$args = new stdClass();
-			$args->product_category_srl = $category_srl;
+			$args->category_srl = $category_srl;
 
 			try{
-				$repository->deleteProductCategory($args);
+				$repository->deleteCategory($args);
 				$this->setMessage('success_deleted');
 			}
 			catch(Exception $e)

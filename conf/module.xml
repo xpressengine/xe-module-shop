@@ -33,9 +33,9 @@
 
         <!-- Product categories -->
         <permission action="dispShopToolManageCategories" target="manager" />
-        <permission action="dispShopToolAddProductCategory" target="manager" />
-        <permission action="procShopToolInsertProductCategory" target="manager" />
-        <permission action="procShopServiceDeleteProductCategory" target="manager" />
+        <permission action="dispShopToolAddCategory" target="manager" />
+        <permission action="procShopToolInsertCategory" target="manager" />
+        <permission action="procShopServiceDeleteCategory" target="manager" />
 		
 		<!-- Payment Gateway -->
         <permission action="dispShopToolManagePaymentGateways" target="manager" />
@@ -94,10 +94,10 @@
 
         <!-- Product categories -->
         <action name="dispShopToolManageCategories" type="view"/>
-        <action name="dispShopToolAddProductCategory" type="view"/>
-        <action name="procShopToolInsertProductCategory" type="controller" />
-        <action name="procShopServiceDeleteProductCategory" type="controller" standalone="true" />
-        <action name="procShopServiceGetProductCategory" type="controller" standalone="true" />
+        <action name="dispShopToolAddCategory" type="view"/>
+        <action name="procShopToolInsertCategory" type="controller" />
+        <action name="procShopServiceDeleteCategory" type="controller" standalone="true" />
+        <action name="procShopServiceGetCategory" type="controller" standalone="true" />
 
 		<!-- Payment Gateway -->
         <action name="dispShopToolManagePaymentGateways" type="view" />

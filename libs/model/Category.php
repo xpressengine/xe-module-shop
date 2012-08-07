@@ -7,9 +7,9 @@ require_once dirname(__FILE__) . '/BaseItem.php';
  *
  * @author Corina Udrescu (dev@xpressengine.org)
  */
-class ProductCategory extends BaseItem
+class Category extends BaseItem
 {
-	public $product_category_srl;
+	public $category_srl;
 	public $module_srl;
 	public $parent_srl = 0;
 	public $filename;
@@ -103,37 +103,37 @@ class ProductCategory extends BaseItem
  *
  * @author Corina Udrescu (dev@xpressengine.org)
  */
-class ProductCategoryTreeNode
+class CategoryTreeNode
 {
-	public $product_category;
+	public $category;
 	public $children = array();
 	public $depth = 0;
 
 	/**
 	 * @author Corina Udrescu (dev@xpressengine.org)
-	 * @param $pc ProductCategory
+	 * @param $pc Category
 	 */
-	public function __construct(ProductCategory $pc = NULL)
+	public function __construct(Category $pc = NULL)
 	{
-		$this->product_category = $pc;
+		$this->category = $pc;
 	}
 
 	/**
 	 * @author Corina Udrescu (dev@xpressengine.org)
-	 * @param $node ProductCategoryTreeNode
+	 * @param $node CategoryTreeNode
 	 */
-	public function addChild(ProductCategoryTreeNode $node)
+	public function addChild(CategoryTreeNode $node)
 	{
-		$this->children[$node->product_category->product_category_srl] = $node;
+		$this->children[$node->category->category_srl] = $node;
 	}
 
 	/**
 	 * @author Corina Udrescu (dev@xpressengine.org)
-	 * @param $node ProductCategoryTreeNode
+	 * @param $node CategoryTreeNode
 	 */
-	public function removeChild(ProductCategoryTreeNode $node)
+	public function removeChild(CategoryTreeNode $node)
 	{
-		unset($this->children[$node->product_category->product_category_srl]);
+		unset($this->children[$node->category->category_srl]);
 	}
 
 	/**
@@ -162,5 +162,5 @@ class ProductCategoryTreeNode
 
 }
 
-/* End of file ProductCategory.php */
-/* Location: ./modules/shop/libs/ProductCategory.php */
+/* End of file Category.php */
+/* Location: ./modules/shop/libs/Category.php */

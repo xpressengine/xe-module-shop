@@ -47,7 +47,7 @@ class AttributeRepository extends BaseRepository
     {
         $args->attribute_srl = $attribute->attribute_srl;
         foreach($attribute->category_scope as $category){
-            $args->product_category_srl = $category;
+            $args->category_srl = $category;
             $output = executeQuery('shop.insertAttributeScope',$args);
             if(!$output->toBool()) throw new Exception($output->getMessage(), $output->getError());
         }
@@ -155,10 +155,10 @@ class AttributeRepository extends BaseRepository
         $output = executeQuery('shop.getAttributeScope',$args);
         if (!$output->toBool()) throw new Exception($output->getMessage(), $output->getError());
         if(!is_array($output->data)){
-            $attribute->category_scope[] = $output->data->product_category_srl;
+            $attribute->category_scope[] = $output->data->category_srl;
         }else{
             foreach($output->data as $scope){
-                $attribute->category_scope[] = $scope->product_category_srl;
+                $attribute->category_scope[] = $scope->category_srl;
             }
         }
         return TRUE;

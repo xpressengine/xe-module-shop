@@ -6,8 +6,8 @@
     <form id="categoryForm" action="./" method="post" enctype="multipart/form-data" >
 		<input type="hidden" id="module" name="module" value="shop" />
 		<input type="hidden" id="vid" name="vid" value="{$vid}" />
-		<input type="hidden" id="act" name="act" value="procShopToolInsertProductCategory" />
-	    <input type="hidden" id="product_category_srl" name="product_category_srl" value="{$category->product_category_srl}" />
+		<input type="hidden" id="act" name="act" value="procShopToolInsertCategory" />
+	    <input type="hidden" id="category_srl" name="category_srl" value="{$category->category_srl}" />
 	    <input type="hidden" id="module_srl"  name="module_srl" value="{$category->module_srl}" />
 
 		<p <!--@if($category->parent_srl == 0)-->style="display:none"<!--@endif-->>

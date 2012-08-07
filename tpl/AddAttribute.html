@@ -124,7 +124,7 @@
                                                 </li>
                                             <!--@endif-->
                                             <li >
-                                            <input type="checkbox" <!--@if(@in_array($node->product_category->product_category_srl,$attribute->category_scope))-->checked="checked"<!--@endif--> name="category_scope[]" value="{$node->product_category->product_category_srl}" />{$node->product_category->title}
+                                            <input type="checkbox" <!--@if(@in_array($node->category->category_srl,$attribute->category_scope))-->checked="checked"<!--@endif--> name="category_scope[]" value="{$node->category->category_srl}" />{$node->category->title}
                                             {@ $previous_depth = $node->depth; }
 
                                         <!--@end-->

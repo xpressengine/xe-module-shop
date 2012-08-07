@@ -234,12 +234,12 @@ class shopModel extends shop
 	 * Returns an instance of the Product Category repository
 	 *
 	 * @author Corina Udrescu (dev@xpressengine.org)
-	 * @return ProductCategoryRepository
+	 * @return CategoryRepository
 	 */
-	function getProductCategoryRepository()
+	function getCategoryRepository()
 	{
-		require_once dirname(__FILE__) . '/libs/repositories/ProductCategoryRepository.php';
-		return new ProductCategoryRepository();
+		require_once dirname(__FILE__) . '/libs/repositories/CategoryRepository.php';
+		return new CategoryRepository();
 	}
 
     /**

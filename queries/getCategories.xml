@@ -1,6 +1,6 @@
-<query id="getProductCategories" action="select">
+<query id="getCategories" action="select">
     <tables>
-        <table name="shop_product_categories" />
+        <table name="shop_categories" />
     </tables>
     <columns></columns>
     <conditions>
@@ -8,6 +8,6 @@
     </conditions>
     <navigation>
         <index default="parent_srl" var="parent_srl" order="asc" />
-        <index default="product_category_srl" var="product_category" order="asc" />
+        <index default="category_srl" var="category" order="asc" />
     </navigation>
 </query>

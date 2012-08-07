@@ -1,5 +1,5 @@
-<table name="shop_product_categories">
-  <column name="product_category_srl" type="number" size="11" notnull="notnull" primary_key="primary_key" />
+<table name="shop_categories">
+  <column name="category_srl" type="number" size="11" notnull="notnull" primary_key="primary_key" />
   <column name="module_srl" type="number" size="11" notnull="notnull" />
   <column name="parent_srl" type="number" size="11" />
   <column name="filename" type="varchar" size="250"  />
