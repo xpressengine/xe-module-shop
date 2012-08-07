@@ -375,7 +375,6 @@
             $attributeRepository = $shopModel->getAttributeRepository();
             $srl = Context::get('attribute_srl');
             if (!$attribute = $attributeRepository->getAttributes(array($srl))) throw new Exception("Attribute doesn't exist");
-            $attributeRepository->getAttributeScope($attribute);
             Context::set('attribute', $attribute);
             Context::set('types', $attributeRepository->getTypes(Context::get('lang')));
 
@@ -414,20 +413,36 @@
          */
         public function dispShopToolEditProduct(){
             $shopModel = getModel('shop');
-            $repository = $shopModel->getProductRepository();
+            $productRepository = $shopModel->getProductRepository();
             $product_srl = Context::get('product_srl');
-            $product = $repository->getProduct($product_srl);
+            $product = $productRepository->getProduct($product_srl);
             Context::set('product',$product);
             $this->setTemplateFile('AddProduct');
+
+            // Retrieve existing categories
+            $categoryRepository = $shopModel->getCategoryRepository();
+            $tree = $categoryRepository->getCategoriesTree($this->module_srl);
+
+            // Prepare tree for display
+            $flat_tree = $tree->toFlatStructure();
+            Context::set('flat_tree', $flat_tree);
         }
 
         /**
          * @brief Shop display product add page
          */
         public function dispShopToolAddProduct(){
-            $oShopModel = getModel('shop');
-            $attributeRepository = $oShopModel->getAttributeRepository();
+            $shopModel = getModel('shop');
+            $attributeRepository = $shopModel->getAttributeRepository();
             $attributes = $attributeRepository->getRequiredAttributesList($this->module_info->module_srl);
+
+            // Retrieve existing categories
+            $categoryRepository = $shopModel->getCategoryRepository();
+            $tree = $categoryRepository->getCategoriesTree($this->module_srl);
+
+            // Prepare tree for display
+            $flat_tree = $tree->toFlatStructure();
+            Context::set('flat_tree', $flat_tree);
         }
 
         /**

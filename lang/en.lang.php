@@ -52,6 +52,7 @@
     $lang->category_scope = "Category Scope";
     $lang->about_category_scope = 'By not selecting any category the scope of the attribute will be global';
     $lang->no_categories = 'There are no categories added';
+    $lang->about_category = 'Select the categories of the product';
 
 	$lang->cmd_open_id = 'Open ID Login';
 	$lang->cmd_common_id = 'Default Login';

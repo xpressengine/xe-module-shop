@@ -144,6 +144,48 @@
                             </div>
                         </td>
                     </tr>
+
+                    <tr>
+                        <th scope="row">
+                            <label for="categories">{$lang->categories}</label>
+                        </th>
+                        <td class="title">
+                            <div class="fItem">
+                                <ul class= "multiple_checkbox" id="categories">
+                                    <!--@if(count($flat_tree) == 0)-->
+                                    <span>{$lang->no_categories}</span>
+                                    <!--@else-->
+                                    <!--@foreach($flat_tree as $node)-->
+                                    <!--@if($previous_depth === $node->depth)-->
+                                    </li>
+                                    <!--@endif-->
+                                    <!--@if($previous_depth < $node->depth)-->
+                                    <ul>
+                                        <!--@endif-->
+                                        <!--@if($previous_depth > $node->depth)-->
+                                        <!--@for($i = $node->depth; $i < $previous_depth; $i++)-->
+                                        </li></ul>
+                                    <!--@end-->
+                                    </li>
+                                    <!--@endif-->
+                                    <li >
+                                        <input type="checkbox" <!--@if(@in_array($node->category->category_srl,$product->categories))-->checked="checked"<!--@endif--> name="categories[]" value="{$node->category->category_srl}" />{$node->category->title}
+                                        {@ $previous_depth = $node->depth; }
+
+                                        <!--@end-->
+                                        <!--@if($previous_depth > 0)-->
+                                        <!--@for($i = 0; $i < $previous_depth; $i++)-->
+                                    </li></ul>
+                                <!--@end-->
+                                <!--@endif-->
+                                </li>
+                                <!--@endif-->
+                                </ul>
+                                <span>{$lang->about_category}</span>
+                            </div>
+                        </td>
+                    </tr>
+
                     <tr class="last">
                         <th scope="row">
                         </th>

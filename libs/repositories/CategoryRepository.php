@@ -51,6 +51,12 @@ class CategoryRepository extends BaseRepository
             throw new Exception($output->getMessage(), $output->getError());
         }
 
+        $output = executeQuery('shop.deleteProductCategories', $args);
+        if(!$output->toBool())
+        {
+            throw new Exception($output->getMessage(), $output->getError());
+        }
+
 		return TRUE;
 	}
 

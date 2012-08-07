@@ -24,9 +24,29 @@ class ProductRepository extends BaseRepository
 		if(!$output->toBool())
 		{
 			throw new Exception($output->getMessage(), $output->getError());
-		}
+		} else {
+            $this->insertProductCategories($product);
+        }
 		return $product->product_srl;
 	}
+
+    /**
+     * Insert product categories
+     *
+     * @author Dan Dragan (dev@xpressengine.org)
+     * @param $product Product
+     * @return boolean
+     */
+    public function insertProductCategories(Product $product)
+    {
+        $args->product_srl = $product->product_srl;
+        foreach($product->categories as $category){
+            $args->category_srl = $category;
+            $output = executeQuery('shop.insertProductCategories',$args);
+            if(!$output->toBool()) throw new Exception($output->getMessage(), $output->getError());
+        }
+        return TRUE;
+    }
 
 	/**
 	 * Deletes a product by $product_srl or $module_srl
@@ -44,7 +64,12 @@ class ProductRepository extends BaseRepository
 		{
 			throw new Exception($output->getMessage(), $output->getError());
 		}
-
+        $args->product_srls[] = $args->product_srl;
+        $output = executeQuery('shop.deleteProductCategories', $args);
+        if(!$output->toBool())
+        {
+            throw new Exception($output->getMessage(), $output->getError());
+        }
 		return TRUE;
 	}
 
@@ -64,7 +89,27 @@ class ProductRepository extends BaseRepository
         {
             throw new Exception($output->getMessage(), $output->getError());
         }
+        $output = executeQuery('shop.deleteProductCategories', $args);
+        if(!$output->toBool())
+        {
+            throw new Exception($output->getMessage(), $output->getError());
+        }
 
+        return TRUE;
+    }
+
+    /**
+     * Delete product categories
+     *
+     * @author Dan Dragan (dev@xpressengine.org)
+     * @param $product Product
+     * @return boolean
+     */
+    public function deleteProductCategories(Product &$product)
+    {
+        $args->product_srls[] = $product->product_srl;
+        $output = executeQuery('shop.deleteProductCategories',$args);
+        if (!$output->toBool()) throw new Exception($output->getMessage(), $output->getError());
         return TRUE;
     }
 
@@ -87,8 +132,31 @@ class ProductRepository extends BaseRepository
 		}
 
 		$product = new Product($output->data);
+        $this->getProductCategories($product);
 		return $product;
 	}
+
+    /**
+     * Retrieve product categories
+     *
+     * @author Dan Dragan (dev@xpressengine.org)
+     * @param $product Product
+     * @return boolean
+     */
+    public function getProductCategories(Product &$product)
+    {
+        $args->product_srl = $product->product_srl;
+        $output = executeQuery('shop.getProductCategories',$args);
+        if (!$output->toBool()) throw new Exception($output->getMessage(), $output->getError());
+        if(!is_array($output->data)){
+            $product->categories[] = $output->data->category_srl;
+        }else{
+            foreach($output->data as $item){
+                $product->categories[] = $item->category_srl;
+            }
+        }
+        return TRUE;
+    }
 
     /**
      * Retrieve a Product List object from the database given a modul_srl
@@ -129,7 +197,23 @@ class ProductRepository extends BaseRepository
 		if(!$output->toBool())
 		{
 			throw new Exception($output->getMessage(), $output->getError());
-		}
+		} else {
+            $this->updateProductCategories($product);
+        }
 		return TRUE;
 	}
+
+    /**
+     * Update product categories
+     *
+     * @author Dan Dragan (dev@xpressengine.org)
+     * @param $product Product
+     * @return boolean
+     */
+    public function updateProductCategories(Product &$product)
+    {
+        $this->deleteProductCategories($product);
+        $this->insertProductCategories($product);
+        return TRUE;
+    }
 }
