@@ -49,6 +49,8 @@
     $lang->msg_confirm_delete_attribute = "Are you sure you want to delete this attribute?";
     $lang->msg_confirm_delete_products = "Are you sure you want to delete these products?";
     $lang->msg_confirm_delete_attributes = "Are you sure you want to delete these attributes?";
+    $lang->category_scope = "Category Scope";
+    $lang->about_category_scope = 'By not selecting any category the scope of the attribute will be global';
 
 	$lang->cmd_open_id = 'Open ID Login';
 	$lang->cmd_common_id = 'Default Login';

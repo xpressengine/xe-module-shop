@@ -595,7 +595,8 @@ a.skipToContent{text-align:center;color:#fff;position:absolute;width:100%;font-s
 .wOption .cap.capTR{top:-1px;right:-1px;background-position:right top}
 .wOption .cap.capBL{bottom:-1px;left:-1px;background-position:left bottom}
 .wOption .cap.capBR{bottom:-1px;right:-1px;background-position:right bottom}
-.wOption select{height:23px;font-size:12px;vertical-align:middle}
+.wOption select{font-size:12px;vertical-align:middle}
+.multiple_checkbox{height: 200px;padding: 5px; overflow: auto;border: 1px solid #ccc; width: 500px;}
 .wOption .addCategoryToggle button,
 .wOption .addTrackbackURL button{padding:0 5px 0 3px !important;*padding:0 8px 0 6px !important}
 .wOption .btnGray button img{vertical-align:middle !important}

@@ -357,18 +357,36 @@
         public function dispShopToolAddAttribute()
         {
             $shopModel = getModel('shop');
-            $repository = $shopModel->getAttributeRepository();
-            Context::set('types', $repository->getTypes(Context::get('lang')));
+            $attributeRepository = $shopModel->getAttributeRepository();
+            Context::set('types', $attributeRepository->getTypes(Context::get('lang')));
+
+            // Retrieve existing categories
+            $categoryRepository = $shopModel->getProductCategoryRepository();
+            $tree = $categoryRepository->getProductCategoriesTree($this->module_srl);
+
+            // Prepare tree for display
+            $flat_tree = $tree->toFlatStructure();
+            Context::set('flat_tree', $flat_tree);
         }
 
         public function dispShopToolEditAttribute()
         {
             $shopModel = getModel('shop');
-            $repository = $shopModel->getAttributeRepository();
+            $attributeRepository = $shopModel->getAttributeRepository();
             $srl = Context::get('attribute_srl');
-            if (!$attribute = $repository->getAttributes(array($srl))) throw new Exception("Attribute doesn't exist");
-            Context::set('attribute', $attribute[0]);
-            Context::set('types', $repository->getTypes(Context::get('lang')));
+            if (!$attribute = $attributeRepository->getAttributes(array($srl))) throw new Exception("Attribute doesn't exist");
+            $attributeRepository->getAttributeScope($attribute);
+            Context::set('attribute', $attribute);
+            Context::set('types', $attributeRepository->getTypes(Context::get('lang')));
+
+            // Retrieve existing categories
+            $categoryRepository = $shopModel->getProductCategoryRepository();
+            $tree = $categoryRepository->getProductCategoriesTree($this->module_srl);
+
+            // Prepare tree for display
+            $flat_tree = $tree->toFlatStructure();
+            Context::set('flat_tree', $flat_tree);
+
             $this->setTemplateFile('AddAttribute');
         }
 

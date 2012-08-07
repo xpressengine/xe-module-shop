@@ -32,8 +32,27 @@ class AttributeRepository extends BaseRepository
         if(count($attribute->values ) == 0) unset($attribute->values);
 		$output = executeQuery('shop.insertAttribute', $attribute);
 		if (!$output->toBool()) throw new Exception($output->getMessage(), $output->getError());
+        else $this->insertAttributeScope($attribute);
         return $output;
 	}
+
+    /**
+     * Insert attribute scope
+     *
+     * @author Dan Dragan (dev@xpressengine.org)
+     * @param $attribute Attribute
+     * @return boolean
+     */
+    public function insertAttributeScope(Attribute &$attribute)
+    {
+        $args->attribute_srl = $attribute->attribute_srl;
+        foreach($attribute->category_scope as $category){
+            $args->product_category_srl = $category;
+            $output = executeQuery('shop.insertAttributeScope',$args);
+            if(!$output->toBool()) throw new Exception($output->getMessage(), $output->getError());
+        }
+        return TRUE;
+    }
 
 
     /**
@@ -49,7 +68,22 @@ class AttributeRepository extends BaseRepository
         if(count($attribute->values ) == 0) unset($attribute->values);
         $output = executeQuery('shop.updateAttribute', $attribute);
         if (!$output->toBool()) throw new Exception($output->getMessage(), $output->getError());
+        else $this->updateAttributeScope($attribute);
         return $output;
+    }
+
+    /**
+     * Update attribute scope
+     *
+     * @author Dan Dragan (dev@xpressengine.org)
+     * @param $attribute Attribute
+     * @return boolean
+     */
+    public function updateAttributeScope(Attribute &$attribute)
+    {
+        $this->deleteAttributesScope($attribute);
+        $this->insertAttributeScope($attribute);
+        return TRUE;
     }
 
 
@@ -65,17 +99,36 @@ class AttributeRepository extends BaseRepository
             if (!isset($args->module_srl)) throw new Exception("Please provide attribute_srls or module_srl.");
             if (!is_array($args->attribute_srls)) throw new Exception("This query expects an array of attribute srls");
         }
+        //delete attributes
 		$output = executeQuery('shop.deleteAttributes', $args);
 		if (!$output->toBool()) throw new Exception($output->getMessage(), $output->getError());
+        //delete attributes scope
+        $output = executeQuery('shop.deleteAttributesScope',$args);
+        if (!$output->toBool()) throw new Exception($output->getMessage(), $output->getError());
         return $output;
 	}
+
+    /**
+     * Delete attribute scope
+     *
+     * @author Dan Dragan (dev@xpressengine.org)
+     * @param $attribute Attribute
+     * @return boolean
+     */
+    public function deleteAttributesScope(Attribute &$attribute)
+    {
+        $args->attribute_srls[] = $attribute->attribute_srl;
+        $output = executeQuery('shop.deleteAttributesScope',$args);
+        if (!$output->toBool()) throw new Exception($output->getMessage(), $output->getError());
+        return TRUE;
+    }
 
 	/**
 	 * Retrieve an attribute object from the database given a list of attribute srls.
 	 *
 	 * @author Florin Ercus (dev@xpressengine.org)
 	 * @param $srls array
-	 * @return boolean|array of attribute objects
+	 * @return mixed|array of attribute objects or only one attribute object if count($srl) is 1
 	 */
 	public function getAttributes(array $srls)
 	{
@@ -84,11 +137,32 @@ class AttributeRepository extends BaseRepository
 		$output = executeQuery('shop.getAttributesBySrls', $args);
 		if (!$output->toBool()) throw new Exception($output->getMessage(), $output->getError());
 		$rez = array();
-        if (!is_array($output->data)) return array(new Attribute($output->data));
-        //TODO: watch this when selecting more than 1 entity
+        if (count($srls) == 1) return new Attribute($output->data);
         foreach ($output->data as $data) $rez[] = new Attribute($data);
 		return empty($rez) ? false : $rez;
 	}
+
+    /**
+     * Retrieve attribute Scope
+     *
+     * @author Dan Dragan (dev@xpressengine.org)
+     * @param $attribute Attribute
+     * @return boolean
+     */
+    public function getAttributeScope(Attribute &$attribute)
+    {
+        $args->attribute_srl = $attribute->attribute_srl;
+        $output = executeQuery('shop.getAttributeScope',$args);
+        if (!$output->toBool()) throw new Exception($output->getMessage(), $output->getError());
+        if(!is_array($output->data)){
+            $attribute->category_scope[] = $output->data->product_category_srl;
+        }else{
+            foreach($output->data as $scope){
+                $attribute->category_scope[] = $scope->product_category_srl;
+            }
+        }
+        return TRUE;
+    }
 
     /**
      * Retrieve a list of Attributes object from the database by modul_srl

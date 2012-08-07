@@ -15,7 +15,8 @@ class Attribute extends BaseItem
         $values = array(),
         $default_value,
         $regdate,
-        $last_update;
+        $last_update,
+        $category_scope = array();
 
     public function save()
     {

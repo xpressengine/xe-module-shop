@@ -45,6 +45,12 @@ class ProductCategoryRepository extends BaseRepository
 			throw new Exception($output->getMessage(), $output->getError());
 		}
 
+        $output = executeQuery('shop.deleteAttributesScope', $args);
+        if(!$output->toBool())
+        {
+            throw new Exception($output->getMessage(), $output->getError());
+        }
+
 		return TRUE;
 	}
 

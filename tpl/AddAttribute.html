@@ -100,6 +100,43 @@
                         </td>
                     </tr>
 
+                    <tr>
+                        <th scope="row">
+                            <label for="default_value">{$lang->category_scope}</label>
+                        </th>
+                        <td class="title">
+                            <div class="fItem">
+                                <ul class= "multiple_checkbox">
+                                    <!--@foreach($flat_tree as $node)-->
+                                        <!--@if($previous_depth === $node->depth)-->
+                                            </li>
+                                        <!--@endif-->
+                                        <!--@if($previous_depth < $node->depth)-->
+                                            <ul>
+                                        <!--@endif-->
+                                        <!--@if($previous_depth > $node->depth)-->
+                                            <!--@for($i = $node->depth; $i < $previous_depth; $i++)-->
+                                                </li></ul>
+                                            <!--@end-->
+                                            </li>
+                                        <!--@endif-->
+                                        <li >
+                                        <input type="checkbox" <!--@if(@in_array($node->product_category->product_category_srl,$attribute->category_scope))-->checked="checked"<!--@endif--> name="category_scope[]" value="{$node->product_category->product_category_srl}" />{$node->product_category->title}
+                                        {@ $previous_depth = $node->depth; }
+
+                                    <!--@end-->
+                                    <!--@if($previous_depth > 0)-->
+                                        <!--@for($i = 0; $i < $previous_depth; $i++)-->
+                                            </li></ul>
+                                        <!--@end-->
+                                        </li>
+                                    <!--@endif-->
+                                </ul>
+                                <span>{$lang->about_category_scope}</span>
+                            </div>
+                        </td>
+                    </tr>
+
                     <tr class="last">
                         <th scope="row">
                         </th>
