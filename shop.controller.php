@@ -576,5 +576,72 @@
 		}
 
 		// endregion
+
+        // region Payment Gateway
+
+        /**
+         * Activates a gateway
+         *
+         * @author Daniel Ionescu (dev@xpressengine.org)
+         * @throws exception
+         * @return object
+         */
+        public function procUpdateShopActivateGateway() {
+
+            $name = Context::get('name');
+
+            if ($name != '') {
+
+                $shopModel = getModel('shop');
+                $repository = $shopModel->getPaymentGatewayRepository();
+
+                $pg = new PaymentGateway();
+                $pg->status = 1;
+                $pg->name = $name;
+
+                $args = new stdClass();
+                $args->name = $name;
+                $gateway_exists = $repository->getGateway($args);
+
+                // if we cannot find the selected gateway we insert it else we update it
+                if ($gateway_exists) {
+
+                    $repository->updatePaymentGatewayStatus($pg);
+
+                } else {
+
+                    $repository->insertPaymentGateway($pg);
+
+                }
+
+            }
+
+            $returnUrl = getNotEncodedUrl('', 'vid', $vid, 'act', 'dispShopToolManagePaymentGateways');
+            $this->setRedirectUrl($returnUrl);
+        }
+
+        public function procUpdateShopDeactivateGateway() {
+
+            $name = Context::get('name');
+
+            if ($name != '') {
+
+                $shopModel = getModel('shop');
+                $repository = $shopModel->getPaymentGatewayRepository();
+
+                $gateway = new PaymentGateway();
+                $gateway->name = $name;
+                $gateway->status = 0;
+
+                $repository->updatePaymentGatewayStatus($gateway);
+
+            }
+
+            $returnUrl = getNotEncodedUrl('', 'vid', $vid, 'act', 'dispShopToolManagePaymentGateways');
+            $this->setRedirectUrl($returnUrl);
+        }
+
+        // end region
+
     }
 ?>

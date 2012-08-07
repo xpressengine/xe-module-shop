@@ -1,0 +1,9 @@
+<query id="getAllGateways" action="select">
+    <tables>
+        <table name="shop_payment_gateways" />
+    </tables>
+    <columns>
+    </columns>
+    <conditions>
+    </conditions>
+</query>

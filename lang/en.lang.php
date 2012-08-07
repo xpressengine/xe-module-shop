@@ -204,7 +204,7 @@
         array('','Statistics'),
         array('','Design'),
         array('','Configuration'),
-        array('dispShopToolManagePaymentGateways','PaymentGateways'),
+        array('dispShopToolManagePaymentGateways','Payment Gateways'),
     );
 
     $lang->shop_second_menus = array(
@@ -234,8 +234,7 @@
             'dispShopToolManageAdminAccount'=>'Admin account',
             'dispShopToolConfigInfo'=>'Shop Configuration',
         ),
-        array(
-        )
+        array('dispShopToolManagePaymentGateways'=>'Payment Gateways')
     );
 
     $lang->cmd_go_help = 'Help Desk';
@@ -326,5 +325,10 @@
     $lang->share_this_article = 'Share this article';
     $lang->notify_for_replies = 'Notify by email if someone replies to my comment';
     $lang->confirm_cancel_comment = 'Would you like to cancel editing your comment?';
+
+    // Payment gateway
+    $lang->no_gateways = 'No payment gateways seem to be installed. Please check that your ./modules/shop/payment_gateways folder actually contains some gateway instances.';
+    $lang->activate = 'Activate';
+    $lang->deactivate = 'Deactivate';
 
 ?>

@@ -2,10 +2,58 @@
 
 <div id="content">
 
-    <!--@foreach($payment_gateways as $val)-->
-        {$val}
-    <!--@end-->
+    <div class="dashboardHeader">
+        <h3 class="h3">{$lang->shop_second_menus[7]['dispShopToolManagePaymentGateways']}</h3>
+    </div>
 
+    <div cond="$XE_VALIDATOR_MESSAGE" class="message {$XE_VALIDATOR_MESSAGE_TYPE}">
+        <p>{$XE_VALIDATOR_MESSAGE}</p>
+    </div>
+
+    <table class="tableData">
+        <thead>
+            <tr>
+                <th scope="col">
+                    <input type="checkbox" class="inputCheck" onclick="jQuery('input.boxlist').click()" />
+                </th>
+                <th scope="col" class="title">{$lang->name}</th>
+                <th scope="col">{$lang->status}</th>
+            </tr>
+        </thead>
+        <tbody>
+        <!--@if(count($pg_dirs))-->
+            <form action="" method="post">
+                <!--@foreach($pg_dirs as $val)-->
+                    <input type="hidden" name="act" value="" />
+                    <tr>
+                        <td>
+                            <input type="checkbox" name="product_srl" value="{$product->product_srl}" class="inputCheck boxlist" />
+                        </td>
+                        <td>{$val}</td>
+                        <td>
+                            {@$flag = false;}
+                            <!--@if(count($pg))-->
+                                <!--@foreach($pg as $obj)-->
+                                    <!--@if($obj->name==$val && $obj->status)-->
+                                        {@$flag = true;}
+                                        <a href="{getUrl('act','procUpdateShopDeactivateGateway','name',$val)}">{$lang->deactivate}</a>
+                                    <!--@end-->
+                                <!--@end-->
+                            <!--@end-->
+                            <!--@if(!$flag)-->
+                                <a href="{getUrl('act','procUpdateShopActivateGateway','name',$val)}">{$lang->activate}</a>
+                            <!--@end-->
+                        </td>
+                    </tr>
+                <!--@end-->
+            </form>
+        <!--@else-->
+            <tr>
+                <td colspan="3">{$lang->no_gateways}</td>
+            </tr>
+        <!--@end-->
+        </tbody>
+    </table>
 </div>
 
 <!-- Extension -->

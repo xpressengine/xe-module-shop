@@ -242,14 +242,18 @@ class shopModel extends shop
 		return new ProductCategoryRepository();
 	}
 
-    /*
-     * Returns a list of active payment gateways
+    /**
+     * Returns an instance of the Product Category repository
      *
      * @author Daniel Ionescu (dev@xpressengine.org)
+     * @return PaymentGatewayRepository
      */
-    function getPaymentGatewaysList() {
-        //$data = executeQueryArray();
-        return;
+    function getPaymentGatewayRepository()
+    {
+        require_once dirname(__FILE__) . '/libs/repositories/PaymentGatewayRepository.php';
+        return new PaymentGatewayRepository();
     }
 
 }
+
+?>
