@@ -45,6 +45,7 @@ class AttributeRepository extends BaseRepository
      */
     public function insertAttributeScope(Attribute &$attribute)
     {
+		$args = new stdClass();
         $args->attribute_srl = $attribute->attribute_srl;
         foreach($attribute->category_scope as $category){
             $args->category_srl = $category;
@@ -117,6 +118,7 @@ class AttributeRepository extends BaseRepository
      */
     public function deleteAttributesScope(Attribute &$attribute)
     {
+		$args = new stdClass();
         $args->attribute_srls[] = $attribute->attribute_srl;
         $output = executeQuery('shop.deleteAttributesScope',$args);
         if (!$output->toBool()) throw new Exception($output->getMessage(), $output->getError());
@@ -158,17 +160,17 @@ class AttributeRepository extends BaseRepository
      */
     public function getAttributeScope(Attribute &$attribute)
     {
+		$args = new stdClass();
         $args->attribute_srl = $attribute->attribute_srl;
-        $output = executeQuery('shop.getAttributeScope',$args);
+
+        $output = executeQueryArray('shop.getAttributeScope',$args);
         if (!$output->toBool()) throw new Exception($output->getMessage(), $output->getError());
-        if(!is_array($output->data)){
-            $attribute->category_scope[] = $output->data->category_srl;
-        }else{
-            foreach($output->data as $scope){
-                $attribute->category_scope[] = $scope->category_srl;
-            }
-        }
-        return TRUE;
+
+		foreach($output->data as $scope){
+			$attribute->category_scope[] = $scope->category_srl;
+		}
+
+        return $attribute->category_scope;
     }
 
     /**
@@ -188,7 +190,7 @@ class AttributeRepository extends BaseRepository
         $args->module_srl = $module_srl;
         if (!isset($args->module_srl)) throw new Exception("Missing arguments for attributes list : please provide module_srl");
 
-        $output = executeQuery('shop.getAttributesList', $args);
+        $output = executeQueryArray('shop.getAttributesList', $args);
         $attributes = array();
         foreach ($output->data as $properties) {
             $o = new Attribute($properties);
@@ -212,7 +214,7 @@ class AttributeRepository extends BaseRepository
         if (!isset($args->module_srl)) throw new Exception("Missing arguments for attributes list : please provide module_srl");
         $args->required = 'Y';
 
-        $output = executeQuery('shop.getAttributesList', $args);
+        $output = executeQueryArray('shop.getAttributesList', $args);
         $attributes = array();
         foreach ($output->data as $properties) {
             $o = new Attribute($properties);
