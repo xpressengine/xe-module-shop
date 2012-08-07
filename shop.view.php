@@ -377,11 +377,17 @@
          */
         public function dispShopToolManageProducts(){
             $shopModel = getModel('shop');
-            $repository = $shopModel->getProductRepository();
-            $module_srl = $this->module_info->module_srl;
-            $output = $repository->getProductList($module_srl);
 
+            $product_repository = $shopModel->getProductRepository();
+            $module_srl = $this->module_info->module_srl;
+            $output = $product_repository->getProductList($module_srl);
             Context::set('product_list',$output->products);
+
+			$category_repository = $shopModel->getProductCategoryRepository();
+			$tree = $category_repository->getProductCategoriesTree($module_srl);
+			$flat_tree = $tree->toFlatStructure();
+			Context::set('category_list', $flat_tree);
+
             Context::set('page_navigation',$output->page_navigation);
         }
 
