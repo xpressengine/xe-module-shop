@@ -334,7 +334,7 @@ a.skipToContent{text-align:center;color:#fff;position:absolute;width:100%;font-s
 .contentNavigation ul.sortDefault li{position:relative;left:-1px;display:inline;padding:0 8px 0 12px;background:url(../img/vrContentNavigation.gif) no-repeat left center}
 .contentNavigation ul.sortExtension{position:relative;float:right;overflow:hidden;list-style:none;margin:0 10px 0 0;padding:12px 0;white-space:nowrap;z-index:110}
 .contentNavigation ul.sortExtension li{position:relative;right:-1px;display:inline;padding:0 12px 0 8px;background:url(../img/vrContentNavigation.gif) no-repeat right center}
-.contentNavigation li a{color:#8b8b8b;text-decoration:none}
+.contentNavigation li a{color:#000;text-decoration:none}
 .contentNavigation li.active,
 .contentNavigation li.active a{font-weight:bold;color:#555566}
 .contentNavigation li a:hover,

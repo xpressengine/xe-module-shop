@@ -45,7 +45,7 @@ class AttributeRepository extends BaseRepository
      */
     public function insertAttributeScope(Attribute &$attribute)
     {
-		$args = new stdClass();
+        $args = new stdClass();
         $args->attribute_srl = $attribute->attribute_srl;
         foreach($attribute->category_scope as $category){
             $args->category_srl = $category;
@@ -118,7 +118,7 @@ class AttributeRepository extends BaseRepository
      */
     public function deleteAttributesScope(Attribute &$attribute)
     {
-		$args = new stdClass();
+        $args = new stdClass();
         $args->attribute_srls[] = $attribute->attribute_srl;
         $output = executeQuery('shop.deleteAttributesScope',$args);
         if (!$output->toBool()) throw new Exception($output->getMessage(), $output->getError());
@@ -146,7 +146,7 @@ class AttributeRepository extends BaseRepository
         }
         foreach ($output->data as $data) {
             $rez[] = new Attribute($data);
-            $this->getAttributeScope($rez[current($rez)]);
+            $this->getAttributeScope($rez[key($rez)]);
         }
 		return empty($rez) ? false : $rez;
 	}
@@ -160,17 +160,14 @@ class AttributeRepository extends BaseRepository
      */
     public function getAttributeScope(Attribute &$attribute)
     {
-		$args = new stdClass();
+        $args = new stdClass();
         $args->attribute_srl = $attribute->attribute_srl;
-
         $output = executeQueryArray('shop.getAttributeScope',$args);
         if (!$output->toBool()) throw new Exception($output->getMessage(), $output->getError());
-
-		foreach($output->data as $scope){
-			$attribute->category_scope[] = $scope->category_srl;
-		}
-
-        return $attribute->category_scope;
+        foreach($output->data as $scope){
+            $attribute->category_scope[] = $scope->category_srl;
+        }
+        return TRUE;
     }
 
     /**
@@ -201,18 +198,18 @@ class AttributeRepository extends BaseRepository
     }
 
     /**
-     * Retrieve a list of required Attributes object from the database by modul_srl
+     * Retrieve a list of configurable Attributes object from the database by modul_srl
      * @author Dan Dragan (dev@xpressengine.org)
      * @param $module_srl int
      * @return Attribute list
      */
-    public function getRequiredAttributesList($module_srl)
+    public function getConfigurableAttributesList($module_srl)
     {
         if (!is_numeric($module_srl)) throw new Exception('module_srl must be a valid int');
         $args = new stdClass();
         $args->module_srl = $module_srl;
         if (!isset($args->module_srl)) throw new Exception("Missing arguments for attributes list : please provide module_srl");
-        $args->required = 'Y';
+        $args->type = $this::TYPE_SELECT;
 
         $output = executeQueryArray('shop.getAttributesList', $args);
         $attributes = array();

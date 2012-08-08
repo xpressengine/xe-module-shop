@@ -7,9 +7,17 @@
     <!-- contentHeader -->
     <div class="contentHeader postListHeader">
         <!--@if(!$product)-->
-        <h3 class="h3">Add product</h3>
+            <!--@if($product_type == 'configurable')-->
+                <h3 class="h3">Add configurable product</h3>
+            <!--@else-->
+                <h3 class="h3">Add simple product</h3>
+            <!--@endif-->
         <!--@else-->
-        <h3 class="h3">Edit product</h3>
+            <!--@if($product_type == 'configurable')-->
+                <h3 class="h3">Edit configurable product</h3>
+            <!--@else-->
+                <h3 class="h3">Edit simple product</h3>
+            <!--@endif-->
         <!--@endif-->
     </div>
     <div cond="$XE_VALIDATOR_MESSAGE" class="message {$XE_VALIDATOR_MESSAGE_TYPE}">
@@ -25,9 +33,17 @@
         <div class="wOption">
             <fieldset class="visualFieldset">
                 <!--@if(!$product)-->
-                <legend class="visualLabel">Add simple product</legend>
+                    <!--@if($product_type == 'configurable')-->
+                        <legend class="visualLabel">Add configurable product</legend>
+                    <!--@else-->
+                        <legend class="visualLabel">Add simple product</legend>
+                    <!--@endif-->
                 <!--@else-->
-                <legend class="visualLabel">Edit simple product</legend>
+                    <!--@if($product_type == 'configurable')-->
+                        <legend class="visualLabel">Editconfigurable product</legend>
+                    <!--@else-->
+                        <legend class="visualLabel">Edit simple product</legend>
+                    <!--@endif-->
                 <!--@endif-->
 
                 <table border="1" cellspacing="0" class="tableData">
@@ -121,6 +137,7 @@
                             </div>
                         </td>
                     </tr>
+                    <!--@if($product_type != 'configurable')-->
                     <tr>
                         <th scope="row">
                             <label for="qty">{$lang->qty}</label>
@@ -132,6 +149,7 @@
                             </div>
                         </td>
                     </tr>
+                    <!--@endif-->
                     <tr>
                         <th scope="row">
                             <label for="in_stock">{$lang->in_stock}</label>

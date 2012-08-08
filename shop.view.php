@@ -429,8 +429,8 @@
         }
 
         /**
-         * @brief Shop display product add page
-         */
+     * @brief Shop display simple product add page
+     */
         public function dispShopToolAddProduct(){
             $shopModel = getModel('shop');
 
@@ -443,6 +443,11 @@
 			}
 			Context::set('attributes_list', $output->attributes);
 
+            $args = Context::getRequestVars();
+            //$attributeRepository = $shopModel->getAttributeRepository();
+            //$attributes = $attributeRepository->getAttributes($args->configurable_attributes);
+            Context::set('product_type',$args->product_type);
+            Context::set('configurable_attributes',$args->configurable_atributes);
             // Retrieve existing categories
             $categoryRepository = $shopModel->getCategoryRepository();
             $tree = $categoryRepository->getCategoriesTree($this->module_srl);
@@ -452,6 +457,16 @@
             Context::set('flat_tree', $flat_tree);
 
 
+        }
+
+        /**
+         * @brief Shop display configurable product add page
+         */
+        public function dispShopToolAddConfigurableProduct(){
+            $shopModel = getModel('shop');
+            $attributeRepository = $shopModel->getAttributeRepository();
+            $output = $attributeRepository->getConfigurableAttributesList($this->module_info->module_srl);
+            Context::set('attributes',$output->attributes);
         }
 
         /**

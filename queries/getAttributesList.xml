@@ -7,7 +7,7 @@
     </columns>
     <conditions>
         <condition operation="equal" column="module_srl" var="module_srl" notnull="notnull" />
-        <condition operation="equal" column="required" var="required" pipe="and"/>
+        <condition operation="equal" column="type" var="type" pipe="and"/>
     </conditions>
     <navigation>
         <index var="attribute_srl" default="attribute_srl" order="order_type" />

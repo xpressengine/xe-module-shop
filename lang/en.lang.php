@@ -44,7 +44,7 @@
     $lang->id = 'Id';
     $lang->name = 'Name';
     $lang->product_type = 'Product Type';
-    $lang->no_product = 'There is no product added, <a href="%s">Add a product!</a>';
+    $lang->no_product = 'There is no product added, <a href="%s">Add a simple product</a> or <a href="%s">Add a configurable product</a>. ';
     $lang->msg_confirm_delete_product = "Are you sure you want to delete this product?";
     $lang->msg_confirm_delete_attribute = "Are you sure you want to delete this attribute?";
     $lang->msg_confirm_delete_products = "Are you sure you want to delete these products?";
@@ -53,6 +53,11 @@
     $lang->about_category_scope = 'By not selecting any category the scope of the attribute will be global';
     $lang->no_categories = 'There are no categories added';
     $lang->about_category = 'Select the categories of the product';
+    $lang->add_simple_product = 'Add simple product';
+    $lang->add_configurable_product = 'Add configurable product';
+    $lang->select_attributes = 'Select attributes';
+    $lang->about_select_attributes = 'Only select type attributes are able to determine configurable products';
+    $lang->no_config_attributes = 'There are no dropdown (seclect) attributes. <a href="%s">Add an attribute</a> ';
 
 	$lang->cmd_open_id = 'Open ID Login';
 	$lang->cmd_common_id = 'Default Login';
@@ -289,6 +294,7 @@
     $lang->ip = 'IP';
 
     $lang->cmd_hide = 'Hide';
+    $lang->cmd_continue = 'Continue';
 
 	$lang->content_list = 'Content List';
 	$lang->msg_input_email_address = 'Input your email address';

@@ -14,7 +14,8 @@
     <!-- contentNavigation -->
     <div class="contentNavigation">
         <ul class="sortDefault">
-            <a href="{getUrl('act','dispShopToolAddProduct')}">Add a new product</a>
+            <li><a href="{getUrl('act','dispShopToolAddProduct')}">{$lang->add_simple_product}</a></li>
+            <li><a href="{getUrl('act','dispShopToolAddConfigurableProduct')}">{$lang->add_configurable_product}</a></li>
         </ul>
     </div>
     <!-- /contentNavigation -->
@@ -80,7 +81,7 @@
 
                 <!--@if(count($product_list)==0)-->
                 <tr>
-                    <td class="noData" colspan="9"><p>{sprintf($lang->no_product,getUrl('','act','dispShopToolAddProduct'))}</p></td>
+                    <td class="noData" colspan="9"><p>{sprintf($lang->no_product,getUrl('','act','dispShopToolAddProduct'),getUrl('','act','dispShopToolAddConfigurableProduct'))}</p></td>
                 </tr>
                 <!--@else-->
                 <!--@foreach($product_list as $no => $product)-->

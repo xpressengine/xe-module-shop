@@ -11,6 +11,7 @@
 		<permission action="dispShopToolLayoutConfigEdit" target="manager" />
         <permission action="dispShopToolManageProducts" target="manager" />
         <permission action="dispShopToolAddProduct" target="manager" />
+        <permission action="dispShopToolAddConfigurableProduct" target="manager" />
         <permission action="dispShopToolEditProduct" target="manager" />
         <permission action="dispShopToolManageAttributes" target="manager"/>
         <permission action="dispShopToolAddAttribute" target="manager"/>
@@ -52,6 +53,7 @@
 		<action name="dispShopToolLayoutConfigEdit" type="view" />
         <action name="dispShopToolManageProducts" type="view" />
         <action name="dispShopToolAddProduct" type="view" />
+        <action name="dispShopToolAddConfigurableProduct" type="view" />
         <action name="dispShopToolEditProduct" type="view" />
         <action name="dispShopToolManageAttributes" type="view"/>
         <action name="dispShopToolAddAttribute" type="view" />
