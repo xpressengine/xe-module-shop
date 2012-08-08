@@ -29,6 +29,7 @@ class Product extends BaseItem
     public $related_products;
     public $categories = array();
 	public $attributes = array();
+	public $configurable_attributes = array();
 
 	public function loadFromArray(array $data)
 	{

@@ -204,50 +204,51 @@
                             </div>
                         </td>
                     </tr>
+                    <!--@if($product_type != 'configurable')-->
+                        <!--@foreach($attributes_list as $attribute)-->
+    
+                        <tr
+                            <!--@if(count($attribute->category_scope) > 0 && count(array_intersect($product->categories, $attribute->category_scope)) === 0)-->
+                                style="display:none"
+                            <!--@end-->
+                            >
+                            <th scope="row">
+                                <label for="attribute_{$attribute->attribute_srl}">{$attribute->title}</label>
+                            </th>
+                            <td class="title">
+                                <div class="fItem">
+                                    <!--@if($attribute->type == AttributeRepository::TYPE_TEXTFIELD)-->
+                                    <input type="text"
+                                           id="attribute_{$attribute->attribute_srl}"
+                                           name="attribute_{$attribute->attribute_srl}"
+                                           style="width:200px"
+                                           class="iText iText attribute {implode(' ', $attribute->category_scope)}"
+                                           title="{$lang->about_qty}"
+                                           <!--@if(isset($product->attributes[$attribute->attribute_srl]))-->
+                                           value="{$product->attributes[$attribute->attribute_srl]}"
+                                            <!--@end-->
+                                            />
+                                        <!-- TODO Add value -->
+                                    <!--@elseif($attribute->type == AttributeRepository::TYPE_SELECT)-->
+                                    {@ $values = explode('|', $attribute->values); }
+                                    <select name="attribute_{$attribute->attribute_srl}"
+                                            id="attribute_{$attribute->attribute_srl}"
+                                            class="attribute {implode(' ', $attribute->category_scope)}"
+                                        >
+                                        <!--@foreach($values as $value)-->
+                                        <option value="{$value}"
+                                            <!--@if($product->in_stock=='Y')-->selected<!--@end-->>
+                                            {$value}
+                                        </option>
+                                        <!--@end-->
+                                    </select>
 
-					<!--@foreach($attributes_list as $attribute)-->
-
-					<tr
-						<!--@if(count($attribute->category_scope) > 0 && count(array_intersect($product->categories, $attribute->category_scope)) === 0)-->
-					        style="display:none"
-						<!--@end-->
-						>
-						<th scope="row">
-							<label for="attribute_{$attribute->attribute_srl}">{$attribute->title}</label>
-						</th>
-						<td class="title">
-							<div class="fItem">
-							    <!--@if($attribute->type == AttributeRepository::TYPE_TEXTFIELD)-->
-								<input type="text"
-									   id="attribute_{$attribute->attribute_srl}"
-									   name="attribute_{$attribute->attribute_srl}"
-									   style="width:200px"
-									   class="iText iText attribute {implode(' ', $attribute->category_scope)}"
-									   title="{$lang->about_qty}"
-									   <!--@if(isset($product->attributes[$attribute->attribute_srl]))-->
-									   value="{$product->attributes[$attribute->attribute_srl]}"
-										<!--@end-->
-										/>
-									<!-- TODO Add value -->
-								<!--@elseif($attribute->type == AttributeRepository::TYPE_SELECT)-->
-								{@ $values = explode('|', $attribute->values); }
-								<select name="attribute_{$attribute->attribute_srl}"
-										id="attribute_{$attribute->attribute_srl}"
-										class="attribute {implode(' ', $attribute->category_scope)}"
-									>
-									<!--@foreach($values as $value)-->
-									<option value="{$value}"
-										<!--@if($product->in_stock=='Y')-->selected<!--@end-->>
-										{$value}
-									</option>
-									<!--@end-->
-								</select>
-
-								<!--@end-->
-							</div>
-						</td>
-					</tr>
-					<!--@end-->
+                                    <!--@end-->
+                                </div>
+                            </td>
+                        </tr>
+                        <!--@end-->
+                    <!--@endif-->
 
 
                     <tr class="last">

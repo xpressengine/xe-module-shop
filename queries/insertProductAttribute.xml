@@ -5,6 +5,6 @@
     <columns>
         <column name="product_srl" var="product_srl" filter="number" notnull="notnull"/>
         <column name="attribute_srl" var="attribute_srl" filter="number" notnull="notnull"/>
-        <column name="value" var="attribute_value" notnull="notnull"/>
+        <column name="value" var="attribute_value" />
     </columns>
 </query>

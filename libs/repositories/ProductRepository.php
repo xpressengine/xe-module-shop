@@ -29,7 +29,7 @@ class ProductRepository extends BaseRepository
 		{
 			$this->insertProductCategories($product);
 			$this->insertProductAttributes($product);
-
+			if($product->product_type == 'configurable') $this->insertProductConfigurableAttributes($product);
 		}
 		return $product->product_srl;
 	}
@@ -57,6 +57,25 @@ class ProductRepository extends BaseRepository
 			{
 				throw new Exception($output->getMessage(), $output->getError());
 			}
+		}
+		return TRUE;
+	}
+
+	/**
+	 * Insert product configurable attributes
+	 *
+	 * @author Dan Dragan (dev@xpressengine.org)
+	 * @param $product Product
+	 * @return boolean
+	 */
+	public function insertProductConfigurableAttributes(Product $product)
+	{
+		$args = new stdClass();
+		$args->product_srl = $product->product_srl;
+		foreach($product->configurable_attributes as $config_attribute){
+			$args->attribute_srl = $config_attribute;
+			$output = executeQuery('shop.insertProductAttribute',$args);
+			if(!$output->toBool()) throw new Exception($output->getMessage(), $output->getError());
 		}
 		return TRUE;
 	}
@@ -100,6 +119,7 @@ class ProductRepository extends BaseRepository
 	 */
 	public function insertProductCategories(Product $product)
 	{
+		$args = new stdClass();
 		$args->product_srl = $product->product_srl;
 		foreach($product->categories as $category){
 			$args->category_srl = $category;

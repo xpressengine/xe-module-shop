@@ -141,7 +141,6 @@
             $logged_info = Context::get('logged_info');
             $args->member_srl = $logged_info->member_srl;
             $args->module_srl = $this->module_info->module_srl;
-            $args->product_type = 'simple';
 
             $product = new Product($args);
             try

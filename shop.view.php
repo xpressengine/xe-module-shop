@@ -428,6 +428,7 @@
 			if($product_srl)
 			{
 				$product = $productRepository->getProduct($product_srl);
+				Context::set('product_type',$product->product_type);
 			}
 			else
 			{
@@ -447,8 +448,8 @@
             $args = Context::getRequestVars();
             //$attributeRepository = $shopModel->getAttributeRepository();
             //$attributes = $attributeRepository->getAttributes($args->configurable_attributes);
-            Context::set('product_type',$args->product_type);
-            Context::set('configurable_attributes',$args->configurable_atributes);
+			if(isset($args->product_type)) Context::set('product_type',$args->product_type);
+			if(isset($args->configurable_attributes)) Context::set('configurable_attributes',$args->configurable_attributes);
             // Retrieve existing categories
             $categoryRepository = $shopModel->getCategoryRepository();
             $tree = $categoryRepository->getCategoriesTree($this->module_srl);
