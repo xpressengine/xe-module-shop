@@ -412,20 +412,8 @@
          * @brief Shop display product tool page
          */
         public function dispShopToolEditProduct(){
-            $shopModel = getModel('shop');
-            $productRepository = $shopModel->getProductRepository();
-            $product_srl = Context::get('product_srl');
-            $product = $productRepository->getProduct($product_srl);
-            Context::set('product',$product);
+			$this->dispShopToolAddProduct();
             $this->setTemplateFile('AddProduct');
-
-            // Retrieve existing categories
-            $categoryRepository = $shopModel->getCategoryRepository();
-            $tree = $categoryRepository->getCategoriesTree($this->module_srl);
-
-            // Prepare tree for display
-            $flat_tree = $tree->toFlatStructure();
-            Context::set('flat_tree', $flat_tree);
         }
 
         /**
@@ -433,6 +421,15 @@
      */
         public function dispShopToolAddProduct(){
             $shopModel = getModel('shop');
+
+			// Retrieve product if exists
+			$product_srl = Context::get('product_srl');
+			if($product_srl)
+			{
+				$productRepository = $shopModel->getProductRepository();
+				$product = $productRepository->getProduct($product_srl);
+				Context::set('product',$product);
+			}
 
 			// Retrieve all attributes
             $attributeRepository = $shopModel->getAttributeRepository();

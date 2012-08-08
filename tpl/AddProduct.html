@@ -228,7 +228,7 @@
 										class="attribute {implode(' ', $attribute->category_scope)}"
 									>
 									<!--@foreach($values as $value)-->
-									<option value="$value"
+									<option value="{$value}"
 										<!--@if($product->in_stock=='Y')-->selected<!--@end-->>
 										{$value}
 									</option>

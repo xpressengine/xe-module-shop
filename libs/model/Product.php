@@ -28,7 +28,21 @@ class Product extends BaseItem
     public $last_updated;
     public $related_products;
     public $categories = array();
+	public $attributes;
 
+	public function loadFromArray(array $data)
+	{
+		foreach ($data as $field=>$value) {
+			if (property_exists(get_called_class(), $field)) {
+				$this->$field = $value;
+			}
+			else if(strpos($field, 'attribute_') === 0)
+			{
+				$attribute_srl = str_replace('attribute_', '', $field);
+				$this->attributes[$attribute_srl] = $value;
+			}
+		}
+	}
 }
 
 

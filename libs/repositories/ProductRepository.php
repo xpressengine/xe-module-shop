@@ -24,29 +24,56 @@ class ProductRepository extends BaseRepository
 		if(!$output->toBool())
 		{
 			throw new Exception($output->getMessage(), $output->getError());
-		} else {
-            $this->insertProductCategories($product);
-        }
+		}
+		else
+		{
+			$this->insertProductCategories($product);
+			$this->insertProductAttributes($product);
+		}
 		return $product->product_srl;
 	}
 
-    /**
-     * Insert product categories
-     *
-     * @author Dan Dragan (dev@xpressengine.org)
-     * @param $product Product
-     * @return boolean
-     */
-    public function insertProductCategories(Product $product)
-    {
-        $args->product_srl = $product->product_srl;
-        foreach($product->categories as $category){
-            $args->category_srl = $category;
-            $output = executeQuery('shop.insertProductCategories',$args);
-            if(!$output->toBool()) throw new Exception($output->getMessage(), $output->getError());
-        }
-        return TRUE;
-    }
+	/**
+	 * Insert product attributes
+	 *
+	 * @author Corina Udrescu (dev@xpressengine.org)
+	 * @param $product Product
+	 * @return boolean
+	 */
+	public function insertProductAttributes(Product $product)
+	{
+		$args = new stdClass();
+		$args->product_srl = $product->product_srl;
+		foreach($product->attributes as $attribute)
+		{
+			$args->attribute_srl = $attribute->attribute_srl;
+			$args->value = $attribute->value;
+			$output = executeQuery('shop.insertProductAttribute', $args);
+			if(!$output->toBool())
+			{
+				throw new Exception($output->getMessage(), $output->getError());
+			}
+		}
+		return TRUE;
+	}
+
+	/**
+	 * Insert product categories
+	 *
+	 * @author Dan Dragan (dev@xpressengine.org)
+	 * @param $product Product
+	 * @return boolean
+	 */
+	public function insertProductCategories(Product $product)
+	{
+		$args->product_srl = $product->product_srl;
+		foreach($product->categories as $category){
+			$args->category_srl = $category;
+			$output = executeQuery('shop.insertProductCategories',$args);
+			if(!$output->toBool()) throw new Exception($output->getMessage(), $output->getError());
+		}
+		return TRUE;
+	}
 
 	/**
 	 * Deletes a product by $product_srl or $module_srl
@@ -64,12 +91,11 @@ class ProductRepository extends BaseRepository
 		{
 			throw new Exception($output->getMessage(), $output->getError());
 		}
-        $args->product_srls[] = $args->product_srl;
-        $output = executeQuery('shop.deleteProductCategories', $args);
-        if(!$output->toBool())
-        {
-            throw new Exception($output->getMessage(), $output->getError());
-        }
+		$product = new Product();
+		$product->product_srl = $args->product_srl;
+		$this->deleteProductCategories($product);
+		$this->deleteProductAttributes($product);
+
 		return TRUE;
 	}
 
@@ -114,6 +140,31 @@ class ProductRepository extends BaseRepository
     }
 
 	/**
+	 * Delete product attributes
+	 *
+	 * @author Corina Udrescu (dev@xpressengine.org)
+	 * @param $product Product
+	 * @return boolean
+	 */
+	public function deleteProductAttributes(Product &$product)
+	{
+		if(!$product->product_srl)
+		{
+			throw new Exception("Invalid arguments! Please provide product_srl for delete atrributes.");
+		}
+
+		$args = new stdClass();
+		$args->product_srl = $product->product_srl;
+		$output = executeQuery('shop.deleteProductAttributes', $args);
+		if(!$output->toBool())
+		{
+			throw new Exception($output->getMessage(), $output->getError());
+		}
+		unset($product->attributes);
+		return TRUE;
+	}
+
+	/**
 	 * Retrieve a Product object from the database given a srl
 	 *
 	 * @author Dan Dragan (dev@xpressengine.org)
@@ -133,6 +184,7 @@ class ProductRepository extends BaseRepository
 
 		$product = new Product($output->data);
         $this->getProductCategories($product);
+		$this->getProductAttributes($product);
 		return $product;
 	}
 
@@ -157,6 +209,37 @@ class ProductRepository extends BaseRepository
         }
         return TRUE;
     }
+
+	/**
+	 * Retrieve product attributes
+	 *
+	 * @author Corina Udrescu (dev@xpressengine.org)
+	 * @param $product Product
+	 * @return boolean
+	 */
+	public function getProductAttributes(Product &$product)
+	{
+		$args = new stdClass();
+		$args->product_srl = $product->product_srl;
+		$output = executeQuery('shop.getProductAttributes', $args);
+		if(!$output->toBool())
+		{
+			throw new Exception($output->getMessage(), $output->getError());
+		}
+
+		if(!is_array($output->data))
+		{
+			$product->categories[] = $output->data->category_srl;
+		}
+		else
+		{
+			foreach($output->data as $item)
+			{
+				$product->categories[] = $item->category_srl;
+			}
+		}
+		return TRUE;
+	}
 
     /**
      * Retrieve a Product List object from the database given a modul_srl
@@ -199,6 +282,7 @@ class ProductRepository extends BaseRepository
 			throw new Exception($output->getMessage(), $output->getError());
 		} else {
             $this->updateProductCategories($product);
+			$this->updateProductAttributes($product);
         }
 		return TRUE;
 	}
@@ -216,4 +300,18 @@ class ProductRepository extends BaseRepository
         $this->insertProductCategories($product);
         return TRUE;
     }
+
+	/**
+	 * Update product attributes
+	 *
+	 * @author Corina Udrescu (dev@xpressengine.org)
+	 * @param $product Product
+	 * @return boolean
+	 */
+	public function updateProductAttributes(Product &$product)
+	{
+		$this->deleteProductCategories($product);
+		$this->insertProductCategories($product);
+		return TRUE;
+	}
 }

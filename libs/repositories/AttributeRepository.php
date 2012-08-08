@@ -43,7 +43,7 @@ class AttributeRepository extends BaseRepository
      * @param $attribute Attribute
      * @return boolean
      */
-    public function insertAttributeScope(Attribute &$attribute)
+    public function  insertAttributeScope(Attribute &$attribute)
     {
         $args = new stdClass();
         $args->attribute_srl = $attribute->attribute_srl;
