@@ -1,5 +1,5 @@
 <?php
-
+require_once "PHPUnit/Extensions/Database/TestCase.php";
 require dirname(__FILE__) . '/Database.php';
 
 /**
@@ -7,7 +7,7 @@ require dirname(__FILE__) . '/Database.php';
  *
  * @author Corina Udrescu (dev@xpressengine.org)
  */
-class TestAgainstDatabase extends PHPUnit_Framework_TestCase
+abstract class TestAgainstDatabase extends PHPUnit_Extensions_Database_TestCase
 {
 
 	protected $backupGlobals = FALSE;
@@ -27,6 +27,8 @@ class TestAgainstDatabase extends PHPUnit_Framework_TestCase
 	 */
 	protected function setUp()
 	{
+		parent::setUp();
+
 		$oContext = &Context::getInstance();
 
 		$db_info = include dirname(__FILE__) . '/../config/db.config.php';
@@ -47,6 +49,8 @@ class TestAgainstDatabase extends PHPUnit_Framework_TestCase
 	protected function tearDown()
 	{
 		unset($GLOBALS['__DB__']);
+
+		parent::tearDown();
 	}
 }
 
