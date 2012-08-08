@@ -1,0 +1,10 @@
+<query id="getActiveGateways" action="select">
+    <tables>
+        <table name="shop_payment_gateways" />
+    </tables>
+    <columns>
+    </columns>
+    <conditions>
+        <condition operation="notequal" column="status" var="status"/>
+    </conditions>
+</query>

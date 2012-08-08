@@ -29,7 +29,7 @@ class PaymentGatewayRepository extends BaseRepository
 
         }
 
-        return $output;
+        return $output->data;
 
     }
 
@@ -50,7 +50,7 @@ class PaymentGatewayRepository extends BaseRepository
 
         }
 
-        return $output;
+        return $output->data;
     }
 
     /**
@@ -92,6 +92,67 @@ class PaymentGatewayRepository extends BaseRepository
         }
 
         return TRUE;
+
+    }
+
+    /**
+     * Get active payment gateways
+     *
+     * @author Daniel Ionescu (dev@xpressengine.org)
+     * @throws exception
+     * @return object
+     */
+    public function getActivePaymentGateways() {
+
+        $args = new stdClass();
+        $args->status = 0;
+        $output = executeQuery('shop.getActiveGateways',$args);
+
+        if (!$output->toBool()) {
+
+            throw new Exception($output->getMessage(), $output->getError());
+
+        }
+
+        return $output->data;
+
+    }
+
+    /**
+     * Includes active payment gateways
+     *
+     * @author Daniel Ionescu (dev@xpressengine.org)
+     * @throws exception
+     * @return boolean
+     */
+    public function includeActiveGateways() {
+
+        $paymentGateways = new stdClass();
+
+        $baseDir = _XE_PATH_ . 'modules/shop/payment_gateways/';
+        $activeGateways = $this->getActivePaymentGateways();
+
+        if ($activeGateways) {
+
+            foreach ($activeGateways as $pg) {
+
+                // load gateway class
+                $classPath = $baseDir . $pg->name . '/' . $pg->name . '.php';
+
+                if (file_exists($classPath)) {
+
+                    require_once($classPath);
+
+                    $className = $pg->name.'Gateway';
+                    $paymentGateways->{$pg->name} = new $className($pg);
+
+                }
+
+            }
+
+        }
+
+        return true;
 
     }
 

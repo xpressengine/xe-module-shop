@@ -582,8 +582,6 @@
          * Activates a gateway
          *
          * @author Daniel Ionescu (dev@xpressengine.org)
-         * @throws exception
-         * @return object
          */
         public function procUpdateShopActivateGateway() {
 
@@ -600,10 +598,10 @@
 
                 $args = new stdClass();
                 $args->name = $name;
-                $gateway_exists = $repository->getGateway($args);
+                $gatewayData = $repository->getGateway($args);
 
                 // if we cannot find the selected gateway we insert it else we update it
-                if ($gateway_exists) {
+                if ($gatewayData) {
 
                     $repository->updatePaymentGatewayStatus($pg);
 
@@ -619,6 +617,11 @@
             $this->setRedirectUrl($returnUrl);
         }
 
+        /**
+         * Deactivates a gateway
+         *
+         * @author Daniel Ionescu (dev@xpressengine.org)
+         */
         public function procUpdateShopDeactivateGateway() {
 
             $name = Context::get('name');

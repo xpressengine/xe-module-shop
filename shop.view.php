@@ -511,14 +511,14 @@
         {
 
             // base directory
-            $baseDir = dirname(__FILE__) . "/payment_gateways/";
+            $baseDir = _XE_PATH_ . 'modules/shop/payment_gateways/';
             $dirHandle = opendir($baseDir);
 
             // get gateways
             $shopModel = getModel('shop');
             $repository = $shopModel->getPaymentGatewayRepository();
-            $output = $repository->getAllGateways();
-            Context::set('pg',$output->data);
+            $gatewaysData = $repository->getAllGateways();
+            Context::set('pg',$gatewaysData);
 
             // Payment gateway list
             $pg_dirs = array();
@@ -530,6 +530,17 @@
             }
 
             Context::set('pg_dirs',$pg_dirs);
+
+        }
+
+        /*
+         * Displays the payment method selection page
+         */
+        public function dispShopToolSelectPaymentMethod() {
+
+            $shopModel = getModel('shop');
+            $repository = $shopModel->getPaymentGatewayRepository();
+            $repository->includeActiveGateways();
 
         }
 
