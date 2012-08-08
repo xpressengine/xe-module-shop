@@ -433,8 +433,15 @@
          */
         public function dispShopToolAddProduct(){
             $shopModel = getModel('shop');
+
+			// Retrieve all attributes
             $attributeRepository = $shopModel->getAttributeRepository();
-            $attributes = $attributeRepository->getRequiredAttributesList($this->module_info->module_srl);
+            $output = $attributeRepository->getAttributesList($this->module_info->module_srl);
+			foreach($output->attributes as $attribute)
+			{
+				$attributeRepository->getAttributeScope($attribute);
+			}
+			Context::set('attributes_list', $output->attributes);
 
             // Retrieve existing categories
             $categoryRepository = $shopModel->getCategoryRepository();
@@ -443,6 +450,8 @@
             // Prepare tree for display
             $flat_tree = $tree->toFlatStructure();
             Context::set('flat_tree', $flat_tree);
+
+
         }
 
         /**
