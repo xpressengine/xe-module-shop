@@ -28,7 +28,7 @@ class Product extends BaseItem
     public $last_updated;
     public $related_products;
     public $categories = array();
-	public $attributes;
+	public $attributes = array();
 
 	public function loadFromArray(array $data)
 	{

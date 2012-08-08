@@ -6,7 +6,7 @@
 <div id="content">
     <!-- contentHeader -->
     <div class="contentHeader postListHeader">
-        <!--@if(!$product)-->
+        <!--@if(!$product->product_srl)-->
             <!--@if($product_type == 'configurable')-->
                 <h3 class="h3">Add configurable product</h3>
             <!--@else-->
@@ -26,13 +26,13 @@
     <!-- /contentHeader -->
     <form action="./" method="post" ruleset="insert_product" class="">
         <input type="hidden" name="act" value="procShopToolInsertProduct" />
-        <!--@if($product)-->
+        <!--@if($product->product_srl)-->
         <input type="hidden" name="product_srl" value="{$product->product_srl}" />
         <!--@endif-->
 
         <div class="wOption">
             <fieldset class="visualFieldset">
-                <!--@if(!$product)-->
+                <!--@if(!$product->product_srl)-->
                     <!--@if($product_type == 'configurable')-->
                         <legend class="visualLabel">Add configurable product</legend>
                     <!--@else-->
@@ -206,7 +206,12 @@
                     </tr>
 
 					<!--@foreach($attributes_list as $attribute)-->
-					<tr>
+
+					<tr
+						<!--@if(count($attribute->category_scope) > 0 && count(array_intersect($product->categories, $attribute->category_scope)) === 0)-->
+					        style="display:none"
+						<!--@end-->
+						>
 						<th scope="row">
 							<label for="attribute_{$attribute->attribute_srl}">{$attribute->title}</label>
 						</th>
@@ -219,6 +224,9 @@
 									   style="width:200px"
 									   class="iText iText attribute {implode(' ', $attribute->category_scope)}"
 									   title="{$lang->about_qty}"
+									   <!--@if(isset($product->attributes[$attribute->attribute_srl]))-->
+									   value="{$product->attributes[$attribute->attribute_srl]}"
+										<!--@end-->
 										/>
 									<!-- TODO Add value -->
 								<!--@elseif($attribute->type == AttributeRepository::TYPE_SELECT)-->
@@ -246,7 +254,7 @@
                         <th scope="row">
                         </th>
                         <td class="title">
-                            <!--@if(!$product)-->
+                            <!--@if(!$product->product_srl)-->
                             <span class="btn"><input type="submit" value="{$lang->cmd_submit}" /></span>
                             <!--@else-->
                             <span class="btn"><input type="submit" value="{$lang->cmd_update}" /></span>

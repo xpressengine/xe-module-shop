@@ -29,6 +29,7 @@ class ProductRepository extends BaseRepository
 		{
 			$this->insertProductCategories($product);
 			$this->insertProductAttributes($product);
+
 		}
 		return $product->product_srl;
 	}
@@ -42,12 +43,15 @@ class ProductRepository extends BaseRepository
 	 */
 	public function insertProductAttributes(Product $product)
 	{
+		$valid_attributes = $this->getProductCategoriesAttributes($product);
+
 		$args = new stdClass();
 		$args->product_srl = $product->product_srl;
-		foreach($product->attributes as $attribute)
+		foreach($product->attributes as $attribute_srl => $attribute_value)
 		{
-			$args->attribute_srl = $attribute->attribute_srl;
-			$args->value = $attribute->value;
+			if(!in_array($attribute_srl, $valid_attributes)) continue;
+			$args->attribute_srl = $attribute_srl;
+			$args->attribute_value = $attribute_value;
 			$output = executeQuery('shop.insertProductAttribute', $args);
 			if(!$output->toBool())
 			{
@@ -55,6 +59,36 @@ class ProductRepository extends BaseRepository
 			}
 		}
 		return TRUE;
+	}
+
+	/**
+	 * Given a product, returns all attributes the
+	 * product can have according to the categories
+	 * it belongs to
+	 *
+	 * @author Corina Udrescu (dev@xpressengine.org)
+	 * @param $product_srl
+	 * @returns array
+	 */
+	public function getProductCategoriesAttributes(Product $product)
+	{
+		$args = new stdClass();
+		$args->category_srls = $product->categories;
+
+		$output = executeQueryArray('shop.getCategoryAttributes', $args);
+		if(!$output->toBool())
+		{
+			throw new Exception($output->getMessage(), $output->getError());
+		}
+
+		$attributes_list = array();
+		foreach($output->data as $attribute)
+		{
+			$attributes_list[] = $attribute->attribute_srl;
+		}
+
+		return $attributes_list;
+
 	}
 
 	/**
@@ -160,7 +194,6 @@ class ProductRepository extends BaseRepository
 		{
 			throw new Exception($output->getMessage(), $output->getError());
 		}
-		unset($product->attributes);
 		return TRUE;
 	}
 
@@ -221,23 +254,17 @@ class ProductRepository extends BaseRepository
 	{
 		$args = new stdClass();
 		$args->product_srl = $product->product_srl;
-		$output = executeQuery('shop.getProductAttributes', $args);
+		$output = executeQueryArray('shop.getProductAttributes', $args);
 		if(!$output->toBool())
 		{
 			throw new Exception($output->getMessage(), $output->getError());
 		}
 
-		if(!is_array($output->data))
+		foreach($output->data as $attribute)
 		{
-			$product->categories[] = $output->data->category_srl;
+			$product->attributes[$attribute->attribute_srl] = $attribute->value;
 		}
-		else
-		{
-			foreach($output->data as $item)
-			{
-				$product->categories[] = $item->category_srl;
-			}
-		}
+
 		return TRUE;
 	}
 
@@ -310,8 +337,8 @@ class ProductRepository extends BaseRepository
 	 */
 	public function updateProductAttributes(Product &$product)
 	{
-		$this->deleteProductCategories($product);
-		$this->insertProductCategories($product);
+		$this->deleteProductAttributes($product);
+		$this->insertProductAttributes($product);
 		return TRUE;
 	}
 }

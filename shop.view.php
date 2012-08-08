@@ -421,15 +421,19 @@
      */
         public function dispShopToolAddProduct(){
             $shopModel = getModel('shop');
+			$productRepository = $shopModel->getProductRepository();
 
 			// Retrieve product if exists
 			$product_srl = Context::get('product_srl');
 			if($product_srl)
 			{
-				$productRepository = $shopModel->getProductRepository();
 				$product = $productRepository->getProduct($product_srl);
-				Context::set('product',$product);
 			}
+			else
+			{
+				$product = new Product();
+			}
+			Context::set('product',$product);
 
 			// Retrieve all attributes
             $attributeRepository = $shopModel->getAttributeRepository();
