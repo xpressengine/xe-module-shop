@@ -218,17 +218,15 @@
                             <td class="title">
                                 <div class="fItem">
                                     <!--@if($attribute->type == AttributeRepository::TYPE_TEXTFIELD)-->
+									{@ $value = (isset($product->attributes[$attribute->attribute_srl]) ? $product->attributes[$attribute->attribute_srl] : '')}
                                     <input type="text"
                                            id="attribute_{$attribute->attribute_srl}"
                                            name="attribute_{$attribute->attribute_srl}"
                                            style="width:200px"
                                            class="iText iText attribute {implode(' ', $attribute->category_scope)}"
                                            title="{$lang->about_qty}"
-                                           <!--@if(isset($product->attributes[$attribute->attribute_srl]))-->
-                                           value="{$product->attributes[$attribute->attribute_srl]}"
-                                            <!--@end-->
+                                           value="{$value}"
                                             />
-                                        <!-- TODO Add value -->
                                     <!--@elseif($attribute->type == AttributeRepository::TYPE_SELECT)-->
                                     {@ $values = explode('|', $attribute->values); }
                                     <select name="attribute_{$attribute->attribute_srl}"
