@@ -26,10 +26,19 @@
     <!-- /contentHeader -->
     <form action="./" method="post" ruleset="insert_product" class="">
         <input type="hidden" name="act" value="procShopToolInsertProduct" />
-        <!--@if($product->product_srl)-->
+        <!--@if(isset($product->product_srl))-->
         <input type="hidden" name="product_srl" value="{$product->product_srl}" />
         <!--@endif-->
-
+        <!--@if($product_type == 'configurable')-->
+            <input type="hidden" name="product_type" value="configurable" />
+        <!--@else-->
+            <input type="hidden" name="product_type" value="simple" />
+        <!--@endif-->
+        <!--@if($product_type == 'configurable')-->
+            <!--@foreach($configurable_attributes as $conf_attribute)-->
+                <input type="hidden" name="configurable_attributes[]" value="{$conf_attribute}" />
+            <!--@end-->
+        <!--@endif-->
         <div class="wOption">
             <fieldset class="visualFieldset">
                 <!--@if(!$product->product_srl)-->
@@ -253,7 +262,7 @@
                         <th scope="row">
                         </th>
                         <td class="title">
-                            <!--@if(!$product->product_srl)-->
+                            <!--@if(!isset($product->product_srl))-->
                             <span class="btn"><input type="submit" value="{$lang->cmd_submit}" /></span>
                             <!--@else-->
                             <span class="btn"><input type="submit" value="{$lang->cmd_update}" /></span>
