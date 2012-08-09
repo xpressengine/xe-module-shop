@@ -150,20 +150,22 @@
                     $product_srl = $repository->insertProduct($product);
 					if($product->product_type == 'simple') $this->setMessage("Saved simple product successfull");
 					else $this->setMessage("Saved configurable product successfull");
+					if($product->product_type == 'simple') $returnUrl = getNotEncodedUrl('', 'act', 'dispShopToolManageProducts');
+					else $returnUrl = getNotEncodedUrl('', 'act', 'dispShopToolAddAssociatedProducts','product_srl',$product->product_srl);
                 }
                 else
                 {
                     $repository->updateProduct($product);
 					if($product->product_type == 'simple') $this->setMessage("Updated simple product successfull");
 					else $this->setMessage("Updated configurable product successfull");
+					$returnUrl = getNotEncodedUrl('', 'act', 'dispShopToolManageProducts');
                 }
             }
             catch(Exception $e)
             {
                 return new Object(-1, $e->getMessage());
             }
-			if($product->product_type == 'simple') $returnUrl = getNotEncodedUrl('', 'act', 'dispShopToolManageProducts');
-            else $returnUrl = getNotEncodedUrl('', 'act', 'dispShopToolAddAssociatedProducts','product_srl',$product->product_srl);
+
 			$this->setRedirectUrl($returnUrl);
         }
 
@@ -178,8 +180,14 @@
 			$parent_product = $productRepository->getProduct($args->parent_product_srl);
 			foreach($args->associated_combinations as $combination){
 				$values = explode('_',$combination);
-				$product = $productRepository->createProductFromParent($parent_product,$values);
-				$product_srl = $productRepository->insertProduct($product);
+				try{
+					$product = $productRepository->createProductFromParent($parent_product,$values);
+					$product_srl = $productRepository->insertProduct($product);
+				}
+				catch(Exception $e)
+				{
+					return new Object(-1, $e->getMessage());
+				}
 			}
 			$this->setMessage("Saved associated products successfull");
 			$returnUrl = getNotEncodedUrl('', 'act', 'dispShopToolManageProducts');
