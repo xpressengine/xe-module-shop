@@ -11,11 +11,12 @@ require_once dirname(__FILE__) . '/../model/Category.php';
 class CategoryRepository extends BaseRepository
 {
 	/**
-	 * Insert a new Product category; returns the ID of the newly created record
+	 * Insert a new Product category; returns the ID of the newly created record.
 	 *
-	 * @author Corina Udrescu (dev@xpressengine.org)
-	 * @param $category Category
-	 * @return int
+	 * @param Category $category Category to inserted
+	 *
+	 * @throws Exception DatabaseError.
+	 * @return category_srl int
 	 */
 	public function insertCategory(Category $category)
 	{
@@ -31,8 +32,10 @@ class CategoryRepository extends BaseRepository
 	/**
 	 * Deletes a product category by $category_srl or $module_srl
 	 *
-	 * @author Corina Udrescu (dev@xpressengine.org)
-	 * @param $args array
+	 * @param stdClass $args Can have the following properties: category_srl or module_srl
+	 *
+	 * @throws Exception
+	 * @return bool
 	 */
 	public function deleteCategory($args)
 	{
@@ -45,17 +48,17 @@ class CategoryRepository extends BaseRepository
 			throw new Exception($output->getMessage(), $output->getError());
 		}
 
-        $output = executeQuery('shop.deleteAttributesScope', $args);
-        if(!$output->toBool())
-        {
-            throw new Exception($output->getMessage(), $output->getError());
-        }
+		$output = executeQuery('shop.deleteAttributesScope', $args);
+		if(!$output->toBool())
+		{
+			throw new Exception($output->getMessage(), $output->getError());
+		}
 
-        $output = executeQuery('shop.deleteProductCategories', $args);
-        if(!$output->toBool())
-        {
-            throw new Exception($output->getMessage(), $output->getError());
-        }
+		$output = executeQuery('shop.deleteProductCategories', $args);
+		if(!$output->toBool())
+		{
+			throw new Exception($output->getMessage(), $output->getError());
+		}
 
 		return TRUE;
 	}
@@ -63,8 +66,9 @@ class CategoryRepository extends BaseRepository
 	/**
 	 * Retrieve a Category object from the database given a srl
 	 *
-	 * @author Corina Udrescu (dev@xpressengine.org)
-	 * @param $category_srl int
+	 * @param int $category_srl by which to select the Category
+	 *
+	 * @throws Exception
 	 * @return Category
 	 */
 	public function getCategory($category_srl)
@@ -86,8 +90,8 @@ class CategoryRepository extends BaseRepository
 	/**
 	 * Update a product category
 	 *
-	 * @author   Corina Udrescu (dev@xpressengine.org)
-	 * @param $category Category
+	 * @param Category $category Object to be persisted
+	 *
 	 * @throws Exception
 	 * @return boolean
 	 */
@@ -105,8 +109,10 @@ class CategoryRepository extends BaseRepository
 	 * Get all product categories for a module as a tree
 	 * Returns root node
 	 *
-	 * @author Corina Udrescu (dev@xpressengine.org)
-	 * @param $module_srl int
+	 * @param int $module_srl Module for which to get all categories as a tree
+	 *
+	 * @throws Exception
+	 * @return CategoryTreeNode Tree root node
 	 */
 	public function getCategoriesTree($module_srl)
 	{
@@ -135,7 +141,11 @@ class CategoryRepository extends BaseRepository
 	/**
 	 * Save category image to disc
 	 *
-	 * @author Corina Udrescu (dev@xpressengine.org)
+	 * @param int    $module_srl        Module's srl
+	 * @param string $original_filename Original filename of the uploaded file
+	 * @param string $tmp_name          Uploaded file's content
+	 *
+	 * @return string
 	 */
 	public function saveCategoryImage($module_srl, $original_filename, $tmp_name)
 	{
@@ -152,12 +162,15 @@ class CategoryRepository extends BaseRepository
 	/**
 	 * Delete category image from disc
 	 *
-	 * @author Corina Udrescu (dev@xpressengine.org)
+	 * @param int $filename Name of the file to delete (category image)
+	 *
+	 * @return void
 	 */
 	public function deleteCategoryImage($filename)
 	{
 		FileHandler::removeFile($filename);
-
 	}
 
 }
+/* End of file CategoryRepository.php */
+/* Location: ./modules/shop/libs/repositories/CategoryRepository.php */
