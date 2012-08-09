@@ -430,7 +430,7 @@
 				$product = $productRepository->getProduct($product_srl);
 				if($product->parent_product_srl) {
 					$parent_product = $productRepository->getProduct($product->parent_product_srl);
-					Context::set('parent_config_atts',$parent_product->configurable_attributes);
+					Context::set('parent_product',$parent_product);
 				}
 				Context::set('product_type',$product->product_type);
 			}

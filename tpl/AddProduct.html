@@ -56,6 +56,9 @@
                 <!--@endif-->
 
                 <table border="1" cellspacing="0" class="tableData">
+                    <tr>
+                        <span>This is an associated simple product for the configurable product with the title: <b>{$parent_product->title}</b> and sku:<b>{$parent_product->sku}</b></span>
+                    </tr>
                     <tr class="first">
                         <th scope="row">
                             <label for="title">{$lang->title}</label>
@@ -222,7 +225,7 @@
                         <!--@foreach($attributes_list as $attribute)-->
     
                         <tr
-                            <!--@if((count($attribute->category_scope) > 0 && count(array_intersect($product->categories, $attribute->category_scope)) === 0) || in_array($attribute->attribute_srl,$parent_config_atts))-->
+                            <!--@if((count($attribute->category_scope) > 0 && count(array_intersect($product->categories, $attribute->category_scope)) === 0) || in_array($attribute->attribute_srl,$parent_product->configurable_attributes))-->
                                 style="display:none"
                             <!--@end-->
                             >
