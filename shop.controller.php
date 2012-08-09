@@ -148,22 +148,43 @@
                 if($product->product_srl === NULL)
                 {
                     $product_srl = $repository->insertProduct($product);
-                    $this->setMessage("success_registed");
+					if($product->product_type == 'simple') $this->setMessage("Saved simple product successfull");
+					else $this->setMessage("Saved configurable product successfull");
                 }
                 else
                 {
                     $repository->updateProduct($product);
-                    $this->setMessage("success_updated");
+					if($product->product_type == 'simple') $this->setMessage("Updated simple product successfull");
+					else $this->setMessage("Updated configurable product successfull");
                 }
             }
             catch(Exception $e)
             {
                 return new Object(-1, $e->getMessage());
             }
-
-            $returnUrl = getNotEncodedUrl('', 'act', 'dispShopToolManageProducts');
-            $this->setRedirectUrl($returnUrl);
+			if($product->product_type == 'simple') $returnUrl = getNotEncodedUrl('', 'act', 'dispShopToolManageProducts');
+            else $returnUrl = getNotEncodedUrl('', 'act', 'dispShopToolAddAssociatedProducts','product_srl',$product->product_srl);
+			$this->setRedirectUrl($returnUrl);
         }
+
+		/*
+		* brief function for associated products insert
+		* @author Dan Dragan (dev@xpressengine.org)
+		*/
+		public function procShopToolInsertAssociatedProducts(){
+			$shopModel = getModel('shop');
+			$productRepository = $shopModel->getProductRepository();
+			$args = Context::getRequestVars();
+			$parent_product = $productRepository->getProduct($args->parent_product_srl);
+			foreach($args->associated_combinations as $combination){
+				$values = explode('_',$combination);
+				$product = $productRepository->createProductFromParent($parent_product,$values);
+				$product_srl = $productRepository->insertProduct($product);
+			}
+			$this->setMessage("Saved associated products successfull");
+			$returnUrl = getNotEncodedUrl('', 'act', 'dispShopToolManageProducts');
+			$this->setRedirectUrl($returnUrl);
+		}
 
         /*
          * @brief function for attribute insert

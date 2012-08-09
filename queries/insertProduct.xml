@@ -9,15 +9,15 @@
         <column name="parent_product_srl" var="parent_product_srl" filter="number" />
         <column name="product_type" var="product_type" notnull="notnull" />
         <column name="title" var="title" notnull="notnull" />
-        <column name="description" var="description" notnull="notnull" />
-        <column name="short_description" var="short_description" notnull="notnull" />
+        <column name="description" var="description" />
+        <column name="short_description" var="short_description"  />
         <column name="sku" var="sku" notnull="notnull" />
         <column name="weight" var="weight"/>
-        <column name="status" var="status" notnull="notnull" />
-        <column name="friendly_url" var="friendly_url" notnull="notnull" />
+        <column name="status" var="status" />
+        <column name="friendly_url" var="friendly_url"  />
         <column name="price" var="price" notnull="notnull" />
         <column name="qty" var="qty" filter="number" />
-        <column name="in_stock" var="in_stock" notnull="notnull" />
+        <column name="in_stock" var="in_stock" />
         <column name="related_products" var="related_products" />
         <column name="regdate" var="regdate" default="curdate()" />
         <column name="last_update" var="last_update" default="curdate()" />

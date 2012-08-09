@@ -106,6 +106,9 @@ class AttributeRepository extends BaseRepository
         //delete attributes scope
         $output = executeQuery('shop.deleteAttributesScope',$args);
         if (!$output->toBool()) throw new Exception($output->getMessage(), $output->getError());
+		//delete product attributes
+		$output = executeQuery('shop.deleteProductAttributes',$args);
+		if (!$output->toBool()) throw new Exception($output->getMessage(), $output->getError());
         return $output;
 	}
 
@@ -148,7 +151,46 @@ class AttributeRepository extends BaseRepository
             $rez[] = new Attribute($data);
             $this->getAttributeScope($rez[key($rez)]);
         }
-		return empty($rez) ? false : $rez;
+		if( empty($rez)) return false;
+		else {
+			foreach($rez as $att){
+				$att->values  = explode('|',$att->values);
+			}
+			return $rez;
+		}
+	}
+
+	/**
+	 * Retrieve all value combinations of configurable attributes
+	 *
+	 * @author Dan Dragan(dev@xpressengine.org)
+	 * @param $product array
+	 * @return array of combinations
+	 */
+	public function getValuesCombinations(array $attributes,$i=0)
+	{
+		if (!isset($attributes[$i])) {
+			return array();
+		}
+		if ($i == count($attributes) - 1) {
+			return $attributes[$i];
+		}
+
+		// get combinations from subsequent arrays
+		$tmp = $this->getValuesCombinations($attributes, $i + 1);
+
+		$result = array();
+
+		// concat each array from tmp with each element from $arrays[$i]
+		foreach ($attributes[$i] as $v) {
+			foreach ($tmp as $t) {
+				$result[] = is_array($t) ?
+					array_merge(array($v), $t) :
+					array($v, $t);
+			}
+		}
+
+		return $result;
 	}
 
     /**

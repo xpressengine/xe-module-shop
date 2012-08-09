@@ -1,0 +1,60 @@
+<!--#include("_tool_header.html")-->
+<!--%import("css/pagination.css",optimized=false)-->
+
+<!-- Content -->
+<div id="content">
+    <!-- contentHeader -->
+    <div class="contentHeader postListHeader">
+        <h3 class="h3">Manage associated products</h3>
+    </div>
+    <div cond="$XE_VALIDATOR_MESSAGE" class="message {$XE_VALIDATOR_MESSAGE_TYPE}">
+        <p>{$XE_VALIDATOR_MESSAGE}</p>
+    </div>
+    <!-- /contentHeader -->
+    <form action="./" method="post">
+        <input type="hidden" name="act" value="procShopToolInsertAssociatedProducts" />
+        <input type="hidden" name="parent_product_srl" value="{$product->product_srl}" />
+
+
+        <div class="wOption">
+            <fieldset class="visualFieldset">
+                <legend class="visualLabel">Select associated products combination</legend>
+                <table border="1" cellspacing="0" class="tableData">
+                    <tr>
+                        <th scope="row">
+                            <label for="associated_products">{$lang->select_associated_products}</label>
+                        </th>
+                        <td class="title">
+                            <div class="fItem">
+                                <ul class= "multiple_checkbox" id="associated_products">
+                                    <!--@foreach($values_combinations as $combination)-->
+                                        <li><input type="checkbox"  name="associated_combinations[]" value="{implode('_',$combination)}" />{implode('_',$combination)}</li>
+                                    <!--@end-->
+                                </ul>
+                                <span>{$lang->about_select_associated_products}</span>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <tr class="last">
+                        <th scope="row">
+                        </th>
+                        <td class="title">
+                            <span class="btn"><input type="submit" value="{$lang->cmd_continue}" /></span>
+                        </td>
+                    </tr>
+                </table>
+            </fieldset>
+        </div>
+    </form>
+
+</div>
+<!-- /Content -->
+
+
+<!-- Extension -->
+<!--#include("_tool_menu.html")-->
+<!-- Extension -->
+
+<!--#include("_tool_footer.html")-->
+

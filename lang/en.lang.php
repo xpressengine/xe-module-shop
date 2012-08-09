@@ -58,6 +58,8 @@
     $lang->select_attributes = 'Select attributes';
     $lang->about_select_attributes = 'Only select type attributes are able to determine configurable products';
     $lang->no_config_attributes = 'There are no dropdown (seclect) attributes. <a href="%s">Add an attribute</a> ';
+	$lang->select_associated_products = 'Select associated products';
+	$lang->about_select_associated_products = 'This combinations will be generated into simple products and will be associated with this parent product';
 
 	$lang->cmd_open_id = 'Open ID Login';
 	$lang->cmd_common_id = 'Default Login';

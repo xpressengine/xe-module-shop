@@ -12,6 +12,7 @@
         <permission action="dispShopToolManageProducts" target="manager" />
         <permission action="dispShopToolAddProduct" target="manager" />
         <permission action="dispShopToolAddConfigurableProduct" target="manager" />
+        <permission action="dispShopToolAddAssociatedProducts" target="manager" />
         <permission action="dispShopToolEditProduct" target="manager" />
         <permission action="dispShopToolManageAttributes" target="manager"/>
         <permission action="dispShopToolAddAttribute" target="manager"/>
@@ -27,6 +28,7 @@
 		<permission action="procShopToolUserSkinImport" target="manager" />
 		<permission action="procShopToolLive" target="manager" />
         <permission action="procShopToolInsertProduct" target="manager" />
+        <permission action="procShopToolInsertAssociatedProducts" target="manager" />
         <permission action="procShopToolInsertAttribute" target="manager" />
         <permission action="procShopToolDeleteProduct" target="manager" />
         <permission action="procShopToolDeleteProducts" target="manager" />
@@ -54,6 +56,7 @@
         <action name="dispShopToolManageProducts" type="view" />
         <action name="dispShopToolAddProduct" type="view" />
         <action name="dispShopToolAddConfigurableProduct" type="view" />
+        <action name="dispShopToolAddAssociatedProducts" type="view" />
         <action name="dispShopToolEditProduct" type="view" />
         <action name="dispShopToolManageAttributes" type="view"/>
         <action name="dispShopToolAddAttribute" type="view" />
@@ -77,6 +80,7 @@
 		<action name="procShopToolUserSkinImport" type="controller" />
 		<action name="procShopToolLive" type="controller" />
         <action name="procShopToolInsertProduct" type="controller" ruleset="insert_product" />
+        <action name="procShopToolInsertAssociatedProducts" type="controller" />
         <action name="procShopToolInsertAttribute" type="controller" ruleset="insert_attribute"/>
         <action name="procShopToolDeleteProduct" type="controller" />
         <action name="procShopToolDeleteProducts" type="controller" />

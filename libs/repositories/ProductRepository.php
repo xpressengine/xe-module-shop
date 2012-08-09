@@ -174,6 +174,11 @@ class ProductRepository extends BaseRepository
         {
             throw new Exception($output->getMessage(), $output->getError());
         }
+		$output = executeQuery('shop.deleteProductAttributes', $args);
+		if(!$output->toBool())
+		{
+			throw new Exception($output->getMessage(), $output->getError());
+		}
 
         return TRUE;
     }
@@ -282,10 +287,36 @@ class ProductRepository extends BaseRepository
 
 		foreach($output->data as $attribute)
 		{
-			$product->attributes[$attribute->attribute_srl] = $attribute->value;
+			if($attribute->value) $product->attributes[$attribute->attribute_srl] = $attribute->value;
+			else $product->configurable_attributes[] = $attribute->attribute_srl;
 		}
 
 		return TRUE;
+	}
+
+	/**
+	 * Create product from parent product
+	 *
+	 * @author Dan Dragan (dev@xpressengine.org)
+	 * @param $product Product , $combination array
+	 * @return $product
+	 */
+	public function createProductFromParent(Product $parent_product, array $values)
+	{
+		$product = new Product();
+		$product->member_srl = $parent_product->member_srl;
+		$product->module_srl = $parent_product->module_srl;
+		$product->parent_product_srl = $parent_product->product_srl;
+		$product->product_type = 'simple';
+		$product->title = $parent_product->title.'_'.implode('_',$values);
+		$product->sku = $parent_product->sku.'_'.implode('_',$values);
+		$product->price = $parent_product->price;
+		$product->categories = $parent_product->categories;
+		for($i=0;$i<count($values);$i++){
+			$product->attributes[$parent_product->configurable_attributes[$i]] = $values[$i];
+		}
+
+		return $product;
 	}
 
     /**

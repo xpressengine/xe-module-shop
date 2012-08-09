@@ -471,6 +471,26 @@
             Context::set('attributes',$output->attributes);
         }
 
+
+		/**
+		 * @brief Shop display associated products
+		 */
+		public function dispShopToolAddAssociatedProducts(){
+			$shopModel = getModel('shop');
+			$product_srl = Context::get('product_srl');
+			$productRepository = $shopModel->getProductRepository();
+			$product = $productRepository->getProduct($product_srl);
+			Context::set('product',$product);
+			$attributeRepository = $shopModel->getAttributeRepository();
+			$configurable_attributes = $attributeRepository->getAttributes($product->configurable_attributes);
+			foreach($configurable_attributes as $conf_att){
+				$configurable_values[] = $conf_att->values;
+			}
+			$values_combinations = $attributeRepository->getValuesCombinations($configurable_values);
+			Context::set('values_combinations',$values_combinations);
+
+		}
+
         /**
          * @brief Shop home
          **/
@@ -511,14 +531,14 @@
         {
 
             // base directory
-            $baseDir = _XE_PATH_ . 'modules/shop/payment_gateways/';
+            $baseDir = dirname(__FILE__) . "/payment_gateways/";
             $dirHandle = opendir($baseDir);
 
             // get gateways
             $shopModel = getModel('shop');
             $repository = $shopModel->getPaymentGatewayRepository();
-            $gatewaysData = $repository->getAllGateways();
-            Context::set('pg',$gatewaysData);
+            $output = $repository->getAllGateways();
+            Context::set('pg',$output->data);
 
             // Payment gateway list
             $pg_dirs = array();
@@ -530,17 +550,6 @@
             }
 
             Context::set('pg_dirs',$pg_dirs);
-
-        }
-
-        /*
-         * Displays the payment method selection page
-         */
-        public function dispShopToolSelectPaymentMethod() {
-
-            $shopModel = getModel('shop');
-            $repository = $shopModel->getPaymentGatewayRepository();
-            $repository->includeActiveGateways();
 
         }
 
