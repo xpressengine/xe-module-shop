@@ -7,7 +7,7 @@
   <column name="title" type="varchar" size="250" notnull="notnull" />
   <column name="description" type="bigtext" />
   <column name="short_description" type="varchar" size="500" />
-  <column name="sku" type="varchar" size="11" notnull="notnull" />
+  <column name="sku" type="varchar" size="250" notnull="notnull" />
   <column name="weight" type="float" size="10"  />
   <column name="status" type="varchar" size="50" />
   <column name="friendly_url" type="varchar" size="50" />
