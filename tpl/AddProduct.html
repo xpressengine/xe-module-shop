@@ -244,7 +244,7 @@
                                         >
                                         <!--@foreach($values as $value)-->
                                         <option value="{$value}"
-                                            <!--@if($product->in_stock=='Y')-->selected<!--@end-->>
+                                            <!--@if($product->attributes[$attribute->attribute_srl]==$value)-->selected<!--@end-->>
                                             {$value}
                                         </option>
                                         <!--@end-->
