@@ -428,6 +428,10 @@
 			if($product_srl)
 			{
 				$product = $productRepository->getProduct($product_srl);
+				if($product->parent_product_srl) {
+					$parent_product = $productRepository->getProduct($product->parent_product_srl);
+					Context::set('parent_config_atts',$parent_product->configurable_attributes);
+				}
 				Context::set('product_type',$product->product_type);
 			}
 			else
@@ -483,10 +487,14 @@
 			Context::set('product',$product);
 			$attributeRepository = $shopModel->getAttributeRepository();
 			$configurable_attributes = $attributeRepository->getAttributes($product->configurable_attributes);
-			foreach($configurable_attributes as $conf_att){
-				$configurable_values[] = $conf_att->values;
+			if(count($product->configurable_attributes) == 1){
+				$values_combinations = explode('|',$configurable_attributes->values);
+			}else{
+				foreach($configurable_attributes as $conf_att){
+					$configurable_values[] = $conf_att->values;
+				}
+				$values_combinations = $attributeRepository->getValuesCombinations($configurable_values);
 			}
-			$values_combinations = $attributeRepository->getValuesCombinations($configurable_values);
 			Context::set('values_combinations',$values_combinations);
 
 		}

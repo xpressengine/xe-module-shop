@@ -28,7 +28,11 @@
                             <div class="fItem">
                                 <ul class= "multiple_checkbox" id="associated_products">
                                     <!--@foreach($values_combinations as $combination)-->
-                                        <li><input type="checkbox"  name="associated_combinations[]" value="{implode('_',$combination)}" />{implode('_',$combination)}</li>
+                                        <!--@if(count($combination) > 1)-->
+                                            <li><input type="checkbox"  name="associated_combinations[]" value="{implode('_',$combination)}" />{implode('_',$combination)}</li>
+                                        <!--@else-->
+                                            <li><input type="checkbox"  name="associated_combinations[]" value="{$combination}" />{$combination}</li>
+                                        <!--@endif-->
                                     <!--@end-->
                                 </ul>
                                 <span>{$lang->about_select_associated_products}</span>
