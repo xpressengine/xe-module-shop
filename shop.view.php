@@ -24,7 +24,7 @@
         /**
          * @brief Shop common init
          **/
-        public function initCommon($is_other_module = false){
+        public function initCommon($is_other_module = FALSE){
             if(!$this->checkXECoreVersion('1.4.3')) return $this->stop(sprintf(Context::getLang('msg_requried_version'),'1.4.3'));
 
             $oShopModel = getModel('shop');
@@ -73,7 +73,7 @@
         /**
          * @brief Shop init tool
          **/
-        public function initTool(&$oModule, $is_other_module = false){
+        public function initTool(&$oModule, $is_other_module = FALSE){
             if (!$oModule) $oModule = $this;
 
             $this->initCommon($is_other_module);
@@ -107,7 +107,7 @@
         /**
          * @brief shop init service
          **/
-        public function initService(&$oModule, $is_other_module = false, $isMobile = false){
+        public function initService(&$oModule, $is_other_module = FALSE, $isMobile = FALSE){
             if (!$oModule) $oModule = $this;
 
             $oShopModel = getModel('shop');
@@ -138,7 +138,7 @@
 				}
 
 				$oModule->{$file_method}('shop');
-				Context::addCssFile($oModule->{$css_path_method}().'shop.css',true,'all','',100);
+				Context::addCssFile($oModule->{$css_path_method}().'shop.css',TRUE,'all','',100);
 			}
 
             Context::set('root_url', Context::getRequestUri());
@@ -172,7 +172,7 @@
             if(!file_exists($cache_file) || filemtime($cache_file)+ 60*60 < time()) {
                 FileHandler::writeFile($cache_file,'');
 
-                if(__PROXY_SERVER__!==null) {
+                if(__PROXY_SERVER__!==NULL) {
                     $oRequest = new HTTP_Request(__PROXY_SERVER__);
                     $oRequest->setMethod('POST');
                     $oRequest->_timeout = $timeout;
@@ -204,7 +204,7 @@
                     if(!is_array($item)) $item = array($item);
 
                     foreach($item as $key => $val) {
-                        $obj = null;
+                        $obj = NULL;
                         $obj->title = $val->body;
                         $obj->date = $val->attrs->date;
                         $obj->url = $val->attrs->url;
@@ -356,7 +356,10 @@
          */
         public function dispShopToolAddAttribute()
         {
-            $shopModel = getModel('shop');
+			/**
+			 * @var shopModel $shopModel
+			 */
+			$shopModel = getModel('shop');
             $attributeRepository = $shopModel->getAttributeRepository();
             Context::set('types', $attributeRepository->getTypes(Context::get('lang')));
 
@@ -365,13 +368,16 @@
             $tree = $categoryRepository->getCategoriesTree($this->module_srl);
 
             // Prepare tree for display
-            $flat_tree = $tree->toFlatStructure();
-            Context::set('flat_tree', $flat_tree);
+			$HTML_tree = $tree->toHTML(TRUE, FALSE, TRUE,	array(), 'category_scope');
+			Context::set('HTML_tree', $HTML_tree);
         }
 
         public function dispShopToolEditAttribute()
         {
-            $shopModel = getModel('shop');
+			/**
+			 * @var shopModel #shopModel
+			 */
+			$shopModel = getModel('shop');
             $attributeRepository = $shopModel->getAttributeRepository();
             $srl = Context::get('attribute_srl');
             if (!$attribute = $attributeRepository->getAttributes(array($srl))) throw new Exception("Attribute doesn't exist");
@@ -383,8 +389,8 @@
             $tree = $categoryRepository->getCategoriesTree($this->module_srl);
 
             // Prepare tree for display
-            $flat_tree = $tree->toFlatStructure();
-            Context::set('flat_tree', $flat_tree);
+			$HTML_tree = $tree->toHTML(TRUE, FALSE, TRUE, $attribute->category_scope, 'category_scope');
+			Context::set('HTML_tree', $HTML_tree);
 
             $this->setTemplateFile('AddAttribute');
         }
@@ -466,8 +472,8 @@
             $tree = $categoryRepository->getCategoriesTree($this->module_srl);
 
             // Prepare tree for display
-            $flat_tree = $tree->toFlatStructure();
-            Context::set('flat_tree', $flat_tree);
+			$HTML_tree = $tree->toHTML(TRUE, FALSE, TRUE, $product->categories, 'categories');
+			Context::set('HTML_tree', $HTML_tree);
 
 
         }
@@ -540,6 +546,9 @@
         }
 
 		// region Product category
+		/**
+		 * Category management view (Admin)
+		 */
 		public function dispShopToolManageCategories()
 		{
 			// Retrieve existing categories
@@ -548,8 +557,8 @@
 			$tree = $repository->getCategoriesTree($this->module_srl);
 
 			// Prepare tree for display
-			$flat_tree = $tree->toFlatStructure();
-			Context::set('flat_tree', $flat_tree);
+			$HTML_tree = $tree->toHTML(TRUE, TRUE);
+			Context::set('HTML_tree', $HTML_tree);
 
 			// Initialize new empty Category object
 			require_once('libs/model/Category.php');
@@ -557,11 +566,6 @@
 			$category->module_srl = $this->module_srl;
 			Context::set('category', $category);
 		}
-
-		public function dispShopToolAddCategory()
-		{
-		}
-
 		// endregion
 
         // startregion Payment Gateways

@@ -102,40 +102,11 @@
 
                     <tr>
                         <th scope="row">
-                            <label for="category_scope">{$lang->category_scope}</label>
+                            <label>{$lang->category_scope}</label>
                         </th>
                         <td class="title">
                             <div class="fItem">
-                                <ul class= "multiple_checkbox" id="category_scope">
-                                    <!--@if(count($flat_tree) == 0)-->
-                                        <span>{$lang->no_categories}</span>
-                                    <!--@else-->
-                                        <!--@foreach($flat_tree as $node)-->
-                                            <!--@if($previous_depth === $node->depth)-->
-                                                </li>
-                                            <!--@endif-->
-                                            <!--@if($previous_depth < $node->depth)-->
-                                                <ul>
-                                            <!--@endif-->
-                                            <!--@if($previous_depth > $node->depth)-->
-                                                <!--@for($i = $node->depth; $i < $previous_depth; $i++)-->
-                                                    </li></ul>
-                                                <!--@end-->
-                                                </li>
-                                            <!--@endif-->
-                                            <li >
-                                            <input type="checkbox" <!--@if(@in_array($node->category->category_srl,$attribute->category_scope))-->checked="checked"<!--@endif--> name="category_scope[]" value="{$node->category->category_srl}" />{$node->category->title}
-                                            {@ $previous_depth = $node->depth; }
-
-                                        <!--@end-->
-                                        <!--@if($previous_depth > 0)-->
-                                            <!--@for($i = 0; $i < $previous_depth; $i++)-->
-                                                </li></ul>
-                                            <!--@end-->
-                                        <!--@endif-->
-                                        </li>
-                                    <!--@endif-->
-                                </ul>
+                               	{$HTML_tree}
                                 <span>{$lang->about_category_scope}</span>
                             </div>
                         </td>

@@ -146,7 +146,7 @@ class CategoryTreeNode
 	}
 
 	/**
-	 *  Converts tree to flat structure easily iterable in template files
+	 * Converts tree to flat structure easily iterable in template files
 	 *
 	 * @param int $depth Default 0
 	 * @param int $index Default 0
@@ -168,6 +168,106 @@ class CategoryTreeNode
 			}
 		}
 		return $flat_structure;
+	}
+
+	/**
+	 * Returns an HTML representation of the tree
+	 */
+	public function toHTML($showProductCount = true
+							, $showManagingLinks = false
+							, $showCheckbox = false
+							, $checked = array()
+							, $checkboxesName = array()
+							)
+	{
+		$flat_tree = $this->toFlatStructure();
+
+		if(count($flat_tree) == 0)
+		{
+			global $lang;
+			$html = '<ul><li>' . $lang->no_categories . '</li></ul>';
+			return $html;
+		}
+
+
+		$html = '';
+		if($showCheckbox)
+		{
+			$html .= '<ul class="multiple_checkbox">';
+		}
+		else
+		{
+			$html .= '<ul>';
+		}
+
+		$previous_depth = NULL;
+		foreach($flat_tree as $node)
+		{
+			if($previous_depth === $node->depth)
+			{
+				$html .= '</li>';
+			}
+			if($previous_depth < $node->depth)
+			{
+				$html .= '<ul>';
+			}
+			if($previous_depth > $node->depth)
+			{
+				for($i = $node->depth; $i < $previous_depth; $i++)
+				{
+					$html .= '</li></ul>';
+				}
+				$html .= '</li>';
+			}
+
+			$html .= '<li id="tree_' . $node->category->category_srl . '">';
+
+			$nodeContent = '<span>';
+
+			if($showCheckbox)
+			{
+				$nodeContent .= '<input type="checkbox" ';
+				if(in_array($node->category->category_srl, $checked))
+				{
+					$nodeContent .= ' checked="checked" ';
+				}
+				$nodeContent .= ' name="' . $checkboxesName . '[]" ';
+				$nodeContent .= ' value="' . $node->category->category_srl . '" ';
+				$nodeContent .= '/>';
+			}
+
+			$nodeContent .= $node->category->title;
+
+			if($showProductCount)
+			{
+				$nodeContent .= ' (' . $node->category->product_count . ')';
+			}
+			$nodeContent .= '</span>';
+
+			if($showManagingLinks)
+			{
+				$nodeContent .= '<a href="#" class="add"><img src="./common/js/plugins/ui.tree/images/iconAdd.gif"></a>';
+				$nodeContent .= '<a href="#" class="modify"><img src="./common/js/plugins/ui.tree/images/iconModify.gif"></a>';
+				if(count($node->children) == 0)
+				{
+					$nodeContent .= '<a href="#" class="delete"><img src="./common/js/plugins/ui.tree/images/iconDel.gif"></a>';
+				}
+			}
+			$html .= $nodeContent;
+
+			$previous_depth = $node->depth;
+		}
+		if($previous_depth > 0)
+		{
+			for($i = 0; $i < $previous_depth; $i++)
+			{
+				$html .= '</li></ul>';
+			}
+		}
+
+		$html .= '</li></ul>';
+
+		return $html;
 	}
 
 }

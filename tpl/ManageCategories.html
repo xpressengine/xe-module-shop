@@ -26,36 +26,7 @@
 			<img src="./common/js/plugins/ui.tree/images/iconAdd.gif">
 		</a>
 
-		<ul>
-		<!--@foreach($flat_tree as $node)-->
-		    <!--@if($previous_depth === $node->depth)-->
-				</li>
-			<!--@endif-->
-		    <!--@if($previous_depth < $node->depth)-->
-		    	<ul>
-			<!--@endif-->
-			<!--@if($previous_depth > $node->depth)-->
-				<!--@for($i = $node->depth; $i < $previous_depth; $i++)-->
-					</li></ul>
-				<!--@end-->
-				</li>
-			<!--@endif-->
-			<li id="tree_{$node->category->category_srl}">
-				<span>{$node->category->title} ({$node->category->product_count})</span>
-				<a href="#" class="add"><img src="./common/js/plugins/ui.tree/images/iconAdd.gif"></a>
-				<a href="#" class="modify"><img src="./common/js/plugins/ui.tree/images/iconModify.gif"></a>
-		    	<!--@if(count($node->children) == 0)-->
-					<a href="#" class="delete"><img src="./common/js/plugins/ui.tree/images/iconDel.gif"></a>
-				<!--@endif-->
-			{@ $previous_depth = $node->depth; }
-		<!--@end-->
-		<!--@if($previous_depth > 0)-->
-				<!--@for($i = 0; $i < $previous_depth; $i++)-->
-					</li></ul>
-				<!--@end-->
-		<!--@endif-->
-			</li>
-		</ul>
+		{$HTML_tree}
 	</li>
 </ul>
 </div>
