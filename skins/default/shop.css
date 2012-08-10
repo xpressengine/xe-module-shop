@@ -4,7 +4,9 @@
 
 
 /* Element Reset */
-html{background:#fff url(img/bgHtml.gif)}
+html{
+    background:#fff /*url(img/bgHtml.gif)*/
+}
 body{font-family:AppleGothic, Tahoma, Sans-serif;font-size:12px;margin:0;color:#000}
 address{font-style:normal}
 hr{display:none;position:absolute}
@@ -12,3 +14,94 @@ legend{position:absolute;width:0;height:0;font-size:0;line-height:0;visibility:h
 fieldset{border:0;padding:0;margin:0}
 img{border:0}
 
+/* Product catalog */
+.clear
+{
+    clear: both;
+}
+#container
+{
+    margin: 0 20px;
+}
+#top_menu
+{
+    border: 1px solid gray;
+    padding: 10px;
+    text-align: right;
+}
+
+#breadcrumbs
+{
+    border:1px solid gray;
+    padding: 10px;
+    width:40%;
+    float: left;
+}
+
+#top_links
+{
+    border: 1px solid gray;
+    padding: 5px;
+    width: 55%;
+    float: right;
+    text-align: right;
+}
+
+#top_links form
+{
+    display: inline;
+    padding-left: 20px;
+}
+
+#content
+{
+    border: 1px solid gray;
+    padding: 10px;
+}
+
+#categories
+{
+    width: 20%;
+    float: left;
+    background-color: #fafad2;
+}
+
+#categories ul
+{
+    list-style-type: none;
+    border: 1px solid gray;
+    border-bottom: 0;
+    margin: 0;
+    padding: 0;
+}
+
+#categories li
+{
+    border-bottom: 1px solid gray;
+    padding: 5px 0;
+}
+
+#products
+{
+    float: right;
+    position: relative;
+    width: 79%;
+    background-color: #add8e6;
+}
+
+#products div.product
+{
+    border:1px solid gray;
+    margin: 5px;
+    padding: 5px;
+    width: 200px;
+    float: left;
+    text-align: center;
+    background-color: #ffffff;
+}
+
+#products div.product span
+{
+    display: block;
+    clear: both;
+}
