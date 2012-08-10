@@ -522,6 +522,13 @@
 			$shopModel = getModel('shop');
 
 			// Categories left tree
+			// Retrieve existing categories
+			$categoryRepository = $shopModel->getCategoryRepository();
+			$tree = $categoryRepository->getCategoriesTree($this->module_srl);
+
+			// Prepare tree for display
+			$HTML_tree = $tree->toHTML(TRUE, FALSE, FALSE, '', array(), TRUE);
+			Context::set('HTML_tree', $HTML_tree);
 
 			// Current category details
 

@@ -178,6 +178,7 @@ class CategoryTreeNode
 							, $showCheckbox = false
 							, $checked = array()
 							, $checkboxesName = array()
+							, $linkToCategoryView = false
 							)
 	{
 		$flat_tree = $this->toFlatStructure();
@@ -236,7 +237,12 @@ class CategoryTreeNode
 				$nodeContent .= '/>';
 			}
 
-			$nodeContent .= $node->category->title;
+			$nodeTitle = $node->category->title;
+			if($linkToCategoryView)
+			{
+				$nodeTitle = '<a href="#">' . $nodeTitle . '</a>';
+			}
+			$nodeContent .= $nodeTitle;
 
 			if($showProductCount)
 			{
