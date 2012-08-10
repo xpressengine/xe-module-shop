@@ -1,0 +1,28 @@
+<query id="getProductListByCategory" action="select">
+    <tables>
+        <table name="shop_products" alias="p" />
+    </tables>
+    <columns>
+        <column name="p.*" />
+    </columns>
+    <conditions>
+        <condition operation="equal" column="p.module_srl" var="module_srl" notnull="notnull" />
+        <query alias="productsInCategories" operation="in" column="p.product_srl" pipe="and">
+            <tables>
+                <table name="shop_product_categories" alias="pc" />
+            </tables>
+            <columns>
+                <column name="pc.product_srl" alias="product_srl" />
+            </columns>
+            <conditions>
+                <condition operation="in" column="pc.category_srl" var="category_srls" />
+            </conditions>
+        </query>
+    </conditions>
+    <navigation>
+        <index var="product_srl" default="product_srl" order="order_type" />
+        <list_count var="list_count" default="10" />
+        <page_count var="page_count" default="10" />
+        <page var="page" default="1" />
+    </navigation>
+</query>

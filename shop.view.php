@@ -566,7 +566,7 @@
 				$page = Context::get('page');
 				if($page) $args->page = $page;
 				$category_srl = Context::get('category_srl');
-				if($category_srl) $args->category_srl = $category_srl;
+				if($category_srl) $args->category_srls = array($category_srl);
 
 				$output = $product_repository->getProductList($args);
 				Context::set('products', $output->products);

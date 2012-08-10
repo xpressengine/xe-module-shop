@@ -334,7 +334,14 @@ class ProductRepository extends BaseRepository
 
 		if(!$args->page) $args->page = 1;
 
-        $output = executeQuery('shop.getProductList', $args);
+		if($args->category_srls & count($args->category_srls) > 0)
+		{
+			$output = executeQuery('shop.getProductListByCategory', $args);
+		}
+		else
+		{
+        	$output = executeQuery('shop.getProductList', $args);
+		}
         foreach ($output->data as $product){
             $product_object = new Product($product);
             $products[] = $product_object;
