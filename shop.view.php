@@ -397,7 +397,14 @@
 
             $product_repository = $shopModel->getProductRepository();
             $module_srl = $this->module_info->module_srl;
-            $output = $product_repository->getProductList($module_srl);
+
+			$args = new stdClass();
+			$args->module_srl = $module_srl;
+
+			$page = Context::get('page');
+			if($page) $args->page = $page;
+
+            $output = $product_repository->getProductList($args);
             Context::set('product_list',$output->products);
 
 			$category_repository = $shopModel->getCategoryRepository();
@@ -503,6 +510,33 @@
          * @brief Shop home
          **/
         public function dispShop() {
+			/**
+			 * @var shopModel $shopModel
+			 */
+			$shopModel = getModel('shop');
+
+			// Categories left tree
+
+			// Current category details
+
+
+			// Products list
+			$product_repository = $shopModel->getProductRepository();
+			try{
+				$args = new stdClass();
+				$args->module_srl = $this->module_srl;
+				$page = Context::get('page');
+				if($page) $args->page = $page;
+				$category_srl = Context::get('category_srl');
+				if($category_srl) $args->category_srl = $category_srl;
+
+				$output = $product_repository->getProductList($args);
+				Context::set('products', $output->products);
+			}
+			catch(Exception $e)
+			{
+				return new Object(-1, $e->getMessage());
+			}
         }
 
 		// region Product category

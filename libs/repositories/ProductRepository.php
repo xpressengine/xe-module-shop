@@ -319,20 +319,20 @@ class ProductRepository extends BaseRepository
 		return $product;
 	}
 
-    /**
-     * Retrieve a Product List object from the database given a modul_srl
-     * @author Dan Dragan (dev@xpressengine.org)
-     * @param $module_srl int
-     * @return Product List
-     */
-    public function getProductList($module_srl){
-        $args->page = Context::get('page');
-        if(!$args->page) $args->page = 1;
-        Context::set('page',$args->page);
-
-        $args->module_srl = $module_srl;
+	/**
+	 * Retrieve a Product List object from the database given a modul_srl
+	 * @author Dan Dragan (dev@xpressengine.org)
+	 *
+	 * @param srdClass $args Must have: module_srl; Can have: page, category_srl
+	 *
+	 * @throws Exception
+	 * @return stdClass $output
+	 */
+    public function getProductList($args){
         if(!isset($args->module_srl))
             throw new Exception("Missing arguments for get product list : please provide [module_srl]");
+
+		if(!$args->page) $args->page = 1;
 
         $output = executeQuery('shop.getProductList', $args);
         foreach ($output->data as $product){
