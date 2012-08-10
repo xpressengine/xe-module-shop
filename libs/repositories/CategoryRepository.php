@@ -171,6 +171,29 @@ class CategoryRepository extends BaseRepository
 		FileHandler::removeFile($filename);
 	}
 
+	/**
+	 * Returns array of all parent categories
+	 *
+	 * @param Category $category Current category
+	 *
+	 * @return Category[]
+	 */
+	public function getCategoryParents(Category $category)
+	{
+		$parents = array();
+
+		if($category->parent_srl == 0)
+		{
+			return $parents;
+		}
+
+		$parent_category = $this->getCategory($category->parent_srl);
+		$parents[] = $parent_category;
+		$rest_of_parents = $this->getCategoryParents($parent_category);
+
+		return array_merge($parents, $rest_of_parents);
+	}
+
 }
 /* End of file CategoryRepository.php */
 /* Location: ./modules/shop/libs/repositories/CategoryRepository.php */

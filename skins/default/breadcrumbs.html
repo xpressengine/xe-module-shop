@@ -1,0 +1,12 @@
+<div id="breadcrumbs">
+
+<!--@if($current_category)-->
+	<a href="{getUrl('vid', $mid, 'act', 'dispShop', 'category_srl', '')}">Home</a> >>
+    <!--@foreach($breadcrumbs_items as $item)-->
+        <a href="{getUrl('vid', $mid, 'act', 'dispShop', 'category_srl', $item->category_srl)}">{$item->title}</a> >>
+    <!--@end-->
+	{$current_category->title}
+<!--@else-->
+	Home
+<!--@end-->
+</div>

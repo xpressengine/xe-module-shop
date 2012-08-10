@@ -101,6 +101,43 @@ class Category extends BaseItem
 }
 
 /**
+ * Defines options for generating the HTML for a category tree
+ *
+ * @author Corina Udrescu (dev@xpressengine.org)
+ */
+class HtmlCategoryTreeConfig
+{
+	/**
+	 * @var bool Show or hide number of products in category
+	 */
+	public $showProductCount = TRUE;
+	/**
+	 * @var bool Show or hide add/edit/delete links next to category name; used for backend;
+	 */
+	public $showManagingLinks = FALSE;
+	/**
+	 * @var bool Show or hide checkboxes next to each category name; Useful for adding things to a certain category
+	 */
+	public $showCheckbox = FALSE;
+	/**
+	 * @var array When $showCheckbox is true, this is used to send selected (checked) values
+	 */
+	public $checked = array();
+	/**
+	 * @var string When $showCheckbox is true, this is used as the input name of the checkboxes
+	 */
+	public $checkboxesName = 'categories';
+	/**
+	 * @var bool Show or hide category link; Turns category name into an anchor
+	 */
+	public $linkCategoryName = FALSE;
+	/**
+	 * @var array When $linkCategoryName is true, this is used to create the URL to link to; Represents parameters for getUrl function
+	 */
+	public $linkGetUrlParams = array();
+}
+
+/**
  * Models a Product category tree hierarchy
  *
  * @author Corina Udrescu (dev@xpressengine.org)
@@ -172,14 +209,12 @@ class CategoryTreeNode
 
 	/**
 	 * Returns an HTML representation of the tree
+	 *
+	 * @param HtmlCategoryTreeConfig $config options for generating the tree
+	 *
+	 * @return string
 	 */
-	public function toHTML($showProductCount = true
-							, $showManagingLinks = false
-							, $showCheckbox = false
-							, $checked = array()
-							, $checkboxesName = array()
-							, $linkToCategoryView = false
-							)
+	public function toHTML(HtmlCategoryTreeConfig $config)
 	{
 		$flat_tree = $this->toFlatStructure();
 
@@ -192,7 +227,7 @@ class CategoryTreeNode
 
 
 		$html = '';
-		if($showCheckbox)
+		if($config->showCheckbox)
 		{
 			$html .= '<ul class="multiple_checkbox">';
 		}
@@ -225,32 +260,34 @@ class CategoryTreeNode
 
 			$nodeContent = '<span>';
 
-			if($showCheckbox)
+			if($config->showCheckbox)
 			{
 				$nodeContent .= '<input type="checkbox" ';
-				if(in_array($node->category->category_srl, $checked))
+				if(in_array($node->category->category_srl, $config->checked))
 				{
 					$nodeContent .= ' checked="checked" ';
 				}
-				$nodeContent .= ' name="' . $checkboxesName . '[]" ';
+				$nodeContent .= ' name="' . $config->checkboxesName . '[]" ';
 				$nodeContent .= ' value="' . $node->category->category_srl . '" ';
 				$nodeContent .= '/>';
 			}
 
 			$nodeTitle = $node->category->title;
-			if($linkToCategoryView)
+			if($config->linkCategoryName)
 			{
-				$nodeTitle = '<a href="#">' . $nodeTitle . '</a>';
+				$config->linkGetUrlParams[] = 'category_srl';
+				$config->linkGetUrlParams[] = $node->category->category_srl;
+				$nodeTitle = '<a href="' . call_user_func_array('getUrl', $config->linkGetUrlParams) . '">' . $nodeTitle . '</a>';
 			}
 			$nodeContent .= $nodeTitle;
 
-			if($showProductCount)
+			if($config->showProductCount)
 			{
 				$nodeContent .= ' (' . $node->category->product_count . ')';
 			}
 			$nodeContent .= '</span>';
 
-			if($showManagingLinks)
+			if($config->showManagingLinks)
 			{
 				$nodeContent .= '<a href="#" class="add"><img src="./common/js/plugins/ui.tree/images/iconAdd.gif"></a>';
 				$nodeContent .= '<a href="#" class="modify"><img src="./common/js/plugins/ui.tree/images/iconModify.gif"></a>';

@@ -368,7 +368,12 @@
             $tree = $categoryRepository->getCategoriesTree($this->module_srl);
 
             // Prepare tree for display
-			$HTML_tree = $tree->toHTML(TRUE, FALSE, TRUE,	array(), 'category_scope');
+			$tree_config = new HtmlCategoryTreeConfig();
+			$tree_config->showCheckbox = true;
+			$tree_config->checked = array();
+			$tree_config->checkboxesName = 'category_scope';
+			$HTML_tree = $tree->toHTML($tree_config);
+
 			Context::set('HTML_tree', $HTML_tree);
         }
 
@@ -389,7 +394,12 @@
             $tree = $categoryRepository->getCategoriesTree($this->module_srl);
 
             // Prepare tree for display
-			$HTML_tree = $tree->toHTML(TRUE, FALSE, TRUE, $attribute->category_scope, 'category_scope');
+			$tree_config = new HtmlCategoryTreeConfig();
+			$tree_config->showCheckbox = true;
+			$tree_config->checked = $attribute->category_scope;
+			$tree_config->checkboxesName = 'category_name';
+			$HTML_tree = $tree->toHTML($tree_config);
+
 			Context::set('HTML_tree', $HTML_tree);
 
             $this->setTemplateFile('AddAttribute');
@@ -472,10 +482,13 @@
             $tree = $categoryRepository->getCategoriesTree($this->module_srl);
 
             // Prepare tree for display
-			$HTML_tree = $tree->toHTML(TRUE, FALSE, TRUE, $product->categories, 'categories');
+			$tree_config = new HtmlCategoryTreeConfig();
+			$tree_config->showCheckbox = true;
+			$tree_config->checked = $product->categories;
+			$tree_config->checkboxesName = 'categories';
+			$HTML_tree = $tree->toHTML($tree_config);
+
 			Context::set('HTML_tree', $HTML_tree);
-
-
         }
 
         /**
@@ -527,10 +540,22 @@
 			$tree = $categoryRepository->getCategoriesTree($this->module_srl);
 
 			// Prepare tree for display
-			$HTML_tree = $tree->toHTML(TRUE, FALSE, FALSE, '', array(), TRUE);
+			$tree_config = new HtmlCategoryTreeConfig();
+			$tree_config->linkCategoryName = true;
+			$tree_config->linkGetUrlParams = array('vid', $this->mid, 'act', 'dispShop');
+			$HTML_tree = $tree->toHTML($tree_config);
 			Context::set('HTML_tree', $HTML_tree);
 
 			// Current category details
+			$category_srl = Context::get('category_srl');
+			if($category_srl)
+			{
+				$current_category = $categoryRepository->getCategory($category_srl);
+				Context::set('current_category', $current_category);
+
+				$breadcrumbs_items = $categoryRepository->getCategoryParents($current_category);
+				Context::set('breadcrumbs_items', $breadcrumbs_items);
+			}
 
 
 			// Products list
@@ -565,7 +590,10 @@
 			$tree = $repository->getCategoriesTree($this->module_srl);
 
 			// Prepare tree for display
-			$HTML_tree = $tree->toHTML(TRUE, TRUE);
+			$tree_config = new HtmlCategoryTreeConfig();
+			$tree_config->showManagingLinks = true;
+			$HTML_tree = $tree->toHTML($tree_config);
+
 			Context::set('HTML_tree', $HTML_tree);
 
 			// Initialize new empty Category object
