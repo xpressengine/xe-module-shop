@@ -37,7 +37,7 @@ img{border:0}
 .pagination a.prev,
 .pagination a.prevEnd,
 .pagination a.next,
-.pagination a.nextEnd{display:inline-block;width:18px;height:19px;padding:0;margin:0;background-image:url(../img/buttonPagination.gif);background-repeat:no-repeat}
+.pagination a.nextEnd{display:inline-block;width:18px;height:19px;padding:0;margin:0;background-image:url(img/buttonPagination.gif);background-repeat:no-repeat}
 .pagination a.prev,
 .pagination a.prevEnd{background-position:left top;margin-right:5px !important}
 .pagination a.next,
