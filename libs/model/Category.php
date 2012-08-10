@@ -24,8 +24,8 @@ class Category extends BaseItem
 	/**
 	 * Calls getters for private properties when accessed directly
 	 *
-	 * @author Corina Udrescu (dev@xpressengine.org)
-	 * @param $name
+	 * @param string $name Property name
+	 *
 	 * @return null|string
 	 */
 	public function __get($name)
@@ -41,10 +41,10 @@ class Category extends BaseItem
 	/**
 	 * Calls setters for private properties when accessed directly
 	 *
-	 * @author Corina Udrescu (dev@xpressengine.org)
-	 * @param $name
-	 * @param $value
-	 * @return null|void
+	 * @param string $name  Property name
+	 * @param mixed  $value Property value
+	 *
+	 * @return void
 	 */
 	public function __set($name, $value)
 	{
@@ -57,8 +57,8 @@ class Category extends BaseItem
 	/**
 	 * Isset check for private properties accessed directly
 	 *
-	 * @author Corina Udrescu (dev@xpressengine.org)
-	 * @param $name
+	 * @param string $name Property name
+	 *
 	 * @return bool
 	 */
 	public function __isset($name)
@@ -67,13 +67,14 @@ class Category extends BaseItem
 		{
 			return isset($this->include_in_navigation_menu);
 		}
+		return FALSE;
 	}
 
 
 	/**
 	 * Getter for [include_in_navigation_menu]
 	 *
-	 * @author Corina Udrescu (dev@xpressengine.org)
+	 * @return string
 	 */
 	public function getIncludeInNavigationMenu()
 	{
@@ -83,8 +84,9 @@ class Category extends BaseItem
 	/**
 	 * Setter for [include_in_navigation_menu]
 	 *
-	 * @author Corina Udrescu (dev@xpressengine.org)
-	 * @param $include_in_navigation_menu char
+	 * @param char $include_in_navigation_menu Accepts 'Y' or 'N'
+	 *
+	 * @return void
 	 */
 	public function setIncludeInNavigationMenu($include_in_navigation_menu)
 	{
@@ -110,8 +112,9 @@ class CategoryTreeNode
 	public $depth = 0;
 
 	/**
-	 * @author Corina Udrescu (dev@xpressengine.org)
-	 * @param $pc Category
+	 * Constructor
+	 *
+	 * @param Category $pc Category object associated with current tree node
 	 */
 	public function __construct(Category $pc = NULL)
 	{
@@ -119,8 +122,11 @@ class CategoryTreeNode
 	}
 
 	/**
-	 * @author Corina Udrescu (dev@xpressengine.org)
-	 * @param $node CategoryTreeNode
+	 * Add a child to this node
+	 *
+	 * @param CategoryTreeNode $node Node to add
+	 *
+	 * @return void
 	 */
 	public function addChild(CategoryTreeNode $node)
 	{
@@ -128,8 +134,11 @@ class CategoryTreeNode
 	}
 
 	/**
-	 * @author Corina Udrescu (dev@xpressengine.org)
-	 * @param $node CategoryTreeNode
+	 * Removes a node from tree
+	 *
+	 * @param CategoryTreeNode $node Node to remove
+	 *
+	 * @return void
 	 */
 	public function removeChild(CategoryTreeNode $node)
 	{
@@ -139,9 +148,10 @@ class CategoryTreeNode
 	/**
 	 *  Converts tree to flat structure easily iterable in template files
 	 *
-	 * @author Corina Udrescu (dev@xpressengine.org)
-	 * @param $depth int
-	 * @param $index 0
+	 * @param int $depth Default 0
+	 * @param int $index Default 0
+	 *
+	 * @return CategoryNode[]
 	 */
 	public function toFlatStructure($depth = 0, $index = 0)
 	{
