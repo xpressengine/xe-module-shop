@@ -545,6 +545,7 @@
 
 				$output = $product_repository->getProductList($args);
 				Context::set('products', $output->products);
+				Context::set('page_navigation', $output->page_navigation);
 			}
 			catch(Exception $e)
 			{

@@ -37,18 +37,37 @@ Category 2
 </div>
 
 <div id="products">
-<!--@foreach($products as $product)-->
-<div id="product_{$product->product_srl}" class="product">
-<!--@if($product->file_srl)-->
-<!-- TODO Add product image here -->
-<!--@else-->
-<img src="img/missingProductLarge.png" width="150px" height="150px" />
-<!--@end-->
-<span><a href="#">{$product->title}</a></span>
-<span>Pret: {$product->price}</span>
+	<!--@foreach($products as $product)-->
+		<div id="product_{$product->product_srl}" class="product">
+			<!--@if($product->file_srl)-->
+				<!-- TODO Add product image here -->
+			<!--@else-->
+				<img src="img/missingProductLarge.png" width="150px" height="150px" />
+			<!--@end-->
+			<span><a href="#">{$product->title}</a></span>
+			<span>Pret: {$product->price}</span>
+		</div>
+	<!--@end-->
+	<div class="clear"/>
+
+	<!-- Pagination -->
+	<div class="pagination">
+		<a href="{getUrl('page','','mid',$mid)}" class="prev"><span>{$lang->first_page}</span></a>
+
+		<!--@while($page_no = $page_navigation->getNextPage())-->
+			<!--@if($page == $page_no)-->
+				<strong>{$page_no}</strong>
+			<!--@else-->
+				<a href="{getUrl('page',$page_no,'mid',$mid)}">{$page_no}</a>
+			<!--@end-->
+		<!--@end-->
+
+		<a href="{getUrl('page',$page_navigation->last_page,'module_srl','')}" class="next"><span>{$lang->last_page}</span></a>
+	</div>
+	<!-- /Pagination -->
+
 </div>
-<!--@end-->
-</div>
+
 
 <div class="clear"/>
 
