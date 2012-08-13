@@ -7,7 +7,7 @@ require_once dirname(__FILE__) . '/../libs/model/Category.php';
 
 /**
  *  Test features related to Product categories
- *  @author Corina Udrescu (dev@xpressengine.org)
+ * @author Corina Udrescu (dev@xpressengine.org)
  */
 class CategoryTest extends Shop_Generic_Tests_DatabaseTestCase
 {
@@ -21,8 +21,7 @@ class CategoryTest extends Shop_Generic_Tests_DatabaseTestCase
 	{
 		return new Shop_DbUnit_ArrayDataSet(array(
 			'xe_shop_categories' => array(
-				array('category_srl' => 1000, 'module_srl' => 1001, 'title' => 'Dummy category 1000', 'parent_srl' => 0,
-					'filename' => 'files/attach/picture.jpg'),
+				array('category_srl' => 1000, 'module_srl' => 1001, 'title' => 'Dummy category 1000', 'parent_srl' => 0, 'filename' => 'files/attach/picture.jpg'),
 				array('category_srl' => 1002, 'module_srl' => 1001, 'title' => 'Dummy category 1002', 'parent_srl' => 1000),
 				array('category_srl' => 1004, 'module_srl' => 1003, 'title' => 'Dummy category 1004', 'parent_srl' => 0),
 				array('category_srl' => 1006, 'module_srl' => 1001, 'title' => 'Dummy category 1006', 'parent_srl' => 0),
@@ -32,70 +31,9 @@ class CategoryTest extends Shop_Generic_Tests_DatabaseTestCase
 	}
 
 	/**
-	 * Tests inserting a new Product - makes sure all fields are properly persisted
-	 * @author Dan dragan (dev@xpressengine.org)
-	 */
-	public function testInsertProduct_ValidData()
-	{
-		// Create new Product object
-		$args = new stdClass();
-		$args->module_srl = 201;
-		$args->member_srl = 4;
-		$args->product_type = "simple";
-		$args->title = "Product 1";
-		$args->description = "Lorem ipsum dolor sit amet, te amet scaevola volutpat eum, ius an decore recteque patrioque, mel sint epicurei ut. Ea lorem noluisse est, ea sed nisl libris electram. Cu vivendum facilisis scribentur mel, bonorum elaboraret no per. Nec eu vidit omittantur, ei putant timeam detraxit quo, urbanitas efficiendi sit id. Mei putent eirmod voluptua ut, at dictas invenire delicata duo.
-
-Patrioque conceptam in mea. Est ad ullum ceteros, pro quem accumsan appareat id, pro nominati electram no. Duo lorem maiorum urbanitas te, cu eum dicunt laoreet, etiam sententiae scriptorem at mel. Vix tamquam epicurei et, quo tota iudicabit an. Duo ea agam antiopam. Et per diam percipitur.";
-		$args->short_description = "short_description";
-		$args->sku = "SKU1";
-		$args->status = '1';
-		$args->friendly_url = "product1";
-		$args->price = 10.5;
-		$args->qty = 0;
-		$args->in_stock = "Y";
-
-		$shopModel = getModel('shop');
-		$repository = $shopModel->getProductRepository();
-		try
-		{
-			// Try to insert the new Product
-
-			$product_srl = $repository->insertProduct($args);
-
-			// Check that a srl was returned
-			$this->assertNotNull($product_srl);
-
-			// Read the newly created object from the database, to compare it with the source object
-			$output = Database::executeQuery("SELECT * FROM xe_shop_products WHERE product_srl = $product_srl");
-			$this->assertEquals(1, count($output));
-
-			$product = $output[0];
-			$this->assertEquals($args->module_srl, $product->module_srl);
-			$this->assertEquals($args->member_srl, $product->member_srl);
-			$this->assertEquals($args->product_type, $product->product_type);
-			$this->assertEquals($args->title, $product->title);
-			$this->assertEquals($args->description, $product->description);
-			$this->assertEquals($args->short_description, $product->short_description);
-			$this->assertEquals($args->sku, $product->sku);
-			$this->assertEquals($args->status, $product->status);
-			$this->assertEquals($args->friendly_url, $product->friendly_url);
-			$this->assertEquals($args->price, $product->price);
-			$this->assertEquals($args->qty, $product->qty);
-			$this->assertEquals($args->in_stock, $product->in_stock);
-			$this->assertNotNull($product->regdate);
-			$this->assertNotNull($product->last_update);
-
-			// Delete product we just added after test is finished
-			Database::executeNonQuery("DELETE FROM xe_shop_products WHERE product_srl = $product_srl");
-		} catch(Exception $e)
-		{
-			$this->fail($e->getMessage());
-		}
-	}
-
-	/**
 	 * Tests inserting a new Product category - makes sure all fields are properly persisted
-	 * @author Corina Udrescu (dev@xpressengine.org)
+	 *
+	 * @return void
 	 */
 	public function testInsertCategory_ValidData()
 	{
@@ -126,8 +64,7 @@ Patrioque conceptam in mea. Est ad ullum ceteros, pro quem accumsan appareat id,
 
 			// Delete product we just added after test is finished
 			Database::executeNonQuery("DELETE FROM xe_shop_categories WHERE category_srl = $category_srl");
-		}
-		catch(Exception $e)
+		} catch(Exception $e)
 		{
 			$this->fail($e->getMessage());
 		}
@@ -136,7 +73,7 @@ Patrioque conceptam in mea. Est ad ullum ceteros, pro quem accumsan appareat id,
 	/**
 	 * Test deleting a Product category by id with valid data (srl is provided)
 	 *
-	 * @author Corina Udrescu (dev@xpressengine.org)
+	 * @return void
 	 */
 	public function testDeleteCategoryBySrl_ValidData()
 	{
@@ -159,8 +96,7 @@ Patrioque conceptam in mea. Est ad ullum ceteros, pro quem accumsan appareat id,
 			// Check that the other record was not also deleted by mistake
 			$count = Database::executeQuery("SELECT COUNT(*) as count FROM xe_shop_categories WHERE category_srl = 1002");
 			$this->assertEquals(1, $count[0]->count);
-		}
-		catch(Exception $e)
+		} catch(Exception $e)
 		{
 			$this->fail($e->getMessage());
 		}
@@ -169,7 +105,7 @@ Patrioque conceptam in mea. Est ad ullum ceteros, pro quem accumsan appareat id,
 	/**
 	 * Test deleting more Product categories by module_srl with valid data (srl is provided)
 	 *
-	 * @author Corina Udrescu (dev@xpressengine.org)
+	 * @return void
 	 */
 	public function testDeleteCategoryByModuleSrl_ValidData()
 	{
@@ -193,8 +129,7 @@ Patrioque conceptam in mea. Est ad ullum ceteros, pro quem accumsan appareat id,
 			// Check that the other record was not also deleted by mistake
 			$count = Database::executeQuery("SELECT COUNT(*) as count FROM xe_shop_categories WHERE module_srl = 1003");
 			$this->assertEquals(1, $count[0]->count);
-		}
-		catch(Exception $e)
+		} catch(Exception $e)
 		{
 			$this->fail($e->getMessage());
 		}
@@ -203,7 +138,7 @@ Patrioque conceptam in mea. Est ad ullum ceteros, pro quem accumsan appareat id,
 	/**
 	 * Test retrieving a Category object from the database
 	 *
-	 * @author Corina Udrescu (dev@xpressengine.org)
+	 * @return void
 	 */
 	public function testGetCategory_ValidData()
 	{
@@ -218,8 +153,7 @@ Patrioque conceptam in mea. Est ad ullum ceteros, pro quem accumsan appareat id,
 			$this->assertEquals(1000, $category->category_srl);
 			$this->assertEquals(1001, $category->module_srl);
 			$this->assertEquals("Dummy category 1000", $category->title);
-		}
-		catch(Exception $e)
+		} catch(Exception $e)
 		{
 			$this->fail($e->getMessage());
 		}
@@ -228,8 +162,9 @@ Patrioque conceptam in mea. Est ad ullum ceteros, pro quem accumsan appareat id,
 	/**
 	 * Test updating a product category
 	 *
-	 * @author Corina Udrescu (dev@xpressengine.org)
 	 * @depends testGetCategory_ValidData
+	 *
+	 * @return void
 	 */
 	public function testUpdateCategory_ValidData()
 	{
@@ -251,8 +186,7 @@ Patrioque conceptam in mea. Est ad ullum ceteros, pro quem accumsan appareat id,
 			// Check that properties were updated
 			$new_category = $repository->getCategory($category->category_srl);
 			$this->assertEquals($category->title, $new_category->title);
-		}
-		catch(Exception $e)
+		} catch(Exception $e)
 		{
 			$this->fail($e->getMessage());
 		}
@@ -262,7 +196,7 @@ Patrioque conceptam in mea. Est ad ullum ceteros, pro quem accumsan appareat id,
 	/**
 	 * Test that tree hierarchy is properly returned
 	 *
-	 * @author Corina Udrescu (dev@xpressengine.org)
+	* @return void
 	 */
 	public function testCategoryTreeHierarchy()
 	{
@@ -299,7 +233,7 @@ Patrioque conceptam in mea. Est ad ullum ceteros, pro quem accumsan appareat id,
 	 * Test product category tree as flat structure
 	 * Used for UI, when printing nested lists
 	 *
-	 * @author Corina Udrescu (dev@xpressengine.org)
+	 * @return void
 	 */
 	public function testCategoryFlatTreeHierarchy()
 	{
@@ -331,7 +265,7 @@ Patrioque conceptam in mea. Est ad ullum ceteros, pro quem accumsan appareat id,
 	/**
 	 * Test that Product category image gets updated
 	 *
-	 * @author Corina Udrescu (dev@xpressengine.org)
+	 * @return void
 	 */
 	public function testRemoveCategoryFilename()
 	{
@@ -352,21 +286,18 @@ Patrioque conceptam in mea. Est ad ullum ceteros, pro quem accumsan appareat id,
 			$new_category = $repository->getCategory($category->category_srl);
 			$this->assertEquals($category->filename, $new_category->filename);
 
-		}
-		catch(Exception $e)
+		} catch(Exception $e)
 		{
 			$this->fail($e->getMessage());
 		}
 
 
-
 	}
-
 
 	/**
 	 * Test that Product category [include_in_navigation_menu] gets updated
 	 *
-	 * @author Corina Udrescu (dev@xpressengine.org)
+	 * @return void
 	 */
 	public function testUpdateCategoryIncludeInNavigationMenu()
 	{
@@ -390,10 +321,9 @@ Patrioque conceptam in mea. Est ad ullum ceteros, pro quem accumsan appareat id,
 			echo "Actual: " . $new_category->getIncludeInNavigationMenu() . PHP_EOL;
 
 			$this->assertEquals($category->include_in_navigation_menu
-									, $new_category->include_in_navigation_menu);
+				, $new_category->include_in_navigation_menu);
 
-		}
-		catch(Exception $e)
+		} catch(Exception $e)
 		{
 			$this->fail($e->getMessage());
 		}
@@ -401,6 +331,8 @@ Patrioque conceptam in mea. Est ad ullum ceteros, pro quem accumsan appareat id,
 
 	/**
 	 * Test that product count gets updated when a new product is added to a category
+	 *
+	 * @return void
 	 */
 	public function testProductCountUpdatesOnProductAdd()
 	{
@@ -436,14 +368,13 @@ Patrioque conceptam in mea. Est ad ullum ceteros, pro quem accumsan appareat id,
 		$this->assertEquals(1, $category->product_count);
 
 
-
-
 	}
 
 
 	/**
 	 * Clean-up testing environment after every test method
-	 * @author Corina Udrescu (dev@xpressengine.org)
+	 *
+	 * @return void
 	 */
 	public function tearDown()
 	{
