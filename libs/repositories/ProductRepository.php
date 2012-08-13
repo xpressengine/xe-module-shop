@@ -121,10 +121,33 @@ class ProductRepository extends BaseRepository
 	{
 		$args = new stdClass();
 		$args->product_srl = $product->product_srl;
-		foreach($product->categories as $category){
+		foreach($product->categories as $category)
+		{
 			$args->category_srl = $category;
-			$output = executeQuery('shop.insertProductCategories',$args);
-			if(!$output->toBool()) throw new Exception($output->getMessage(), $output->getError());
+
+			// Insert product category
+			$output = executeQuery('shop.insertProductCategories', $args);
+			if(!$output->toBool())
+			{
+				throw new Exception($output->getMessage(), $output->getError());
+			}
+
+			// Get number of products in category
+			$count_output = executeQuery('shop.getProductsInCategoryCount', $args);
+			if(!$count_output->toBool())
+			{
+				throw new Exception($count_output->getMessage(), $count_output->getError());
+			}
+
+			// Update product count
+			$update_args = new stdClass();
+			$update_args->category_srl = $args->category_srl;
+			$update_args->product_count = $count_output->data->product_count;
+			$output = executeQuery('shop.updateCategory', $update_args);
+			if(!$output->toBool())
+			{
+				throw new Exception($output->getMessage(), $output->getError());
+			}
 		}
 		return TRUE;
 	}
