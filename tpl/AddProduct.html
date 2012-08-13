@@ -196,7 +196,7 @@
                         <!--@foreach($attributes_list as $attribute)-->
     
                         <tr
-                            <!--@if((count($attribute->category_scope) > 0 && count(array_intersect($product->categories, $attribute->category_scope)) === 0) || in_array($attribute->attribute_srl,$parent_product->configurable_attributes))-->
+                            <!--@if((count($attribute->category_scope) > 0 && count(array_intersect($product->categories, $attribute->category_scope)) === 0) || (isset($parent_product) && in_array($attribute->attribute_srl,$parent_product->configurable_attributes)))-->
                                 style="display:none"
                             <!--@end-->
                             >

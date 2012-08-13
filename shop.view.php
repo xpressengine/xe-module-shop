@@ -369,7 +369,7 @@
 
             // Prepare tree for display
 			$tree_config = new HtmlCategoryTreeConfig();
-			$tree_config->showCheckbox = true;
+			$tree_config->showCheckbox = TRUE;
 			$tree_config->checked = array();
 			$tree_config->checkboxesName = 'category_scope';
 			$HTML_tree = $tree->toHTML($tree_config);
@@ -395,7 +395,7 @@
 
             // Prepare tree for display
 			$tree_config = new HtmlCategoryTreeConfig();
-			$tree_config->showCheckbox = true;
+			$tree_config->showCheckbox = TRUE;
 			$tree_config->checked = $attribute->category_scope;
 			$tree_config->checkboxesName = 'category_name';
 			$HTML_tree = $tree->toHTML($tree_config);
@@ -443,7 +443,10 @@
      * @brief Shop display simple product add page
      */
         public function dispShopToolAddProduct(){
-            $shopModel = getModel('shop');
+			/**
+			 * @var shopModel $shopModel
+			 */
+			$shopModel = getModel('shop');
 			$productRepository = $shopModel->getProductRepository();
 
 			// Retrieve product if exists
@@ -483,7 +486,7 @@
 
             // Prepare tree for display
 			$tree_config = new HtmlCategoryTreeConfig();
-			$tree_config->showCheckbox = true;
+			$tree_config->showCheckbox = TRUE;
 			$tree_config->checked = $product->categories;
 			$tree_config->checkboxesName = 'categories';
 			$HTML_tree = $tree->toHTML($tree_config);
@@ -541,7 +544,7 @@
 
 			// Prepare tree for display
 			$tree_config = new HtmlCategoryTreeConfig();
-			$tree_config->linkCategoryName = true;
+			$tree_config->linkCategoryName = TRUE;
 			$tree_config->linkGetUrlParams = array('vid', $this->mid, 'act', 'dispShop');
 			$HTML_tree = $tree->toHTML($tree_config);
 			Context::set('HTML_tree', $HTML_tree);
@@ -591,7 +594,7 @@
 
 			// Prepare tree for display
 			$tree_config = new HtmlCategoryTreeConfig();
-			$tree_config->showManagingLinks = true;
+			$tree_config->showManagingLinks = TRUE;
 			$HTML_tree = $tree->toHTML($tree_config);
 
 			Context::set('HTML_tree', $HTML_tree);
