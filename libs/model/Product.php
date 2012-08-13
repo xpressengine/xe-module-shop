@@ -30,6 +30,7 @@ class Product extends BaseItem
     public $categories = array();
 	public $attributes = array();
 	public $configurable_attributes = array();
+	public $images = array();
 
 	public function loadFromArray(array $data)
 	{

@@ -24,7 +24,7 @@
         <p>{$XE_VALIDATOR_MESSAGE}</p>
     </div>
     <!-- /contentHeader -->
-    <form action="./" method="post" ruleset="insert_product" class="">
+    <form action="./" method="post" ruleset="insert_product" class="" enctype="multipart/form-data" >
         <input type="hidden" name="act" value="procShopToolInsertProduct" />
         <!--@if(isset($product->product_srl))-->
         <input type="hidden" name="product_srl" value="{$product->product_srl}" />
@@ -56,9 +56,11 @@
                 <!--@endif-->
 
                 <table border="1" cellspacing="0" class="tableData">
+                    <!--@if($product->parent_product_srl)-->
                     <tr>
                         <span>This is an associated simple product for the configurable product with the title: <b>{$parent_product->title}</b> and sku:<b>{$parent_product->sku}</b></span>
                     </tr>
+                    <!--@endif-->
                     <tr class="first">
                         <th scope="row">
                             <label for="title">{$lang->title}</label>
@@ -94,6 +96,18 @@
                         </td>
                     </tr>
                     <!--@endif-->
+                    <tr>
+                        <th scope="row">
+                            <label>{$lang->images}</label>
+                        </th>
+                        <td class="title">
+                            <div class="fItem">
+                                <label class="iLabel" for="sku">{$lang->about_images}</label>
+                                <input name="filesToUpload[]" id="filesToUpload" type="file" multiple="" onchange="makeFileList();"/>
+                                <ul id="fileList" style="list-style:none;"></ul>
+                            </div>
+                        </td>
+                    </tr>
                     <tr>
                         <th scope="row">
                             <label for="sku">{$lang->sku}</label>
@@ -264,3 +278,60 @@
 
 <!--#include("_tool_footer.html")-->
 
+<script type="text/javascript">
+    var i=0;
+    var numfiles =0;
+    var id = '';
+    function makeFileList(){
+        var input = document.getElementById('filesToUpload');
+        numfiles = input.files.length;
+        var list = document.getElementById('fileList');
+        while (list.hasChildNodes()) {
+            list.removeChild(ul.firstChild);
+        }
+
+        for (var x = 0; x < numfiles; x++) {
+            //add to list
+            var li = document.createElement('li');
+
+            var checkbox = document.createElement('input');
+            checkbox.type = "radio";
+            checkbox.name = "primary_image";
+            checkbox.value = x;
+            checkbox.id = x;
+
+
+
+            jQuery(list).append(li);
+
+            var image = document.createElement('image');
+            image.name = "image_"+x;
+            image.id = "image_"+x;
+            image.src="#";
+
+            li.innerHTML = checkbox.outerHTML + 'File ' + (x + 1) + ':  ' + input.files[x].name + image.outerHTML;
+
+            var reader = new FileReader();
+
+
+        }
+
+        var p = document.createElement('p');
+        p.innerHTML = "Select primary product image";
+
+        jQuery(p).insertBefore(list);
+        reader.readAsDataURL(input.files[0]);
+        reader.onload = function (e) {
+            if(i < numfiles){
+                id = "image_"+i;
+                image = document.getElementById(id);
+                image.src =  e.target.result ;
+                image.width = 100;
+                image.height = 100;
+                i++;
+                reader.readAsDataURL(input.files[i]);
+            }
+        }
+    }
+
+</script>

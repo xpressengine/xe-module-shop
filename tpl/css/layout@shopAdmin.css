@@ -59,6 +59,22 @@ a.skipToContent{text-align:center;color:#fff;position:absolute;width:100%;font-s
 .partitionContainer .partitionRight{float:right}
 .partitionContainer .quarter{width:23.4%}
 
+/* Image upload*/
+
+.fileUploader{clear:both;padding-top:5px;margin-bottom:10px}
+.fileUploader:after{content:"";display:block;clear:both}
+.fileUploader .preview{float:left;width:64px;height:64px;border:1px solid #ccc;;padding:2px;margin:0 10px 5px 0}
+.fileUploader .preview.black {background-color:#000;border:1px solid #666}
+.fileUploader .preview img{display:block;width:64px;height:64px}
+.fileUploader .fileListArea{float:left;width:260px;margin:0 10px 5px 0}
+.fileUploader .fileListArea select{width:100%;height:70px;overflow:auto;margin:0;padding:0;float:none}
+.fileUploader .fileListArea select option{font-size:11px}
+.fileUploader .fileListArea.black select {background-color:#000;border:1px solid #666}
+.fileUploader .fileListArea.black select option {color:#aaa}
+.fileUploader .fileUploadControl{clear:right}
+.fileUploader .fileUploadControl .button{margin-bottom:5px}
+.fileUploader .file_attach_info{clear:right;margin:5px 0;font-size:11px;color:#333}
+
 /* Header */
 #shopAdmin #header{width:100%;height:100px;zoom:1;z-index:1;clear:both;background:url(../img/bgHeader.gif) repeat-x}
 #shopAdmin #header:after{content:"";display:block;clear:both}
