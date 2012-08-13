@@ -1,7 +1,7 @@
 <?php
 
 require dirname(__FILE__) . '/lib/Bootstrap.php';
-require dirname(__FILE__) . '/lib/TestAgainstDatabase.php';
+require dirname(__FILE__) . "/lib/Shop_Generic_Tests.class.php";
 
 require_once dirname(__FILE__) . '/../libs/model/Category.php';
 
@@ -9,99 +9,90 @@ require_once dirname(__FILE__) . '/../libs/model/Category.php';
  *  Test features related to Product categories
  *  @author Corina Udrescu (dev@xpressengine.org)
  */
-class CategoryTest extends TestAgainstDatabase
+class CategoryTest extends Shop_Generic_Tests_DatabaseTestCase
 {
+
 	/**
-	 * Set up environment for testing before each test method
-	 * @author Corina Udrescu (dev@xpressengine.org)
+	 * Returns the test dataset.
+	 *
+	 * @return PHPUnit_Extensions_Database_DataSet_IDataSet
 	 */
-	protected function setUp()
+	protected function getDataSet()
 	{
-		parent::setUp();
-		// Insert a few product categories in the database, so that we will have what to delete
-		Database::executeNonQuery("
-			INSERT INTO xe_shop_categories (category_srl, module_srl, title, parent_srl, filename)
-				VALUES(1000, 1001, 'Dummy category 1000', 0, 'files/attach/picture.jpg')
-			");
-		Database::executeNonQuery("
-			INSERT INTO xe_shop_categories (category_srl, module_srl, title, parent_srl)
-				VALUES(1002, 1001, 'Dummy category 1002', 1000)
-			");
-		Database::executeNonQuery("
-			INSERT INTO xe_shop_categories (category_srl, module_srl, title, parent_srl)
-				VALUES(1004, 1003, 'Dummy category 1002', 0)
-			");
-		Database::executeNonQuery("
-			INSERT INTO xe_shop_categories (category_srl, module_srl, title, parent_srl)
-				VALUES(1006, 1001, 'Dummy category 1006', 0)
-			");
-		Database::executeNonQuery("
-			INSERT INTO xe_shop_categories (category_srl, module_srl, title, parent_srl)
-				VALUES(1008, 1001, 'Dummy category 1008', 1000)
-			");
+		return new Shop_DbUnit_ArrayDataSet(array(
+			'xe_shop_categories' => array(
+				array('category_srl' => 1000, 'module_srl' => 1001, 'title' => 'Dummy category 1000', 'parent_srl' => 0,
+					'filename' => 'files/attach/picture.jpg'),
+				array('category_srl' => 1002, 'module_srl' => 1001, 'title' => 'Dummy category 1002', 'parent_srl' => 1000),
+				array('category_srl' => 1004, 'module_srl' => 1003, 'title' => 'Dummy category 1004', 'parent_srl' => 0),
+				array('category_srl' => 1006, 'module_srl' => 1001, 'title' => 'Dummy category 1006', 'parent_srl' => 0),
+				array('category_srl' => 1008, 'module_srl' => 1001, 'title' => 'Dummy category 1008', 'parent_srl' => 1000)
+			)
+		));
 	}
-    /**
-     * Tests inserting a new Product - makes sure all fields are properly persisted
-     * @author Dan dragan (dev@xpressengine.org)
-     */
-    public function testInsertProduct_ValidData()
-    {
-        // Create new Product object
-        $args = new stdClass();
-        $args->module_srl = 201;
-        $args->member_srl = 4;
-        $args->product_type = "simple";
-        $args->title = "Product 1";
-        $args->description = "Lorem ipsum dolor sit amet, te amet scaevola volutpat eum, ius an decore recteque patrioque, mel sint epicurei ut. Ea lorem noluisse est, ea sed nisl libris electram. Cu vivendum facilisis scribentur mel, bonorum elaboraret no per. Nec eu vidit omittantur, ei putant timeam detraxit quo, urbanitas efficiendi sit id. Mei putent eirmod voluptua ut, at dictas invenire delicata duo.
+
+	/**
+	 * Tests inserting a new Product - makes sure all fields are properly persisted
+	 * @author Dan dragan (dev@xpressengine.org)
+	 */
+	public function testInsertProduct_ValidData()
+	{
+		// Create new Product object
+		$args = new stdClass();
+		$args->module_srl = 201;
+		$args->member_srl = 4;
+		$args->product_type = "simple";
+		$args->title = "Product 1";
+		$args->description = "Lorem ipsum dolor sit amet, te amet scaevola volutpat eum, ius an decore recteque patrioque, mel sint epicurei ut. Ea lorem noluisse est, ea sed nisl libris electram. Cu vivendum facilisis scribentur mel, bonorum elaboraret no per. Nec eu vidit omittantur, ei putant timeam detraxit quo, urbanitas efficiendi sit id. Mei putent eirmod voluptua ut, at dictas invenire delicata duo.
 
 Patrioque conceptam in mea. Est ad ullum ceteros, pro quem accumsan appareat id, pro nominati electram no. Duo lorem maiorum urbanitas te, cu eum dicunt laoreet, etiam sententiae scriptorem at mel. Vix tamquam epicurei et, quo tota iudicabit an. Duo ea agam antiopam. Et per diam percipitur.";
-        $args->short_description = "short_description";
-        $args->sku = "SKU1";
-        $args->status = '1';
-        $args->friendly_url = "product1";
-        $args->price = 10.5;
-        $args->qty = 0;
-        $args->in_stock = "Y";
+		$args->short_description = "short_description";
+		$args->sku = "SKU1";
+		$args->status = '1';
+		$args->friendly_url = "product1";
+		$args->price = 10.5;
+		$args->qty = 0;
+		$args->in_stock = "Y";
 
-        $shopModel = getModel('shop');
+		$shopModel = getModel('shop');
 		$repository = $shopModel->getProductRepository();
-        try
-        {
-            // Try to insert the new Product
+		try
+		{
+			// Try to insert the new Product
 
-            $product_srl = $repository->insertProduct($args);
+			$product_srl = $repository->insertProduct($args);
 
-            // Check that a srl was returned
-            $this->assertNotNull($product_srl);
+			// Check that a srl was returned
+			$this->assertNotNull($product_srl);
 
-            // Read the newly created object from the database, to compare it with the source object
-            $output = Database::executeQuery("SELECT * FROM xe_shop_products WHERE product_srl = $product_srl");
-            $this->assertEquals(1, count($output));
+			// Read the newly created object from the database, to compare it with the source object
+			$output = Database::executeQuery("SELECT * FROM xe_shop_products WHERE product_srl = $product_srl");
+			$this->assertEquals(1, count($output));
 
-            $product = $output[0];
-            $this->assertEquals($args->module_srl, $product->module_srl);
-            $this->assertEquals($args->member_srl, $product->member_srl);
-            $this->assertEquals($args->product_type, $product->product_type);
-            $this->assertEquals($args->title, $product->title);
-            $this->assertEquals($args->description, $product->description);
-            $this->assertEquals($args->short_description, $product->short_description);
-            $this->assertEquals($args->sku, $product->sku);
-            $this->assertEquals($args->status, $product->status);
-            $this->assertEquals($args->friendly_url, $product->friendly_url);
-            $this->assertEquals($args->price, $product->price);
-            $this->assertEquals($args->qty, $product->qty);
-            $this->assertEquals($args->in_stock, $product->in_stock);
-            $this->assertNotNull($product->regdate);
-            $this->assertNotNull($product->last_update);
+			$product = $output[0];
+			$this->assertEquals($args->module_srl, $product->module_srl);
+			$this->assertEquals($args->member_srl, $product->member_srl);
+			$this->assertEquals($args->product_type, $product->product_type);
+			$this->assertEquals($args->title, $product->title);
+			$this->assertEquals($args->description, $product->description);
+			$this->assertEquals($args->short_description, $product->short_description);
+			$this->assertEquals($args->sku, $product->sku);
+			$this->assertEquals($args->status, $product->status);
+			$this->assertEquals($args->friendly_url, $product->friendly_url);
+			$this->assertEquals($args->price, $product->price);
+			$this->assertEquals($args->qty, $product->qty);
+			$this->assertEquals($args->in_stock, $product->in_stock);
+			$this->assertNotNull($product->regdate);
+			$this->assertNotNull($product->last_update);
 
-            // Delete product we just added after test is finished
-            Database::executeNonQuery("DELETE FROM xe_shop_products WHERE product_srl = $product_srl");
-        }
-        catch(Exception $e)
-        {
-            $this->fail($e->getMessage());
-        }
-    }
+			// Delete product we just added after test is finished
+			Database::executeNonQuery("DELETE FROM xe_shop_products WHERE product_srl = $product_srl");
+		} catch(Exception $e)
+		{
+			$this->fail($e->getMessage());
+		}
+	}
+
 	/**
 	 * Tests inserting a new Product category - makes sure all fields are properly persisted
 	 * @author Corina Udrescu (dev@xpressengine.org)
@@ -406,6 +397,44 @@ Patrioque conceptam in mea. Est ad ullum ceteros, pro quem accumsan appareat id,
 		{
 			$this->fail($e->getMessage());
 		}
+	}
+
+	/**
+	 * Test that product count gets updated when a new product is added to a category
+	 */
+	public function testProductCountUpdatesOnProductAdd()
+	{
+		/**
+		 * @var shopModel $shopModel
+		 */
+		$shopModel = getModel('shop');
+
+		// Make sure product count is 0 at the beginning
+		$category_repository = $shopModel->getCategoryRepository();
+		$category = $category_repository->getCategory(1000);
+
+		$this->assertEquals(0, $category->product_count);
+
+		// Add new product
+		$product_repository = $shopModel->getProductRepository();
+
+		$product = new Product();
+		$product->product_srl = 12;
+		$product->title = "Some product";
+		$product->member_srl = 4;
+		$product->module_srl = 1;
+		$product->product_type = 'simple';
+		$product->sku = 'some-product';
+		$product->friendly_url = $product->sku;
+		$product->price = 100;
+		$product->categories[] = 1000;
+
+		$product_repository->insertProduct($product);
+
+		// Check that count was increased
+		$category = $category_repository->getCategory(1000);
+		$this->assertEquals(1, $category->product_count);
+
 
 
 
@@ -423,7 +452,6 @@ Patrioque conceptam in mea. Est ad ullum ceteros, pro quem accumsan appareat id,
 
 		parent::tearDown();
 	}
-
 }
 
 /* End of file CategoryTest.php */
