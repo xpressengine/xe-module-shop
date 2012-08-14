@@ -300,14 +300,17 @@
 
             jQuery(list).append(li);
 
-            var image = document.createElement('image');
-            image.name = "image_"+index;
-            image.id = "image_"+index;
-            image.src="#";
 
             var elem = input.value.split("\\");
             var filename = elem[elem.length-1];
-            li.innerHTML = outerHTML(checkbox) + 'File ' + index + ':  ' + filename + outerHTML(image);
+            li.innerHTML = outerHTML(checkbox) + 'File ' + index + ':  ' + filename;
+
+            if(index == 1){
+                var p = document.createElement('p');
+                p.innerHTML = "Select primary product image";
+
+                jQuery(p).insertBefore(list);
+            }
         }
          else {
             numfiles = input.files.length;
@@ -334,23 +337,17 @@
                 li.innerHTML = outerHTML(checkbox) + 'File ' + (index+1) + ':  ' + input.files[x].name + outerHTML(image);
                 index++;
             }
+            if(index == numfiles){
+                var p = document.createElement('p');
+                p.innerHTML = "Select primary product image";
+
+                jQuery(p).insertBefore(list);
+            }
         }
 
-        if(index == numfiles){
-            var p = document.createElement('p');
-            p.innerHTML = "Select primary product image";
 
-            jQuery(p).insertBefore(list);
-        }
 
-        if (browserName=="Microsoft Internet Explorer") {
-            id = "image_"+index;
-            image = document.getElementById(id);
-            image.src =  input.value ;
-            image.width = 100;
-            image.height = 100;
-        }
-        else {
+        if (browserName!="Microsoft Internet Explorer") {
             var reader = new FileReader();
             reader.readAsDataURL(input.files[0]);
             reader.onload = function (e) {
