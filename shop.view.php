@@ -432,7 +432,7 @@
 			}
 			else
 			{
-				$product = new Product();
+				$product = new SimpleProduct();
 			}
 			Context::set('product',$product);
 

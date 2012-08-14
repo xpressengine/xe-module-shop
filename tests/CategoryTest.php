@@ -350,7 +350,7 @@ class CategoryTest extends Shop_Generic_Tests_DatabaseTestCase
 		// Add new product
 		$product_repository = $shopModel->getProductRepository();
 
-		$product = new Product();
+		$product = new SimpleProduct();
 		$product->product_srl = 12;
 		$product->title = "Some product";
 		$product->member_srl = 4;

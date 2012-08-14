@@ -7,6 +7,7 @@
     </columns>
     <conditions>
         <condition operation="equal" column="module_srl" var="module_srl" notnull="notnull" />
+        <condition operation="null" column="parent_product_srl" pipe="and" />
     </conditions>
     <navigation>
         <index var="product_srl" default="product_srl" order="order_type" />

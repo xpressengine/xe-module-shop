@@ -168,7 +168,7 @@ class ProductRepository extends BaseRepository
 		{
 			throw new Exception($output->getMessage(), $output->getError());
 		}
-		$product = new Product();
+		$product = new SimpleProduct();
 		$product->product_srl = $args->product_srl;
 		$this->deleteProductCategories($product);
 		$this->deleteProductAttributes($product);
@@ -263,7 +263,7 @@ class ProductRepository extends BaseRepository
 			throw new Exception($output->getMessage(), $output->getError());
 		}
 
-		$product = new Product($output->data);
+		$product = new SimpleProduct($output->data);
         $this->getProductCategories($product);
 		$this->getProductAttributes($product);
 		return $product;
@@ -326,7 +326,7 @@ class ProductRepository extends BaseRepository
 	 */
 	public function createProductFromParent(Product $parent_product, array $values)
 	{
-		$product = new Product();
+		$product = new SimpleProduct();
 		$product->member_srl = $parent_product->member_srl;
 		$product->module_srl = $parent_product->module_srl;
 		$product->parent_product_srl = $parent_product->product_srl;
@@ -343,7 +343,7 @@ class ProductRepository extends BaseRepository
 	}
 
 	/**
-	 * Retrieve a Product List object from the database given a modul_srl
+	 * Retrieve a Product List object from the database given a module_srl
 	 * @author Dan Dragan (dev@xpressengine.org)
 	 *
 	 * @param srdClass $args Must have: module_srl; Can have: page, category_srl
@@ -359,16 +359,55 @@ class ProductRepository extends BaseRepository
 
 		if($args->category_srls & count($args->category_srls) > 0)
 		{
-			$output = executeQuery('shop.getProductListByCategory', $args);
+			$output = executeQueryArray('shop.getProductListByCategory', $args);
 		}
 		else
 		{
-        	$output = executeQuery('shop.getProductList', $args);
+        	$output = executeQueryArray('shop.getProductList', $args);
 		}
+
+		if(!$output->toBool())
+		{
+			throw new Exception($output->getMessage());
+		}
+
+		// Get top level products
+		$configurable_products = array();
         foreach ($output->data as $product){
-            $product_object = new Product($product);
-            $products[] = $product_object;
+			if($product->product_type == 'simple')
+			{
+				$product_object = new SimpleProduct($product);
+			}
+			else
+			{
+				$product_object = new ConfigurableProduct($product);
+				$configurable_products[] = $product->product_srl;
+			}
+            $products[$product->product_srl] = $product_object;
         }
+
+
+		if(count($configurable_products) > 0)
+		{
+			// Get associated products and link to their parents
+			$associated_products_args = new stdClass();
+			$associated_products_args->module_srl = $args->module_srl;
+			$associated_products_args->configurable_product_srls = $configurable_products;
+
+			$associated_products_output = executeQueryArray('shop.getAssociatedProducts', $associated_products_args);
+			if(!$associated_products_output->toBool())
+			{
+				throw new Exception($associated_products_output->getMessage());
+			}
+
+			$associated_products = $associated_products_output->data;
+			foreach($associated_products as $associated_product)
+			{
+				$product_object = new SimpleProduct($associated_product);
+				$products[$associated_product->parent_product_srl]->associated_products[] = $product_object;
+			}
+		}
+
         $output->products = $products;
         return $output;
     }

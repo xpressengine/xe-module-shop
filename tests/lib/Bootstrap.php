@@ -7,6 +7,9 @@ if(!defined('_XE_PATH_')) define('_XE_PATH_', realpath(dirname(__FILE__) . '/../
 
 require_once(_XE_PATH_ . 'config/config.inc.php');
 
+// Delete any cache files
+FileHandler::removeDir(_XE_PATH_ . 'files/cache');
+
 $oContext = Context::getInstance();
 Context::setLangType('en');
 

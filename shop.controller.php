@@ -142,7 +142,7 @@
             $args->member_srl = $logged_info->member_srl;
             $args->module_srl = $this->module_info->module_srl;
 
-            $product = new Product($args);
+            $product = new SimpleProduct($args);
             try
             {
                 if($product->product_srl === NULL)

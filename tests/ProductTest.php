@@ -51,7 +51,15 @@ class ProductTest extends Shop_Generic_Tests_DatabaseTestCase
 					'related_products' => NULL,
 					'regdate' => date("YmdGis"),
 					'last_update' => date("YmdGis")
-				)
+				),
+				array('product_srl' => 302, 'member_srl' => 4, 'module_srl' => 104, 'parent_product_srl' => 297, 'product_type' => 'simple', 'title' => 'Tricou_M_alb', 'description' => NULL, 'short_description' => NULL, 'sku' => 'tricou_M_alb', 'weight' => NULL, 'status' => NULL, 'friendly_url' => NULL, 'price' => 100, 'qty' => NULL, 'in_stock' => 'N', 'related_products' => NULL, 'regdate' => 20120809193142, 'last_update' => 20120809193142),
+				array('product_srl' => 301, 'member_srl' => 4, 'module_srl' => 104, 'parent_product_srl' => 297, 'product_type' => 'simple', 'title' => 'Tricou_M_rosu', 'description' => NULL, 'short_description' => NULL, 'sku' => 'tricou_M_rosu', 'weight' => NULL, 'status' => NULL, 'friendly_url' => NULL, 'price' => 100, 'qty' => NULL, 'in_stock' => 'N', 'related_products' => NULL, 'regdate' => 20120809193142, 'last_update' => 20120809193142),
+				array('product_srl' => 300, 'member_srl' => 4, 'module_srl' => 104, 'parent_product_srl' => 297, 'product_type' => 'simple', 'title' => 'Tricou_S_negru', 'description' => NULL, 'short_description' => NULL, 'sku' => 'tricou_S_negru', 'weight' => NULL, 'status' => NULL, 'friendly_url' => NULL, 'price' => 100, 'qty' => NULL, 'in_stock' => 'N', 'related_products' => NULL, 'regdate' => 20120809193142, 'last_update' => 20120809193142),
+				array('product_srl' => 299, 'member_srl' => 4, 'module_srl' => 104, 'parent_product_srl' => 297, 'product_type' => 'simple', 'title' => 'Tricou_S_alb', 'description' => NULL, 'short_description' => NULL, 'sku' => 'tricou_S_alb', 'weight' => NULL, 'status' => NULL, 'friendly_url' => NULL, 'price' => 100, 'qty' => NULL, 'in_stock' => 'N', 'related_products' => NULL, 'regdate' => 20120809193142, 'last_update' => 20120809193142),
+				array('product_srl' => 304, 'member_srl' => 4, 'module_srl' => 104, 'parent_product_srl' => NULL, 'product_type' => 'simple', 'title' => 'O carte', 'description' => 'fewhjgjg', 'short_description' => 'O carte', 'sku' => 'o-carte', 'weight' => 999, 'status' => 'enabled', 'friendly_url' => 'o-carte', 'price' => 999, 'qty' => 99, 'in_stock' => 'Y', 'related_products' => NULL, 'regdate' => 20120813140441, 'last_update' => 20120813152057),
+				array('product_srl' => 298, 'member_srl' => 4, 'module_srl' => 104, 'parent_product_srl' => 297, 'product_type' => 'simple', 'title' => 'Tricou_S_rosu', 'description' => NULL, 'short_description' => NULL, 'sku' => 'tricou_S_rosu', 'weight' => NULL, 'status' => NULL, 'friendly_url' => NULL, 'price' => 100, 'qty' => NULL, 'in_stock' => 'N', 'related_products' => NULL, 'regdate' => 20120809193142, 'last_update' => 20120809193142),
+				array('product_srl' => 297, 'member_srl' => 4, 'module_srl' => 104, 'parent_product_srl' => NULL, 'product_type' => 'configurable', 'title' => 'Tricou', 'description' => 'Bumbac 100%.', 'short_description' => 'Tricou', 'sku' => 'tricou', 'weight' => 50, 'status' => 'enabled', 'friendly_url' => 'tricou', 'price' => 100, 'qty' => NULL, 'in_stock' => 'Y', 'related_products' => NULL, 'regdate' => 20120809193134, 'last_update' => 20120813152109),
+				array('product_srl' => 303, 'member_srl' => 4, 'module_srl' => 104, 'parent_product_srl' => 297, 'product_type' => 'simple', 'title' => 'Tricou_M_negru', 'description' => NULL, 'short_description' => NULL, 'sku' => 'tricou_M_negru', 'weight' => NULL, 'status' => NULL, 'friendly_url' => NULL, 'price' => 100, 'qty' => NULL, 'in_stock' => 'N', 'related_products' => NULL, 'regdate' => 20120809193142, 'last_update' => 20120809193142)
 			),
 			'xe_shop_categories' => array(
 				array('category_srl' => self::CATEGORY_BOOKS, 'module_srl' => 104, 'parent_srl' => 0,   'filename' => NULL, 'title' => 'Carti', 'description' => NULL, 'product_count' => 0, 'friendly_url' => NULL, 'include_in_navigation_menu' => 'Y', 'regdate' => 20120807185846, 'last_update' => 20120807185846),
@@ -63,6 +71,9 @@ class ProductTest extends Shop_Generic_Tests_DatabaseTestCase
 			'xe_shop_product_categories' => array(
 				array('product_srl' => self::PRODUCT, 'category_srl' => self::CATEGORY_BOOKS),
 				array('product_srl' => self::PRODUCT, 'category_srl' => self::CATEGORY_PHOTOGRAPHY),
+				array('product_srl' => 297, 'category_srl' => self::CATEGORY_TSHIRTS),
+				array('product_srl' => 304, 'category_srl' => self::CATEGORY_BOOKS),
+				array('product_srl' => 304, 'category_srl' => self::CATEGORY_PHOTOGRAPHY)
 			),
 			'xe_shop_attributes'  => array(
 				array('attribute_srl' => self::ATTRIBUTE_URL, 'member_srl' => 4, 'module_srl' => 104, 'title' => 'URL', 'type' => 1, 'required' => 'Y', 'status' => 'Y', 'default_value' => NULL, 'values' => NULL, 'regdate' => 20120807160414, 'last_update' => 20120807160414),
@@ -93,7 +104,7 @@ class ProductTest extends Shop_Generic_Tests_DatabaseTestCase
 	public function testInsertProduct_ValidData()
 	{
 		// Create new Product object
-		$args = new Product();
+		$args = new SimpleProduct();
 		$args->module_srl = 201;
 		$args->member_srl = 4;
 		$args->product_type = "simple";
@@ -200,6 +211,90 @@ Patrioque conceptam in mea. Est ad ullum ceteros, pro quem accumsan appareat id,
 		$this->assertEquals("J. K. Rowling", $new_product->attributes[self::ATTRIBUTE_AUTHOR]);
 		$this->assertEquals(2003, $new_product->attributes[self::ATTRIBUTE_PUBLISH_YEAR]);
 	}
+
+	/**
+	 * Test get all products
+	 *
+	 * Method should return just products without parent_srl
+	 * Simple products should be SimpleProduct instances
+	 * Configurable products should be ConfigurableProduct instances with associated_products
+	 *
+	 * @return void
+	 */
+	public function testGetAllProducts()
+	{
+		/**
+		 * @var shopModel $shopModel
+		 */
+		$shopModel = getModel('shop');
+
+		$product_repository = $shopModel->getProductRepository();
+
+		$args = new stdClass();
+		$args->module_srl = 104;
+		$output = $product_repository->getProductList($args);
+
+		$products = $output->products;
+		$this->assertEquals(2, count($products));
+
+		foreach($products as $product)
+		{
+			$this->assertEquals(0, $product->parent_product_srl);
+
+			if($product->isConfigurable())
+			{
+				$this->assertTrue(is_a($product, 'ConfigurableProduct'));
+				$this->assertEquals(6, count($product->associated_products));
+
+				foreach($product->associated_products as $associated_product)
+				{
+					$this->assertTrue(is_a($associated_product, 'SimpleProduct'));
+				}
+			}
+			elseif($product->isSimple())
+			{
+				$this->assertTrue(is_a($product, 'SimpleProduct'));
+			}
+		}
+	}
+
+	/**
+	 * Test get all products by category
+	 */
+	public function testGetProductsListByCategory()
+	{
+		/**
+		 * @var shopModel $shopModel
+		 */
+		$shopModel = getModel('shop');
+
+		$product_repository = $shopModel->getProductRepository();
+
+		$args = new stdClass();
+		$args->module_srl = 104;
+		$args->category_srls = array(self::CATEGORY_TSHIRTS);
+		$output = $product_repository->getProductList($args);
+
+		$products = $output->products;
+		$this->assertEquals(1, count($products));
+
+		foreach($products as $product)
+		{
+			$this->assertEquals(0, $product->parent_product_srl);
+
+			$this->assertTrue($product->isConfigurable());
+			$this->assertTrue(is_a($product, 'ConfigurableProduct'));
+
+			$this->assertEquals(6, count($product->associated_products));
+
+			foreach($product->associated_products as $associated_product)
+			{
+				$this->assertTrue(is_a($associated_product, 'SimpleProduct'));
+			}
+		}
+
+	}
+
 
 
 }
