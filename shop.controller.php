@@ -670,6 +670,174 @@
 
             $returnUrl = getNotEncodedUrl('', 'vid', $vid, 'act', 'dispShopToolManagePaymentGateways');
             $this->setRedirectUrl($returnUrl);
+
+        }
+
+        /**
+         * Deletes the gateway folder and database entry
+         *
+         * @author Daniel Ionescu (dev@xpressengine.org)
+         */
+        public function procUpdateShopDeleteGateway() {
+
+            $name = Context::get('name');
+
+            if ($name != '') {
+
+                $baseDir = _XE_PATH_ . 'modules/shop/payment_gateways/';
+
+                /**
+                 * @var shopModel $shopModel
+                 */
+                $shopModel = getModel('shop');
+                $repository = $shopModel->getPaymentGatewayRepository();
+
+                $gateway = new PaymentGateway();
+                $gateway->name = $name;
+
+                $repository->deleteGateway($gateway);
+
+                $fullPath = $baseDir . $name;
+                if (!rmdir($fullPath)) {
+
+                    $this->setError($lang->unable_to_delete);
+
+                }
+
+            }
+
+            $returnUrl = getNotEncodedUrl('', 'vid', $vid, 'act', 'dispShopToolManagePaymentGateways');
+            $this->setRedirectUrl($returnUrl);
+
+        }
+
+        /**
+         * Uploads and installs a new payment gateway
+         *
+         * @author Daniel Ionescu (dev@xpressengine.org)
+         */
+        public function procShopUploadGateway() {
+
+            $baseDir = _XE_PATH_ . 'modules/shop/payment_gateways/';
+            $uploadedGateway = Context::get('uploadedPaymentGateway');
+            $fullName = $uploadedGateway['name'];
+            $name = explode('.',$uploadedGateway['name']);
+
+            if ($uploadedGateway->error) {
+
+                $this->setError('There was an error while uploading your file.');
+
+            } else {
+
+                $folderPath = $baseDir.$name[0];
+                $filePath = $baseDir.$name[0].'/'.$fullName;
+
+                if(is_dir($folderPath)) {
+
+                    $this->setMessage('There is already a directory called "' . $name[0] . '" under ./modules/shop/payment_gateways/. Please delete the directory and try again.','error');
+
+                } else {
+
+                    if (mkdir($folderPath)) {
+
+                        if (move_uploaded_file($uploadedGateway['tmp_name'], $filePath)) {
+
+                            $zip = new ZipArchive();
+                            $res = $zip->open($filePath);
+                            if ($res === true) {
+
+                                $zip->extractTo($folderPath);
+                                $zip->close();
+
+                                if (file_exists($filePath)) {
+                                    unlink($filePath);
+                                }
+
+                                /**
+                                 * @var shopModel $shopModel
+                                 */
+                                $shopModel = getModel('shop');
+                                $repository = $shopModel->getPaymentGatewayRepository();
+
+                                $pg = new PaymentGateway();
+                                $pg->name = $name[0];
+                                $pg->status = 1;
+                                $output = $repository->getGateway($pg);
+
+                                if ($output) {
+
+                                    $output = $repository->updatePaymentGatewayStatus($pg);
+
+                                    if ($output) {
+
+                                        $this->setMessage('An older installation of this gateway has been found. Reverting to old settings.','info');
+
+                                    }
+
+                                } else {
+
+                                    $output = $repository->insertPaymentGateway($pg);
+
+                                    if (!$output) {
+
+                                        $this->setMessage('An error occurred when inserting the payment gateway in the Database.','error');
+
+                                    }
+
+                                }
+
+                            } else {
+
+                                $this->setMessage('The ZIP archive seems to be corrupt','error');
+
+                            }
+
+                        } else {
+
+                            $this->setMessage('Unable to write in payment_gateways directory. Please set the appropriate permissions.','error');
+
+                        }
+
+                    } else {
+
+                        $this->setMessage('Unable to create gateway directory at '.$folderPath,'error');
+
+                    }
+
+                }
+
+            }
+
+            $returnUrl = getNotEncodedUrl('', 'vid', $vid, 'act', 'dispShopToolManagePaymentGateways');
+            $this->setRedirectUrl($returnUrl);
+
+        }
+
+        /**
+         * Sanitizes the payment gateway database
+         */
+        public function procSanitizeGateway() {
+
+            /**
+             * @var shopModel $shopModel
+             */
+            $shopModel = getModel('shop');
+            $repository = $shopModel->getPaymentGatewayRepository();
+
+            try {
+
+                $repository->sanitizeGateways();
+                $this->setMessage('Successfully sanitized gateway','info');
+
+            } catch (Exception $e) {
+
+                $this->setMessage('Unable to sanitize payment gateway table.','error');
+
+            }
+
+            $returnUrl = getNotEncodedUrl('', 'vid', $vid, 'act', 'dispShopToolManagePaymentGateways');
+            $this->setRedirectUrl($returnUrl);
+
         }
 
         // end region

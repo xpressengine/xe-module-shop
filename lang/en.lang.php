@@ -342,8 +342,12 @@
     $lang->confirm_cancel_comment = 'Would you like to cancel editing your comment?';
 
     // Payment gateway
-    $lang->no_gateways = 'No payment gateways seem to be installed. Please check that your ./modules/shop/payment_gateways folder actually contains some gateway instances.';
+    $lang->no_gateways = 'No payment gateways seem to be installed. Please check that your "./modules/shop/payment_gateways/" folder actually contains some gateway instances.';
     $lang->activate = 'Activate';
     $lang->deactivate = 'Deactivate';
+    $lang->gateway_settings = 'Settings';
+    $lang->upload_new_pg = 'Upload new payment gateway';
+    $lang->unable_to_delete = 'Unable to delete gateway folder';
+    $lang->sanitise_gateway = 'Sanitize gateway list';
 
 ?>

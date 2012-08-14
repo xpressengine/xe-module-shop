@@ -24,7 +24,7 @@
         /**
          * @brief Shop common init
          **/
-        public function initCommon($is_other_module = FALSE){
+        public function initCommon($is_other_module = false){
             if(!$this->checkXECoreVersion('1.4.3')) return $this->stop(sprintf(Context::getLang('msg_requried_version'),'1.4.3'));
 
             $oShopModel = getModel('shop');
@@ -73,7 +73,7 @@
         /**
          * @brief Shop init tool
          **/
-        public function initTool(&$oModule, $is_other_module = FALSE){
+        public function initTool(&$oModule, $is_other_module = false){
             if (!$oModule) $oModule = $this;
 
             $this->initCommon($is_other_module);
@@ -100,14 +100,14 @@
             if($_COOKIE['tclnb']) Context::addBodyClass('lnbClose');
             else Context::addBodyClass('lnbToggleOpen');
 
-            // set browser title 
+            // set browser title
             Context::setBrowserTitle($shop->get('browser_title') . ' - admin');
         }
 
         /**
          * @brief shop init service
          **/
-        public function initService(&$oModule, $is_other_module = FALSE, $isMobile = FALSE){
+        public function initService(&$oModule, $is_other_module = false, $isMobile = false){
             if (!$oModule) $oModule = $this;
 
             $oShopModel = getModel('shop');
@@ -138,7 +138,7 @@
 				}
 
 				$oModule->{$file_method}('shop');
-				Context::addCssFile($oModule->{$css_path_method}().'shop.css',TRUE,'all','',100);
+				Context::addCssFile($oModule->{$css_path_method}().'shop.css',true,'all','',100);
 			}
 
             Context::set('root_url', Context::getRequestUri());
@@ -149,7 +149,7 @@
             Context::set('shop_title', $this->shop->get('shop_title'));
 
 
-            // set browser title 
+            // set browser title
             Context::setBrowserTitle($this->shop->get('browser_title'));
         }
 
@@ -172,7 +172,7 @@
             if(!file_exists($cache_file) || filemtime($cache_file)+ 60*60 < time()) {
                 FileHandler::writeFile($cache_file,'');
 
-                if(__PROXY_SERVER__!==NULL) {
+                if(__PROXY_SERVER__!==null) {
                     $oRequest = new HTTP_Request(__PROXY_SERVER__);
                     $oRequest->setMethod('POST');
                     $oRequest->_timeout = $timeout;
@@ -204,7 +204,7 @@
                     if(!is_array($item)) $item = array($item);
 
                     foreach($item as $key => $val) {
-                        $obj = NULL;
+                        $obj = null;
                         $obj->title = $val->body;
                         $obj->date = $val->attrs->date;
                         $obj->url = $val->attrs->url;
@@ -356,10 +356,7 @@
          */
         public function dispShopToolAddAttribute()
         {
-			/**
-			 * @var shopModel $shopModel
-			 */
-			$shopModel = getModel('shop');
+            $shopModel = getModel('shop');
             $attributeRepository = $shopModel->getAttributeRepository();
             Context::set('types', $attributeRepository->getTypes(Context::get('lang')));
 
@@ -368,21 +365,13 @@
             $tree = $categoryRepository->getCategoriesTree($this->module_srl);
 
             // Prepare tree for display
-			$tree_config = new HtmlCategoryTreeConfig();
-			$tree_config->showCheckbox = TRUE;
-			$tree_config->checked = array();
-			$tree_config->checkboxesName = 'category_scope';
-			$HTML_tree = $tree->toHTML($tree_config);
-
-			Context::set('HTML_tree', $HTML_tree);
+            $flat_tree = $tree->toFlatStructure();
+            Context::set('flat_tree', $flat_tree);
         }
 
         public function dispShopToolEditAttribute()
         {
-			/**
-			 * @var shopModel #shopModel
-			 */
-			$shopModel = getModel('shop');
+            $shopModel = getModel('shop');
             $attributeRepository = $shopModel->getAttributeRepository();
             $srl = Context::get('attribute_srl');
             if (!$attribute = $attributeRepository->getAttributes(array($srl))) throw new Exception("Attribute doesn't exist");
@@ -394,13 +383,8 @@
             $tree = $categoryRepository->getCategoriesTree($this->module_srl);
 
             // Prepare tree for display
-			$tree_config = new HtmlCategoryTreeConfig();
-			$tree_config->showCheckbox = TRUE;
-			$tree_config->checked = $attribute->category_scope;
-			$tree_config->checkboxesName = 'category_name';
-			$HTML_tree = $tree->toHTML($tree_config);
-
-			Context::set('HTML_tree', $HTML_tree);
+            $flat_tree = $tree->toFlatStructure();
+            Context::set('flat_tree', $flat_tree);
 
             $this->setTemplateFile('AddAttribute');
         }
@@ -413,14 +397,7 @@
 
             $product_repository = $shopModel->getProductRepository();
             $module_srl = $this->module_info->module_srl;
-
-			$args = new stdClass();
-			$args->module_srl = $module_srl;
-
-			$page = Context::get('page');
-			if($page) $args->page = $page;
-
-            $output = $product_repository->getProductList($args);
+            $output = $product_repository->getProductList($module_srl);
             Context::set('product_list',$output->products);
 
 			$category_repository = $shopModel->getCategoryRepository();
@@ -440,13 +417,10 @@
         }
 
         /**
-     * @brief Shop display simple product add page
-     */
+         * @brief Shop display simple product add page
+         */
         public function dispShopToolAddProduct(){
-			/**
-			 * @var shopModel $shopModel
-			 */
-			$shopModel = getModel('shop');
+            $shopModel = getModel('shop');
 			$productRepository = $shopModel->getProductRepository();
 
 			// Retrieve product if exists
@@ -454,10 +428,6 @@
 			if($product_srl)
 			{
 				$product = $productRepository->getProduct($product_srl);
-				if($product->parent_product_srl) {
-					$parent_product = $productRepository->getProduct($product->parent_product_srl);
-					Context::set('parent_product',$parent_product);
-				}
 				Context::set('product_type',$product->product_type);
 			}
 			else
@@ -485,13 +455,10 @@
             $tree = $categoryRepository->getCategoriesTree($this->module_srl);
 
             // Prepare tree for display
-			$tree_config = new HtmlCategoryTreeConfig();
-			$tree_config->showCheckbox = TRUE;
-			$tree_config->checked = $product->categories;
-			$tree_config->checkboxesName = 'categories';
-			$HTML_tree = $tree->toHTML($tree_config);
+            $flat_tree = $tree->toFlatStructure();
+            Context::set('flat_tree', $flat_tree);
 
-			Context::set('HTML_tree', $HTML_tree);
+
         }
 
         /**
@@ -504,87 +471,13 @@
             Context::set('attributes',$output->attributes);
         }
 
-
-		/**
-		 * @brief Shop display associated products
-		 */
-		public function dispShopToolAddAssociatedProducts(){
-			$shopModel = getModel('shop');
-			$product_srl = Context::get('product_srl');
-			$productRepository = $shopModel->getProductRepository();
-			$product = $productRepository->getProduct($product_srl);
-			Context::set('product',$product);
-			$attributeRepository = $shopModel->getAttributeRepository();
-			$configurable_attributes = $attributeRepository->getAttributes($product->configurable_attributes);
-			if(count($product->configurable_attributes) == 1){
-				$values_combinations = explode('|',$configurable_attributes->values);
-			}else{
-				foreach($configurable_attributes as $conf_att){
-					$configurable_values[] = $conf_att->values;
-				}
-				$values_combinations = $attributeRepository->getValuesCombinations($configurable_values);
-			}
-			Context::set('values_combinations',$values_combinations);
-
-		}
-
         /**
          * @brief Shop home
          **/
         public function dispShop() {
-			/**
-			 * @var shopModel $shopModel
-			 */
-			$shopModel = getModel('shop');
-
-			// Categories left tree
-			// Retrieve existing categories
-			$categoryRepository = $shopModel->getCategoryRepository();
-			$tree = $categoryRepository->getCategoriesTree($this->module_srl);
-
-			// Prepare tree for display
-			$tree_config = new HtmlCategoryTreeConfig();
-			$tree_config->linkCategoryName = TRUE;
-			$tree_config->linkGetUrlParams = array('vid', $this->mid, 'act', 'dispShop');
-			$HTML_tree = $tree->toHTML($tree_config);
-			Context::set('HTML_tree', $HTML_tree);
-
-			// Current category details
-			$category_srl = Context::get('category_srl');
-			if($category_srl)
-			{
-				$current_category = $categoryRepository->getCategory($category_srl);
-				Context::set('current_category', $current_category);
-
-				$breadcrumbs_items = $categoryRepository->getCategoryParents($current_category);
-				Context::set('breadcrumbs_items', $breadcrumbs_items);
-			}
-
-
-			// Products list
-			$product_repository = $shopModel->getProductRepository();
-			try{
-				$args = new stdClass();
-				$args->module_srl = $this->module_srl;
-				$page = Context::get('page');
-				if($page) $args->page = $page;
-				$category_srl = Context::get('category_srl');
-				if($category_srl) $args->category_srls = array($category_srl);
-
-				$output = $product_repository->getProductList($args);
-				Context::set('products', $output->products);
-				Context::set('page_navigation', $output->page_navigation);
-			}
-			catch(Exception $e)
-			{
-				return new Object(-1, $e->getMessage());
-			}
         }
 
 		// region Product category
-		/**
-		 * Category management view (Admin)
-		 */
 		public function dispShopToolManageCategories()
 		{
 			// Retrieve existing categories
@@ -593,11 +486,8 @@
 			$tree = $repository->getCategoriesTree($this->module_srl);
 
 			// Prepare tree for display
-			$tree_config = new HtmlCategoryTreeConfig();
-			$tree_config->showManagingLinks = TRUE;
-			$HTML_tree = $tree->toHTML($tree_config);
-
-			Context::set('HTML_tree', $HTML_tree);
+			$flat_tree = $tree->toFlatStructure();
+			Context::set('flat_tree', $flat_tree);
 
 			// Initialize new empty Category object
 			require_once('libs/model/Category.php');
@@ -605,6 +495,11 @@
 			$category->module_srl = $this->module_srl;
 			Context::set('category', $category);
 		}
+
+		public function dispShopToolAddCategory()
+		{
+		}
+
 		// endregion
 
         // startregion Payment Gateways
@@ -615,26 +510,27 @@
         public function dispShopToolManagePaymentGateways()
         {
 
-            // base directory
-            $baseDir = dirname(__FILE__) . "/payment_gateways/";
-            $dirHandle = opendir($baseDir);
-
             // get gateways
+            /**
+             * @var shopModel $shopModel
+             */
             $shopModel = getModel('shop');
             $repository = $shopModel->getPaymentGatewayRepository();
-            $output = $repository->getAllGateways();
-            Context::set('pg',$output->data);
+            $gatewayManager = $shopModel->getPaymentGatewayManager();
+            $gatewayManager->allGateways = $gatewayManager->getAllGateways();
 
-            // Payment gateway list
-            $pg_dirs = array();
+            Context::set('gatewayManager',$gatewayManager);
 
-            while( $file = readdir($dirHandle) ) {
-                if(is_dir($baseDir.$file) && $file != '.' && $file != '..') {
-                    $pg_dirs[] = $file;
-                }
-            }
+        }
 
-            Context::set('pg_dirs',$pg_dirs);
+        /*
+         * Displays the payment method selection page
+         */
+        public function dispShopToolSelectPaymentMethod() {
+
+            $shopModel = getModel('shop');
+            $repository = $shopModel->getPaymentGatewayRepository();
+            //$repository->includeActiveGateways();
 
         }
 

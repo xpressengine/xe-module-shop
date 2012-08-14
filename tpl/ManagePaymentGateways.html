@@ -1,5 +1,28 @@
 <!--#include("_tool_header.html")-->
 
+<script type="text/javascript">
+
+    /**
+     * We iterate through all the active gateways settings
+     * links and make the settings collapsible.
+     */
+    jQuery(document).ready(function($){
+
+        $('.pg').each(function(){
+
+            $(this).click(function(e) {
+
+                e.preventDefault();
+                $(this).closest('td').next('td').children('.pgSettings').toggle('fast');
+
+            })
+
+        })
+
+    });
+
+</script>
+
 <div id="content">
 
     <div class="dashboardHeader">
@@ -16,44 +39,64 @@
                 <th scope="col">
                     <input type="checkbox" class="inputCheck" onclick="jQuery('input.boxlist').click()" />
                 </th>
+                <th scope="col">{$lang->gateway_settings}</th>
                 <th scope="col" class="title">{$lang->name}</th>
-                <th scope="col">{$lang->status}</th>
+                <th scope="col" class="center">{$lang->status}</th>
+                <th scope="col">{$lang->cmd_delete}</th>
             </tr>
         </thead>
         <tbody>
-        <!--@if(count($pg_dirs))-->
-            <form action="" method="post">
-                <!--@foreach($pg_dirs as $val)-->
-                    <input type="hidden" name="act" value="" />
-                    <tr>
-                        <td>
-                            <input type="checkbox" name="product_srl" value="{$product->product_srl}" class="inputCheck boxlist" />
-                        </td>
-                        <td>{$val}</td>
-                        <td>
-                            {@$flag = false;}
-                            <!--@if(count($pg))-->
-                                <!--@foreach($pg as $obj)-->
-                                    <!--@if($obj->name==$val && $obj->status)-->
-                                        {@$flag = true;}
-                                        <a href="{getUrl('act','procUpdateShopDeactivateGateway','name',$val)}">{$lang->deactivate}</a>
-                                    <!--@end-->
-                                <!--@end-->
-                            <!--@end-->
-                            <!--@if(!$flag)-->
-                                <a href="{getUrl('act','procUpdateShopActivateGateway','name',$val)}">{$lang->activate}</a>
-                            <!--@end-->
-                        </td>
-                    </tr>
-                <!--@end-->
-            </form>
+        <!--@if(count((array)$gatewayManager))-->
+            <!--@foreach($gatewayManager->allGateways as $obj)-->
+                <tr>
+                    <td>
+                        <input type="checkbox" name="product_srl" value="{$product->product_srl}" class="inputCheck boxlist" />
+                    </td>
+                    <td>
+                        <span class="btnGray medium"><a class="pg" href="#">{$lang->gateway_settings}</a></span>
+                    </td>
+                    <td>
+                        {$obj->name}
+                        <div class="pgSettings">
+                            {@$obj->loadAdminTemplate();}
+                        </div>
+                    </td>
+                    <td>
+                        <!--@if($obj->status)-->
+                            <a href="{getUrl('act','procUpdateShopDeactivateGateway','name',$obj->name)}">{$lang->deactivate}</a>
+                        <!--@else-->
+                            <a href="{getUrl('act','procUpdateShopActivateGateway','name',$obj->name)}">{$lang->activate}</a>
+                        <!--@end-->
+                    </td>
+                    <td>
+                        <a href="{getUrl('act','procUpdateShopDeleteGateway','name',$obj->name)}">{$lang->cmd_delete}</a>
+                    </td>
+                </tr>
+            <!--@end-->
         <!--@else-->
             <tr>
-                <td colspan="3">{$lang->no_gateways}</td>
+                <td colspan="4">{$lang->no_gateways}</td>
             </tr>
         <!--@end-->
         </tbody>
     </table>
+
+    <h4 class="dashboardH4">{$lang->upload_new_pg}</h4>
+
+    <form enctype="multipart/form-data" action="" method="post">
+        <input type="hidden" name="act" value="procShopUploadGateway" />
+        <input type="hidden" name="MAX_FILE_SIZE" value="100000" />
+        <p>
+            <label for="uploadedPaymentGateway">Choose a file to upload:</label>
+            <input id="uploadedPaymentGateway" name="uploadedPaymentGateway" type="file" />
+        </p>
+        <span class="btnGray medium"><input type="submit" value="Upload File" /></span>
+    </form>
+    <br />
+
+    <h4 class="dashboardH4">{$lang->sanitise_gateway}</h4>
+    <p><span class="btnGray medium"><a href="{getURL('act', 'procSanitizeGateway', 'vid', '$vid')}">{$lang->sanitise_gateway}</a></span></p>
+
 </div>
 
 <!-- Extension -->

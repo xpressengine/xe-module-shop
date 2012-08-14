@@ -1,0 +1,8 @@
+<query id="deleteGateway" action="delete">
+    <tables>
+        <table name="shop_payment_gateways" />
+    </tables>
+    <conditions>
+        <condition operation="equal" column="name" var="name" />
+    </conditions>
+</query>

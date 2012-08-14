@@ -57,6 +57,7 @@ class PaymentGatewayRepository extends BaseRepository
      * updates the status of a payment gateway (active=1/inactve=0)
      *
      * @author Daniel Ionescu (dev@xpressengine.org)
+     * @param  $pg
      * @throws exception
      * @return boolean
      */
@@ -78,6 +79,7 @@ class PaymentGatewayRepository extends BaseRepository
      * Inserts a new payment gateway
      *
      * @author Daniel Ionescu (dev@xpressengine.org)
+     * @param  args
      * @throws exception
      * @return boolean
      */
@@ -119,40 +121,72 @@ class PaymentGatewayRepository extends BaseRepository
     }
 
     /**
-     * Includes active payment gateways
+     * Inserts a new payment gateway
      *
      * @author Daniel Ionescu (dev@xpressengine.org)
+     * @param  $args
      * @throws exception
      * @return boolean
      */
-    public function includeActiveGateways() {
+    public function deleteGateway($args) {
 
-        $paymentGateways = new stdClass();
+        $output = executeQuery('shop.deleteGateway',$args);
 
-        $baseDir = _XE_PATH_ . 'modules/shop/payment_gateways/';
-        $activeGateways = $this->getActivePaymentGateways();
+        if (!$output->toBool()) {
 
-        if ($activeGateways) {
+            throw new Exception($output->getMessage(), $output->getError());
 
-            foreach ($activeGateways as $pg) {
+        }
 
-                // load gateway class
-                $classPath = $baseDir . $pg->name . '/' . $pg->name . '.php';
+        return $output->data;
 
-                if (file_exists($classPath)) {
+    }
 
-                    require_once($classPath);
+    /**
+     * Deletes payment gateways from DB if they do not have a folder with a corresponding name
+     *
+     * @author Daniel Ionescu (dev@xpressengine.org)
+     * @param  none
+     */
+    public function sanitizeGateways() {
 
-                    $className = $pg->name.'Gateway';
-                    $paymentGateways->{$pg->name} = new $className($pg);
+        $pgByDatabase = $this->getAllGateways();
 
-                }
+        $pgByFolders = $this->getPaymentGatewaysByFolders();
+
+        foreach ($pgByDatabase as $obj) {
+
+            if (!in_array($obj->name,$pgByFolders)) {
+
+                $this->deleteGateway($obj);
 
             }
 
         }
 
-        return true;
+    }
+
+    /**
+     * Gets payment gateway by folders
+     *
+     * @author Daniel Ionescu (dev@xpressengine.org)
+     * @param none
+     * @throws exception
+     * @return array
+     */
+    public function getPaymentGatewaysByFolders() {
+
+        $paymentGateways = array();
+        $baseDir = _XE_PATH_ . 'modules/shop/payment_gateways/';
+        $dirHandle = opendir($baseDir);
+
+        while( $file = readdir($dirHandle) ) {
+            if(is_dir($baseDir.$file) && $file != '.' && $file != '..') {
+                $paymentGateways[] = strtolower($file);
+            }
+        }
+
+        return $paymentGateways;
 
     }
 

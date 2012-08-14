@@ -44,6 +44,9 @@
         <permission action="dispShopToolManagePaymentGateways" target="manager" />
         <permission action="procUpdateShopActivateGateway" target="manager" />
         <permission action="procUpdateShopDeactivateGateway" target="manager" />
+        <permission action="procUpdateShopDeleteGateway" target="manager" />
+        <permission action="procShopUploadGateway" target="manager" />
+        <permission action="procSanitizeGateway" target="manager" />
 
     </permissions>
     <actions>
@@ -110,6 +113,9 @@
         <action name="dispShopToolSelectPaymentMethod" type="view" />
         <action name="procUpdateShopActivateGateway" type="controller" />
         <action name="procUpdateShopDeactivateGateway" type="controller" />
+        <action name="procUpdateShopDeleteGateway" type="controller" />
+        <action name="procShopUploadGateway" type="controller" />
+        <action name="procSanitizeGateway" type="controller" />
 
     </actions>
 </module>

@@ -254,6 +254,18 @@ class shopModel extends shop
         return new PaymentGatewayRepository();
     }
 
+    /**
+     * Returns an instance of the Product Category Manager
+     *
+     * @author Daniel Ionescu (dev@xpressengine.org)
+     * @return PaymentGatewayManager
+     */
+    function getPaymentGatewayManager()
+    {
+        require_once dirname(__FILE__) . '/libs/model/PaymentGatewayManager.php';
+        return new PaymentGatewayManager();
+    }
+
 }
 
 ?>
