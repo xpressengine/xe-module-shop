@@ -4,12 +4,8 @@
     </customrules>
     <fields>
         <field name="title" required="true" length="3:250" />
-        <field name="description" required="true" />
-        <field name="short_description" required="true"  />
-        <field name="friendly_url" required="true"  />
         <field name="in_stock" required="true"  />
         <field name="status" required="true"  />
         <field name="sku" required="true"  />
-        <field name="price" required="true"  />
     </fields>
 </ruleset>

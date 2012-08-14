@@ -1,0 +1,19 @@
+<script type="text/javascript">
+    jQuery(document).ready(function($){
+	    $("#associated_products fieldset").hide();
+
+		$("#associated_products legend").click(function(){
+		$("#associated_products fieldset").slideToggle();
+		});
+	});
+</script>
+
+<style type="text/css">
+
+</style>
+<fieldset id="associated_products" class="visualFieldset">
+	<legend class="visualLabel" title="Click to show or hide associated products">Associated products</legend>
+
+	<include target="AdminProductsList" />
+
+</fieldset>

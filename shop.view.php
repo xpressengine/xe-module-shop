@@ -422,13 +422,12 @@ class shopView extends shop {
 
 		$output = $product_repository->getProductList($args);
 		Context::set('product_list',$output->products);
+		Context::set('page_navigation',$output->page_navigation);
 
 		$category_repository = $shopModel->getCategoryRepository();
 		$tree = $category_repository->getCategoriesTree($module_srl);
 		$flat_tree = $tree->toFlatStructure();
 		Context::set('category_list', $flat_tree);
-
-		Context::set('page_navigation',$output->page_navigation);
 	}
 
 	/**
@@ -460,6 +459,12 @@ class shopView extends shop {
 			if($product->parent_product_srl) {
 				$parent_product = $productRepository->getProduct($product->parent_product_srl);
 				Context::set('parent_product',$parent_product);
+			}
+
+			// Display associated products for Configurable products
+			if($product->isConfigurable())
+			{
+				Context::set('product_list',$product->associated_products);
 			}
 		}
 		else

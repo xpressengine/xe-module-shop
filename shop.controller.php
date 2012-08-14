@@ -178,7 +178,15 @@
 					{
 						$this->setMessage("Updated configurable product successfull");
 					}
-					$returnUrl = getNotEncodedUrl('', 'act', 'dispShopToolManageProducts');
+
+					if($product->isSimple() && $product->parent_product_srl)
+					{
+						$returnUrl = getNotEncodedUrl('', 'act', 'dispShopToolEditProduct', 'product_srl', $product->parent_product_srl);
+					}
+					else
+					{
+						$returnUrl = getNotEncodedUrl('', 'act', 'dispShopToolManageProducts');
+					}
                 }
             }
             catch(Exception $e)

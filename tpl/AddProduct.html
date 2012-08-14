@@ -25,6 +25,10 @@
     </div>
     <!-- /contentHeader -->
         <div class="wOption">
+			<!--@if($product->product_srl && $product->isConfigurable())-->
+				<include target="AssociatedProducts.html" />
+			<!--@end-->
+
             <fieldset class="visualFieldset">
                 <!--@if(!$product->product_srl)-->
                     <!--@if($product->isConfigurable())-->
@@ -45,6 +49,9 @@
 
 				<!--@if(isset($product->product_srl))-->
 				<input type="hidden" name="product_srl" value="{$product->product_srl}" />
+				<!--@endif-->
+				<!--@if(isset($product->parent_product_srl))-->
+				<input type="hidden" name="parent_product_srl" value="{$product->parent_product_srl}" />
 				<!--@endif-->
 
 				<!--@if($product->isConfigurable())-->

@@ -270,6 +270,23 @@ class ProductRepository extends BaseRepository
 		else
 		{
 			$product = new ConfigurableProduct($output->data);
+
+			// Get associated products
+			$associated_products_args = new stdClass();
+			$associated_products_args->configurable_product_srls = array($product->product_srl);
+
+			$associated_products_output = executeQueryArray('shop.getAssociatedProducts', $associated_products_args);
+			if(!$associated_products_output->toBool())
+			{
+				throw new Exception($associated_products_output->getMessage());
+			}
+
+			$associated_products = $associated_products_output->data;
+			foreach($associated_products as $associated_product)
+			{
+				$product_object = new SimpleProduct($associated_product);
+				$product->associated_products[] = $product_object;
+			}
 		}
         $this->getProductCategories($product);
 		$this->getProductAttributes($product);
