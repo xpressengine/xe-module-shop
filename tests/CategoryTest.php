@@ -1,7 +1,7 @@
 <?php
 
-require dirname(__FILE__) . '/lib/Bootstrap.php';
-require dirname(__FILE__) . "/lib/Shop_Generic_Tests.class.php";
+require_once dirname(__FILE__) . '/lib/Bootstrap.php';
+require_once dirname(__FILE__) . "/lib/Shop_Generic_Tests.class.php";
 
 require_once dirname(__FILE__) . '/../libs/model/Category.php';
 
@@ -368,20 +368,6 @@ class CategoryTest extends Shop_Generic_Tests_DatabaseTestCase
 		$this->assertEquals(1, $category->product_count);
 
 
-	}
-
-
-	/**
-	 * Clean-up testing environment after every test method
-	 *
-	 * @return void
-	 */
-	public function tearDown()
-	{
-		// Revert changes: delete the product categories added previously
-		Database::executeNonQuery("DELETE FROM xe_shop_categories WHERE category_srl IN (1000, 1002, 1004, 1006, 1008)");
-
-		parent::tearDown();
 	}
 }
 

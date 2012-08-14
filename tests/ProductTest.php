@@ -1,7 +1,7 @@
 <?php
 
 require_once "lib/Shop_Generic_Tests.class.php";
-require dirname(__FILE__) . '/lib/Bootstrap.php';
+require_once dirname(__FILE__) . '/lib/Bootstrap.php';
 
 require_once dirname(__FILE__) . '/../libs/repositories/ProductRepository.php';
 
@@ -93,7 +93,7 @@ class ProductTest extends Shop_Generic_Tests_DatabaseTestCase
 	public function testInsertProduct_ValidData()
 	{
 		// Create new Product object
-		$args = new stdClass();
+		$args = new Product();
 		$args->module_srl = 201;
 		$args->member_srl = 4;
 		$args->product_type = "simple";
@@ -139,10 +139,8 @@ Patrioque conceptam in mea. Est ad ullum ceteros, pro quem accumsan appareat id,
 			$this->assertEquals($args->in_stock, $product->in_stock);
 			$this->assertNotNull($product->regdate);
 			$this->assertNotNull($product->last_update);
-
-			// Delete product we just added after test is finished
-			Database::executeNonQuery("DELETE FROM xe_shop_products WHERE product_srl = $product_srl");
-		} catch(Exception $e)
+		}
+		catch(Exception $e)
 		{
 			$this->fail($e->getMessage());
 		}

@@ -1,6 +1,6 @@
 <?php
 require_once "lib/Shop_Generic_Tests.class.php";
-require dirname(__FILE__) . '/lib/Bootstrap.php';
+require_once dirname(__FILE__) . '/lib/Bootstrap.php';
 require_once dirname(__FILE__) . '/../libs/repositories/AttributeRepository.php';
 
 class AttributeTest extends Shop_Generic_Tests_DatabaseTestCase
@@ -15,26 +15,28 @@ class AttributeTest extends Shop_Generic_Tests_DatabaseTestCase
                 array(
                     'attribute_srl' => 1405,
                     'member_srl'    => 7,
+					'module_srl'	=> 13,
                     'title'         => 'hehe',
                     'type'          => 'select',
                     'required'      => 'Y',
                     'status'        => 'Y',
                     'values'        => 'sa|b|cas',
                     'default_value' => 'sa',
-                    'regdate'       => '2010-04-24 17:15:23',
-                    'last_update'   => '2010-04-24 19:15:23'
+                    'regdate'       => '20100424171523',
+                    'last_update'   => '20100424191523'
                 ),
                 array(
                     'attribute_srl' => 1406,
                     'member_srl'    => 7,
+					'module_srl'	=> 13,
                     'title'         => 'trolo',
                     'type'          => 'select',
                     'required'      => 'Y',
                     'status'        => 'Y',
                     'values'        => 'be|he|he2',
                     'default_value' => 'he',
-                    'regdate'       => '2010-04-24 12:15:13',
-                    'last_update'   => '2010-04-24 14:14:12'
+                    'regdate'       => '20100424121513',
+                    'last_update'   => '20100424141412'
                 )
             )
         ));
@@ -43,22 +45,26 @@ class AttributeTest extends Shop_Generic_Tests_DatabaseTestCase
     public function testAddEntry()
     {
         $this->assertEquals(2, $this->getConnection()->getRowCount('xe_shop_attributes'), "First count");
-        $model = getModel('shop');
-        $model = $model->getAttributesModel();
+
+		/**
+		 * @var shopModel $model
+		 */
+		$model = getModel('shop');
+        $model = $model->getAttributeRepository();
         $attribute = new Attribute((object) array(
-            'attribute_srl' => 1412,
             'member_srl'    => 7,
+			'module_srl'	=> 9,
             'title'         => 'yoyo',
             'type'          => 'select',
             'required'      => 'Y',
             'status'        => 'Y',
             'values'        => 'a|b|c',
             'default_value' => 'c',
-            'regdate'       => '2010-04-24 12:15:13',
-            'last_update'   => '2010-04-24 14:14:12'
+            'regdate'       => '20100424121513',
+            'last_update'   => '20100424141412'
         ));
-        $attribute->save();
-        $this->assertEquals(2, $this->getConnection()->getRowCount('xe_shop_attributes'), "Insert failed");
+		$model->insertAttribute($attribute);
+        $this->assertEquals(3, $this->getConnection()->getRowCount('xe_shop_attributes'), "Insert failed");
     }
 
 }

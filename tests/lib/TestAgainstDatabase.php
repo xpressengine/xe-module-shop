@@ -14,12 +14,6 @@ abstract class TestAgainstDatabase extends PHPUnit_Extensions_Database_TestCase
 	protected $backupStaticAttributes = FALSE;
 	protected $preserveGlobalState = FALSE;
 
-	public static function setUpBeforeClass()
-	{
-		// remove cache dir
-		FileHandler::removeDir(_XE_PATH_ . 'files/cache');
-	}
-
 	/**
 	 * Prepare runtime context - tell DB class about current db connection info
 	 *
