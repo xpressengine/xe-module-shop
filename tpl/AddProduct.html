@@ -7,13 +7,13 @@
     <!-- contentHeader -->
     <div class="contentHeader postListHeader">
         <!--@if(!$product->product_srl)-->
-            <!--@if($product_type == 'configurable')-->
+            <!--@if($product->isConfigurable())-->
                 <h3 class="h3">Add configurable product</h3>
             <!--@else-->
                 <h3 class="h3">Add simple product</h3>
             <!--@endif-->
         <!--@else-->
-            <!--@if($product_type == 'configurable')-->
+            <!--@if($product->isConfigurable())-->
                 <h3 class="h3">Edit configurable product</h3>
             <!--@else-->
                 <h3 class="h3">Edit simple product</h3>
@@ -29,12 +29,12 @@
         <!--@if(isset($product->product_srl))-->
         <input type="hidden" name="product_srl" value="{$product->product_srl}" />
         <!--@endif-->
-        <!--@if($product_type == 'configurable')-->
+        <!--@if($product->isConfigurable())-->
             <input type="hidden" name="product_type" value="configurable" />
         <!--@else-->
             <input type="hidden" name="product_type" value="simple" />
         <!--@endif-->
-        <!--@if($product_type == 'configurable')-->
+        <!--@if($product->isConfigurable())-->
             <!--@foreach($configurable_attributes as $conf_attribute)-->
                 <input type="hidden" name="configurable_attributes[]" value="{$conf_attribute}" />
             <!--@end-->
@@ -42,13 +42,13 @@
         <div class="wOption">
             <fieldset class="visualFieldset">
                 <!--@if(!$product->product_srl)-->
-                    <!--@if($product_type == 'configurable')-->
+                    <!--@if($product->isConfigurable())-->
                         <legend class="visualLabel">Add configurable product</legend>
                     <!--@else-->
                         <legend class="visualLabel">Add simple product</legend>
                     <!--@endif-->
                 <!--@else-->
-                    <!--@if($product_type == 'configurable')-->
+                    <!--@if($product->isConfigurable())-->
                         <legend class="visualLabel">Editconfigurable product</legend>
                     <!--@else-->
                         <legend class="visualLabel">Edit simple product</legend>
@@ -167,7 +167,7 @@
                         </td>
                     </tr>
                     <!--@endif-->
-                    <!--@if($product_type != 'configurable')-->
+                    <!--@if(!$product->isConfigurable())-->
                     <tr>
                         <th scope="row">
                             <label for="qty">{$lang->qty}</label>
@@ -206,7 +206,7 @@
                         </td>
                     </tr>
                     <!--@endif-->
-                    <!--@if($product_type != 'configurable')-->
+                    <!--@if(!$product->isConfigurable())-->
                         <!--@foreach($attributes_list as $attribute)-->
     
                         <tr

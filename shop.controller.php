@@ -142,22 +142,42 @@
             $args->member_srl = $logged_info->member_srl;
             $args->module_srl = $this->module_info->module_srl;
 
-            $product = new SimpleProduct($args);
+			if($args->product_type == 'simple')
+			{
+				$product = new SimpleProduct($args);
+			}
+			else
+			{
+				$product = new ConfigurableProduct($args);
+			}
+
             try
             {
                 if($product->product_srl === NULL)
                 {
                     $product_srl = $repository->insertProduct($product);
-					if($product->product_type == 'simple') $this->setMessage("Saved simple product successfull");
-					else $this->setMessage("Saved configurable product successfull");
-					if($product->product_type == 'simple') $returnUrl = getNotEncodedUrl('', 'act', 'dispShopToolManageProducts');
-					else $returnUrl = getNotEncodedUrl('', 'act', 'dispShopToolAddAssociatedProducts','product_srl',$product->product_srl);
+					if($product->isSimple())
+					{
+						$this->setMessage("Saved simple product successfull");
+						$returnUrl = getNotEncodedUrl('', 'act', 'dispShopToolManageProducts');
+					}
+					else
+					{
+						$this->setMessage("Saved configurable product successfull");
+						$returnUrl = getNotEncodedUrl('', 'act', 'dispShopToolAddAssociatedProducts','product_srl',$product->product_srl);
+					}
                 }
                 else
                 {
                     $repository->updateProduct($product);
-					if($product->product_type == 'simple') $this->setMessage("Updated simple product successfull");
-					else $this->setMessage("Updated configurable product successfull");
+					if($product->isSimple())
+					{
+						$this->setMessage("Updated simple product successfull");
+					}
+					else
+					{
+						$this->setMessage("Updated configurable product successfull");
+					}
 					$returnUrl = getNotEncodedUrl('', 'act', 'dispShopToolManageProducts');
                 }
             }
@@ -174,6 +194,9 @@
 		* @author Dan Dragan (dev@xpressengine.org)
 		*/
 		public function procShopToolInsertAssociatedProducts(){
+			/**
+			 * @var shopModel $shopModel
+			 */
 			$shopModel = getModel('shop');
 			$productRepository = $shopModel->getProductRepository();
 			$args = Context::getRequestVars();
@@ -744,7 +767,7 @@
 
                             $zip = new ZipArchive();
                             $res = $zip->open($filePath);
-                            if ($res === true) {
+                            if ($res === TRUE) {
 
                                 $zip->extractTo($folderPath);
                                 $zip->close();

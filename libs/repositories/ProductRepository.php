@@ -263,7 +263,14 @@ class ProductRepository extends BaseRepository
 			throw new Exception($output->getMessage(), $output->getError());
 		}
 
-		$product = new SimpleProduct($output->data);
+		if($output->data->product_type == 'simple')
+		{
+			$product = new SimpleProduct($output->data);
+		}
+		else
+		{
+			$product = new ConfigurableProduct($output->data);
+		}
         $this->getProductCategories($product);
 		$this->getProductAttributes($product);
 		return $product;

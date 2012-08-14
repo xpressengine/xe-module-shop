@@ -443,6 +443,9 @@ class shopView extends shop {
 	 * @brief Shop display simple product add page
 	 */
 	public function dispShopToolAddProduct(){
+		$args = Context::getRequestVars();
+		if(isset($args->configurable_attributes)) Context::set('configurable_attributes',$args->configurable_attributes);
+
 		/**
 		 * @var shopModel $shopModel
 		 */
@@ -458,11 +461,17 @@ class shopView extends shop {
 				$parent_product = $productRepository->getProduct($product->parent_product_srl);
 				Context::set('parent_product',$parent_product);
 			}
-			Context::set('product_type',$product->product_type);
 		}
 		else
 		{
-			$product = new Product();
+			if($args->configurable_attributes)
+			{
+				$product = new ConfigurableProduct();
+			}
+			else
+			{
+				$product = new SimpleProduct();
+			}
 		}
 		Context::set('product',$product);
 
@@ -475,11 +484,6 @@ class shopView extends shop {
 		}
 		Context::set('attributes_list', $output->attributes);
 
-		$args = Context::getRequestVars();
-		//$attributeRepository = $shopModel->getAttributeRepository();
-		//$attributes = $attributeRepository->getAttributes($args->configurable_attributes);
-		if(isset($args->product_type)) Context::set('product_type',$args->product_type);
-		if(isset($args->configurable_attributes)) Context::set('configurable_attributes',$args->configurable_attributes);
 		// Retrieve existing categories
 		$categoryRepository = $shopModel->getCategoryRepository();
 		$tree = $categoryRepository->getCategoriesTree($this->module_srl);

@@ -95,6 +95,11 @@ abstract class Product extends BaseItem
  */
 class SimpleProduct extends Product
 {
+	public function __construct($args = null)
+	{
+		parent::__construct($args);
+		$this->product_type = 'simple';
+	}
 
 }
 
@@ -105,6 +110,11 @@ class ConfigurableProduct extends Product
 {
 	public $associated_products = array();
 
+	public function __construct($args = null)
+	{
+		parent::__construct($args);
+		$this->product_type = 'configurable';
+	}
 }
 
 /* End of file Product.class.php */
