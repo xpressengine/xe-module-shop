@@ -14,4 +14,13 @@ class Cart extends BaseItem
         $regdate,
         $last_update;
 
+    public function save()
+    {
+        /* @var shopModel $model */
+        $model = getModel('shop');
+        /* @var CartRepository $repo */
+        $repo = $model->getCartRepository();
+        return $repo->insert($this);
+    }
+
 }

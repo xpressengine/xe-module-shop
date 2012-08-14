@@ -21,7 +21,7 @@ class Attribute extends BaseItem
     public function save()
     {
         $model = getModel('shop'); /* @var shopModel $model */
-        $model->getAttributeRepository()->insertAttribute($this);
+        return $model->getAttributeRepository()->insertAttribute($this);
     }
 
     public function getType($lang)

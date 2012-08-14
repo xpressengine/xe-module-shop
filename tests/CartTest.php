@@ -43,7 +43,6 @@ class CartTest extends Shop_Generic_Tests_DatabaseTestCase
         /* @var shopModel $model */
         $model->getCartRepository();
         $cart = new Cart(array(
-            'cart_srl'      => 3,
             'module_srl'    => 307,
             'member_srl'    => null,
             'guest_srl'     => 14,
@@ -53,7 +52,7 @@ class CartTest extends Shop_Generic_Tests_DatabaseTestCase
             'last_update'   => '20100424192420'
         ));
         $cart->save();
-        $this->assertEquals(2, $this->getConnection()->getRowCount('xe_shop_attributes'), "Insert failed");
+        $this->assertEquals(2, $this->getConnection()->getRowCount('xe_shop_cart'), "Insert failed");
     }
 
 }
