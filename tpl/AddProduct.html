@@ -24,21 +24,6 @@
         <p>{$XE_VALIDATOR_MESSAGE}</p>
     </div>
     <!-- /contentHeader -->
-    <form action="./" method="post" ruleset="insert_product" class="" enctype="multipart/form-data" >
-        <input type="hidden" name="act" value="procShopToolInsertProduct" />
-        <!--@if(isset($product->product_srl))-->
-        <input type="hidden" name="product_srl" value="{$product->product_srl}" />
-        <!--@endif-->
-        <!--@if($product->isConfigurable())-->
-            <input type="hidden" name="product_type" value="configurable" />
-        <!--@else-->
-            <input type="hidden" name="product_type" value="simple" />
-        <!--@endif-->
-        <!--@if($product->isConfigurable())-->
-            <!--@foreach($configurable_attributes as $conf_attribute)-->
-                <input type="hidden" name="configurable_attributes[]" value="{$conf_attribute}" />
-            <!--@end-->
-        <!--@endif-->
         <div class="wOption">
             <fieldset class="visualFieldset">
                 <!--@if(!$product->product_srl)-->
@@ -54,6 +39,22 @@
                         <legend class="visualLabel">Edit simple product</legend>
                     <!--@endif-->
                 <!--@endif-->
+
+				<form action="./" method="post" ruleset="insert_product" class="" enctype="multipart/form-data" >
+				<input type="hidden" name="act" value="procShopToolInsertProduct" />
+
+				<!--@if(isset($product->product_srl))-->
+				<input type="hidden" name="product_srl" value="{$product->product_srl}" />
+				<!--@endif-->
+
+				<!--@if($product->isConfigurable())-->
+				<input type="hidden" name="product_type" value="configurable" />
+				<!--@foreach($configurable_attributes as $conf_attribute)-->
+				<input type="hidden" name="configurable_attributes[]" value="{$conf_attribute}" />
+				<!--@end-->
+				<!--@else-->
+				<input type="hidden" name="product_type" value="simple" />
+				<!--@endif-->
 
                 <table border="1" cellspacing="0" class="tableData">
                     <!--@if($product->parent_product_srl)-->
@@ -263,10 +264,9 @@
                         </td>
                     </tr>
                 </table>
-
+				</form>
             </fieldset>
         </div>
-    </form>
 
 </div>
 <!-- /Content -->
