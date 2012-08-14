@@ -66,7 +66,7 @@ class AttributeRepository extends BaseRepository
     public function updateAttribute(Attribute $attribute)
     {
         if (!$attribute->attribute_srl) throw new Exception('Target srl must be specified');
-        if(count($attribute->values ) == 0) unset($attribute->values);
+        if (count($attribute->values ) == 0) unset($attribute->values);
         $output = executeQuery('shop.updateAttribute', $attribute);
         if (!$output->toBool()) throw new Exception($output->getMessage(), $output->getError());
         else $this->updateAttributeScope($attribute);

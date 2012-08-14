@@ -20,7 +20,8 @@ class Attribute extends BaseItem
 
     public function save()
     {
-        AttributeRepository::insertAttribute($this);
+        $model = getModel('shop'); /* @var shopModel $model */
+        $model->getAttributeRepository()->insertAttribute($this);
     }
 
     public function getType($lang)

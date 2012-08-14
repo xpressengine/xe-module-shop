@@ -148,3 +148,11 @@ img{border:0}
     display: block;
     clear: both;
 }
+
+#cart
+{
+    display: inline-block;
+    background-color: #b5ff49;
+    padding: 5px 10px;
+    border: 1px solid #4f4c69;
+}

@@ -1,26 +1,26 @@
 <div id="container">
 
 <div id="top_menu">
-
-<!--@if($logged_info)-->
-<span>Welcome {$logged_info->user_id}!</span>
-<!--@end-->
-
-<a href="{$admin_url}" accesskey="A">Admin Page</a>
-<a href="{getURL('act','dispShopToolSelectPaymentMethod')}">Payment test page</a>
+    <include target="cart_small.html"/>
+    <!--@if($logged_info)-->
+    <span>Welcome {$logged_info->user_id}!</span>
+    <!--@end-->
+    <a href="{$admin_url}" accesskey="A">Admin Page</a>
+    <a href="{getURL('act','dispShopToolSelectPaymentMethod')}">Payment test page</a>
 </div>
 
 <include target="breadcrumbs.html" />
 
 <div id="top_links">
-<a href=="#">My Account</a>
-<a href=="#">Cart</a>
-<a href=="#">Support</a>
 
-<form>
-<input type="text" name="search" value=""/>
-<input type="submit" value="Search"/>
-</form>
+    <a href="#">My Account</a>
+    <a href="#">Cart</a>
+    <a href="#">Support</a>
+
+    <form>
+        <input type="text" name="search" value=""/>
+        <input type="submit" value="Search"/>
+    </form>
 </div>
 
 <div class="clear"/>

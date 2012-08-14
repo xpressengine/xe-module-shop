@@ -27,14 +27,15 @@ class shopModel extends shop
 			return new ShopInfo();
 		}
 
-		if(!$member_srl)
+        $args = new stdClass();
+        if(!$member_srl)
 		{
 			$logged_info = Context::get('logged_info');
 			$args->member_srl = $logged_info->member_srl;
 		}
 		else
 		{
-			$args->member_srl = $member_srl;
+            $args->member_srl = $member_srl;
 		}
 
 		$output = executeQueryArray('shop.getMemberShop', $args);
@@ -115,7 +116,8 @@ class shopModel extends shop
 			return NULL;
 		}
 
-		$args->member_srl = $member_srl;
+        $args = new stdClass();
+        $args->member_srl = $member_srl;
 		$output = executeQuery('shop.getShopCount', $args);
 
 		return $output->data->count;
@@ -212,6 +214,7 @@ class shopModel extends shop
      * Returns an instance of the Product repository
      *
      * @author Dan Dragan(dev@xpressengine.org)
+     * @return ProductRepository
      */
     function getProductRepository()
     {
@@ -223,6 +226,7 @@ class shopModel extends shop
      * Returns an instance of the Attribute repository
      *
      * @author Dan Dragan(dev@xpressengine.org)
+     * @return AttributeRepository
      */
     function getAttributeRepository()
     {
@@ -243,7 +247,7 @@ class shopModel extends shop
 	}
 
     /**
-     * Returns an instance of the Product Category repository
+     * Returns an instance of the Payment Gateways repository
      *
      * @author Daniel Ionescu (dev@xpressengine.org)
      * @return PaymentGatewayRepository
@@ -266,6 +270,16 @@ class shopModel extends shop
         return new PaymentGatewayManager();
     }
 
-}
+    /**
+     * Returns an instance of the Cart repository
+     *
+     * @author Florin Ercus (dev@xpressengine.org)
+     * @return CartRepository
+     */
+    function getCartRepository()
+    {
+        require_once dirname(__FILE__) . '/libs/repositories/CartRepository.php';
+        return new CartRepository();
+    }
 
-?>
+}
