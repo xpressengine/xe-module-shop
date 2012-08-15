@@ -110,7 +110,7 @@
                         </th>
                         <td class="title">
                             <div class="fItem">
-                                <label class="iLabel" for="sku">{$lang->about_images}</label>
+                                <label class="iLabel" for="filesToUpload">{$lang->about_images}</label>
                                 <input name="filesToUpload[]" id="filesToUpload" type="file" multiple="" onchange="makeFileList();"/>
                                 <ul id="fileList" style="list-style:none;"></ul>
                             </div>
@@ -216,7 +216,7 @@
                     <!--@endif-->
                     <!--@if(!$product->isConfigurable())-->
                         <!--@foreach($attributes_list as $attribute)-->
-    
+
                         <tr
                             <!--@if((count($attribute->category_scope) > 0 && count(array_intersect($product->categories, $attribute->category_scope)) === 0) || (isset($parent_product) && in_array($attribute->attribute_srl,$parent_product->configurable_attributes)))-->
                                 style="display:none"
@@ -298,6 +298,15 @@
         var list = document.getElementById('fileList');
         if (browserName=="Microsoft Internet Explorer") {
             index++;
+            if(index == 1) var currentinput = input;
+            else var currentinput = document.getElementById('filesToUpload'+(index-1));
+            var newfileuploadinput = jQuery(currentinput).clone(true);
+            jQuery(newfileuploadinput).removeAttr("id");
+            jQuery(newfileuploadinput).attr('id', 'filesToUpload'+index);
+            jQuery(currentinput).hide();
+            jQuery(newfileuploadinput).insertAfter(currentinput);
+
+
             var li = document.createElement('li');
             var checkbox = document.createElement('input');
             checkbox.type = "radio";
@@ -308,7 +317,7 @@
             jQuery(list).append(li);
 
 
-            var elem = input.value.split("\\");
+            var elem = currentinput.value.split("\\");
             var filename = elem[elem.length-1];
             li.innerHTML = outerHTML(checkbox) + 'File ' + index + ':  ' + filename;
 
