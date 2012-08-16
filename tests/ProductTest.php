@@ -73,7 +73,13 @@ class ProductTest extends Shop_Generic_Tests_DatabaseTestCase
 				array('product_srl' => self::PRODUCT, 'category_srl' => self::CATEGORY_PHOTOGRAPHY),
 				array('product_srl' => 297, 'category_srl' => self::CATEGORY_TSHIRTS),
 				array('product_srl' => 304, 'category_srl' => self::CATEGORY_BOOKS),
-				array('product_srl' => 304, 'category_srl' => self::CATEGORY_PHOTOGRAPHY)
+				array('product_srl' => 304, 'category_srl' => self::CATEGORY_PHOTOGRAPHY),
+				array('product_srl' => 298, 'category_srl' => self::CATEGORY_TSHIRTS),
+				array('product_srl' => 299, 'category_srl' => self::CATEGORY_TSHIRTS),
+				array('product_srl' => 300, 'category_srl' => self::CATEGORY_TSHIRTS),
+				array('product_srl' => 301, 'category_srl' => self::CATEGORY_TSHIRTS),
+				array('product_srl' => 302, 'category_srl' => self::CATEGORY_TSHIRTS),
+				array('product_srl' => 303, 'category_srl' => self::CATEGORY_TSHIRTS)
 			),
 			'xe_shop_attributes'  => array(
 				array('attribute_srl' => self::ATTRIBUTE_URL, 'member_srl' => 4, 'module_srl' => 104, 'title' => 'URL', 'type' => 1, 'required' => 'Y', 'status' => 'Y', 'default_value' => NULL, 'values' => NULL, 'regdate' => 20120807160414, 'last_update' => 20120807160414),

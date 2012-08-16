@@ -16,6 +16,7 @@
             </columns>
             <conditions>
                 <condition operation="in" column="pc.category_srl" var="category_srls" />
+                <condition operation="null" column="parent_product_srl" pipe="and" />
             </conditions>
         </query>
     </conditions>
