@@ -42,6 +42,7 @@
 			<!--@end-->
 			<span><a href="#">{$product->title}</a></span>
 			<span>Pret: {$product->price}</span>
+            <a class="cart add" href="{getUrl('', 'act','procShopToolCartAddProduct', 'entry', $product->friendly_url)}">add</a>
 		</div>
 	<!--@end-->
 	<div class="clear"/>

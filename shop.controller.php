@@ -264,6 +264,33 @@
 
 
         /*
+         * @author Florin Ercus (dev@xpressengine.org)
+         */
+        public function procShopToolCartAddProduct() {
+            $shopModel = getModel('shop');
+            /* @var CartRepository $repository */
+            $repository = $shopModel->getCartRepository();
+
+            if (!$friendly_url = Context::get('entry')) {
+
+            } else throw new Exception('Missing product friendly_url');
+            $quantity = is_numeric(Context::get('quantity')) ? Context::get('quantity') : 1;
+            $module_srl = $this->module_info->module_srl;
+            $logged_info = Context::get('logged_info');
+            if (!$member_srl = $logged_info->member_srl) {
+                //create or retrieve guest and use the srl
+            }
+
+            $args->module_srl = $this->module_srl;
+            $output = executeQuery('shop.updateShopInfo', $args);
+            if (!$output->toBool()) return $output;
+
+            $returnUrl = getNotEncodedUrl('', 'act', 'dispShopToolManageAttributes');
+            $this->setRedirectUrl($returnUrl);
+        }
+
+
+        /*
         * @brief function for product delete
         * @author Dan Dragan (dev@xpressengine.org)
         */

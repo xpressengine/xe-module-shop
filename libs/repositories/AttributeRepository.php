@@ -31,8 +31,8 @@ class AttributeRepository extends BaseRepository
         $attribute->attribute_srl = getNextSequence();
         if(count($attribute->values ) == 0) unset($attribute->values);
 		$output = executeQuery('shop.insertAttribute', $attribute);
-		if (!$output->toBool()) throw new Exception($output->getMessage(), $output->getError());
-        else $this->insertAttributeScope($attribute);
+		self::check($output);
+        $this->insertAttributeScope($attribute);
         return $output;
 	}
 
@@ -50,7 +50,7 @@ class AttributeRepository extends BaseRepository
         foreach($attribute->category_scope as $category){
             $args->category_srl = $category;
             $output = executeQuery('shop.insertAttributeScope',$args);
-            if(!$output->toBool()) throw new Exception($output->getMessage(), $output->getError());
+            self::check($output);
         }
         return TRUE;
     }
@@ -68,8 +68,8 @@ class AttributeRepository extends BaseRepository
         if (!$attribute->attribute_srl) throw new Exception('Target srl must be specified');
         if (count($attribute->values ) == 0) unset($attribute->values);
         $output = executeQuery('shop.updateAttribute', $attribute);
-        if (!$output->toBool()) throw new Exception($output->getMessage(), $output->getError());
-        else $this->updateAttributeScope($attribute);
+        self::check($output);
+        $this->updateAttributeScope($attribute);
         return $output;
     }
 
@@ -102,13 +102,13 @@ class AttributeRepository extends BaseRepository
         }
         //delete attributes
 		$output = executeQuery('shop.deleteAttributes', $args);
-		if (!$output->toBool()) throw new Exception($output->getMessage(), $output->getError());
+        self::check($output);
         //delete attributes scope
         $output = executeQuery('shop.deleteAttributesScope',$args);
-        if (!$output->toBool()) throw new Exception($output->getMessage(), $output->getError());
-		//delete product attributes
+        self::check($output);
+        //delete product attributes
 		$output = executeQuery('shop.deleteProductAttributes',$args);
-		if (!$output->toBool()) throw new Exception($output->getMessage(), $output->getError());
+		self::check($output);
         return $output;
 	}
 
@@ -124,7 +124,7 @@ class AttributeRepository extends BaseRepository
         $args = new stdClass();
         $args->attribute_srls[] = $attribute->attribute_srl;
         $output = executeQuery('shop.deleteAttributesScope',$args);
-        if (!$output->toBool()) throw new Exception($output->getMessage(), $output->getError());
+        self::check($output);
         return TRUE;
     }
 
@@ -140,7 +140,7 @@ class AttributeRepository extends BaseRepository
 		$args = new stdClass();
 		$args->attribute_srls = $srls;
 		$output = executeQuery('shop.getAttributesBySrls', $args);
-		if (!$output->toBool()) throw new Exception($output->getMessage(), $output->getError());
+		self::check($output);
 		$rez = array();
         if (count($srls) == 1) {
             $attribute = new Attribute($output->data);
@@ -205,7 +205,7 @@ class AttributeRepository extends BaseRepository
         $args = new stdClass();
         $args->attribute_srl = $attribute->attribute_srl;
         $output = executeQueryArray('shop.getAttributeScope',$args);
-        if (!$output->toBool()) throw new Exception($output->getMessage(), $output->getError());
+        self::check($output);
         foreach($output->data as $scope){
             $attribute->category_scope[] = $scope->category_srl;
         }

@@ -20,7 +20,7 @@ class Cart extends BaseItem
         $model = getModel('shop');
         /* @var CartRepository $repo */
         $repo = $model->getCartRepository();
-        return $repo->insert($this);
+        return $repo->insertCart($this);
     }
 
 }
