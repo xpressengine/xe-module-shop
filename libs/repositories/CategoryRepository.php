@@ -152,7 +152,7 @@ class CategoryRepository extends BaseRepository
 		$tmp_arr = explode('.', $original_filename);
 		$extension = $tmp_arr[count($tmp_arr) - 1];
 
-		$path = sprintf('./files/attach/shop/%d/product-categories/', $module_srl);
+		$path = sprintf('./files/attach/images/shop/%d/product-categories/', $module_srl);
 		$filename = sprintf('%s%s.%s', $path, uniqid('product-category-'), $extension);
 		FileHandler::copyFile($tmp_name, $filename);
 

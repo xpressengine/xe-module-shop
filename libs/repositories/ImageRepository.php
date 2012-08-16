@@ -46,7 +46,7 @@ class ImageRepository extends BaseRepository
 	public function saveImage(Image &$image)
 	{
 		try{
-			$path = sprintf('./files/attach/shop/%d/product-images/%d/', $image->module_srl , $image->product_srl);
+			$path = sprintf('./files/attach/images/shop/%d/product-images/%d/', $image->module_srl , $image->product_srl);
 			$filename = sprintf('%s%s', $path, $image->filename);
 			FileHandler::copyFile($image->source_filename, $filename);
 		}
