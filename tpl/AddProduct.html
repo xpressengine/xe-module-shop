@@ -303,7 +303,7 @@
             var newfileuploadinput = jQuery(currentinput).clone(true);
             jQuery(newfileuploadinput).removeAttr("id");
             jQuery(newfileuploadinput).attr('id', 'filesToUpload'+index);
-            jQuery(currentinput).hide();
+            jQuery(currentinput).hide(0.1);
             jQuery(newfileuploadinput).insertAfter(currentinput);
 
 
