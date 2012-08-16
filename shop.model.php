@@ -222,6 +222,18 @@ class shopModel extends shop
         return new ProductRepository();
     }
 
+	/**
+	 * Returns an instance of the Image repository
+	 *
+	 * @author Dan Dragan(dev@xpressengine.org)
+	 * @return ImageRepository
+	 */
+	function getImageRepository()
+	{
+		require_once dirname(__FILE__) . '/libs/repositories/ImageRepository.php';
+		return new ImageRepository();
+	}
+
     /**
      * Returns an instance of the Attribute repository
      *

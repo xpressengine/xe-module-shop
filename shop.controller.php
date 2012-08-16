@@ -135,9 +135,12 @@
          */
         public function procShopToolInsertProduct(){
             $shopModel = getModel('shop');
-            $repository = $shopModel->getProductRepository();
+            $productRepository = $shopModel->getProductRepository();
+			$imageRepository = $shopModel->getImageRepository();
 
             $args = Context::getRequestVars();
+			$args->images = $imageRepository->createImagesUploadedFiles($_FILES['filesToUpload']);
+
             $logged_info = Context::get('logged_info');
             $args->member_srl = $logged_info->member_srl;
             $args->module_srl = $this->module_info->module_srl;
@@ -155,7 +158,7 @@
             {
                 if($product->product_srl === NULL)
                 {
-                    $product_srl = $repository->insertProduct($product);
+                    $product_srl = $productRepository->insertProduct($product);
 					if($product->isSimple())
 					{
 						$this->setMessage("Saved simple product successfull");
@@ -169,7 +172,7 @@
                 }
                 else
                 {
-                    $repository->updateProduct($product);
+                    $productRepository->updateProduct($product);
 					if($product->isSimple())
 					{
 						$this->setMessage("Updated simple product successfull");

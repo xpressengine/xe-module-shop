@@ -30,6 +30,7 @@ class ProductRepository extends BaseRepository
 			$this->insertProductCategories($product);
 			$this->insertProductAttributes($product);
 			if($product->product_type == 'configurable') $this->insertProductConfigurableAttributes($product);
+			$this->insertProductImages($product);
 		}
 		return $product->product_srl;
 	}
@@ -57,6 +58,26 @@ class ProductRepository extends BaseRepository
 			{
 				throw new Exception($output->getMessage(), $output->getError());
 			}
+		}
+		return TRUE;
+	}
+
+	/**
+	 * Insert product images
+	 *
+	 * @author Dan Dragan (dev@xpressengine.org)
+	 * @param $product Product
+	 * @return boolean
+	 */
+	public function insertProductImages(Product $product)
+	{
+		$shopModel = getModel('shop');
+		$imageRepository = $shopModel->getImageRepository();
+		foreach($product->images as $image){
+			$image->product_srl = $product->product_srl;
+			$image->module_srl = $product->module_srl;
+			$image->member_srl = $product->member_srl;
+			$imageRepository->insertImage($image);
 		}
 		return TRUE;
 	}
