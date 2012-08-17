@@ -34,13 +34,16 @@
 
 <script type="text/javascript">
 jQuery(document).ready(function($){
-	var product_attributes = new Object();
+	var associated_products = new Object();
+    // For each product
+	associated_products[323] = new Object();
+    //   For each attribute value
+	associated_products[323]['S'] = new Object();
+	//   For each combination, set associated product srl
+	associated_products[323]['S']['alb'] = 325;
 
-	product_attributes[323] = new Object();
-	product_attributes[323]['S'] = new Object();
-	product_attributes[323]['S']['alb'] = 325;
-	product_attributes[323]['M'] = new Object();
-	product_attributes[323]['M']['rosu'] = 324;
+	associated_products[323]['M'] = new Object();
+	associated_products[323]['M']['rosu'] = 324;
 
     $("#products .product select.level_1").change(function(){
 	    $first_select = $(this);
@@ -50,7 +53,7 @@ jQuery(document).ready(function($){
 	    $selected_value = $first_select.val();
 	    $product_srl = $current_form.parent(".product").attr("id").substr(8);
 
-	    $options_list = product_attributes[$product_srl][$selected_value];
+	    $options_list = associated_products[$product_srl][$selected_value];
 
 		$second_select.html("");
 		$.each($options_list, function(attribute, associated_product_srl){
@@ -87,14 +90,24 @@ jQuery(document).ready(function($){
 			<form action="./">
 
 			    <!--@if($product->isConfigurable())-->
-				Marime:
-				<select class="level_1">
-				    <option value="S">S</option>
-					<option value="M">M</option>
-				</select>
-				Culoare:
-				<select class="level_2">
-				</select>
+				<!-- Display just first two attributes -->
+				{@ $max_attributes = 2; $i = 1; }
+				<!--@foreach($product->configurable_attributes as $attribute_srl => $attribute_title)-->
+				    <!--@if($i > $max_attributes) break; -->
+				    <!--@endif-->
+
+				    {$attribute_title}
+				    <select id="product_{$product->product_srl}_attribute_{$attribute_srl}_values" class="level_{$i}">
+					    <!-- For first select, also display options -->
+					    <!--@if($i == 1)-->
+						    <!--@foreach($product->associated_products as $asoc_product)-->
+						        <option value="{$asoc_product->attributes[$attribute_srl]}">{$asoc_product->attributes[$attribute_srl]}</option>
+							<!--@end-->
+						<!--@endif-->
+
+				    </select>
+				    {@ $i++;}
+				<!--@end-->
 				<!--@end-->
 				<input type="hidden" id="product_srl" name="product_srl" value="{$product->product_srl}" />
 				<a href="#" class="add_to_cart">Add to cart</a>

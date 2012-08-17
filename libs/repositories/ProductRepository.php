@@ -486,7 +486,7 @@ class ProductRepository extends BaseRepository
 	 * @throws Exception
 	 * @return stdClass $output
 	 */
-    public function getProductList($args){
+    public function getProductList($args, $loadAttributes = false){
         if(!isset($args->module_srl))
             throw new Exception("Missing arguments for get product list : please provide [module_srl]");
 
@@ -512,10 +512,18 @@ class ProductRepository extends BaseRepository
 			if($product->product_type == 'simple')
 			{
 				$product_object = new SimpleProduct($product);
+				if($loadAttributes)
+				{
+					$this->getProductAttributes($product_object);
+				}
 			}
 			else
 			{
 				$product_object = new ConfigurableProduct($product);
+				if($loadAttributes)
+				{
+					$this->getProductAttributes($product_object);
+				}
 				$configurable_products[] = $product->product_srl;
 			}
             $products[$product->product_srl] = $product_object;
@@ -539,6 +547,10 @@ class ProductRepository extends BaseRepository
 			foreach($associated_products as $associated_product)
 			{
 				$product_object = new SimpleProduct($associated_product);
+				if($loadAttributes)
+				{
+					$this->getProductAttributes($product_object);
+				}
 				$products[$associated_product->parent_product_srl]->associated_products[] = $product_object;
 			}
 		}
