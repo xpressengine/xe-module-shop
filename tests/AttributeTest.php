@@ -37,14 +37,46 @@ class AttributeTest extends Shop_Generic_Tests_DatabaseTestCase
                     'default_value' => 'he',
                     'regdate'       => '20100424121513',
                     'last_update'   => '20100424141412'
-                )
-            )
+                ),
+				array(
+					'attribute_srl' => 1407,
+					'member_srl'    => 7,
+					'module_srl'	=> 14,
+					'title'         => 'hehe',
+					'type'          => 'select',
+					'required'      => 'Y',
+					'status'        => 'Y',
+					'values'        => 'sa|b|cas',
+					'default_value' => 'sa',
+					'regdate'       => '20100424171523',
+					'last_update'   => '20100424191523'
+				),
+				array(
+					'attribute_srl' => 1408,
+					'member_srl'    => 7,
+					'module_srl'	=> 14,
+					'title'         => 'trolo',
+					'type'          => 'select',
+					'required'      => 'Y',
+					'status'        => 'Y',
+					'values'        => 'be|he|he2',
+					'default_value' => 'he',
+					'regdate'       => '20100424121513',
+					'last_update'   => '20100424141412'
+				)
+            ),
+			'xe_shop_attributes_scope' => array(
+				array('attribute_srl' => 1407, 'category_srl' => 100),
+				array('attribute_srl' => 1407, 'category_srl' => 101),
+				array('attribute_srl' => 1407, 'category_srl' => 102),
+				array('attribute_srl' => 1408, 'category_srl' => 101)
+			)
         ));
     }
 
     public function testAddEntry()
     {
-        $this->assertEquals(2, $this->getConnection()->getRowCount('xe_shop_attributes'), "First count");
+        $this->assertEquals(4, $this->getConnection()->getRowCount('xe_shop_attributes'), "First count");
 
 		/**
 		 * @var shopModel $model
@@ -64,7 +96,7 @@ class AttributeTest extends Shop_Generic_Tests_DatabaseTestCase
             'last_update'   => '20100424141412'
         ));
 		$model->insertAttribute($attribute);
-        $this->assertEquals(3, $this->getConnection()->getRowCount('xe_shop_attributes'), "Insert failed");
+        $this->assertEquals(5, $this->getConnection()->getRowCount('xe_shop_attributes'), "Insert failed");
     }
 
 	/**
@@ -128,6 +160,99 @@ class AttributeTest extends Shop_Generic_Tests_DatabaseTestCase
 		foreach($new_product->configurable_attributes as $attribute_srl => $attribute_title)
 		{
 			$this->assertTrue(in_array($attribute_srl, array(1405, 1406)));
+			$this->assertTrue(in_array($attribute_title, array("hehe", "trolo")));
+		}
+	}
+
+	/**
+	 * Test adding attributes for associated products
+	 */
+	public function testAddAssociatedProductsAttributes()
+	{
+		/**
+		 * @var shopModel $shopModel
+		 */
+		$shopModel = getModel('shop');
+		$product_repository = $shopModel->getProductRepository();
+
+		// Create a parent product
+		$args = new stdClass();
+		$args->module_srl = 112;
+		$args->member_srl = 22;
+		$args->title = "Some product";
+		$args->sku = 'some-product';
+		$args->price = 22;
+		$args->configurable_attributes = array(1405, 1406);
+
+		$configurable_product = new ConfigurableProduct($args);
+		$configurable_product_srl = $product_repository->insertProduct($configurable_product);
+
+		// Create an associated product
+		$attribute_values = array("sa", "he");
+		$associated_product = $product_repository->createProductFromParent($configurable_product, $attribute_values);
+
+		// Insert associated product
+		$product_srl = $product_repository->insertProduct($associated_product);
+
+		// Check that attributes were successfully saved and loaded
+		$new_associated_product = $product_repository->getProduct($product_srl);
+		$this->assertEquals(2, count($new_associated_product->attributes));
+		$this->assertEquals("sa", $new_associated_product->attributes[1405]);
+		$this->assertEquals("he", $new_associated_product->attributes[1406]);
+
+		// Check that parent product configurable attributes are still there
+		$new_configurable_product = $product_repository->getProduct($configurable_product_srl);
+		$this->assertEquals(2, count($new_configurable_product ->configurable_attributes));
+		foreach($new_configurable_product ->configurable_attributes as $attribute_srl => $attribute_title)
+		{
+			$this->assertTrue(in_array($attribute_srl, array(1405, 1406)));
+			$this->assertTrue(in_array($attribute_title, array("hehe", "trolo")));
+		}
+	}
+
+
+	/**
+	 * Test adding attributes for associated products
+	 */
+	public function testAddAssociatedProductsAttributesWhenAttributeNotInScope()
+	{
+		/**
+		 * @var shopModel $shopModel
+		 */
+		$shopModel = getModel('shop');
+		$product_repository = $shopModel->getProductRepository();
+
+		// Create a parent product
+		$args = new stdClass();
+		$args->module_srl = 14;
+		$args->member_srl = 22;
+		$args->title = "Some product";
+		$args->sku = 'some-product';
+		$args->price = 22;
+		$args->configurable_attributes = array(1407, 1408);
+		$args->categories = array(100);
+
+		$configurable_product = new ConfigurableProduct($args);
+		$configurable_product_srl = $product_repository->insertProduct($configurable_product);
+
+		// Create an associated product
+		$attribute_values = array("sa", "he");
+		$associated_product = $product_repository->createProductFromParent($configurable_product, $attribute_values);
+
+		// Insert associated product
+		$product_srl = $product_repository->insertProduct($associated_product);
+
+		// Check that attributes were successfully saved and loaded
+		$new_associated_product = $product_repository->getProduct($product_srl);
+		$this->assertEquals(1, count($new_associated_product->attributes));
+		$this->assertEquals("sa", $new_associated_product->attributes[1407]);
+
+		// Check that parent product configurable attributes are still there
+		$new_configurable_product = $product_repository->getProduct($configurable_product_srl);
+		$this->assertEquals(2, count($new_configurable_product ->configurable_attributes));
+		foreach($new_configurable_product ->configurable_attributes as $attribute_srl => $attribute_title)
+		{
+			$this->assertTrue(in_array($attribute_srl, array(1407, 1408)));
 			$this->assertTrue(in_array($attribute_title, array("hehe", "trolo")));
 		}
 	}

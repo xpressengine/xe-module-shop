@@ -397,7 +397,7 @@ class shopView extends shop {
 		$tree_config = new HtmlCategoryTreeConfig();
 		$tree_config->showCheckbox = TRUE;
 		$tree_config->checked = $attribute->category_scope;
-		$tree_config->checkboxesName = 'category_name';
+		$tree_config->checkboxesName = 'category_scope';
 		$HTML_tree = $tree->toHTML($tree_config);
 
 		Context::set('HTML_tree', $HTML_tree);
