@@ -615,13 +615,20 @@ class shopView extends shop {
 				 $attribute1 = $attribute_values[0];
 				 $attribute2 = $attribute_values[1];
 
-				 if(!$already_added[$attribute1])
+				 if($attribute2)
 				 {
-					 $datasource .= "associated_products[$product->product_srl]['$attribute1'] = new Object();" . PHP_EOL;
-					 $already_added[$attribute1] = true;
-				 }
+					 if(!$already_added[$attribute1])
+					 {
+						 $datasource .= "associated_products[$product->product_srl]['$attribute1'] = new Object();" . PHP_EOL;
+						 $already_added[$attribute1] = true;
+					 }
 
-				 $datasource .= "associated_products[$product->product_srl]['$attribute1']['$attribute2'] = $asoc_product->product_srl;" . PHP_EOL;
+					 $datasource .= "associated_products[$product->product_srl]['$attribute1']['$attribute2'] = $asoc_product->product_srl;" . PHP_EOL;
+				 }
+				 else
+				 {
+					 $datasource .= "associated_products[$product->product_srl]['$attribute1'] = $asoc_product->product_srl;" . PHP_EOL;
+				 }
 			 }
 		 }
 		return $datasource;

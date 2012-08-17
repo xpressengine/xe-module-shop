@@ -36,22 +36,48 @@
 jQuery(document).ready(function($){
 	{$datasourceJS}
 
+    $("#products .add_to_cart").click(function(){
+	    $current_form = $(this).parent();
+
+	    $product_srl = $current_form.find("#product_srl").val();
+
+	    if(!$product_srl)
+		{
+			alert("There's a problem with the product you selected! It cannot be added to your cart.");
+		}
+	    else
+		{
+		    alert("When the cart will be ready, product " + $product_srl + " will be added!");
+		}
+
+
+	});
+
+
     $("#products .product select.level_1").change(function(){
 	    $first_select = $(this);
-		$second_select = $first_select.next("select.level_2");
 	    $current_form = $first_select.parent("form");
 
 	    $selected_value = $first_select.val();
-	    $product_srl = $current_form.parent(".product").attr("id").substr(8);
+		$product_srl = $current_form.parent(".product").attr("id").substr(8);
 
-	    $options_list = associated_products[$product_srl][$selected_value];
+		$second_select = $first_select.next("select.level_2");
+	    if($second_select.length)
+		{
+			$options_list = associated_products[$product_srl][$selected_value];
+			$second_select.html("");
+			$.each($options_list, function(attribute, associated_product_srl){
+				$second_select.append("<option value='" + associated_product_srl + "'>" + attribute + "</option>");
+			});
 
-		$second_select.html("");
-		$.each($options_list, function(attribute, associated_product_srl){
-		    $second_select.append("<option value='" + associated_product_srl + "'>" + attribute + "</option>");
-		});
+			$second_select.trigger("change");
+		}
+		else
+		{
+			$associated_product_srl = associated_products[$product_srl][$selected_value];
+			$current_form.find("#product_srl").val($associated_product_srl);
+		}
 
-	    $second_select.trigger("change");
 	});
 
 	$("#products .product select.level_2").change(function(){
@@ -75,7 +101,7 @@ jQuery(document).ready(function($){
 			<!--@else-->
 				<img src="img/missingProductLarge.png" width="150px" height="150px" />
 			<!--@end-->
-			<span><a href="#">{$product->title}</a></span>
+			<span><a href="#">{$product->product_srl} - {$product->title}</a></span>
 			<span>Price: {$product->price}</span>
 
 			<form action="./">
@@ -105,7 +131,7 @@ jQuery(document).ready(function($){
 				    {@ $i++;}
 				<!--@end-->
 				<!--@end-->
-				<input type="hidden" id="product_srl" name="product_srl" value="{$product->product_srl}" />
+				<input type="text" disabled="disabled" id="product_srl" name="product_srl" value="{$product->product_srl}" />
 				<a href="#" class="add_to_cart">Add to cart</a>
 			</form>
 
