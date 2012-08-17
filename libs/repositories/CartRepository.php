@@ -19,65 +19,62 @@ class CartRepository extends BaseRepository
     {
         if ($cart->cart_srl) throw new Exception('A srl must NOT be specified for the insert operation!');
         $cart->cart_srl = getNextSequence();
-        $output = executeQuery('shop.insertCart', $cart);
-        return self::check($output);
+        return $this->query('insertCart', get_object_vars($cart));
     }
 
     public function updateCart(Cart $cart)
     {
         if (!is_numeric($cart->cart_srl)) throw new Exception('You must specify a srl for the updated cart');
-        $output = executeQuery('shop.updateCart', $cart);
-        return self::check($output);
+        return $this->query('updateCart', get_object_vars($cart));
     }
 
     public function deleteCarts(array $cart_srls)
     {
-        $output = executeQuery('shop.deleteCarts', (object) array('cart_srls' => $cart_srls));
-        return self::check($output);
+        return $this->query('deleteCarts', array('cart_srls' => $cart_srls));
     }
 
     public function deleteCartsByModule($module_srl)
     {
-        $output = executeQuery('shop.deleteCarts', (object) array('module_srl' => $module_srl));
-        return self::check($output);
+        return $this->query('deleteCarts', array('module_srl' => $module_srl));
     }
 
     public function getCartByMember($member_srl, $module_srl)
     {
-        $output = executeQuery('shop.getCartByMember', (object) array('member_srl' => $member_srl, 'module_srl' => $module_srl));
-        return self::check($output);
+        return $this->query('getCartByMember', array('member_srl' => $member_srl, 'module_srl' => $module_srl));
     }
 
     public function getCartByGuest($guest_srl, $module_srl)
     {
-        $output = executeQuery('shop.getCartByGuest', (object) array('guest_srl' => $guest_srl, 'module_srl' => $module_srl));
-        return self::check($output);
+        return $this->query('getCartByGuest', array('guest_srl' => $guest_srl, 'module_srl' => $module_srl));
     }
 
     //CartProduct:
 
     public function insertCartProduct($cart_srl, $product_srl)
     {
-        $output = executeQuery('shop.insertCartProduct', (object) array('cart_srl' => $cart_srl, 'product_srl' => $product_srl));
-        return self::check($output);
+        return $this->query('insertCartProduct', array('cart_srl' => $cart_srl, 'product_srl' => $product_srl));
     }
 
     public function getCartProducts($cart_srl, array $product_srls)
     {
-        $output = executeQuery('shop.getCartProducts', (object) array('cart_srl' => $cart_srl, 'product_srls' => $product_srls));
-        return self::check($output);
+        return $this->query('getCartProducts', array('cart_srl' => $cart_srl, 'product_srls' => $product_srls));
     }
 
     public function deleteCartProducts($cart_srl, array $product_srls)
     {
-        $output = executeQuery('shop.deleteCartProducts', (object) array('cart_srl' => $cart_srl, 'product_srls' => $product_srls));
-        return self::check($output);
+        return $this->query('deleteCartProducts', array('cart_srl' => $cart_srl, 'product_srls' => $product_srls));
     }
 
 
     //compound operations:
 
-    public function getCart($module_srl=null)
+
+    /**
+     * @param $module_srl We need to force module_srl
+     *
+     * @return Cart|null
+     */
+    public function getCart($module_srl)
     {
         //TODO: find guest srl (guest workflow needs implemented)
         $guest_srl = null;
@@ -88,11 +85,13 @@ class CartRepository extends BaseRepository
                 'module_srl' => $module_srl,
                 'member_srl' => self::getMemberSrl(),
                 'guest_srl' => self::getGuestSrl(),
-                'session_id' => '',
+                'session_id' => session_id(),
                 'items' => 0
             ));
-            $output = $this->insertCart($cart);
+            $this->insertCart($cart);
+            return $cart;
         }
+        return null;
     }
 
 }

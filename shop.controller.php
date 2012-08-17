@@ -271,7 +271,7 @@
             /* @var CartRepository $repository */
             $repository = $shopModel->getCartRepository();
 
-            if (!$friendly_url = Context::get('entry')) {
+            if ($friendly_url = Context::get('entry')) {
 
             } else throw new Exception('Missing product friendly_url');
             $quantity = is_numeric(Context::get('quantity')) ? Context::get('quantity') : 1;
