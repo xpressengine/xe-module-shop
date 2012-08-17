@@ -29,7 +29,6 @@ abstract class Product extends BaseItem
     public $related_products;
     public $categories = array();
 	public $attributes = array();
-	public $configurable_attributes = array();
 	public $images = array();
 	public $primary_image;
 
@@ -110,6 +109,7 @@ class SimpleProduct extends Product
 class ConfigurableProduct extends Product
 {
 	public $associated_products = array();
+	public $configurable_attributes = array(); // Associated array: [attribute srl] => [attribute title]
 
 	public function __construct($args = null)
 	{

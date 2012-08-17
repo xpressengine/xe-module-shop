@@ -93,8 +93,8 @@ class ProductRepository extends BaseRepository
 	{
 		$args = new stdClass();
 		$args->product_srl = $product->product_srl;
-		foreach($product->configurable_attributes as $config_attribute){
-			$args->attribute_srl = $config_attribute;
+		foreach($product->configurable_attributes as $config_attribute_srl => $config_attribute_title){
+			$args->attribute_srl = $config_attribute_srl;
 			$output = executeQuery('shop.insertProductAttribute',$args);
 			if(!$output->toBool()) throw new Exception($output->getMessage(), $output->getError());
 		}
@@ -417,7 +417,7 @@ class ProductRepository extends BaseRepository
 		foreach($output->data as $attribute)
 		{
 			if($attribute->value) $product->attributes[$attribute->attribute_srl] = $attribute->value;
-			else $product->configurable_attributes[] = $attribute->attribute_srl;
+			else $product->configurable_attributes[$attribute->attribute_srl] = $attribute->title;
 		}
 
 		return TRUE;
@@ -458,7 +458,7 @@ class ProductRepository extends BaseRepository
 	 * @param $product Product , $combination array
 	 * @return $product
 	 */
-	public function createProductFromParent(Product $parent_product, array $values)
+	public function createProductFromParent(ConfigurableProduct $parent_product, array $values)
 	{
 		$product = new SimpleProduct();
 		$product->member_srl = $parent_product->member_srl;
@@ -469,8 +469,9 @@ class ProductRepository extends BaseRepository
 		$product->sku = $parent_product->sku.'_'.implode('_',$values);
 		$product->price = $parent_product->price;
 		$product->categories = $parent_product->categories;
+		$configurable_attributes_srls = array_keys($parent_product->configurable_attributes);
 		for($i=0;$i<count($values);$i++){
-			$product->attributes[$parent_product->configurable_attributes[$i]] = $values[$i];
+			$product->attributes[$configurable_attributes_srls[$i]] = $values[$i];
 		}
 
 		return $product;

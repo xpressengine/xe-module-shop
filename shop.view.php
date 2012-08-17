@@ -524,7 +524,7 @@ class shopView extends shop {
 		$product = $productRepository->getProduct($product_srl);
 		Context::set('product',$product);
 		$attributeRepository = $shopModel->getAttributeRepository();
-		$configurable_attributes = $attributeRepository->getAttributes($product->configurable_attributes);
+		$configurable_attributes = $attributeRepository->getAttributes(array_keys($product->configurable_attributes));
 		if(count($product->configurable_attributes) == 1){
 			$values_combinations = explode('|',$configurable_attributes->values);
 		}else{
