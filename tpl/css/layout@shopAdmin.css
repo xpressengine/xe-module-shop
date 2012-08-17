@@ -1011,3 +1011,23 @@ a.skipToContent{text-align:center;color:#fff;position:absolute;width:100%;font-s
 #category_info .layer .layerBody span.btn input{position:relative;border:0;margin:0;display:inline-block !important;font-family:Tahoma, Sans-serif;font-weight:bold !important;cursor:pointer;text-decoration:none !important;white-space:nowrap;vertical-align:middle;*vertical-align:top;background-color:transparent;background-image:url(../img/buttonAction.gif);background-repeat:no-repeat;zoom:1}
 #category_info .layer .layerBody span.btn{position:relative;top:40px;margin-right:7px;background-position:left top;border:1px solid}
 #category_info .layer .layerBody span.btn input{top:0;left:7px;color:#fff;height:39px;padding:0 25px 0 40px !important;font:12px/39px Sans-serif;background-position:right top;overflow:visible}
+
+#associated_products
+{
+    padding-bottom: 20px;
+}
+#associated_products_title
+{
+    font-size: 32px;
+    font-weight: bold;
+    color: #ccc;
+    border-bottom: 1px dotted #ccc;
+    display: inline-block;
+    width: 100%;
+}
+
+#associated_products_title:hover
+{
+    background-color: #ffff00;
+    cursor: pointer;
+}

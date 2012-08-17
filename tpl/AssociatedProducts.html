@@ -2,18 +2,24 @@
     jQuery(document).ready(function($){
 	    $("#associated_products fieldset").hide();
 
-		$("#associated_products legend").click(function(){
-		$("#associated_products fieldset").slideToggle();
+		$("#associated_products_title").click(function(){
+			$("#associated_products fieldset").slideToggle();
+
+		    if($("#associated_products_title").text().substr(0, 1) == '+')
+			{
+				$("#associated_products_title").text("- Associated products");
+			}
+			else
+			{
+				$("#associated_products_title").text("+ Associated products");
+			}
 		});
 	});
 </script>
 
-<style type="text/css">
-
-</style>
-<fieldset id="associated_products" class="visualFieldset">
-	<legend class="visualLabel" title="Click to show or hide associated products">Associated products</legend>
+<div id="associated_products">
+	<span id="associated_products_title" title="Click to show or hide associated products">+ Associated products</span>
 
 	<include target="AdminProductsList" />
 
-</fieldset>
+</div>
