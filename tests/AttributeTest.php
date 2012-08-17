@@ -67,4 +67,69 @@ class AttributeTest extends Shop_Generic_Tests_DatabaseTestCase
         $this->assertEquals(3, $this->getConnection()->getRowCount('xe_shop_attributes'), "Insert failed");
     }
 
+	/**
+	 * Test that configurable attributes are properly stored in the product object
+	 */
+	public function testConfigurableProductsAreStoredAsAssociativeArray()
+	{
+		/**
+		 * @var shopModel $shopModel
+		 */
+		$shopModel = getModel('shop');
+		$product_repository = $shopModel->getProductRepository();
+
+		$args = new stdClass();
+		$args->module_srl = 112;
+		$args->member_srl = 22;
+		$args->title = "Some product";
+		$args->sku = 'some-product';
+		$args->price = 22;
+		$args->configurable_attributes = array(1405, 1406);
+
+		$configurable_product = new ConfigurableProduct($args);
+
+		$this->assertEquals(2, count($configurable_product->configurable_attributes));
+
+		foreach($configurable_product->configurable_attributes as $attribute_srl => $attribute_title)
+		{
+			$this->assertTrue(in_array($attribute_srl, array(1405, 1406)));
+		}
+
+	}
+
+	/**
+	 * Tests adding configurable attributes
+	 */
+	public function testAddConfigurableAttributes()
+	{
+		/**
+		 * @var shopModel $shopModel
+		 */
+		$shopModel = getModel('shop');
+		$product_repository = $shopModel->getProductRepository();
+
+		$args = new stdClass();
+		$args->module_srl = 112;
+		$args->member_srl = 22;
+		$args->title = "Some product";
+		$args->sku = 'some-product';
+		$args->price = 22;
+		$args->configurable_attributes = array(1405, 1406);
+
+		$configurable_product = new ConfigurableProduct($args);
+		$new_product_srl = $product_repository->insertProduct($configurable_product);
+
+		/**
+		 * @var ConfigurableProduct $new_product
+		 */
+		$new_product = $product_repository->getProduct($new_product_srl);
+
+		$this->assertEquals(2, count($new_product->configurable_attributes));
+		foreach($new_product->configurable_attributes as $attribute_srl => $attribute_title)
+		{
+			$this->assertTrue(in_array($attribute_srl, array(1405, 1406)));
+			$this->assertTrue(in_array($attribute_title, array("hehe", "trolo")));
+		}
+	}
+
 }

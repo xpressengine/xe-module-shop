@@ -59,7 +59,17 @@ abstract class Product extends BaseItem
 		{
 			if(property_exists(get_called_class(), $field))
 			{
-				$this->$field = $value;
+				if($field == "configurable_attributes")
+				{
+					foreach($value as $attribute_srl)
+					{
+						$this->configurable_attributes[$attribute_srl] = "";
+					}
+				}
+				else
+				{
+					$this->$field = $value;
+				}
 			}
 			elseif(strpos($field, 'attribute_') === 0)
 			{
