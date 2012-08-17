@@ -31,6 +31,7 @@ abstract class Product extends BaseItem
 	public $attributes = array();
 	public $configurable_attributes = array();
 	public $images = array();
+	public $primary_image;
 
 
 	/**

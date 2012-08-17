@@ -191,8 +191,10 @@ class ProductRepository extends BaseRepository
 		}
 		$product = new SimpleProduct();
 		$product->product_srl = $args->product_srl;
+		$product->module_srl = $args->module_srl;
 		$this->deleteProductCategories($product);
 		$this->deleteProductAttributes($product);
+		$this->deleteProductImages($product);
 
 		return TRUE;
 	}
@@ -223,6 +225,15 @@ class ProductRepository extends BaseRepository
 		{
 			throw new Exception($output->getMessage(), $output->getError());
 		}
+		$output = executeQuery('shop.deleteProductImages', $args);
+		if(!$output->toBool())
+		{
+			throw new Exception($output->getMessage(), $output->getError());
+		}
+		foreach($args->product_srls as $product_srl){
+			$path = sprintf('./files/attach/images/shop/%d/product-images/%d/', $args->module_srl,$product_srl);
+			FileHandler::removeDir($path);
+		}
 
         return TRUE;
     }
@@ -236,6 +247,7 @@ class ProductRepository extends BaseRepository
      */
     public function deleteProductCategories(Product &$product)
     {
+		$args = new stdClass();
         $args->product_srls[] = $product->product_srl;
         $output = executeQuery('shop.deleteProductCategories',$args);
         if (!$output->toBool()) throw new Exception($output->getMessage(), $output->getError());
@@ -263,6 +275,32 @@ class ProductRepository extends BaseRepository
 		{
 			throw new Exception($output->getMessage(), $output->getError());
 		}
+		return TRUE;
+	}
+
+	/**
+	 * Delete product images
+	 *
+	 * @author Dan Dragan (dev@xpressengine.org)
+	 * @param $product Product
+	 * @return boolean
+	 */
+	public function deleteProductImages(Product &$product)
+	{
+		if(!$product->product_srl)
+		{
+			throw new Exception("Invalid arguments! Please provide product_srl for delete atrributes.");
+		}
+
+		$args = new stdClass();
+		$args->product_srl = $product->product_srl;
+		$output = executeQuery('shop.deleteProductImages', $args);
+		if(!$output->toBool())
+		{
+			throw new Exception($output->getMessage(), $output->getError());
+		}
+		$path = sprintf('./files/attach/images/shop/%d/product-images/%d/', $product->module_srl,$product->product_srl);
+		FileHandler::removeDir($path);
 		return TRUE;
 	}
 
@@ -317,6 +355,7 @@ class ProductRepository extends BaseRepository
 		}
         $this->getProductCategories($product);
 		$this->getProductAttributes($product);
+		$this->getProductImages($product);
 		return $product;
 	}
 
@@ -344,6 +383,7 @@ class ProductRepository extends BaseRepository
      */
     public function getProductCategories(Product &$product)
     {
+		$args = new stdClass();
         $args->product_srl = $product->product_srl;
         $output = executeQuery('shop.getProductCategories',$args);
         if (!$output->toBool()) throw new Exception($output->getMessage(), $output->getError());
@@ -378,6 +418,34 @@ class ProductRepository extends BaseRepository
 		{
 			if($attribute->value) $product->attributes[$attribute->attribute_srl] = $attribute->value;
 			else $product->configurable_attributes[] = $attribute->attribute_srl;
+		}
+
+		return TRUE;
+	}
+
+	/**
+	 * Retrieve product images
+	 *
+	 * @author Dan Dragan (dev@xpressengine.org)
+	 * @param $product Product
+	 * @return boolean
+	 */
+	public function getProductImages(Product &$product)
+	{
+		$args = new stdClass();
+		$args->product_srl = $product->product_srl;
+		$shopModel = getModel('shop');
+		$imageRepository = $shopModel->getImageRepository();
+		$output = executeQueryArray('shop.getProductImages', $args);
+		if(!$output->toBool())
+		{
+			throw new Exception($output->getMessage(), $output->getError());
+		}
+
+		foreach($output->data as $image)
+		{
+			$oImage = new Image($image);
+			$product->images[] = $oImage;
 		}
 
 		return TRUE;
@@ -496,6 +564,7 @@ class ProductRepository extends BaseRepository
 		} else {
             $this->updateProductCategories($product);
 			$this->updateProductAttributes($product);
+			$this->updateProductImages($product);
         }
 		return TRUE;
 	}
@@ -525,6 +594,33 @@ class ProductRepository extends BaseRepository
 	{
 		$this->deleteProductAttributes($product);
 		$this->insertProductAttributes($product);
+		return TRUE;
+	}
+
+	/**
+	 * Update product images
+	 *
+	 * @author Dan Dragan (dev@xpressengine.org)
+	 * @param $product Product
+	 * @return boolean
+	 */
+	public function updateProductImages(Product &$product)
+	{
+		$args = new stdClass();
+		$args->image_srls = $product->delete_images;
+		$shopModel = getModel('shop');
+		$imageRepository = $shopModel->getImageRepository();
+		$delete_images = $imageRepository->getImages($args->image_srls);
+		foreach($delete_images as $delete_image){
+			$path = sprintf('./files/attach/images/shop/%d/product-images/%d/%s', $product->module_srl,$product->product_srl,$delete_image->filename);
+			FileHandler::removeFile($path);
+		}
+		$output = executeQuery('shop.deleteProductImages', $args);
+		if(!$output->toBool())
+		{
+			throw new Exception($output->getMessage(), $output->getError());
+		}
+		$this->insertProductImages($product);
 		return TRUE;
 	}
 }

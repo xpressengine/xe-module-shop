@@ -112,7 +112,17 @@
                             <div class="fItem">
                                 <label class="iLabel" for="filesToUpload">{$lang->about_images}</label>
                                 <input name="filesToUpload[]" id="filesToUpload" type="file" multiple="" onchange="makeFileList();"/>
-                                <ul id="fileList" style="list-style:none;"></ul>
+                                <ul id="fileList" style="list-style:none;">
+                                </ul>
+                                <ul id="existingFilesList" style="list-style:none;">
+                                    <!--@foreach($product->images as $image)-->
+                                    <li>
+                                        <input type="radio" name="primary_image" value="{$image->image_srl}" id="{$image->image_srl}" <!--@if($image->is_primary == 'Y')-->checked<!--@end-->>{$image->filename}
+                                        <img name="{$image->image_srl}" src="./files/attach/images/shop/{$product->module_srl}/product-images/{$product->product_srl}/{$image->filename}" width="100" height="100">
+                                        <input type="checkbox" id="delete_{$image->image_srl}" name="delete[]" value="{$image->image_srl}"/> Delete
+                                    </li>
+                                    <!--@end-->
+                                </ul>
                             </div>
                         </td>
                     </tr>
@@ -350,7 +360,7 @@
                 image.id = "image_"+index;
                 image.src="#";
 
-                li.innerHTML = outerHTML(checkbox) + 'File ' + (index+1) + ':  ' + input.files[x].name + outerHTML(image);
+                li.innerHTML = outerHTML(checkbox) + 'Not yet saved:  ' + input.files[x].name + outerHTML(image);
                 index++;
             }
             if(index == numfiles){

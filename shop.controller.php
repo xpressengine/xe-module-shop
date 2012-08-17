@@ -143,7 +143,11 @@
 			$imageRepository = $shopModel->getImageRepository();
 
             $args = Context::getRequestVars();
-			$args->images = $imageRepository->createImagesUploadedFiles($_FILES['filesToUpload']);
+			$args->images = $imageRepository->createImagesUploadedFiles($args->filesToUpload);
+			if(isset($args->primary_image) && isset($args->images[$args->primary_image]))	{
+				$args->images[$args->primary_image]->is_primary = 'Y';
+				unset($args->primary_image);
+			}
 
             $logged_info = Context::get('logged_info');
             $args->member_srl = $logged_info->member_srl;
@@ -176,6 +180,7 @@
                 }
                 else
                 {
+					$product->delete_images = $args->delete;
                     $productRepository->updateProduct($product);
 					if($product->isSimple())
 					{
@@ -305,6 +310,7 @@
             $repository = $shopModel->getProductRepository();
 
             $args = new stdClass();
+			$args->module_srl = $this->module_info->module_srl;
             $args->product_srl = Context::get('product_srl');
 
             $repository->deleteProduct($args);
@@ -321,6 +327,8 @@
             $shopModel = getModel('shop');
             $repository = $shopModel->getProductRepository();
 
+			$args = new stdClass();
+			$args->module_srl = $this->module_info->module_srl;
             $args->product_srls = explode(',',Context::get('product_srls'));
             $repository->deleteProducts($args);
             $this->setMessage("success_deleted");

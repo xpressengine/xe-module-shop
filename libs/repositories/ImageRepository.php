@@ -21,19 +21,13 @@ class ImageRepository extends BaseRepository
 	{
         if ($image->image_srl) throw new Exception('A srl must NOT be specified');
         $image->image_srl = getNextSequence();
-		try{
-			if($image->file_size > 0){
-				$output = executeQuery('shop.insertImage', $image);
-				$this->saveImage($image);
-				if (!$output->toBool()) throw new Exception($output->getMessage(), $output->getError());
-				return $output;
-			}
+		if($image->file_size > 0){
+			$output = executeQuery('shop.insertImage', $image);
+			$this->saveImage($image);
+			if (!$output->toBool()) throw new Exception($output->getMessage(), $output->getError());
+			return $output;
 		}
-		catch(Exception $e)
-		{
-			return new Object(-1, $e->getMessage());
-		}
-
+		else return;
 	}
 
 	/**
@@ -93,6 +87,21 @@ class ImageRepository extends BaseRepository
 
     }
 
+	/**
+	 * Retrieve a Images object from the database by image_srls
+	 * @author Dan Dragan (dev@xpressengine.org)
+	 * @param $image_srls array
+	 * @return Image list
+	 */
+	public function getImages($image_srls)
+	{
+		$args = new stdClass();
+		$args->image_srls = $image_srls;
+		$output = executeQuery('shop.getProductImages', $args);
+		if (!$output->toBool()) throw new Exception($output->getMessage(), $output->getError());
+		return $output->data;
+	}
+
 
 	/**
 	 * Create Image list from uploaded files
@@ -103,10 +112,10 @@ class ImageRepository extends BaseRepository
 	public function createImagesUploadedFiles(Array $files)
 	{
 		$args = new stdClass();
-		for($i = 0; $i < count($files['name']);$i++){
-			$args->source_filename = $files['tmp_name'][$i];
-			$args->filename = $files['name'][$i];
-			$args->file_size = $files['size'][$i];
+		foreach($files as $file){
+			$args->source_filename = $file['tmp_name'];
+			$args->filename = $file['name'];
+			$args->file_size = $file['size'];
 			$image = new Image($args);
 			$images[] = $image;
 		}
