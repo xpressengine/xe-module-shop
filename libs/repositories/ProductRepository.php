@@ -257,7 +257,7 @@ class ProductRepository extends BaseRepository
 		}
 
 		$args = new stdClass();
-		$args->product_srl = $product->product_srl;
+		$args->product_srls = array($product->product_srl);
 		$output = executeQuery('shop.deleteProductAttributes', $args);
 		if(!$output->toBool())
 		{
@@ -282,6 +282,12 @@ class ProductRepository extends BaseRepository
 		if(!$output->toBool())
 		{
 			throw new Exception($output->getMessage(), $output->getError());
+		}
+
+		// If product does not exist, return null
+		if(!$output->data)
+		{
+			return NULL;
 		}
 
 		if($output->data->product_type == 'simple')

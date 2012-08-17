@@ -98,6 +98,9 @@ class ProductTest extends Shop_Generic_Tests_DatabaseTestCase
 				array('attribute_srl' => self::ATTRIBUTE_SIZE, 'category_srl' => self::CATEGORY_TSHIRTS)
 			),
 			'xe_shop_product_attributes' => array(
+				array('product_srl' => 304, 'attribute_srl' => self::ATTRIBUTE_PUBLISH_YEAR, 'value' => '2002'),
+				array('product_srl' => 304, 'attribute_srl' => self::ATTRIBUTE_AUTHOR, 'value' => 'lalala'),
+				array('product_srl' => 298, 'attribute_srl' => self::ATTRIBUTE_URL, 'value' => 'some-product')
 			)
 		));
 	}
@@ -299,6 +302,44 @@ Patrioque conceptam in mea. Est ad ullum ceteros, pro quem accumsan appareat id,
 			}
 		}
 
+	}
+
+	/**
+	 * Tests that when a product is deleted, its attributes are also deleted
+	 */
+	public function testDeletingProductDeletesAttributes()
+	{
+		/**
+		 * @var shopModel $shopModel
+		 */
+		$shopModel = getModel('shop');
+		$product_repository = $shopModel->getProductRepository();
+
+		// Delete product
+		$args = new stdClass();
+		$args->product_srl = 304;
+		$product_repository->deleteProduct($args);
+
+		// Check that product was deleted
+		$this->assertNull($product_repository->getProduct(304));
+
+		/**
+		 * @var PHPUnit_Extensions_Database_DataSet_QueryTable $queryTable
+		 */
+		$queryTable = $this->getConnection()->createQueryTable(
+			'xe_shop_product_attributes', 'SELECT * FROM xe_shop_product_attributes'
+		);
+
+		$row_count = $queryTable->getRowCount();
+		// Check that attributes for other products were not deleted.
+		$this->assertNotEquals(0, $row_count);
+
+		for($i = 0; $i < $row_count; $i++)
+		{
+			$row = $queryTable->getRow($i);
+			// Check that attributes were deleted
+			$this->assertNotEquals(304, $row->product_srl);
+		}
 	}
 
 
