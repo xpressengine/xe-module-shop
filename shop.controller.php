@@ -282,10 +282,16 @@
             if ($friendly_url = Context::get('entry')) {
                 $productsRepo = $this->model->getProductRepository();
                 if ($product = $productsRepo->getProductByFriendlyUrl($friendly_url)) {
-                    $cart = $cartRepository->getCart($this->module_info->module_srl);
-                    $quantity = is_numeric(Context::get('quantity')) ? Context::get('quantity') : 1;
-                }
-                else throw new Exception('404 product not found?');
+                    $logged_info = Context::get('logged_info');
+                    if ($member_srl = $logged_info->member_srl) {
+                        $cart = $cartRepository->getCartByMember($member_srl, $this->module_info->module_srl);
+                    }
+                    else {
+                        $guestRepo = $this->model->getGuestRepository();
+                        $guest = $guestRepo->createOrRetrieve();
+                    }
+                    $cartRepository->insertCartProduct($cart->cart_srl, $product->product_srl, Context::get('quantity'));
+                } else throw new Exception('404 product not found?');
             } else throw new Exception('Missing product friendly_url');
             $logged_info = Context::get('logged_info');
             if (!$member_srl = $logged_info->member_srl) {

@@ -9,4 +9,11 @@ require_once "BaseRepository.php";
  * @author Florin Ercus (dev@xpressengine.org)
  */
 class GuestRepository extends BaseRepository
-{}
+{
+
+    public function createOrRetrieve()
+    {
+        //aici
+    }
+
+}

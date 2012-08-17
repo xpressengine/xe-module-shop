@@ -11,8 +11,6 @@ require_once "BaseRepository.php";
 class CartRepository extends BaseRepository
 {
 
-    //atomic operations:
-
     //Cart:
 
     public function insertCart(Cart &$cart)
@@ -40,19 +38,37 @@ class CartRepository extends BaseRepository
 
     public function getCartByMember($member_srl, $module_srl)
     {
-        return $this->query('getCartByMember', array('member_srl' => $member_srl, 'module_srl' => $module_srl));
+        $output = $this->query('getCartByMember', array('member_srl' => $member_srl, 'module_srl' => $module_srl));
+        if (!empty($output->data)) return new Cart($output->data);
+        $cart = new Cart(array(
+            'module_srl' => $module_srl,
+            'member_srl' => $member_srl,
+            'session_id' => session_id(),
+            'items'      => 0
+        ));
+        $this->insertCart($cart);
+        return $cart;
     }
 
     public function getCartByGuest($guest_srl, $module_srl)
     {
-        return $this->query('getCartByGuest', array('guest_srl' => $guest_srl, 'module_srl' => $module_srl));
+        $output = $this->query('getCartByGuest', array('guest_srl' => $guest_srl, 'module_srl' => $module_srl));
+        if (!empty($output->data)) return new Cart($output->data);
+        $cart = new Cart(array(
+            'module_srl' => $module_srl,
+            'guest_srl' => $guest_srl,
+            'session_id' => session_id(),
+            'items'      => 0
+        ));
+        $this->insertCart($cart);
+        return $cart;
     }
 
     //CartProduct:
 
-    public function insertCartProduct($cart_srl, $product_srl)
+    public function insertCartProduct($cart_srl, $product_srl, $quantity=1)
     {
-        return $this->query('insertCartProduct', array('cart_srl' => $cart_srl, 'product_srl' => $product_srl));
+        return $this->query('insertCartProduct', array('cart_srl' => $cart_srl, 'product_srl' => $product_srl, 'quantity' => $quantity));
     }
 
     public function getCartProducts($cart_srl, array $product_srls)
@@ -63,35 +79,6 @@ class CartRepository extends BaseRepository
     public function deleteCartProducts($cart_srl, array $product_srls)
     {
         return $this->query('deleteCartProducts', array('cart_srl' => $cart_srl, 'product_srls' => $product_srls));
-    }
-
-
-    //compound operations:
-
-
-    /**
-     * @param $module_srl We need to force module_srl
-     *
-     * @return Cart|null
-     */
-    public function getCart($module_srl)
-    {
-        //TODO: find guest srl (guest workflow needs implemented)
-        $guest_srl = null;
-        $member_srl = self::getMemberSrl();
-        $output = $member_srl ? $this->getCartByMember($member_srl, $module_srl) : $this->getCartByGuest($guest_srl, $module_srl);
-        if (empty($output->data)) {
-            $cart = new Cart(array(
-                'module_srl' => $module_srl,
-                'member_srl' => self::getMemberSrl(),
-                'guest_srl' => self::getGuestSrl(),
-                'session_id' => session_id(),
-                'items' => 0
-            ));
-            $this->insertCart($cart);
-            return $cart;
-        }
-        return null;
     }
 
 }

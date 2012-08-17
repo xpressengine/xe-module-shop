@@ -2,23 +2,12 @@
 abstract class BaseRepository
 {
 
-    public static function getMemberSrl()
-    {
-        $logged_info = Context::get('logged_info');
-        return $logged_info->member_srl;
-    }
-
-    public static function getGuestSrl()
-    {
-        return null;
-    }
-
-
-    public function query($name, array $params = null)
+    public function query($name, array $params = null, $array=false)
     {
         if (!strpos($name, '.')) $name = "shop.$name";
         if ($params) $params = (object) $params;
-        $output = executeQuery($name, $params);
+        $function = 'executeQuery' . ($array ? 'Array' : '');
+        $output = $function($name, $params);
         return self::check($output);
     }
 

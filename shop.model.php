@@ -298,7 +298,7 @@ class shopModel extends shop
      * Returns an instance of the Guest repository
      *
      * @author Florin Ercus (dev@xpressengine.org)
-     * @return CartRepository
+     * @return GuestRepository
      */
     public function getGuestRepository()
     {
