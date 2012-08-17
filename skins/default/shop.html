@@ -34,16 +34,7 @@
 
 <script type="text/javascript">
 jQuery(document).ready(function($){
-	var associated_products = new Object();
-    // For each product
-	associated_products[323] = new Object();
-    //   For each attribute value
-	associated_products[323]['S'] = new Object();
-	//   For each combination, set associated product srl
-	associated_products[323]['S']['alb'] = 325;
-
-	associated_products[323]['M'] = new Object();
-	associated_products[323]['M']['rosu'] = 324;
+	{$datasourceJS}
 
     $("#products .product select.level_1").change(function(){
 	    $first_select = $(this);

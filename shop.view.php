@@ -580,14 +580,60 @@ class shopView extends shop {
 			$category_srl = Context::get('category_srl');
 			if($category_srl) $args->category_srls = array($category_srl);
 
-			$output = $product_repository->getProductList($args, true);
+			$output = $product_repository->getProductList($args, TRUE);
 			Context::set('products', $output->products);
 			Context::set('page_navigation', $output->page_navigation);
+
+			$datasourceJS = $this->getAssociatedProductsAttributesAsJavascriptArray($output->products);
+			Context::set('datasourceJS', $datasourceJS);
 		}
 		catch(Exception $e)
 		{
 			return new Object(-1, $e->getMessage());
 		}
+	}
+
+	/**
+	 * Returns the javascript code used as datasource for linked dropdowns
+	 */
+	private function getAssociatedProductsAttributesAsJavascriptArray($products)
+	{
+		 $datasource = "var associated_products = new Object();" . PHP_EOL;
+
+		 foreach($products as $product)
+		 {
+			 if($product->isSimple()) continue;
+
+			 $datasource .= "associated_products[$product->product_srl] = new Object();" . PHP_EOL;
+
+			 $already_added = array();
+			 foreach($product->associated_products as $asoc_product)
+			 {
+				 $attribute_values = array_values($asoc_product->attributes);
+
+				 // Take just first two attributes
+				 $attribute1 = $attribute_values[0];
+				 $attribute2 = $attribute_values[1];
+
+				 if(!$already_added[$attribute1])
+				 {
+					 $datasource .= "associated_products[$product->product_srl]['$attribute1'] = new Object();" . PHP_EOL;
+					 $already_added[$attribute1] = true;
+				 }
+
+				 $datasource .= "associated_products[$product->product_srl]['$attribute1']['$attribute2'] = $asoc_product->product_srl;" . PHP_EOL;
+			 }
+		 }
+		return $datasource;
+
+	/*
+"   //   For each attribute value
+	//   For each combination, set associated product srl
+	associated_products[323]['S']['alb'] = 325;
+
+	associated_products[323]['M'] = new Object();
+	associated_products[323]['M']['rosu'] = 324;";
+	*/
 	}
 
 	// region Product category
