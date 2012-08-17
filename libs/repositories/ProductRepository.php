@@ -610,17 +610,46 @@ class ProductRepository extends BaseRepository
 		$args->image_srls = $product->delete_images;
 		$shopModel = getModel('shop');
 		$imageRepository = $shopModel->getImageRepository();
-		$delete_images = $imageRepository->getImages($args->image_srls);
-		foreach($delete_images as $delete_image){
-			$path = sprintf('./files/attach/images/shop/%d/product-images/%d/%s', $product->module_srl,$product->product_srl,$delete_image->filename);
-			FileHandler::removeFile($path);
+		if(isset($product->primary_image)) $this->updatePrimaryImage($product);
+		if(isset($args->image_srls)){
+			$delete_images = $imageRepository->getImages($args->image_srls);
+			foreach($delete_images as $delete_image){
+				$path = sprintf('./files/attach/images/shop/%d/product-images/%d/%s', $product->module_srl,$product->product_srl,$delete_image->filename);
+				FileHandler::removeFile($path);
+			}
+			$output = executeQuery('shop.deleteProductImages', $args);
+			if(!$output->toBool())
+			{
+				throw new Exception($output->getMessage(), $output->getError());
+			}
 		}
-		$output = executeQuery('shop.deleteProductImages', $args);
+		$this->insertProductImages($product);
+		return TRUE;
+	}
+
+	/**
+	 * Set primary image
+	 *
+	 * @author Dan Dragan (dev@xpressengine.org)
+	 * @param $product Product
+	 * @return boolean
+	 */
+	public function updatePrimaryImage($product)
+	{
+		$args = new stdClass();
+		$args->product_srl = $product->product_srl;
+		$args->is_primary = "N";
+		$output = executeQuery('shop.updatePrimaryImage', $args);
 		if(!$output->toBool())
 		{
 			throw new Exception($output->getMessage(), $output->getError());
 		}
-		$this->insertProductImages($product);
-		return TRUE;
+		$args->primary_image = $product->primary_image;
+		$args->is_primary = "Y";
+		$output = executeQuery('shop.updatePrimaryImage', $args);
+		if(!$output->toBool())
+		{
+			throw new Exception($output->getMessage(), $output->getError());
+		}
 	}
 }

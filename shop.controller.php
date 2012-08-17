@@ -143,7 +143,7 @@
 			$imageRepository = $shopModel->getImageRepository();
 
             $args = Context::getRequestVars();
-			$args->images = $imageRepository->createImagesUploadedFiles($args->filesToUpload);
+			if(is_array($args->filesToUpload)) $args->images = $imageRepository->createImagesUploadedFiles($args->filesToUpload);
 			if(isset($args->primary_image) && isset($args->images[$args->primary_image]))	{
 				$args->images[$args->primary_image]->is_primary = 'Y';
 				unset($args->primary_image);
