@@ -100,8 +100,13 @@ jQuery(document).ready(function($){
 				    <select id="product_{$product->product_srl}_attribute_{$attribute_srl}_values" class="level_{$i}">
 					    <!-- For first select, also display options -->
 					    <!--@if($i == 1)-->
+							{@ $already_added = array() }
 						    <!--@foreach($product->associated_products as $asoc_product)-->
-						        <option value="{$asoc_product->attributes[$attribute_srl]}">{$asoc_product->attributes[$attribute_srl]}</option>
+								{@ $current_value = $asoc_product->attributes[$attribute_srl] }
+								<!--@if(!$already_added[$current_value])-->
+						        	<option value="{$current_value}">{$current_value}</option>
+								<!--@endif-->
+						        {@ $already_added[$current_value] = true; }
 							<!--@end-->
 						<!--@endif-->
 
