@@ -6,11 +6,16 @@
      **/
 
     class shopController extends shop {
+
+        /** @var shopModel */
+        protected $model;
+
         /**
          * @brief Initialization
          **/
         public function init() {
-            $oShopModel = getModel('shop');
+            $this->model = getModel('shop');
+
             $oModuleModel = getModel('module');
 
             $site_module_info = Context::get('site_module_info');
@@ -23,10 +28,9 @@
                 Context::set('current_module_info',$this->module_info);
             }
 
-            $this->shop = $oShopModel->getShop($this->module_srl);
+            $this->shop = $this->model->getShop($this->module_srl);
             $this->site_srl = $this->shop->site_srl;
             Context::set('shop',$this->shop);
-
         }
 
         public function procShopLogin() {
@@ -267,15 +271,17 @@
          * @author Florin Ercus (dev@xpressengine.org)
          */
         public function procShopToolCartAddProduct() {
-            $shopModel = getModel('shop');
-            /* @var CartRepository $repository */
-            $repository = $shopModel->getCartRepository();
+            /* @var CartRepository $cartRepository */
+            $cartRepository = $this->model->getCartRepository();
 
             if ($friendly_url = Context::get('entry')) {
-
+                $productsRepo = $this->model->getProductRepository();
+                if ($product = $productsRepo->getProductByFriendlyUrl($friendly_url)) {
+                    $cart = $cartRepository->getCart($this->module_info->module_srl);
+                    $quantity = is_numeric(Context::get('quantity')) ? Context::get('quantity') : 1;
+                }
+                else throw new Exception('404 product not found?');
             } else throw new Exception('Missing product friendly_url');
-            $quantity = is_numeric(Context::get('quantity')) ? Context::get('quantity') : 1;
-            $module_srl = $this->module_info->module_srl;
             $logged_info = Context::get('logged_info');
             if (!$member_srl = $logged_info->member_srl) {
                 //create or retrieve guest and use the srl

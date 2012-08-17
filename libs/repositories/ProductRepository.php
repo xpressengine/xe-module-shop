@@ -321,6 +321,21 @@ class ProductRepository extends BaseRepository
 	}
 
     /**
+     * Retrieve a Product object from the database given a friendly url string
+     *
+     * @author Florin Ercus (dev@xpressengine.org)
+     *
+     * @param $str string
+     *
+     * @return Product
+     */
+    public function getProductByFriendlyUrl($str)
+    {
+        $output = $this->query('getProductByFriendlyUrl', array('friendly_url' => $str));
+        return empty($output->data) ? null : new SimpleProduct($output->data);
+    }
+
+    /**
      * Retrieve product categories
      *
      * @author Dan Dragan (dev@xpressengine.org)

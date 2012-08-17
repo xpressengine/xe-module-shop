@@ -52,9 +52,6 @@ class CartTest extends Shop_Generic_Tests_DatabaseTestCase
         $this->assertEquals(0, $this->getConnection()->getRowCount('xe_shop_cart'), "First count");
     }
 
-    /**
-     * @expectedException Exception
-     */
     public function testAddCart()
     {
         $cart = new Cart(array(
@@ -67,6 +64,7 @@ class CartTest extends Shop_Generic_Tests_DatabaseTestCase
             'last_update'   => '20100424192420'
         ));
 
+        //se opreste la getNextSequence:
         $this->repo->insertCart($cart);
         $this->assertEquals(1, $this->getConnection()->getRowCount('xe_shop_cart'), "Insert failed");
     }

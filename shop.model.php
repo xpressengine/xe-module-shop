@@ -216,7 +216,7 @@ class shopModel extends shop
      * @author Dan Dragan(dev@xpressengine.org)
      * @return ProductRepository
      */
-    function getProductRepository()
+    public function getProductRepository()
     {
         require_once dirname(__FILE__) . '/libs/repositories/ProductRepository.php';
         return new ProductRepository();
@@ -228,7 +228,7 @@ class shopModel extends shop
 	 * @author Dan Dragan(dev@xpressengine.org)
 	 * @return ImageRepository
 	 */
-	function getImageRepository()
+	public function getImageRepository()
 	{
 		require_once dirname(__FILE__) . '/libs/repositories/ImageRepository.php';
 		return new ImageRepository();
@@ -240,7 +240,7 @@ class shopModel extends shop
      * @author Dan Dragan(dev@xpressengine.org)
      * @return AttributeRepository
      */
-    function getAttributeRepository()
+    public function getAttributeRepository()
     {
         require_once dirname(__FILE__) . '/libs/repositories/AttributeRepository.php';
         return new AttributeRepository();
@@ -252,7 +252,7 @@ class shopModel extends shop
 	 * @author Corina Udrescu (dev@xpressengine.org)
 	 * @return CategoryRepository
 	 */
-	function getCategoryRepository()
+    public function getCategoryRepository()
 	{
 		require_once dirname(__FILE__) . '/libs/repositories/CategoryRepository.php';
 		return new CategoryRepository();
@@ -264,7 +264,7 @@ class shopModel extends shop
      * @author Daniel Ionescu (dev@xpressengine.org)
      * @return PaymentGatewayRepository
      */
-    function getPaymentGatewayRepository()
+    public function getPaymentGatewayRepository()
     {
         require_once dirname(__FILE__) . '/libs/repositories/PaymentGatewayRepository.php';
         return new PaymentGatewayRepository();
@@ -276,7 +276,7 @@ class shopModel extends shop
      * @author Daniel Ionescu (dev@xpressengine.org)
      * @return PaymentGatewayManager
      */
-    function getPaymentGatewayManager()
+    public function getPaymentGatewayManager()
     {
         require_once dirname(__FILE__) . '/libs/model/PaymentGatewayManager.php';
         return new PaymentGatewayManager();
@@ -288,10 +288,22 @@ class shopModel extends shop
      * @author Florin Ercus (dev@xpressengine.org)
      * @return CartRepository
      */
-    function getCartRepository()
+    public function getCartRepository()
     {
         require_once dirname(__FILE__) . '/libs/repositories/CartRepository.php';
         return new CartRepository();
+    }
+
+    /**
+     * Returns an instance of the Guest repository
+     *
+     * @author Florin Ercus (dev@xpressengine.org)
+     * @return CartRepository
+     */
+    public function getGuestRepository()
+    {
+        require_once dirname(__FILE__) . '/libs/repositories/GuestRepository.php';
+        return new GuestRepository();
     }
 
 }
