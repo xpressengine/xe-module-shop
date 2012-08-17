@@ -32,6 +32,47 @@
 {$HTML_tree}
 </div>
 
+<script type="text/javascript">
+jQuery(document).ready(function($){
+	var product_attributes = new Object();
+
+	product_attributes[323] = new Object();
+	product_attributes[323]['S'] = new Object();
+	product_attributes[323]['S']['alb'] = 325;
+	product_attributes[323]['M'] = new Object();
+	product_attributes[323]['M']['rosu'] = 324;
+
+    $("#products .product select.level_1").change(function(){
+	    $first_select = $(this);
+		$second_select = $first_select.next("select.level_2");
+	    $current_form = $first_select.parent("form");
+
+	    $selected_value = $first_select.val();
+	    $product_srl = $current_form.parent(".product").attr("id").substr(8);
+
+	    $options_list = product_attributes[$product_srl][$selected_value];
+
+		$second_select.html("");
+		$.each($options_list, function(attribute, associated_product_srl){
+		    $second_select.append("<option value='" + associated_product_srl + "'>" + attribute + "</option>");
+		});
+
+	    $second_select.trigger("change");
+	});
+
+	$("#products .product select.level_2").change(function(){
+		$current_form = $(this).parent("form");
+	    $selected_value = $(this).val();
+
+	    $current_form.find("#product_srl").val($selected_value);
+	});
+});
+
+
+</script>
+
+
+
 <div id="products">
 	<!--@foreach($products as $product)-->
 		<div id="product_{$product->product_srl}" class="product">
@@ -41,7 +82,24 @@
 				<img src="img/missingProductLarge.png" width="150px" height="150px" />
 			<!--@end-->
 			<span><a href="#">{$product->title}</a></span>
-			<span>Pret: {$product->price}</span>
+			<span>Price: {$product->price}</span>
+
+			<form action="./">
+
+			    <!--@if($product->isConfigurable())-->
+				Marime:
+				<select class="level_1">
+				    <option value="S">S</option>
+					<option value="M">M</option>
+				</select>
+				Culoare:
+				<select class="level_2">
+				</select>
+				<!--@end-->
+				<input type="hidden" id="product_srl" name="product_srl" value="{$product->product_srl}" />
+				<a href="#" class="add_to_cart">Add to cart</a>
+			</form>
+
             <a class="cart add" href="{getUrl('', 'act','procShopToolCartAddProduct', 'entry', $product->friendly_url)}">add</a>
 		</div>
 	<!--@end-->

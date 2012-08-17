@@ -156,3 +156,16 @@ img{border:0}
     padding: 5px 10px;
     border: 1px solid #4f4c69;
 }
+.add_to_cart
+{
+    display: inline-block;
+    clear: both;
+    padding: 5px;
+    margin: 5px;
+    background-color: #87cefa;
+    text-decoration: none;
+}
+.add_to_cart:hover
+{
+    background-color: #e0ffff;
+}
