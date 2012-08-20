@@ -2,27 +2,6 @@
 
 <include target="_sidebar.html" />
 
-<script type="text/javascript">
-jQuery(document).ready(function($){
-    $("#products .add_to_cart").click(function(){
-	    $current_form = $(this).parent();
-
-	    $product_srl = $current_form.find("#product_srl").val();
-
-	    if(!$product_srl)
-		{
-			alert("There's a problem with the product you selected! It cannot be added to your cart.");
-		}
-	    else
-		{
-		    alert("When the cart will be ready, product " + $product_srl + " will be added!");
-		}
-
-
-	});
-});
-</script>
-
 <include target="product_variants_datasource.html" />
 
 <div id="products" class="mainContent">

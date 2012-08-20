@@ -92,8 +92,19 @@ class CartRepository extends BaseRepository
 
     public function countCartProducts($cart_srl)
     {
-        $output = $this->query('getCartProductsCount', array('cart_srl' => $cart_srl));
-        return $output->count;
+        return $this->query('getCartProductsCount', array('cart_srl' => $cart_srl))->data->count;
+    }
+
+    public function getCartProductsBySessionId($session_id)
+    {
+        return $this->query('getCartProductsBySessionId', array('session_id' => $session_id))->data;
+    }
+
+    public function countCartProductsBySessionId($session_id)
+    {
+        $n = 0;
+        foreach ($this->getCartProductsBySessionId($session_id) as $cp) $n += $cp->quantity;
+        return $n;
     }
 
 }

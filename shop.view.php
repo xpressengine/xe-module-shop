@@ -110,6 +110,7 @@ class shopView extends shop {
 	public function initService(&$oModule, $is_other_module = FALSE, $isMobile = FALSE){
 		if (!$oModule) $oModule = $this;
 
+        /** @var $oShopModel shopModel */
 		$oShopModel = getModel('shop');
 
 		$this->initCommon($is_other_module);
@@ -151,6 +152,11 @@ class shopView extends shop {
 
 		// set browser title
 		Context::setBrowserTitle($this->shop->get('browser_title'));
+
+
+        $cartRepo = $oShopModel->getCartRepository();
+        $productsInCart = $cartRepo->countCartProductsBySessionId(session_id());
+        Context::set('productsInCart', $productsInCart);
 	}
 
 

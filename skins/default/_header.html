@@ -1,7 +1,6 @@
 <div id="container">
 
 <div id="top_menu">
-<include target="cart_small.html"/>
 <!--@if($logged_info)-->
 <span>Welcome {$logged_info->user_id}!</span>
 <!--@end-->
@@ -14,7 +13,7 @@
 <div id="top_links">
 
 <a href="#">My Account</a>
-<a href="#">Cart</a>
+<a href="#">Cart [{$productsInCart}]</a>
 <a href="#">Support</a>
 
 <form>
