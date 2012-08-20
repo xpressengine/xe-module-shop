@@ -370,7 +370,7 @@ class shopView extends shop {
 		// Prepare tree for display
 		$tree_config = new HtmlCategoryTreeConfig();
 		$tree_config->showCheckbox = TRUE;
-		$tree_config->checked = array();
+		$tree_config->selected = array();
 		$tree_config->checkboxesName = 'category_scope';
 		$HTML_tree = $tree->toHTML($tree_config);
 
@@ -396,7 +396,7 @@ class shopView extends shop {
 		// Prepare tree for display
 		$tree_config = new HtmlCategoryTreeConfig();
 		$tree_config->showCheckbox = TRUE;
-		$tree_config->checked = $attribute->category_scope;
+		$tree_config->selected = $attribute->category_scope;
 		$tree_config->checkboxesName = 'category_scope';
 		$HTML_tree = $tree->toHTML($tree_config);
 
@@ -496,7 +496,7 @@ class shopView extends shop {
 		// Prepare tree for display
 		$tree_config = new HtmlCategoryTreeConfig();
 		$tree_config->showCheckbox = TRUE;
-		$tree_config->checked = $product->categories;
+		$tree_config->selected = $product->categories;
 		$tree_config->checkboxesName = 'categories';
 		$HTML_tree = $tree->toHTML($tree_config);
 
@@ -548,6 +548,7 @@ class shopView extends shop {
 
 		// Categories left tree
 		// Retrieve existing categories
+		$category_srl = Context::get('category_srl');
 		$category_repository = $shopModel->getCategoryRepository();
 		$tree = $category_repository->getCategoriesTree($this->module_srl);
 
@@ -555,11 +556,11 @@ class shopView extends shop {
 		$tree_config = new HtmlCategoryTreeConfig();
 		$tree_config->linkCategoryName = TRUE;
 		$tree_config->linkGetUrlParams = array('vid', $this->mid, 'act', 'dispShop');
+		if($category_srl) $tree_config->selected = array($category_srl);
 		$HTML_tree = $tree->toHTML($tree_config);
 		Context::set('HTML_tree', $HTML_tree);
 
 		// Current category details
-		$category_srl = Context::get('category_srl');
 		if($category_srl)
 		{
 			$current_category = $category_repository->getCategory($category_srl);
@@ -609,11 +610,23 @@ class shopView extends shop {
 		$product = $product_repository->getProduct($product_srl);
 		Context::set('product', $product);
 
+		// Categories left tree
+		// Retrieve existing categories
+		$category_repository = $shopModel->getCategoryRepository();
+		$tree = $category_repository->getCategoriesTree($this->module_srl);
+
+		// Prepare tree for display
+		$tree_config = new HtmlCategoryTreeConfig();
+		$tree_config->linkCategoryName = TRUE;
+		$tree_config->linkGetUrlParams = array('vid', $this->mid, 'act', 'dispShop');
+		$tree_config->selected = $product->categories;
+		$HTML_tree = $tree->toHTML($tree_config);
+		Context::set('HTML_tree', $HTML_tree);
+
 		// Current category details
 		$category_srl = Context::get('category_srl');
 		if($category_srl)
 		{
-			$category_repository = $shopModel->getCategoryRepository();
 			$current_category = $category_repository->getCategory($category_srl);
 			Context::set('current_category', $current_category);
 

@@ -1,24 +1,29 @@
 <include target="_header.html" />
 
-<h2>{$product->title}</h2>
+<include target="_sidebar.html" />
 
-<p>{$product->short_description}</p>
+<div id="product" class="mainContent">
+	<h2>{$product->title}</h2>
 
-<p>{$product->description}</p>
+	<p>{$product->short_description}</p>
 
-<p>
-    <b>SKU </b> {$product->sku}
-</p>
+	<p>{$product->description}</p>
 
-<p>
-	<b> Weight </b> {$product->weight}
-</p>
+	<p>
+		<b>SKU </b> {$product->sku}
+	</p>
 
-<p>
-	<b> Price </b> {$product->price}
-</p>
+	<p>
+		<b> Weight </b> {$product->weight}
+	</p>
 
-<a href="{getUrl('vid', $mid, 'act', 'dispShop', 'product_srl', '')}">Go back</a>
+	<p>
+		<b> Price </b> {$product->price}
+	</p>
+
+	<a href="{getUrl('vid', $mid, 'act', 'dispShop', 'product_srl', '')}">Go back</a>
+
+</div>
 
 <include target="_footer.html" />
 

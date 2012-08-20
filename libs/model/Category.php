@@ -116,13 +116,13 @@ class HtmlCategoryTreeConfig
 	 */
 	public $showManagingLinks = FALSE;
 	/**
+	 * @var array When given, selected categories get added a class - active. Also, when $showCheckbox is true, this is used to send selected (checked) values
+	 */
+	public $selected = array();
+	/**
 	 * @var bool Show or hide checkboxes next to each category name; Useful for adding things to a certain category
 	 */
 	public $showCheckbox = FALSE;
-	/**
-	 * @var array When $showCheckbox is true, this is used to send selected (checked) values
-	 */
-	public $checked = array();
 	/**
 	 * @var string When $showCheckbox is true, this is used as the input name of the checkboxes
 	 */
@@ -256,14 +256,19 @@ class CategoryTreeNode
 				$html .= '</li>';
 			}
 
-			$html .= '<li id="tree_' . $node->category->category_srl . '">';
+			$class = '';
+			if(in_array($node->category->category_srl, $config->selected))
+			{
+				$class = "class='active'";
+			}
+			$html .= '<li id="tree_' . $node->category->category_srl . '" ' . $class . '>';
 
 			$nodeContent = '<span>';
 
 			if($config->showCheckbox)
 			{
 				$nodeContent .= '<input type="checkbox" ';
-				if(in_array($node->category->category_srl, $config->checked))
+				if(in_array($node->category->category_srl, $config->selected))
 				{
 					$nodeContent .= ' checked="checked" ';
 				}

@@ -124,7 +124,7 @@ img{border:0}
     padding-left: 10px;
 }
 
-#products
+.mainContent
 {
     float: right;
     position: relative;
@@ -168,4 +168,8 @@ img{border:0}
 .add_to_cart:hover
 {
     background-color: #e0ffff;
+}
+.active a
+{
+    font-weight: bold;
 }
