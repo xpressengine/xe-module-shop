@@ -1,3 +1,108 @@
+var index =0;
+var numfiles =0;
+var id = '';
+
+function makeFileList(){
+    var i=0;
+    var input = document.getElementById('filesToUpload');
+    var browserName=navigator.appName;
+    var list = document.getElementById('fileList');
+    if (browserName=="Microsoft Internet Explorer") {
+    index++;
+    if(index == 1) var currentinput = input;
+    else var currentinput = document.getElementById('filesToUpload'+(index-1));
+    var newfileuploadinput = jQuery(currentinput).clone(true);
+    jQuery(newfileuploadinput).removeAttr("id");
+    jQuery(newfileuploadinput).attr('id', 'filesToUpload'+index);
+    jQuery(currentinput).hide(0.1);
+    jQuery(newfileuploadinput).insertAfter(currentinput);
+
+
+    var li = document.createElement('li');
+    var checkbox = document.createElement('input');
+    checkbox.type = "radio";
+    checkbox.name = "primary_image";
+    checkbox.value = index;
+    checkbox.id = index;
+
+    jQuery(list).append(li);
+
+
+    var elem = currentinput.value.split("\\");
+    var filename = elem[elem.length-1];
+    li.innerHTML = outerHTML(checkbox) + 'File ' + index + ':  ' + filename;
+
+    if(index == 1){
+    var p = document.createElement('p');
+    p.innerHTML = "Select primary product image";
+
+    jQuery(p).insertBefore(list);
+    }
+}
+else {
+    numfiles = input.files.length;
+    for (var x = 0; x < numfiles; x++) {
+
+    //add to list
+    var li = document.createElement('li');
+
+    var checkbox = document.createElement('input');
+    checkbox.type = "radio";
+    checkbox.name = "primary_image";
+    checkbox.value = index;
+    checkbox.id = index;
+
+
+
+    jQuery(list).append(li);
+
+    var image = document.createElement('image');
+    image.name = "image_"+index;
+    image.id = "image_"+index;
+    image.src="#";
+
+    li.innerHTML = outerHTML(checkbox) + 'Not yet saved:  ' + input.files[x].name + outerHTML(image);
+    index++;
+    }
+if(index == numfiles){
+    var p = document.createElement('p');
+    p.innerHTML = "Select primary product image";
+
+    jQuery(p).insertBefore(list);
+    }
+}
+
+
+
+if (browserName!="Microsoft Internet Explorer") {
+    var reader = new FileReader();
+    reader.readAsDataURL(input.files[0]);
+    reader.onload = function (e) {
+    if(i < numfiles){
+    id = "image_"+(index-(numfiles-i));
+    image = document.getElementById(id);
+    image.src =  e.target.result ;
+    image.width = 100;
+    image.height = 100;
+    i++;
+    reader.readAsDataURL(input.files[i]);
+    }
+}
+}
+
+}
+function outerHTML(node){
+    // if IE, Chrome take the internal method otherwise build one
+    return node.outerHTML || (
+    function(n){
+    var div = document.createElement('div'), h;
+    div.appendChild( n.cloneNode(true) );
+    h = div.innerHTML;
+    div = null;
+    return h;
+    })(node);
+}
+
 function unique(t) {
 	var a = [];
 	var l = t.length;

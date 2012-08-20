@@ -20,270 +20,271 @@
             <!--@endif-->
         <!--@endif-->
     </div>
+    <!-- /contentHeader -->
     <div cond="$XE_VALIDATOR_MESSAGE" class="message {$XE_VALIDATOR_MESSAGE_TYPE}">
         <p>{$XE_VALIDATOR_MESSAGE}</p>
     </div>
-    <!-- /contentHeader -->
-        <div class="wOption">
-			<!--@if($product->product_srl && $product->isConfigurable())-->
-				<include target="AssociatedProducts.html" />
-			<!--@end-->
 
-            <fieldset class="visualFieldset">
-                <!--@if(!$product->product_srl)-->
-                    <!--@if($product->isConfigurable())-->
-                        <legend class="visualLabel">Add configurable product</legend>
-                    <!--@else-->
-                        <legend class="visualLabel">Add simple product</legend>
-                    <!--@endif-->
+    <div class="wOption">
+        <!--@if($product->product_srl && $product->isConfigurable())-->
+            <include target="AssociatedProducts.html" />
+        <!--@end-->
+
+        <fieldset class="visualFieldset">
+            <!--@if(!$product->product_srl)-->
+                <!--@if($product->isConfigurable())-->
+                    <legend class="visualLabel">Add configurable product</legend>
                 <!--@else-->
-                    <!--@if($product->isConfigurable())-->
-                        <legend class="visualLabel">Edit configurable product</legend>
-                    <!--@else-->
-                        <legend class="visualLabel">Edit simple product</legend>
-                    <!--@endif-->
+                    <legend class="visualLabel">Add simple product</legend>
+                <!--@endif-->
+            <!--@else-->
+                <!--@if($product->isConfigurable())-->
+                    <legend class="visualLabel">Edit configurable product</legend>
+                <!--@else-->
+                    <legend class="visualLabel">Edit simple product</legend>
+                <!--@endif-->
+            <!--@endif-->
+
+            <form action="./" method="post" ruleset="insert_product" class="" enctype="multipart/form-data" >
+            <input type="hidden" name="act" value="procShopToolInsertProduct" />
+
+            <!--@if(isset($product->product_srl))-->
+            <input type="hidden" name="product_srl" value="{$product->product_srl}" />
+            <!--@endif-->
+            <!--@if(isset($product->parent_product_srl))-->
+            <input type="hidden" name="parent_product_srl" value="{$product->parent_product_srl}" />
+            <!--@endif-->
+
+            <!--@if($product->isConfigurable())-->
+            <input type="hidden" name="product_type" value="configurable" />
+            <!--@foreach($configurable_attributes as $conf_attribute)-->
+            <input type="hidden" name="configurable_attributes[]" value="{$conf_attribute}" />
+            <!--@end-->
+            <!--@else-->
+            <input type="hidden" name="product_type" value="simple" />
+            <!--@endif-->
+
+            <table border="1" cellspacing="0" class="tableData">
+                <!--@if($product->parent_product_srl)-->
+                <tr>
+                    <span>This is an associated simple product for the configurable product with the title: <b>{$parent_product->title}</b> and sku:<b>{$parent_product->sku}</b></span>
+                </tr>
+                <!--@endif-->
+                <tr class="first">
+                    <th scope="row">
+                        <label for="title">{$lang->title}</label>
+                    </th>
+                    <td class="title">
+                        <div class="fItem">
+                            <label class="iLabel" for="title">{$lang->about_title}</label>
+                            <input type="text" id="title" name="title" style="width:200px" class="iText iText" title="{$lang->about_title}" <!--@if($product->title)-->value="{$product->title}"<!--@end--> />
+                        </div>
+                    </td>
+                </tr>
+                <!--@if(!$product->parent_product_srl)-->
+                <tr>
+                    <th scope="row">
+                        <label for="description">{$lang->description}</label>
+                    </th>
+                    <td class="title">
+                        <div class="fItem">
+                            <label class="iLabel" for="description">{$lang->about_description}</label>
+                            <textarea name="description" rows="8" cols="100" class="iTextarea" id="description" title="{$lang->about_description}"><!--@if($product->title)-->{$product->description}<!--@end--></textarea>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">
+                        <label for="short_description">{$lang->short_description}</label>
+                    </th>
+                    <td class="title">
+                        <div class="fItem">
+                            <label class="iLabel" for="short_description">{$lang->about_short_description}</label>
+                            <textarea name="short_description" rows="8" cols="100" class="iTextarea" id="short_description" title="{$lang->about_short_description}"><!--@if($product->short_description)-->{$product->title}<!--@end--></textarea>
+                        </div>
+                    </td>
+                </tr>
+                <!--@endif-->
+                <tr>
+                    <th scope="row">
+                        <label>{$lang->images}</label>
+                    </th>
+                    <td class="title">
+                        <div class="fItem">
+                            <label class="iLabel" for="filesToUpload">{$lang->about_images}</label>
+                            <input name="filesToUpload[]" id="filesToUpload" type="file" multiple="" onchange="makeFileList();"/>
+                            <ul id="fileList" style="list-style:none;">
+                            </ul>
+                            <ul id="existingFilesList" style="list-style:none;">
+                                <!--@foreach($product->images as $image)-->
+                                <li>
+                                    <input type="radio" name="primary_image" value="{$image->image_srl}" id="{$image->image_srl}" <!--@if($image->is_primary == 'Y')-->checked<!--@end-->>{$image->filename}
+                                    <img name="{$image->image_srl}" src="./files/attach/images/shop/{$product->module_srl}/product-images/{$product->product_srl}/{$image->filename}" width="100" height="100">
+                                    <input type="checkbox" id="delete_{$image->image_srl}" name="delete[]" value="{$image->image_srl}"/> Delete
+                                </li>
+                                <!--@end-->
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">
+                        <label for="sku">{$lang->sku}</label>
+                    </th>
+                    <td class="title">
+                        <div class="fItem">
+                            <label class="iLabel" for="sku">{$lang->about_sku}</label>
+                            <input type="text" id="sku" name="sku" style="width:200px" class="iText iText" title="{$lang->about_sku}" <!--@if($product->title)-->value="{$product->sku}"<!--@end--> />
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">
+                        <label for="weight">{$lang->weight}</label>
+                    </th>
+                    <td class="title">
+                        <div class="fItem">
+                            <label class="iLabel" for="weight">{$lang->about_weight}</label>
+                            <input type="text" id="weight" name="weight" style="width:200px" class="iText iText" title="{$lang->about_weight}" <!--@if($product->title)-->value="{number_format($product->weight,2)}"<!--@end--> />
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">
+                        <label for="status">{$lang->status}</label>
+                    </th>
+                    <td class="title">
+                        <div class="fItem">
+                            <select name="status" id="status">
+                                <option value="enabled" <!--@if($product->status=='enabled')-->selected<!--@end-->>{$lang->enabled}</option>
+                                <option value="disabled" <!--@if($product->status=='disabled')-->selected<!--@end-->>{$lang->disabled}</option>
+                            </select>
+                        </div>
+                    </td>
+                </tr>
+                <!--@if(!$product->parent_product_srl)-->
+                <tr>
+                    <th scope="row">
+                        <label for="friendly_url">{$lang->friendly_url}</label>
+                    </th>
+                    <td class="title">
+                        <div class="fItem">
+                            <label class="iLabel" for="friendly_url">{$lang->about_friendly_url}</label>
+                            <input type="text" id="friendly_url" name="friendly_url" style="width:200px" class="iText iText" title="{$lang->about_friendly_url}" <!--@if($product->title)-->value="{$product->friendly_url}"<!--@end--> />
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">
+                        <label for="price">{$lang->price}</label>
+                    </th>
+                    <td class="title">
+                        <div class="fItem">
+                            <label class="iLabel" for="price">{$lang->about_price}</label>
+                            <input type="text" id="price" name="price" style="width:200px" class="iText iText" title="{$lang->about_price}" <!--@if($product->title)-->value="{number_format($product->price,2)}"<!--@end--> />
+                        </div>
+                    </td>
+                </tr>
+                <!--@endif-->
+                <!--@if(!$product->isConfigurable())-->
+                <tr>
+                    <th scope="row">
+                        <label for="qty">{$lang->qty}</label>
+                    </th>
+                    <td class="title">
+                        <div class="fItem">
+                            <label class="iLabel" for="qty">{$lang->about_qty}</label>
+                            <input type="text" id="qty" name="qty" style="width:200px" class="iText iText" title="{$lang->about_qty}" <!--@if($product->title)-->value="{number_format($product->qty,2)}"<!--@end--> />
+                        </div>
+                    </td>
+                </tr>
+                <!--@endif-->
+                <tr>
+                    <th scope="row">
+                        <label for="in_stock">{$lang->in_stock}</label>
+                    </th>
+                    <td class="title">
+                        <div class="fItem">
+                            <select name="in_stock" id="in_stock">
+                                <option value="Y" <!--@if($product->in_stock=='Y')-->selected<!--@end-->>{$lang->yes}</option>
+                                <option value="N" <!--@if($product->in_stock=='N')-->selected<!--@end-->>{$lang->no}</option>
+                            </select>
+                        </div>
+                    </td>
+                </tr>
+                <!--@if(!$product->parent_product_srl)-->
+                <tr>
+                    <th scope="row">
+                        <label for="categories">{$lang->categories}</label>
+                    </th>
+                    <td class="title">
+                        <div class="fItem">
+                            {$HTML_tree}
+                            <span>{$lang->about_category}</span>
+                        </div>
+                    </td>
+                </tr>
+                <!--@endif-->
+                <!--@if(!$product->isConfigurable())-->
+                    <!--@foreach($attributes_list as $attribute)-->
+
+                    <tr
+                        <!--@if((count($attribute->category_scope) > 0 && count(array_intersect($product->categories, $attribute->category_scope)) === 0) || (isset($parent_product) && in_array($attribute->attribute_srl,$parent_product->configurable_attributes)))-->
+                            style="display:none"
+                        <!--@end-->
+                        >
+                        <th scope="row">
+                            <label for="attribute_{$attribute->attribute_srl}">{$attribute->title}</label>
+                        </th>
+                        <td class="title">
+                            <div class="fItem">
+                                <!--@if($attribute->type == AttributeRepository::TYPE_TEXTFIELD)-->
+                                {@ $value = (isset($product->attributes[$attribute->attribute_srl]) ? $product->attributes[$attribute->attribute_srl] : '')}
+                                <input type="text"
+                                       id="attribute_{$attribute->attribute_srl}"
+                                       name="attribute_{$attribute->attribute_srl}"
+                                       style="width:200px"
+                                       class="iText iText attribute {implode(' ', $attribute->category_scope)}"
+                                       title="{$lang->about_qty}"
+                                       value="{$value}"
+                                        />
+                                <!--@elseif($attribute->type == AttributeRepository::TYPE_SELECT)-->
+                                {@ $values = explode('|', $attribute->values); }
+                                <select name="attribute_{$attribute->attribute_srl}"
+                                        id="attribute_{$attribute->attribute_srl}"
+                                        class="attribute {implode(' ', $attribute->category_scope)}"
+                                    >
+                                    <!--@foreach($values as $value)-->
+                                    <option value="{$value}"
+                                        <!--@if($product->attributes[$attribute->attribute_srl]==$value)-->selected<!--@end-->>
+                                        {$value}
+                                    </option>
+                                    <!--@end-->
+                                </select>
+
+                                <!--@end-->
+                            </div>
+                        </td>
+                    </tr>
+                    <!--@end-->
                 <!--@endif-->
 
-				<form action="./" method="post" ruleset="insert_product" class="" enctype="multipart/form-data" >
-				<input type="hidden" name="act" value="procShopToolInsertProduct" />
 
-				<!--@if(isset($product->product_srl))-->
-				<input type="hidden" name="product_srl" value="{$product->product_srl}" />
-				<!--@endif-->
-				<!--@if(isset($product->parent_product_srl))-->
-				<input type="hidden" name="parent_product_srl" value="{$product->parent_product_srl}" />
-				<!--@endif-->
-
-				<!--@if($product->isConfigurable())-->
-				<input type="hidden" name="product_type" value="configurable" />
-				<!--@foreach($configurable_attributes as $conf_attribute)-->
-				<input type="hidden" name="configurable_attributes[]" value="{$conf_attribute}" />
-				<!--@end-->
-				<!--@else-->
-				<input type="hidden" name="product_type" value="simple" />
-				<!--@endif-->
-
-                <table border="1" cellspacing="0" class="tableData">
-                    <!--@if($product->parent_product_srl)-->
-                    <tr>
-                        <span>This is an associated simple product for the configurable product with the title: <b>{$parent_product->title}</b> and sku:<b>{$parent_product->sku}</b></span>
-                    </tr>
-                    <!--@endif-->
-                    <tr class="first">
-                        <th scope="row">
-                            <label for="title">{$lang->title}</label>
-                        </th>
-                        <td class="title">
-                            <div class="fItem">
-                                <label class="iLabel" for="title">{$lang->about_title}</label>
-                                <input type="text" id="title" name="title" style="width:200px" class="iText iText" title="{$lang->about_title}" <!--@if($product->title)-->value="{$product->title}"<!--@end--> />
-                            </div>
-                        </td>
-                    </tr>
-                    <!--@if(!$product->parent_product_srl)-->
-                    <tr>
-                        <th scope="row">
-                            <label for="description">{$lang->description}</label>
-                        </th>
-                        <td class="title">
-                            <div class="fItem">
-                                <label class="iLabel" for="description">{$lang->about_description}</label>
-                                <textarea name="description" rows="8" cols="100" class="iTextarea" id="description" title="{$lang->about_description}"><!--@if($product->title)-->{$product->description}<!--@end--></textarea>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th scope="row">
-                            <label for="short_description">{$lang->short_description}</label>
-                        </th>
-                        <td class="title">
-                            <div class="fItem">
-                                <label class="iLabel" for="short_description">{$lang->about_short_description}</label>
-                                <textarea name="short_description" rows="8" cols="100" class="iTextarea" id="short_description" title="{$lang->about_short_description}"><!--@if($product->short_description)-->{$product->title}<!--@end--></textarea>
-                            </div>
-                        </td>
-                    </tr>
-                    <!--@endif-->
-                    <tr>
-                        <th scope="row">
-                            <label>{$lang->images}</label>
-                        </th>
-                        <td class="title">
-                            <div class="fItem">
-                                <label class="iLabel" for="filesToUpload">{$lang->about_images}</label>
-                                <input name="filesToUpload[]" id="filesToUpload" type="file" multiple="" onchange="makeFileList();"/>
-                                <ul id="fileList" style="list-style:none;">
-                                </ul>
-                                <ul id="existingFilesList" style="list-style:none;">
-                                    <!--@foreach($product->images as $image)-->
-                                    <li>
-                                        <input type="radio" name="primary_image" value="{$image->image_srl}" id="{$image->image_srl}" <!--@if($image->is_primary == 'Y')-->checked<!--@end-->>{$image->filename}
-                                        <img name="{$image->image_srl}" src="./files/attach/images/shop/{$product->module_srl}/product-images/{$product->product_srl}/{$image->filename}" width="100" height="100">
-                                        <input type="checkbox" id="delete_{$image->image_srl}" name="delete[]" value="{$image->image_srl}"/> Delete
-                                    </li>
-                                    <!--@end-->
-                                </ul>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th scope="row">
-                            <label for="sku">{$lang->sku}</label>
-                        </th>
-                        <td class="title">
-                            <div class="fItem">
-                                <label class="iLabel" for="sku">{$lang->about_sku}</label>
-                                <input type="text" id="sku" name="sku" style="width:200px" class="iText iText" title="{$lang->about_sku}" <!--@if($product->title)-->value="{$product->sku}"<!--@end--> />
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th scope="row">
-                            <label for="weight">{$lang->weight}</label>
-                        </th>
-                        <td class="title">
-                            <div class="fItem">
-                                <label class="iLabel" for="weight">{$lang->about_weight}</label>
-                                <input type="text" id="weight" name="weight" style="width:200px" class="iText iText" title="{$lang->about_weight}" <!--@if($product->title)-->value="{number_format($product->weight,2)}"<!--@end--> />
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th scope="row">
-                            <label for="status">{$lang->status}</label>
-                        </th>
-                        <td class="title">
-                            <div class="fItem">
-                                <select name="status" id="status">
-                                    <option value="enabled" <!--@if($product->status=='enabled')-->selected<!--@end-->>{$lang->enabled}</option>
-                                    <option value="disabled" <!--@if($product->status=='disabled')-->selected<!--@end-->>{$lang->disabled}</option>
-                                </select>
-                            </div>
-                        </td>
-                    </tr>
-                    <!--@if(!$product->parent_product_srl)-->
-                    <tr>
-                        <th scope="row">
-                            <label for="friendly_url">{$lang->friendly_url}</label>
-                        </th>
-                        <td class="title">
-                            <div class="fItem">
-                                <label class="iLabel" for="friendly_url">{$lang->about_friendly_url}</label>
-                                <input type="text" id="friendly_url" name="friendly_url" style="width:200px" class="iText iText" title="{$lang->about_friendly_url}" <!--@if($product->title)-->value="{$product->friendly_url}"<!--@end--> />
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th scope="row">
-                            <label for="price">{$lang->price}</label>
-                        </th>
-                        <td class="title">
-                            <div class="fItem">
-                                <label class="iLabel" for="price">{$lang->about_price}</label>
-                                <input type="text" id="price" name="price" style="width:200px" class="iText iText" title="{$lang->about_price}" <!--@if($product->title)-->value="{number_format($product->price,2)}"<!--@end--> />
-                            </div>
-                        </td>
-                    </tr>
-                    <!--@endif-->
-                    <!--@if(!$product->isConfigurable())-->
-                    <tr>
-                        <th scope="row">
-                            <label for="qty">{$lang->qty}</label>
-                        </th>
-                        <td class="title">
-                            <div class="fItem">
-                                <label class="iLabel" for="qty">{$lang->about_qty}</label>
-                                <input type="text" id="qty" name="qty" style="width:200px" class="iText iText" title="{$lang->about_qty}" <!--@if($product->title)-->value="{number_format($product->qty,2)}"<!--@end--> />
-                            </div>
-                        </td>
-                    </tr>
-                    <!--@endif-->
-                    <tr>
-                        <th scope="row">
-                            <label for="in_stock">{$lang->in_stock}</label>
-                        </th>
-                        <td class="title">
-                            <div class="fItem">
-                                <select name="in_stock" id="in_stock">
-                                    <option value="Y" <!--@if($product->in_stock=='Y')-->selected<!--@end-->>{$lang->yes}</option>
-                                    <option value="N" <!--@if($product->in_stock=='N')-->selected<!--@end-->>{$lang->no}</option>
-                                </select>
-                            </div>
-                        </td>
-                    </tr>
-                    <!--@if(!$product->parent_product_srl)-->
-                    <tr>
-                        <th scope="row">
-                            <label for="categories">{$lang->categories}</label>
-                        </th>
-                        <td class="title">
-                            <div class="fItem">
-                                {$HTML_tree}
-                                <span>{$lang->about_category}</span>
-                            </div>
-                        </td>
-                    </tr>
-                    <!--@endif-->
-                    <!--@if(!$product->isConfigurable())-->
-                        <!--@foreach($attributes_list as $attribute)-->
-
-                        <tr
-                            <!--@if((count($attribute->category_scope) > 0 && count(array_intersect($product->categories, $attribute->category_scope)) === 0) || (isset($parent_product) && in_array($attribute->attribute_srl,$parent_product->configurable_attributes)))-->
-                                style="display:none"
-                            <!--@end-->
-                            >
-                            <th scope="row">
-                                <label for="attribute_{$attribute->attribute_srl}">{$attribute->title}</label>
-                            </th>
-                            <td class="title">
-                                <div class="fItem">
-                                    <!--@if($attribute->type == AttributeRepository::TYPE_TEXTFIELD)-->
-									{@ $value = (isset($product->attributes[$attribute->attribute_srl]) ? $product->attributes[$attribute->attribute_srl] : '')}
-                                    <input type="text"
-                                           id="attribute_{$attribute->attribute_srl}"
-                                           name="attribute_{$attribute->attribute_srl}"
-                                           style="width:200px"
-                                           class="iText iText attribute {implode(' ', $attribute->category_scope)}"
-                                           title="{$lang->about_qty}"
-                                           value="{$value}"
-                                            />
-                                    <!--@elseif($attribute->type == AttributeRepository::TYPE_SELECT)-->
-                                    {@ $values = explode('|', $attribute->values); }
-                                    <select name="attribute_{$attribute->attribute_srl}"
-                                            id="attribute_{$attribute->attribute_srl}"
-                                            class="attribute {implode(' ', $attribute->category_scope)}"
-                                        >
-                                        <!--@foreach($values as $value)-->
-                                        <option value="{$value}"
-                                            <!--@if($product->attributes[$attribute->attribute_srl]==$value)-->selected<!--@end-->>
-                                            {$value}
-                                        </option>
-                                        <!--@end-->
-                                    </select>
-
-                                    <!--@end-->
-                                </div>
-                            </td>
-                        </tr>
-                        <!--@end-->
-                    <!--@endif-->
-
-
-                    <tr class="last">
-                        <th scope="row">
-                        </th>
-                        <td class="title">
-                            <!--@if(!isset($product->product_srl))-->
-                            <span class="btn"><input type="submit" value="{$lang->cmd_submit}" /></span>
-                            <!--@else-->
-                            <span class="btn"><input type="submit" value="{$lang->cmd_update}" /></span>
-                            <!--@endif-->
-                        </td>
-                    </tr>
-                </table>
-				</form>
-            </fieldset>
-        </div>
+                <tr class="last">
+                    <th scope="row">
+                    </th>
+                    <td class="title">
+                        <!--@if(!isset($product->product_srl))-->
+                        <span class="btn"><input type="submit" value="{$lang->cmd_submit}" /></span>
+                        <!--@else-->
+                        <span class="btn"><input type="submit" value="{$lang->cmd_update}" /></span>
+                        <!--@endif-->
+                    </td>
+                </tr>
+            </table>
+            </form>
+        </fieldset>
+    </div>
 
 </div>
 <!-- /Content -->
@@ -294,112 +295,3 @@
 <!-- Extension -->
 
 <!--#include("_tool_footer.html")-->
-
-<script type="text/javascript">
-
-    var index =0;
-    var numfiles =0;
-    var id = '';
-
-    function makeFileList(){
-        var i=0;
-        var input = document.getElementById('filesToUpload');
-        var browserName=navigator.appName;
-        var list = document.getElementById('fileList');
-        if (browserName=="Microsoft Internet Explorer") {
-            index++;
-            if(index == 1) var currentinput = input;
-            else var currentinput = document.getElementById('filesToUpload'+(index-1));
-            var newfileuploadinput = jQuery(currentinput).clone(true);
-            jQuery(newfileuploadinput).removeAttr("id");
-            jQuery(newfileuploadinput).attr('id', 'filesToUpload'+index);
-            jQuery(currentinput).hide(0.1);
-            jQuery(newfileuploadinput).insertAfter(currentinput);
-
-
-            var li = document.createElement('li');
-            var checkbox = document.createElement('input');
-            checkbox.type = "radio";
-            checkbox.name = "primary_image";
-            checkbox.value = index;
-            checkbox.id = index;
-
-            jQuery(list).append(li);
-
-
-            var elem = currentinput.value.split("\\");
-            var filename = elem[elem.length-1];
-            li.innerHTML = outerHTML(checkbox) + 'File ' + index + ':  ' + filename;
-
-            if(index == 1){
-                var p = document.createElement('p');
-                p.innerHTML = "Select primary product image";
-
-                jQuery(p).insertBefore(list);
-            }
-        }
-         else {
-            numfiles = input.files.length;
-            for (var x = 0; x < numfiles; x++) {
-
-                //add to list
-                var li = document.createElement('li');
-
-                var checkbox = document.createElement('input');
-                checkbox.type = "radio";
-                checkbox.name = "primary_image";
-                checkbox.value = index;
-                checkbox.id = index;
-
-
-
-                jQuery(list).append(li);
-
-                var image = document.createElement('image');
-                image.name = "image_"+index;
-                image.id = "image_"+index;
-                image.src="#";
-
-                li.innerHTML = outerHTML(checkbox) + 'Not yet saved:  ' + input.files[x].name + outerHTML(image);
-                index++;
-            }
-            if(index == numfiles){
-                var p = document.createElement('p');
-                p.innerHTML = "Select primary product image";
-
-                jQuery(p).insertBefore(list);
-            }
-        }
-
-
-
-        if (browserName!="Microsoft Internet Explorer") {
-            var reader = new FileReader();
-            reader.readAsDataURL(input.files[0]);
-            reader.onload = function (e) {
-                if(i < numfiles){
-                    id = "image_"+(index-(numfiles-i));
-                    image = document.getElementById(id);
-                    image.src =  e.target.result ;
-                    image.width = 100;
-                    image.height = 100;
-                    i++;
-                    reader.readAsDataURL(input.files[i]);
-                }
-            }
-        }
-
-    }
-    function outerHTML(node){
-        // if IE, Chrome take the internal method otherwise build one
-        return node.outerHTML || (
-                function(n){
-                    var div = document.createElement('div'), h;
-                    div.appendChild( n.cloneNode(true) );
-                    h = div.innerHTML;
-                    div = null;
-                    return h;
-                })(node);
-    }
-
-</script>
