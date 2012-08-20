@@ -1,31 +1,4 @@
-<div id="container">
-
-<div id="top_menu">
-    <include target="cart_small.html"/>
-    <!--@if($logged_info)-->
-    <span>Welcome {$logged_info->user_id}!</span>
-    <!--@end-->
-    <a href="{$admin_url}" accesskey="A">Admin Page</a>
-    <a href="{getURL('act','dispShopToolSelectPaymentMethod')}">Payment test page</a>
-</div>
-
-<include target="breadcrumbs.html" />
-
-<div id="top_links">
-
-    <a href="#">My Account</a>
-    <a href="#">Cart</a>
-    <a href="#">Support</a>
-
-    <form>
-        <input type="text" name="search" value=""/>
-        <input type="submit" value="Search"/>
-    </form>
-</div>
-
-<div class="clear"/>
-
-<div id="content">
+<include target="_header.html" />
 
 <div id="categories">
 <h4>Categories</h4>
@@ -101,7 +74,7 @@ jQuery(document).ready(function($){
 			<!--@else-->
 				<img src="img/missingProductLarge.png" width="150px" height="150px" />
 			<!--@end-->
-			<span><a href="#">{$product->product_srl} - {$product->title}</a></span>
+			<span><a href="{getUrl('vid', $mid, 'act', 'dispShopProduct', 'product_srl', $product->product_srl)}">{$product->product_srl} - {$product->title}</a></span>
 			<span>Price: {$product->price}</span>
 
 			<form action="./">
@@ -141,6 +114,7 @@ jQuery(document).ready(function($){
 	<div class="clear"/>
 
 	<!-- Pagination -->
+	<!--@if($page_navigation)-->
 	<div class="pagination">
 		<a href="{getUrl('page','','mid',$mid)}" class="prev"><span>{$lang->first_page}</span></a>
 
@@ -154,13 +128,9 @@ jQuery(document).ready(function($){
 
 		<a href="{getUrl('page',$page_navigation->last_page,'module_srl','')}" class="next"><span>{$lang->last_page}</span></a>
 	</div>
+	<!--@end-->
 	<!-- /Pagination -->
 
 </div>
 
-
-<div class="clear"/>
-
-</div>
-
-</div>
+<include target="_footer.html"/>

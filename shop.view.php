@@ -594,6 +594,26 @@ class shopView extends shop {
 	}
 
 	/**
+	 * Frontend shop product page
+	 */
+	public function dispShopProduct()
+	{
+		$product_srl = Context::get('product_srl');
+
+		/**
+		 * @var shopModel $shopModel
+		 */
+		$shopModel = getModel('shop');
+		$product_repository = $shopModel->getProductRepository();
+
+		$product = $product_repository->getProduct($product_srl);
+
+		Context::set('product', $product);
+
+		$this->setTemplateFile('product.html');
+	}
+
+	/**
 	 * Returns the javascript code used as datasource for linked dropdowns
 	 */
 	private function getAssociatedProductsAttributesAsJavascriptArray($products)
@@ -620,7 +640,7 @@ class shopView extends shop {
 					 if(!$already_added[$attribute1])
 					 {
 						 $datasource .= "associated_products[$product->product_srl]['$attribute1'] = new Object();" . PHP_EOL;
-						 $already_added[$attribute1] = true;
+						 $already_added[$attribute1] = TRUE;
 					 }
 
 					 $datasource .= "associated_products[$product->product_srl]['$attribute1']['$attribute2'] = $asoc_product->product_srl;" . PHP_EOL;

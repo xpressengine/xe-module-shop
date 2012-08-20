@@ -1,0 +1,24 @@
+<include target="_header.html" />
+
+<h2>{$product->title}</h2>
+
+<p>{$product->short_description}</p>
+
+<p>{$product->description}</p>
+
+<p>
+    <b>SKU </b> {$product->sku}
+</p>
+
+<p>
+	<b> Weight </b> {$product->weight}
+</p>
+
+<p>
+	<b> Price </b> {$product->price}
+</p>
+
+<a href="{getUrl('vid', $mid, 'act', 'dispShop', 'product_srl', '')}">Go back</a>
+
+<include target="_footer.html" />
+
