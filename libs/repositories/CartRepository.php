@@ -36,32 +36,36 @@ class CartRepository extends BaseRepository
         return $this->query('deleteCarts', array('module_srl' => $module_srl));
     }
 
-    public function getCartByMember($member_srl, $module_srl)
+    public function getNewCart($module_srl, $member_srl=null, $guest_srl=null, $session_id=null, $items=0)
     {
-        $output = $this->query('getCartByMember', array('member_srl' => $member_srl, 'module_srl' => $module_srl));
-        if (!empty($output->data)) return new Cart($output->data);
+        if (!$session_id) $session_id = session_id();
         $cart = new Cart(array(
             'module_srl' => $module_srl,
             'member_srl' => $member_srl,
-            'session_id' => session_id(),
-            'items'      => 0
+            'guest_srl' => $guest_srl,
+            'session_id' => $session_id,
+            'items'      => $items
         ));
         $this->insertCart($cart);
         return $cart;
     }
 
+    public function getCartByMember($member_srl, $module_srl)
+    {
+        $output = $this->query('getCartByMember', array('member_srl' => $member_srl, 'module_srl' => $module_srl));
+        return empty($output->data) ? $this->getNewCart($module_srl, $member_srl) : new Cart($output->data);
+    }
+
     public function getCartByGuest($guest_srl, $module_srl)
     {
         $output = $this->query('getCartByGuest', array('guest_srl' => $guest_srl, 'module_srl' => $module_srl));
-        if (!empty($output->data)) return new Cart($output->data);
-        $cart = new Cart(array(
-            'module_srl' => $module_srl,
-            'guest_srl' => $guest_srl,
-            'session_id' => session_id(),
-            'items'      => 0
-        ));
-        $this->insertCart($cart);
-        return $cart;
+        return empty($output->data) ? $this->getNewCart($module_srl, null, $guest_srl) : new Cart($output->data);
+    }
+
+    public function getCartBySessionId($session_id, $module_srl)
+    {
+        $output = $this->query('getCartBySessionId', array('session_id' => session_id(), 'module_srl' => $module_srl));
+        return empty($output->data) ? $this->getNewCart($module_srl, null, null, $session_id) : new Cart($output->data);
     }
 
     //CartProduct:
@@ -79,6 +83,17 @@ class CartRepository extends BaseRepository
     public function deleteCartProducts($cart_srl, array $product_srls)
     {
         return $this->query('deleteCartProducts', array('cart_srl' => $cart_srl, 'product_srls' => $product_srls));
+    }
+
+    public function updateCartProduct($cart_srl, $product_srl, $quantity)
+    {
+        return $this->query('updateCartProduct', array('cart_srl' => $cart_srl, 'product_srl' => $product_srl, 'quantity' => $quantity));
+    }
+
+    public function countCartProducts($cart_srl)
+    {
+        $output = $this->query('getCartProductsCount', array('cart_srl' => $cart_srl));
+        return $output->count;
     }
 
 }

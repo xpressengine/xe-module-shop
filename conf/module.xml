@@ -33,7 +33,6 @@
         <permission action="procShopToolDeleteProduct" target="manager" />
         <permission action="procShopToolDeleteProducts" target="manager" />
         <permission action="procShopToolDeleteAttributes" target="manager" />
-        <permission action="procShopToolCartAddProduct" target="manager" />
 
         <!-- Product categories -->
         <permission action="dispShopToolManageCategories" target="manager" />

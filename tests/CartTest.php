@@ -69,9 +69,9 @@ class CartTest extends Shop_Generic_Tests_DatabaseTestCase
         $this->assertEquals(1, $this->getConnection()->getRowCount('xe_shop_cart'), "Insert failed");
     }
 
-    public function testGetCart()
+    public function testGetCartByGuest()
     {
-        $cart = $this->repo->getCart(307);
+        $cart = $this->repo->getCartByGuest(13, 307);
         $this->assertInstanceOf('Cart', $cart);
     }
 

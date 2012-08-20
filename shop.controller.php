@@ -9,6 +9,8 @@
 
         /** @var shopModel */
         protected $model;
+        /** @var shopInfo */
+        protected $shop;
 
         /**
          * @brief Initialization
@@ -85,7 +87,7 @@
         public function procShopInfoUpdate(){
             $oModuleController = getController('module');
             $oModuleModel = getModel('module');
-            $oShopModel = getModel('shop');
+            $oShopModel = $this->model;
 
             if(in_array(strtolower('dispShopToolConfigInfo'),$this->custom_menu->hidden_menu)) return new Object(-1,'msg_invalid_request');
 
@@ -120,7 +122,7 @@
          * @brief shop colorset modify
          **/
         public function procShopColorsetModify() {
-            $oShopModel = getModel('shop');
+            $oShopModel = $this->model;
             $myshop = $oShopModel->getMemberShop();
             if(!$myshop->isExists()) return new Object(-1, 'msg_not_permitted');
 
@@ -138,7 +140,7 @@
          * @author Dan Dragan (dev@xpressengine.org)
          */
         public function procShopToolInsertProduct(){
-            $shopModel = getModel('shop');
+            $shopModel = $this->model;
             $productRepository = $shopModel->getProductRepository();
 			$imageRepository = $shopModel->getImageRepository();
 
@@ -217,7 +219,7 @@
 			/**
 			 * @var shopModel $shopModel
 			 */
-			$shopModel = getModel('shop');
+			$shopModel = $this->model;
 			$productRepository = $shopModel->getProductRepository();
 			$args = Context::getRequestVars();
 			$parent_product = $productRepository->getProduct($args->parent_product_srl);
@@ -242,7 +244,8 @@
          * @author Florin Ercus (dev@xpressengine.org)
          */
         public function procShopToolInsertAttribute() {
-            $shopModel = getModel('shop');
+            $shopModel = $this->model;
+            /** @var $repository AttributeRepository */
             $repository = $shopModel->getAttributeRepository();
 
             $args = Context::getRequestVars();
@@ -283,26 +286,23 @@
                 $productsRepo = $this->model->getProductRepository();
                 if ($product = $productsRepo->getProductByFriendlyUrl($friendly_url)) {
                     $logged_info = Context::get('logged_info');
+                    $module_srl = $this->module_info->module_srl;
                     if ($member_srl = $logged_info->member_srl) {
-                        $cart = $cartRepository->getCartByMember($member_srl, $this->module_info->module_srl);
+                        $cart = $cartRepository->getCartByMember($member_srl, $module_srl);
                     }
                     else {
-                        $guestRepo = $this->model->getGuestRepository();
-                        $guest = $guestRepo->createOrRetrieve();
+                        $cart = $cartRepository->getCartBySessionId(session_id(), $module_srl);
                     }
-                    $cartRepository->insertCartProduct($cart->cart_srl, $product->product_srl, Context::get('quantity'));
-                } else throw new Exception('404 product not found?');
-            } else throw new Exception('Missing product friendly_url');
-            $logged_info = Context::get('logged_info');
-            if (!$member_srl = $logged_info->member_srl) {
-                //create or retrieve guest and use the srl
+                    $quantity = (is_numeric(Context::get('quantity')) && Context::get('quantity') > 0 ? Context::get('quantity') : 1);
+                    $output = $cart->addProduct($product, $quantity);
+                }
+                else throw new Exception('404 product not found?');
             }
+            else throw new Exception('Missing product friendly_url');
 
-            $args->module_srl = $this->module_srl;
-            $output = executeQuery('shop.updateShopInfo', $args);
-            if (!$output->toBool()) return $output;
-
-            $returnUrl = getNotEncodedUrl('', 'act', 'dispShopToolManageAttributes');
+            //$returnUrl = getNotEncodedUrl('', 'act', 'dispShopToolManageAttributes');
+            $shop = $this->model->getShop($this->module_srl);
+            $returnUrl = getSiteUrl($shop->domain);
             $this->setRedirectUrl($returnUrl);
         }
 
@@ -312,7 +312,7 @@
         * @author Dan Dragan (dev@xpressengine.org)
         */
         public function procShopToolDeleteProduct(){
-            $shopModel = getModel('shop');
+            $shopModel = $this->model;
             $repository = $shopModel->getProductRepository();
 
             $args = new stdClass();
@@ -330,7 +330,7 @@
         * @author Dan Dragan (dev@xpressengine.org)
         */
         public function procShopToolDeleteProducts(){
-            $shopModel = getModel('shop');
+            $shopModel = $this->model;
             $repository = $shopModel->getProductRepository();
 
 			$args = new stdClass();
@@ -347,7 +347,7 @@
         * @author Florin Ercus (dev@xpressengine.org)
         */
         public function procShopToolDeleteAttributes(){
-            $shopModel = getModel('shop');
+            $shopModel = $this->model;
             $repository = $shopModel->getAttributeRepository();
             $args = new stdClass();
             $args->attribute_srls = explode(',', Context::get('attribute_srls'));
@@ -359,7 +359,7 @@
         public function procShopToolLayoutConfigSkin() {
             $oModuleModel = getModel('module');
             $oModuleController = getController('module');
-            $oShopModel = getModel('shop');
+            $oShopModel = $this->model;
 
             if(in_array(strtolower('dispShopToolLayoutConfigSkin'),$this->custom_menu->hidden_menu)) return new Object(-1,'msg_invalid_request');
 
@@ -387,7 +387,7 @@
         public function resetSkin($module_srl,$skin=NULL){
             if(!$skin) $skin = $this->skin;
             if(!file_exists($this->module_path.'skins/'.$skin)) $skin = $this->skin;
-            $oShopModel = getModel('shop');
+            $oShopModel = $this->model;
             FileHandler::removeDir($oShopModel->getShopPath($module_srl));
             FileHandler::copyDir($this->module_path.'skins/'.$skin, $oShopModel->getShopPath($module_srl));
         }
@@ -396,7 +396,7 @@
         public function procShopToolLayoutConfigEdit() {
             if(in_array(strtolower('dispShopToolLayoutConfigEdit'),$this->custom_menu->hidden_menu)) return new Object(-1,'msg_invalid_request');
 
-            $oShopModel = getModel('shop');
+            $oShopModel = $this->model;
             $skin_path = $oShopModel->getShopPath($this->module_srl);
 
             $skin_file_list = $oShopModel->getShopUserSkinFileList($this->module_srl);
@@ -417,7 +417,7 @@
         public function procShopToolUserSkinExport(){
             if(!$this->module_srl) return new Object('-1','msg_invalid_request');
 
-            $oShopModel = getModel('shop');
+            $oShopModel = $this->model;
             $skin_path = FileHandler::getRealPath($oShopModel->getShopPath($this->module_srl));
 
             $tar_list = FileHandler::readDir($skin_path,'/(\.css|\.html|\.htm|\.js)$/');
@@ -458,7 +458,7 @@
             if(!is_uploaded_file($file['tmp_name'])) exit();
             if(!preg_match('/\.(tar)$/i', $file['name'])) exit();
 
-            $oShopModel = getModel('shop');
+            $oShopModel = $this->model;
             $skin_path = FileHandler::getRealPath($oShopModel->getShopPath($this->module_srl));
 
             $tar_file = $skin_path . 'shop_skin.tar';
@@ -552,7 +552,7 @@
             $xml_info = $oModuleModel->getModuleActionXml('shop');
             if($oModule->mid == $this->shop_mid && isset($xml_info->action->{$oModule->act})) return new Object();
 
-            $oShopModel = getModel('shop');
+            $oShopModel = $this->model;
             $oShopView = getView('shop');
 
             Context::set('layout',NULL);
@@ -590,7 +590,7 @@
 			$delete_image = Context::get('delete_image');
 			$vid = Context::get('vid');
 
-			$shopModel = getModel('shop');
+			$shopModel = $this->model;
 			$repository = $shopModel->getCategoryRepository();
 
 			// Upload image
@@ -649,7 +649,7 @@
 			$category_srl = Context::get('category_srl');
 			if(!isset($category_srl)) return new Object(-1, 'msg_invalid_request');
 
-			$shopModel = getModel('shop');
+			$shopModel = $this->model;
 			$repository = $shopModel->getCategoryRepository();
 			$category = $repository->getCategory($category_srl);
 
@@ -668,7 +668,7 @@
 			$category_srl = Context::get('category_srl');
 			if(!isset($category_srl)) return new Object(-1, 'msg_invalid_request');
 
-			$shopModel = getModel('shop');
+			$shopModel = $this->model;
 			$repository = $shopModel->getCategoryRepository();
 			$args = new stdClass();
 			$args->category_srl = $category_srl;
@@ -699,7 +699,7 @@
 
             if ($name != '') {
 
-                $shopModel = getModel('shop');
+                $shopModel = $this->model;
                 $repository = $shopModel->getPaymentGatewayRepository();
 
                 $pg = new PaymentGateway();
@@ -738,7 +738,7 @@
 
             if ($name != '') {
 
-                $shopModel = getModel('shop');
+                $shopModel = $this->model;
                 $repository = $shopModel->getPaymentGatewayRepository();
 
                 $gateway = new PaymentGateway();
@@ -770,7 +770,7 @@
                 /**
                  * @var shopModel $shopModel
                  */
-                $shopModel = getModel('shop');
+                $shopModel = $this->model;
                 $repository = $shopModel->getPaymentGatewayRepository();
 
                 $gateway = new PaymentGateway();
@@ -837,7 +837,7 @@
                                 /**
                                  * @var shopModel $shopModel
                                  */
-                                $shopModel = getModel('shop');
+                                $shopModel = $this->model;
                                 $repository = $shopModel->getPaymentGatewayRepository();
 
                                 $pg = new PaymentGateway();
@@ -902,7 +902,7 @@
             /**
              * @var shopModel $shopModel
              */
-            $shopModel = getModel('shop');
+            $shopModel = $this->model;
             $repository = $shopModel->getPaymentGatewayRepository();
 
             try {

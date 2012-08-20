@@ -13,7 +13,14 @@ class GuestRepository extends BaseRepository
 
     public function createOrRetrieve()
     {
-        //aici
+        return new Guest(array(
+            'guest_srl' => getNextSequence(),
+            'address_srl' => null,
+            'ip' => '43.46.62.212',
+            'session_id' => session_id(),
+            'regdate' => time(),
+            'last_update' => time()
+        ));
     }
 
 }

@@ -650,36 +650,39 @@ class shopView extends shop {
 	{
 		 $datasource = "var associated_products = new Object();" . PHP_EOL;
 
-		 foreach($products as $product)
-		 {
-			 if($product->isSimple()) continue;
 
-			 $datasource .= "associated_products[$product->product_srl] = new Object();" . PHP_EOL;
+         if (is_array($products)) {
+             foreach($products as $product)
+             {
+                 if($product->isSimple()) continue;
 
-			 $already_added = array();
-			 foreach($product->associated_products as $asoc_product)
-			 {
-				 $attribute_values = array_values($asoc_product->attributes);
+                 $datasource .= "associated_products[$product->product_srl] = new Object();" . PHP_EOL;
 
-				 // Take just first two attributes
-				 $attribute1 = $attribute_values[0];
-				 $attribute2 = $attribute_values[1];
+                 $already_added = array();
+                 foreach($product->associated_products as $asoc_product)
+                 {
+                     $attribute_values = array_values($asoc_product->attributes);
 
-				 if($attribute2)
-				 {
-					 if(!$already_added[$attribute1])
-					 {
-						 $datasource .= "associated_products[$product->product_srl]['$attribute1'] = new Object();" . PHP_EOL;
-						 $already_added[$attribute1] = TRUE;
-					 }
+                     // Take just first two attributes
+                     $attribute1 = $attribute_values[0];
+                     $attribute2 = $attribute_values[1];
 
-					 $datasource .= "associated_products[$product->product_srl]['$attribute1']['$attribute2'] = $asoc_product->product_srl;" . PHP_EOL;
-				 }
-				 else
-				 {
-					 $datasource .= "associated_products[$product->product_srl]['$attribute1'] = $asoc_product->product_srl;" . PHP_EOL;
-				 }
-			 }
+                     if($attribute2)
+                     {
+                         if(!$already_added[$attribute1])
+                         {
+                             $datasource .= "associated_products[$product->product_srl]['$attribute1'] = new Object();" . PHP_EOL;
+                             $already_added[$attribute1] = TRUE;
+                         }
+
+                         $datasource .= "associated_products[$product->product_srl]['$attribute1']['$attribute2'] = $asoc_product->product_srl;" . PHP_EOL;
+                     }
+                     else
+                     {
+                         $datasource .= "associated_products[$product->product_srl]['$attribute1'] = $asoc_product->product_srl;" . PHP_EOL;
+                     }
+                 }
+             }
 		 }
 		return $datasource;
 
@@ -755,4 +758,3 @@ class shopView extends shop {
 
 
 }
-?>

@@ -14,7 +14,9 @@ abstract class BaseRepository
     public static function check($output)
     {
         if (!is_object($output)) throw new Exception('A valid query output is expected here');
-        if (!$output->toBool()) throw new Exception($output->getMessage(), $output->getError());
+        if (!$output->toBool()) {
+            throw new Exception($output->getMessage(), $output->getError());
+        }
         return $output;
     }
 
