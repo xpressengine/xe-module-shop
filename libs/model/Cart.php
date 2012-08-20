@@ -29,16 +29,25 @@ class Cart extends BaseItem
         //check if product already added
         $output = $this->repo->getCartProducts($this->cart_srl, array($product_srl));
         if (empty($output->data)) {
-            return $this->repo->insertCartProduct($this->cart_srl, $product_srl, $quantity);
+            $return = $this->repo->insertCartProduct($this->cart_srl, $product_srl, $quantity);
         }
-        //if already exists increase quantity
-        return $this->setProductQuantity($product_srl, $output->data->quantity + $quantity);
+        $return = $this->setProductQuantity($product_srl, $output->data->quantity + $quantity);
+
+        $this->items = $this->count();
+        $this->save();
+
+        return $return;
     }
 
     public function setProductQuantity($product_srl, $quantity)
     {
         if (!$this->cart_srl) throw new Exception('Cart is not persisted');
         return $this->repo->updateCartProduct($this->cart_srl, $product_srl, $quantity);
+    }
+
+    public function count()
+    {
+        return $this->repo->countCartProductsBySessionId( $this->session_id );
     }
 
 }

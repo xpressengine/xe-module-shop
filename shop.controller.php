@@ -296,6 +296,7 @@
                     $quantity = (is_numeric(Context::get('quantity')) && Context::get('quantity') > 0 ? Context::get('quantity') : 1);
                     $output = $cart->addProduct($product, $quantity);
                 }
+                //TODO: throw proper 404 instead of exception
                 else throw new Exception('404 product not found?');
             }
             else throw new Exception('Missing product friendly_url');
