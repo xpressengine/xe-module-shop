@@ -7,10 +7,10 @@
 			<!--@if($i > $max_attributes) break; -->
 			<!--@endif-->
 
+			<p>
 			{$attribute_title}
 			<select id="product_{$product->product_srl}_attribute_{$attribute_srl}_values" class="level_{$i}">
-			<!-- For first select, also display options -->
-				<!--@if($i == 1)-->
+			<option value=""></option>
 				{@ $already_added = array() }
 				<!--@foreach($product->associated_products as $asoc_product)-->
 					{@ $current_value = $asoc_product->attributes[$attribute_srl] }
@@ -19,10 +19,10 @@
 					<!--@endif-->
 					{@ $already_added[$current_value] = true; }
 				<!--@end-->
-				<!--@endif-->
 			</select>
+			</p>
 		{@ $i++;}
-	<!--@end-->
+		<!--@end-->
 		<input type="text" disabled="disabled" id="product_srl" name="product_srl" value="" />
 	</div>
 <!--@end-->

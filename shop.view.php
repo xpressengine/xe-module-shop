@@ -652,54 +652,60 @@ class shopView extends shop {
 	/**
 	 * Returns the javascript code used as datasource for linked dropdowns
 	 */
-	private function getAssociatedProductsAttributesAsJavascriptArray($products)
+	private function getAssociatedProductsAttributesAsJavascriptArray($products, $reverse = null)
 	{
-		 $datasource = "var associated_products = new Object();" . PHP_EOL;
+		if(is_null($reverse))
+		{
+			return $this->getAssociatedProductsAttributesAsJavascriptArray($products, false) . PHP_EOL .
+						$this->getAssociatedProductsAttributesAsJavascriptArray($products, true);
+		}
+
+		$datasource_name = 'associated_products';
+		if($reverse) $datasource_name = 'reverse_' . $datasource_name;
+
+		 $datasource = "var $datasource_name = new Object();" . PHP_EOL;
+
+		 foreach($products as $product)
+		 {
+			 if($product->isSimple()) continue;
+
+			 $datasource .= $datasource_name . "[$product->product_srl] = new Object();" . PHP_EOL;
+
+			 $already_added = array();
+			 foreach($product->associated_products as $asoc_product)
+			 {
+				 $attribute_values = array_values($asoc_product->attributes);
+
+				 // Take just first two attributes
+				 if(!$reverse)
+				 {
+					 $attribute1 = $attribute_values[0];
+					 $attribute2 = $attribute_values[1];
+				 }
+				 else
+				 {
+					 $attribute2 = $attribute_values[0];
+					 $attribute1 = $attribute_values[1];
+				 }
 
 
-         if (is_array($products)) {
-             foreach($products as $product)
-             {
-                 if($product->isSimple()) continue;
+				 if($attribute2)
+				 {
+					 if(!$already_added[$attribute1])
+					 {
+						 $datasource .= $datasource_name . "[$product->product_srl]['$attribute1'] = new Object();" . PHP_EOL;
+						 $already_added[$attribute1] = TRUE;
+					 }
 
-                 $datasource .= "associated_products[$product->product_srl] = new Object();" . PHP_EOL;
-
-                 $already_added = array();
-                 foreach($product->associated_products as $asoc_product)
-                 {
-                     $attribute_values = array_values($asoc_product->attributes);
-
-                     // Take just first two attributes
-                     $attribute1 = $attribute_values[0];
-                     $attribute2 = $attribute_values[1];
-
-                     if($attribute2)
-                     {
-                         if(!$already_added[$attribute1])
-                         {
-                             $datasource .= "associated_products[$product->product_srl]['$attribute1'] = new Object();" . PHP_EOL;
-                             $already_added[$attribute1] = TRUE;
-                         }
-
-                         $datasource .= "associated_products[$product->product_srl]['$attribute1']['$attribute2'] = $asoc_product->product_srl;" . PHP_EOL;
-                     }
-                     else
-                     {
-                         $datasource .= "associated_products[$product->product_srl]['$attribute1'] = $asoc_product->product_srl;" . PHP_EOL;
-                     }
-                 }
-             }
+					 $datasource .= $datasource_name . "[$product->product_srl]['$attribute1']['$attribute2'] = $asoc_product->product_srl;" . PHP_EOL;
+				 }
+				 else
+				 {
+					 $datasource .= $datasource_name . "[$product->product_srl]['$attribute1'] = $asoc_product->product_srl;" . PHP_EOL;
+				 }
+			 }
 		 }
 		return $datasource;
-
-	/*
-"   //   For each attribute value
-	//   For each combination, set associated product srl
-	associated_products[323]['S']['alb'] = 325;
-
-	associated_products[323]['M'] = new Object();
-	associated_products[323]['M']['rosu'] = 324;";
-	*/
 	}
 
 	// region Product category
@@ -764,3 +770,4 @@ class shopView extends shop {
 
 
 }
+?>
