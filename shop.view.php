@@ -610,6 +610,10 @@ class shopView extends shop {
 		$product = $product_repository->getProduct($product_srl);
 		Context::set('product', $product);
 
+		// Setup Javscript datasource for linked dropdowns
+		$datasourceJS = $this->getAssociatedProductsAttributesAsJavascriptArray(array($product));
+		Context::set('datasourceJS', $datasourceJS);
+
 		// Categories left tree
 		// Retrieve existing categories
 		$category_repository = $shopModel->getCategoryRepository();

@@ -21,6 +21,9 @@
 		<b> Price </b> {$product->price}
 	</p>
 
+	<include target="product_variants_datasource.html" />
+	<include target="product_variants" />
+
 	<a href="{getUrl('vid', $mid, 'act', 'dispShop', 'product_srl', '')}">Go back</a>
 
 </div>
