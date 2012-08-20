@@ -42,6 +42,9 @@ class CategoryRepository extends BaseRepository
 		if(!isset($args->category_srl) && !isset($args->module_srl))
 			throw new Exception("Missing arguments for Product category delete: please provide [category_srl] or [module_srl]");
 
+		// Get category info before deleting it, so we can also delete category image
+		$category = $this->getCategory($args->category_srl);
+
 		$output = executeQuery('shop.deleteCategory', $args);
 		if(!$output->toBool())
 		{
@@ -58,6 +61,12 @@ class CategoryRepository extends BaseRepository
 		if(!$output->toBool())
 		{
 			throw new Exception($output->getMessage(), $output->getError());
+		}
+
+		$output = $this->deleteCategoryImage($category->filename);
+		if(!$output)
+		{
+			throw new Exception("Could not delete category image");
 		}
 
 		return TRUE;
@@ -162,13 +171,18 @@ class CategoryRepository extends BaseRepository
 	/**
 	 * Delete category image from disc
 	 *
-	 * @param int $filename Name of the file to delete (category image)
+	 * @param string $filename Name of the file to delete (category image)
 	 *
-	 * @return void
+	 * @return boolean
 	 */
 	public function deleteCategoryImage($filename)
 	{
-		FileHandler::removeFile($filename);
+		if(!$filename)
+		{
+			return TRUE;
+		}
+
+		return FileHandler::removeFile($filename);
 	}
 
 	/**
