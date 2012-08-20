@@ -548,8 +548,8 @@ class shopView extends shop {
 
 		// Categories left tree
 		// Retrieve existing categories
-		$categoryRepository = $shopModel->getCategoryRepository();
-		$tree = $categoryRepository->getCategoriesTree($this->module_srl);
+		$category_repository = $shopModel->getCategoryRepository();
+		$tree = $category_repository->getCategoriesTree($this->module_srl);
 
 		// Prepare tree for display
 		$tree_config = new HtmlCategoryTreeConfig();
@@ -562,10 +562,10 @@ class shopView extends shop {
 		$category_srl = Context::get('category_srl');
 		if($category_srl)
 		{
-			$current_category = $categoryRepository->getCategory($category_srl);
+			$current_category = $category_repository->getCategory($category_srl);
 			Context::set('current_category', $current_category);
 
-			$breadcrumbs_items = $categoryRepository->getCategoryParents($current_category);
+			$breadcrumbs_items = $category_repository->getCategoryParents($current_category);
 			Context::set('breadcrumbs_items', $breadcrumbs_items);
 		}
 
@@ -607,8 +607,21 @@ class shopView extends shop {
 		$product_repository = $shopModel->getProductRepository();
 
 		$product = $product_repository->getProduct($product_srl);
-
 		Context::set('product', $product);
+
+		// Current category details
+		$category_srl = Context::get('category_srl');
+		if($category_srl)
+		{
+			$category_repository = $shopModel->getCategoryRepository();
+			$current_category = $category_repository->getCategory($category_srl);
+			Context::set('current_category', $current_category);
+
+			$breadcrumbs_items = $category_repository->getCategoryParents($current_category);
+			Context::set('breadcrumbs_items', $breadcrumbs_items);
+		}
+
+
 
 		$this->setTemplateFile('product.html');
 	}

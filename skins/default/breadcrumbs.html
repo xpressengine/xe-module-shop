@@ -5,8 +5,16 @@
     <!--@foreach($breadcrumbs_items as $item)-->
         <a href="{getUrl('vid', $mid, 'act', 'dispShop', 'category_srl', $item->category_srl)}">{$item->title}</a> >>
     <!--@end-->
-	{$current_category->title}
+	{@ $last_link = array( 'text' => $current_category->title, 'url' => getUrl('vid', $mid, 'act', 'dispShop', 'category_srl', $current_category->category_srl) )}
 <!--@else-->
-	Home
+	{@ $last_link = array( 'text' => 'Home', 'url' => getUrl('vid', $mid, 'act', 'dispShop', 'category_srl', '')) }
 <!--@end-->
+
+<!--@if($product)-->
+    <a href="{$last_link["url"]}">{$last_link["text"]}</a> >>
+    {$product->title}
+<!--@else-->
+	{$last_link["text"]}
+<!--@end-->
+
 </div>
