@@ -350,6 +350,7 @@ class ProductRepository extends BaseRepository
 			foreach($associated_products as $associated_product)
 			{
 				$product_object = new SimpleProduct($associated_product);
+				$this->getProductAttributes($product_object);
 				$product->associated_products[] = $product_object;
 			}
 		}

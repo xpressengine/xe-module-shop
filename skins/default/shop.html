@@ -4,8 +4,6 @@
 
 <script type="text/javascript">
 jQuery(document).ready(function($){
-	{$datasourceJS}
-
     $("#products .add_to_cart").click(function(){
 	    $current_form = $(this).parent();
 
@@ -21,40 +19,6 @@ jQuery(document).ready(function($){
 		}
 
 
-	});
-
-
-    $("#products .product select.level_1").change(function(){
-	    $first_select = $(this);
-	    $current_form = $first_select.parent("form");
-
-	    $selected_value = $first_select.val();
-		$product_srl = $current_form.parent(".product").attr("id").substr(8);
-
-		$second_select = $first_select.next("select.level_2");
-	    if($second_select.length)
-		{
-			$options_list = associated_products[$product_srl][$selected_value];
-			$second_select.html("");
-			$.each($options_list, function(attribute, associated_product_srl){
-				$second_select.append("<option value='" + associated_product_srl + "'>" + attribute + "</option>");
-			});
-
-			$second_select.trigger("change");
-		}
-		else
-		{
-			$associated_product_srl = associated_products[$product_srl][$selected_value];
-			$current_form.find("#product_srl").val($associated_product_srl);
-		}
-
-	});
-
-	$("#products .product select.level_2").change(function(){
-		$current_form = $(this).parent("form");
-	    $selected_value = $(this).val();
-
-	    $current_form.find("#product_srl").val($selected_value);
 	});
 });
 </script>
@@ -75,9 +39,13 @@ jQuery(document).ready(function($){
 			<form action="./">
 				<include target="product_variants" />
 
+				<!--@if($product->isSimple())-->
 				<input type="text" disabled="disabled" id="product_srl" name="product_srl" value="{$product->product_srl}" />
+				<!--@end-->
 				<a href="{getUrl('', 'act','procShopToolCartAddProduct', 'entry', $product->friendly_url, 'quantity', 1)}" class="add_to_cart">Add to cart</a>
 			</form>
+
+            <a class="cart add" href="{getUrl('', 'act','procShopToolCartAddProduct', 'entry', $product->friendly_url)}">add</a>
 		</div>
 	<!--@end-->
 	<div class="clear"/>

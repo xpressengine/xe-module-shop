@@ -2,12 +2,12 @@
 jQuery(document).ready(function($){
 	{$datasourceJS}
 
-	$("#products .product select.level_1").change(function(){
+	$(".product_variants select.level_1").change(function(){
 		$first_select = $(this);
-		$current_form = $first_select.parent("form");
+		$current_container = $first_select.parent(".product_variants");
 
 		$selected_value = $first_select.val();
-		$product_srl = $current_form.parent(".product").attr("id").substr(8);
+		$product_srl = $current_container.attr("id").substr("product_variants_".length);
 
 		$second_select = $first_select.next("select.level_2");
 		if($second_select.length)
@@ -23,15 +23,15 @@ jQuery(document).ready(function($){
 		else
 		{
 			$associated_product_srl = associated_products[$product_srl][$selected_value];
-			$current_form.find("#product_srl").val($associated_product_srl);
+			$current_container.find("#product_srl").val($associated_product_srl);
 		}
 		});
 
-	$("#products .product select.level_2").change(function(){
-		$current_form = $(this).parent("form");
+	$(".product_variants select.level_2").change(function(){
+		$current_container = $(this).parent(".product_variants");
 		$selected_value = $(this).val();
 
-		$current_form.find("#product_srl").val($selected_value);
+		$current_container.find("#product_srl").val($selected_value);
 	});
 });
 

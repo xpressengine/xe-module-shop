@@ -1,6 +1,8 @@
 <!--@if($product->isConfigurable())-->
+	<div class="product_variants" id="product_variants_{$product->product_srl}">
 	<!-- Display just first two attributes -->
 		{@ $max_attributes = 2; $i = 1; }
+
 		<!--@foreach($product->configurable_attributes as $attribute_srl => $attribute_title)-->
 			<!--@if($i > $max_attributes) break; -->
 			<!--@endif-->
@@ -21,4 +23,6 @@
 			</select>
 		{@ $i++;}
 	<!--@end-->
+		<input type="text" disabled="disabled" id="product_srl" name="product_srl" value="" />
+	</div>
 <!--@end-->
