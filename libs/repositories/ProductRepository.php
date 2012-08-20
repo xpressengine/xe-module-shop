@@ -127,6 +127,16 @@ class ProductRepository extends BaseRepository
 			$attributes_list[] = $attribute->attribute_srl;
 		}
 
+		// If this is an associated product, also add parent's configurable attributes as valid
+		if($product->parent_product_srl)
+		{
+			/**
+			 * @var ConfigurableProduct $parent_product
+			 */
+			$parent_product = $this->getProduct($product->parent_product_srl);
+			$attributes_list = array_merge($attributes_list, array_keys($parent_product->configurable_attributes));
+		}
+
 		return $attributes_list;
 
 	}
@@ -372,7 +382,7 @@ class ProductRepository extends BaseRepository
     public function getProductByFriendlyUrl($str)
     {
         $output = $this->query('getProductByFriendlyUrl', array('friendly_url' => $str));
-        return empty($output->data) ? null : new SimpleProduct($output->data);
+        return empty($output->data) ? NULL : new SimpleProduct($output->data);
     }
 
     /**
@@ -487,7 +497,7 @@ class ProductRepository extends BaseRepository
 	 * @throws Exception
 	 * @return stdClass $output
 	 */
-    public function getProductList($args, $loadAttributes = false){
+    public function getProductList($args, $loadAttributes = FALSE){
         if(!isset($args->module_srl))
             throw new Exception("Missing arguments for get product list : please provide [module_srl]");
 
