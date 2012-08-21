@@ -125,6 +125,12 @@ function unique(t) {
 	return a;
 }
 
+function sortExtraMenu(menu_items){
+    var response_tags = new Array('error','message');
+    var params = {'menu_items':menu_items.join(',')};
+    exec_xml('shop', 'procShopToolExtraMenuSort', params, function(){}, response_tags);
+}
+
 function completeInsertCategory(){
 	jQuery('#category_info').html("");
 	Tree(xml_url);

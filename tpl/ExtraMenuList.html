@@ -18,25 +18,25 @@
 		<thead>
 			<tr>
 			<th scope="col">{$lang->menu_name}</th>
-			<th scope="col">{$lang->module}</th>
+			<th scope="col">{$lang->url}</th>
+			<th scope="col">-</th>
 			<th scope="col">-</th>
 			</tr>
 		</thead>
 
-		<!--@if($extra_menu_list)-->
+		<!--@if($menu_list)-->
 		<tbody class="sort">
-		<!--@foreach($extra_menu_list->data as $k => $menu)-->
+		<!--@foreach($menu_list as $k => $menu)-->
 			<tr style="cursor:n-resize">
-			<td><a href="{getUrl('','mid',$menu->mid)}">{$menu->name}</a></td>
-			<td>{$menu->module}</td>
-			<td><input type="hidden" name="" class="menu_mid" value="{$menu->mid}" />
-			<!--@if($menu->type=='text_page')-->
-				<a href="{getUrl('','act','dispShopToolExtraMenuInsert','menu_mid',$menu->mid)}">{$lang->cmd_modify}...</a>
-			<!--@elseif($menu->type=='module_page')-->
-				<a href="{getUrl('','act','dispShopToolExtraMenuModuleInsert','menu_mid',$menu->mid)}">{$lang->cmd_modify}...</a>
-			<!--@end-->
-			<button type="button" onclick="deleteExtraMenu('{$menu->mid}','{$lang->confirm_delete}')" class="text">{$lang->cmd_delete}</button>
-			</td>
+				<td><a href="{getUrl('','mid',$menu->mid)}">{$menu->name}</a></td>
+				<td>{$menu->url}</td>
+				<td>
+					<input type="hidden" name="" class="menu_item_srl" value="{$menu->menu_item_srl}" />
+					<a href="{getUrl('','act','dispShopToolExtraMenuModuleInsert','menu_item_srl',$menu->menu_item_srl)}">{$lang->cmd_modify}...</a>
+				</td>
+				<td>
+				<button type="button" onclick="deleteExtraMenu('{$menu->menu_item_srl}','{$lang->confirm_delete}')" class="text">{$lang->cmd_delete}</button>
+				</td>
 			</tr>
 		<!--@end-->
 		</tbody>
@@ -57,11 +57,11 @@
 <script	type="text/javascript">//<![CDATA[
 jQuery(function() {
 jQuery('tbody.sort').sortable().bind('sortstop',function(e,ui){
-var menu_mids = [];
-jQuery('tbody.sort .menu_mid').each(function(){
-menu_mids.push(jQuery(this).val());
+var menu_items = [];
+jQuery('tbody.sort .menu_item_srl').each(function(){
+menu_items.push(jQuery(this).val());
 });
-sortExtraMenu(menu_mids);
+sortExtraMenu(menu_items);
 });
 });
 //]]></script>

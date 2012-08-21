@@ -782,15 +782,19 @@ class shopView extends shop {
 	 * @return object
 	 */
 	function dispShopToolExtraMenuList(){
-		$oTextyleModel = &getModel('textyle');
-		$config = $oTextyleModel->getModulePartConfig($this->module_srl);
-		Context::set('config',$config);
+		/**
+		 * @var shopModel $shopModel
+		 */
+		$shopModel = getModel('shop');
+		$shop_menu_srl = $shopModel->getShopMenuSrl($this->site_srl);
 
-		$args = new stdClass();
-		$args->site_srl = $this->site_srl;
-		$output = executeQueryArray('textyle.getExtraMenus',$args);
-		if(!$output->toBool()) return $output;
-		Context::set('extra_menu_list',$output);
+		/**
+		 * @var menuAdminModel $menuModel
+		 */
+		$menuModel = getAdminModel('menu');
+		$menu_items = $menuModel->getMenuItems($shop_menu_srl);
+
+		Context::set('menu_list',$menu_items->data);
 
 	}
 
@@ -810,8 +814,6 @@ class shopView extends shop {
 			$service_modules[] = $val;
 		}
 		Context::set('service_modules', $service_modules);
-
-
 	}
 
 	/**

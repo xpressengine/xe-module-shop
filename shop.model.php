@@ -369,7 +369,7 @@ class shopModel extends shop
 		$args->hover_btn = NULL;
 		$args->active_btn = NULL;
 		$args->group_srls = NULL;
-		$args->listorder = $args->menu_item_srl*-1;
+		$args->listorder = 0;
 		$output = executeQuery('menu.insertMenuItem', $args);
 		return $args->menu_item_srl;
 	}

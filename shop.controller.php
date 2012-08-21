@@ -971,6 +971,51 @@
 			$returnUrl = getNotEncodedUrl('', 'vid', $this->vid, 'act', 'dispShopToolExtraMenuList');
 			$this->setRedirectUrl($returnUrl);
 		}
+
+		/**
+		 * Sort menu items
+		 *
+		 * Updates list order attribute of each menu item
+		 * Does not use the xe_menu built-in logic, but simply updates all menu items list
+		 * order with values from 0 to count(menu_items).
+		 *
+		 * @return object
+		 */
+		function procShopToolExtraMenuSort(){
+			$menu_items = Context::get('menu_items');
+			if(!$menu_items) return new Object(-1,'msg_invalid_request');
+
+			$order = array();
+			$menu_items = explode(',',$menu_items);
+			// Since XE menu items are sorted DESC, we revert the input array
+			$menu_items = array_reverse($menu_items, true);
+			foreach($menu_items as $k => $menu_item_srl){
+				$order[$menu_item_srl] = $k;
+			}
+
+			$shopModel = getModel('shop');
+			$shop_menu_srl = $shopModel->getShopMenuSrl($this->site_srl);
+			$menuModel = getAdminModel('menu');
+			$output = $menuModel->getMenuItems($shop_menu_srl);
+			if(!$output->toBool() || !$output->data) return $output;
+
+			foreach($output->data as $k => $menu)
+			{
+				$order[$menu->menu_item_srl] = $menu;
+			}
+
+			$list_order = 0;
+			foreach($order as $menu){
+				if($list_order != $menu->listorder){
+					$args = new stdClass();
+					$args->menu_item_srl = $menu->menu_item_srl;
+					$args->listorder = $list_order;
+					$output = executeQuery('menu.updateMenuItemNode',$args);
+				}
+				$list_order++;
+			}
+		}
+
 		// endregion
     }
 ?>
