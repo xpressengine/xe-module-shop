@@ -660,12 +660,12 @@ class shopView extends shop {
 	/**
 	 * Returns the javascript code used as datasource for linked dropdowns
 	 */
-	private function getAssociatedProductsAttributesAsJavascriptArray($products, $reverse = null)
+	private function getAssociatedProductsAttributesAsJavascriptArray($products, $reverse = NULL)
 	{
 		if(is_null($reverse))
 		{
-			return $this->getAssociatedProductsAttributesAsJavascriptArray($products, false) . PHP_EOL .
-						$this->getAssociatedProductsAttributesAsJavascriptArray($products, true);
+			return $this->getAssociatedProductsAttributesAsJavascriptArray($products, FALSE) . PHP_EOL .
+						$this->getAssociatedProductsAttributesAsJavascriptArray($products, TRUE);
 		}
 
 		$datasource_name = 'associated_products';
@@ -772,6 +772,144 @@ class shopView extends shop {
 		$repository = $shopModel->getPaymentGatewayRepository();
 		//$repository->includeActiveGateways();
 
+	}
+
+	// endregion
+
+	// region Extra menu
+	/**
+	 * Displays all extra menu elements
+	 * @return object
+	 */
+	function dispShopToolExtraMenuList(){
+		$oTextyleModel = &getModel('textyle');
+		$config = $oTextyleModel->getModulePartConfig($this->module_srl);
+		Context::set('config',$config);
+
+		$args = new stdClass();
+		$args->site_srl = $this->site_srl;
+		$output = executeQueryArray('textyle.getExtraMenus',$args);
+		if(!$output->toBool()) return $output;
+		Context::set('extra_menu_list',$output);
+
+	}
+
+	/**
+	 * Add existing module to the the custom menu
+	 *
+	 * @return Object
+	 */
+	function dispShopToolExtraMenuModuleInsert(){
+		$menu_mid = Context::get('menu_mid');
+		if($menu_mid){
+			$oModuleModel = &getModel('module');
+			$module_info = $oModuleModel->getModuleInfoByMid($menu_mid,$this->site_srl);
+			if(!$module_info) return new Object(-1,'msg_invalid_request');
+
+			$args = new stdClass();
+			$args->module_srl = $module_info->module_srl;
+			$output = executeQuery('textyle.getExtraMenu',$args);
+			if($output->data){
+				$selected_extra_menu = $output->data;
+			}
+		}
+		if($selected_extra_menu){
+			Context::set('selected_extra_menu',$selected_extra_menu);
+			Context::addJsFilter($this->module_path.'tpl/filter', 'modify_extra_menu.xml');
+		}else{
+			Context::addJsFilter($this->module_path.'tpl/filter', 'insert_extra_menu.xml');
+		}
+		$oTextyleModel = &getModel('textyle');
+		$config = $oTextyleModel->getModulePartConfig($this->module_srl);
+		Context::set('config',$config);
+
+		$used_extra_menu_count = array();
+		$args->site_srl = $this->site_srl;
+		$output = executeQueryArray('textyle.getExtraMenus',$args);
+
+		if($output->data){
+			foreach($output->data as $k => $menu){
+				if($config->allow_service[$menu->module]){
+					$used_extra_menu_count[$menu->module] += 1;
+				}
+			}
+		}
+
+		Context::set('used_extra_menu_count',$used_extra_menu_count);
+	}
+
+	/**
+	 * Add new module (page) to custom menu
+	 *
+	 * @return Object
+	 */
+	function dispShopToolExtraMenuInsert(){
+		// set filter
+		$menu_mid = Context::get('menu_mid');
+		if($menu_mid){
+			$oModuleModel = &getModel('module');
+			$module_info = $oModuleModel->getModuleInfoByMid($menu_mid,$this->site_srl);
+			if(!$module_info) return new Object(-1,'msg_invalid_request');
+
+			$oWidgetController = &getController('widget');
+			$buff = trim($module_info->content);
+			$oXmlParser = new XmlParser();
+			$xml_doc = $oXmlParser->parse(trim($buff));
+			$document_srl = $xml_doc->img->attrs->document_srl;
+			$args->module_srl = $module_info->module_srl;
+			$output = executeQuery('textyle.getExtraMenu',$args);
+			if($output->data){
+				$selected_extra_menu = $output->data;
+			}
+		}
+		if($selected_extra_menu){
+			Context::set('selected_extra_menu',$selected_extra_menu);
+			Context::addJsFilter($this->module_path.'tpl/filter', 'modify_extra_menu.xml');
+		}else{
+			Context::addJsFilter($this->module_path.'tpl/filter', 'insert_extra_menu.xml');
+		}
+
+
+		$oDocumentModel = &getModel('document');
+		$material_srl = Context::get('material_srl');
+
+		if($document_srl){
+			$oDocument = $oDocumentModel->getDocument($document_srl,FALSE,FALSE);
+		}else{
+			$document_srl=0;
+			$oDocument = $oDocumentModel->getDocument(0);
+			if($material_srl){
+				$oMaterialModel = &getModel('material');
+				$output = $oMaterialModel->getMaterial($material_srl);
+				if($output->data){
+					$material_content = $output->data[0]->content;
+					Context::set('material_content',$material_content);
+				}
+			}
+
+		}
+
+//		$oEditorModel = &getModel('editor');
+//		$option->skin = $this->textyle->getPostEditorSkin();
+//		$option->primary_key_name = 'document_srl';
+//		$option->content_key_name = 'content';
+//		$option->allow_fileupload = TRUE;
+//		$option->enable_autosave = TRUE;
+//		$option->enable_default_component = TRUE;
+//		$option->enable_component = $option->skin =='dreditor' ? FALSE : TRUE;
+//		$option->resizable = TRUE;
+//		$option->height = 500;
+//		$option->content_font = $this->textyle->getFontFamily();
+//		$option->content_font_size = $this->textyle->getFontSize();
+//		$editor = $oEditorModel->getEditor($document_srl, $option);
+//		Context::set('editor', $editor);
+//		Context::set('editor_skin', $option->skin);
+
+		if($oDocument->get('module_srl') != $this->module_srl && !$document_srl){
+			Context::set('from_saved',TRUE);
+		}
+
+		Context::set('oDocument', $oDocument);
 	}
 
 	// endregion

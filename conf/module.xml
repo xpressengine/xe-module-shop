@@ -122,5 +122,10 @@
         <action name="procShopUploadGateway" type="controller" />
         <action name="procSanitizeGateway" type="controller" />
 
+        <!-- Extra menu -->
+        <action name="dispShopToolExtraMenuList" type="view" />
+        <action name="dispShopToolExtraMenuInsert" type="view" />
+        <action name="dispShopToolExtraMenuModuleInsert" type="view" />
+
     </actions>
 </module>
