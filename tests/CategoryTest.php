@@ -81,7 +81,7 @@ class CategoryTest extends Shop_Generic_Tests_DatabaseTestCase
 		$shopModel = &getModel('shop');
 		$repository = $shopModel->getCategoryRepository();
 		$args = new stdClass();
-		$args->category_srl = 1000;
+		$args->category_srl = 1002;
 		try
 		{
 			$output = $repository->deleteCategory($args);
@@ -90,11 +90,11 @@ class CategoryTest extends Shop_Generic_Tests_DatabaseTestCase
 			$this->assertTrue($output);
 
 			// Check that the record is no longer in the database
-			$count = Database::executeQuery("SELECT COUNT(*) as count FROM xe_shop_categories WHERE category_srl = 1000");
+			$count = Database::executeQuery("SELECT COUNT(*) as count FROM xe_shop_categories WHERE category_srl = 1002");
 			$this->assertEquals(0, $count[0]->count);
 
 			// Check that the other record was not also deleted by mistake
-			$count = Database::executeQuery("SELECT COUNT(*) as count FROM xe_shop_categories WHERE category_srl = 1002");
+			$count = Database::executeQuery("SELECT COUNT(*) as count FROM xe_shop_categories WHERE category_srl = 1000");
 			$this->assertEquals(1, $count[0]->count);
 		} catch(Exception $e)
 		{

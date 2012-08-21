@@ -10,6 +10,8 @@ require_once dirname(__FILE__) . '/../model/Category.php';
  */
 class CategoryRepository extends BaseRepository
 {
+	private $category_images_folder = './files/attach/images/shop/%d/product-categories/';
+
 	/**
 	 * Insert a new Product category; returns the ID of the newly created record.
 	 *
@@ -40,10 +42,15 @@ class CategoryRepository extends BaseRepository
 	public function deleteCategory($args)
 	{
 		if(!isset($args->category_srl) && !isset($args->module_srl))
+		{
 			throw new Exception("Missing arguments for Product category delete: please provide [category_srl] or [module_srl]");
+		}
 
 		// Get category info before deleting it, so we can also delete category image
-		$category = $this->getCategory($args->category_srl);
+		if($args->category_srl)
+		{
+			$category = $this->getCategory($args->category_srl);
+		}
 
 		$output = executeQuery('shop.deleteCategory', $args);
 		if(!$output->toBool())
@@ -63,10 +70,17 @@ class CategoryRepository extends BaseRepository
 			throw new Exception($output->getMessage(), $output->getError());
 		}
 
-		$output = $this->deleteCategoryImage($category->filename);
-		if(!$output)
+		if($args->category_srl)
 		{
-			throw new Exception("Could not delete category image");
+			$output = $this->deleteCategoryImage($category->filename);
+			if(!$output)
+			{
+				throw new Exception("Could not delete category image");
+			}
+		}
+		else
+		{
+			$this->deleteCategoriesImages($args->module_srl);
 		}
 
 		return TRUE;
@@ -161,7 +175,7 @@ class CategoryRepository extends BaseRepository
 		$tmp_arr = explode('.', $original_filename);
 		$extension = $tmp_arr[count($tmp_arr) - 1];
 
-		$path = sprintf('./files/attach/images/shop/%d/product-categories/', $module_srl);
+		$path = sprintf($this->category_images_folder, $module_srl);
 		$filename = sprintf('%s%s.%s', $path, uniqid('product-category-'), $extension);
 		FileHandler::copyFile($tmp_name, $filename);
 
@@ -183,6 +197,18 @@ class CategoryRepository extends BaseRepository
 		}
 
 		return FileHandler::removeFile($filename);
+	}
+
+	/**
+	 * Deletes all category images for a given module
+	 *
+	 * @param int $module_srl Module
+	 *
+	 * @return void
+	 */
+	public function deleteCategoriesImages($module_srl)
+	{
+		FileHandler::removeFilesInDir(sprintf($this->category_images_folder, $module_srl));
 	}
 
 	/**
