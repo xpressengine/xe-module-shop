@@ -126,6 +126,7 @@
         <action name="dispShopToolExtraMenuList" type="view" />
         <action name="dispShopToolExtraMenuInsert" type="view" />
         <action name="dispShopToolExtraMenuModuleInsert" type="view" />
+        <action name="procShopServiceGetModulesByType" type="controller" standalone="true"/>
 
     </actions>
 </module>

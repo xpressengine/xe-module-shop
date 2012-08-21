@@ -215,7 +215,7 @@
         array('','Catalog'),
         array('','Sales'),
         array('','Customers'),
-		array('','Pages'),
+		array('','Menu'),
         array('','Statistics'),
         array('','Design'),
         array('','Configuration'),
@@ -237,9 +237,9 @@
             'dispShopToolManageCustommers'=>'Manage Accounts',
         ),
 		array(
-			'dispShopToolExtraMenuInsert'=>'New Text Page',
-			'dispShopToolExtraMenuModuleInsert'=>'New Module Page',
 			'dispShopToolExtraMenuList'=>'All Pages',
+			'dispShopToolExtraMenuInsert'=>'New Text Page',
+			'dispShopToolExtraMenuModuleInsert'=>'New Menu item'
 		),
         array(
             'dispShopToolStatisticsVisitor'=>'Visitor statistics',

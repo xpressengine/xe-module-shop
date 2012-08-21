@@ -800,42 +800,18 @@ class shopView extends shop {
 	 * @return Object
 	 */
 	function dispShopToolExtraMenuModuleInsert(){
-		$menu_mid = Context::get('menu_mid');
-		if($menu_mid){
-			$oModuleModel = &getModel('module');
-			$module_info = $oModuleModel->getModuleInfoByMid($menu_mid,$this->site_srl);
-			if(!$module_info) return new Object(-1,'msg_invalid_request');
+		$oModuleModel = getModel('module');
 
-			$args = new stdClass();
-			$args->module_srl = $module_info->module_srl;
-			$output = executeQuery('textyle.getExtraMenu',$args);
-			if($output->data){
-				$selected_extra_menu = $output->data;
-			}
+		// Retrieve just modules of type 'service' out of all installed modules
+		$installed_module_list = $oModuleModel->getModulesXmlInfo();
+		foreach($installed_module_list as $key => $val) {
+			if($val->category != 'service') continue;
+			if(!$val->default_index_act) continue;
+			$service_modules[] = $val;
 		}
-		if($selected_extra_menu){
-			Context::set('selected_extra_menu',$selected_extra_menu);
-			Context::addJsFilter($this->module_path.'tpl/filter', 'modify_extra_menu.xml');
-		}else{
-			Context::addJsFilter($this->module_path.'tpl/filter', 'insert_extra_menu.xml');
-		}
-		$oTextyleModel = &getModel('textyle');
-		$config = $oTextyleModel->getModulePartConfig($this->module_srl);
-		Context::set('config',$config);
+		Context::set('service_modules', $service_modules);
 
-		$used_extra_menu_count = array();
-		$args->site_srl = $this->site_srl;
-		$output = executeQueryArray('textyle.getExtraMenus',$args);
 
-		if($output->data){
-			foreach($output->data as $k => $menu){
-				if($config->allow_service[$menu->module]){
-					$used_extra_menu_count[$menu->module] += 1;
-				}
-			}
-		}
-
-		Context::set('used_extra_menu_count',$used_extra_menu_count);
 	}
 
 	/**

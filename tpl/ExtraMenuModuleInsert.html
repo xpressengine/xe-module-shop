@@ -1,7 +1,70 @@
 <include target="_tool_header.html" />
-<load target="css/pagination.css" />
+<load target="css/form.css" />
 
-<!--%load_js_plugin("ui")-->
+<style type="text/css">
+#http_prefix
+{
+	margin-left: 8px;
+}
+#text_url
+{
+	margin-left: 0;
+}
+</style>
+
+<script type="text/javascript">
+    jQuery(document).ready(function($){
+	    var showUrl = function() {
+			hideAll();
+			$("#text_url_container").show();
+		};
+	    var showMidList = function($module_type) {
+			hideAll();
+
+			$.exec_json('shop.procShopServiceGetModulesByType'
+				, { module_type : $module_type}
+				, function(data) {
+					if(data.error != 0)
+					{
+						alert("Error " + data.error + " " + data.message);
+						return;
+					}
+				    $mid_list = data.mid_list;
+
+					// Remove previous entries
+					$("#mid_url_container select").html("");
+				    // Add new mids
+				    for(var $mid in $mid_list)
+					{
+						$("#mid_url_container select").append("<option value=" + $mid + ">" + $mid + "</option>");
+					}
+					$("#mid_url_container").show();
+				}
+			);
+		};
+	    var hideAll = function() {
+			$("#mid_url_container").hide();
+			$("#text_url_container").hide();
+		}
+
+	    $("#module_type").change(function(){
+		    $selected_value = $(this).val();
+
+			if(!$selected_value)
+			{
+			    hideAll();
+			}
+		    else if($selected_value == 'url')
+			{
+			    showUrl();
+			}
+			else
+			{
+			    showMidList($selected_value);
+			}
+		});
+	});
+</script>
 
 <!-- Content -->
 <div id="content">
@@ -16,65 +79,45 @@
 		<p class="info">{$lang->about_shop_extra_menu}</p>
 	</div>
 
-	<div class="setUp">
-		<!--@if($selected_extra_menu)-->
-		<form action="" method="post" onsubmit="return procFilter(this, modify_extra_menu);">
-		<input type="hidden" name="menu_mid" value="{$selected_extra_menu->mid}" />
-		<!--@else-->
-		<form action="" method="post" onsubmit="return procFilter(this, insert_extra_menu);">
-		<!--@end-->
+	<form>
+	    <p>
+		    <label for="module_type">Type</label>
+			<select id="module_type" name="module_type">
+				<option value="">{$lang->cmd_select}</option>
+				<!--@foreach($service_modules as $module)-->
+				<option value="{$module->module}" title="{$module->description}">{$module->title}</option>
+				<!--@end-->
+				<option value="url" <!--@if($item_info->module_type == 'url')-->selected="selected"<!--@end-->>{$lang->url}</option>
+			</select>
 
-		<fieldset>
-		<input type="hidden" name="mid" value="{$mid}" />
-		<input type="hidden" name="vid" value="{$vid}" />
-		<input type="hidden" name="insert_type" value="module_page" />
+	    </p>
 
-		<table cellspacing="0" class="setupData">
-		<col width="100" />
-		<col width="" />
-		<tr>
-			<th scope="row">{$lang->module}</th>
-			<td>
-			<!--@if($selected_extra_menu)-->
-				{$selected_extra_menu->module}
-			<!--@else-->
-				<select name="module_type">
-					<option>{$lang->cmd_select}</option>
-					<!--@foreach($config->allow_service as $k => $v)-->
-					{@$_left=$v-$used_extra_menu_count[$k]}
-					<option value="{$k}" <!--@if($v<1 || $_left<1)-->disabled="disabled"<!--@end-->>{$k} [{sprintf($lang->msg_limit_module,$_left)}]</option>
-					<!--@end-->
-				</select>
-			<!--@end-->
-			</td>
-		</tr>
-		<tr>
-			<th scope="row">{$lang->url}</th>
-			<td>
-			<!--@if($selected_extra_menu)-->
-				{getFullUrl('').'/'.$selected_extra_menu->mid}
-			<!--@else-->
-				{str_replace('__mid__','<input type="text" name="menu_mid" value="" class="inputTypeText" />',getFullUrl('','mid','__mid__'))}
-				<p>{$lang->msg_limit_textyle_extra_mid}</p>
-			<!--@end-->
-			</td>
-		</tr>
-		<tr>
-			<th scope="row">{$lang->menu_name}</th>
-			<td>
-				<input type="text" name="menu_name" id="menu_name" value="<!--@if($selected_extra_menu->name)-->{$selected_extra_menu->name}<!--@end-->" class="inputTypeText"/>
-				<a href="{getUrl('','module','module','act','dispModuleAdminLangcode','target','menu_name')}" onclick="popopen(this.href);return false;" class="buttonSet buttonSetting"><span>{$lang->cmd_find_langcode}</span></a>
-				<p>{$lang->about_langcode}</p>
-			</td>
-		</tr>
-		</table>
+	    <p id="text_url_container" style="display: none">
+			<label for="text_url">URL</label>
+			<span id="http_prefix">http:// <span><input type="text" id="text_url" name="text_url" />
+	    </p>
 
-		<div class="buttonArea">
-			<span class="buttonAction actionWhite"><input type="submit" value="{$lang->cmd_save}" /></span>
-		</div>
-		</fieldset>
-		</form>
-	</div>
+		<p id="mid_url_container" style="display: none">
+			<label for="mid_url">Module</label>
+			<select id="mid_url" name="mid_url">
+			</select>
+		</p>
+
+	    <p>
+		    <label for="menu_name">Menu name</label>
+		    <input type="text" id="menu_name" value="" />
+	    </p>
+
+		<p class="submit">
+			<span class="btnGray medium">
+				<input type="submit" value="Submit" class="submit">
+			</span>
+		</p>
+
+
+	</form>
+
+
 </div>
 
 <!-- /Content -->

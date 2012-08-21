@@ -922,7 +922,31 @@
 
         }
 
-        // end region
+        // endregion
 
+		// region Extra menu
+		/**
+		 * Retrieves all module instances of a certain type
+		 * Called through AJAX
+		 *
+		 * @author Corina Udrescu (dev@xpressengine.org)
+		 * @return Object
+		 */
+		public function procShopServiceGetModulesByType()
+		{
+			$module_type = Context::get('module_type');
+			if(!isset($module_type)) return new Object(-1, 'msg_invalid_request');
+
+			/**
+			 * @var moduleModel $oModuleModel
+			 */
+			$oModuleModel = getModel('module');
+			$args = new stdClass();
+			$args->module = $module_type;
+			$mid_list = $oModuleModel->getMidList($args, array("mid"));
+
+			$this->add('mid_list', $mid_list);
+		}
+		// endregion
     }
 ?>
