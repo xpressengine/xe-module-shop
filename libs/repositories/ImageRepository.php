@@ -24,7 +24,15 @@ class ImageRepository extends BaseRepository
 		if($image->file_size > 0){
 			$output = executeQuery('shop.insertImage', $image);
 			$this->saveImage($image);
-			//if (!$output->toBool()) throw new Exception($output->getMessage(), $output->getError());
+			if (!$output->toBool()) {
+				if($image->is_primary == 'Y') {
+					$args = new stdClass();
+					$args->filename = $image->filename;
+					$args->product_srl = $image->product_srl;
+					$args->is_primary= 'Y';
+					$output = executeQuery('shop.updatePrimaryImage',$args);
+				}
+			}
 			return $output;
 		}
 		else return;
@@ -52,40 +60,6 @@ class ImageRepository extends BaseRepository
 		return TRUE;;
 
 	}
-
-    /**
-     * Update an image
-     * @author Dan Dragan (dev@xpressengine.org)
-     * @param $image Image
-     * @throws Exception
-     * @return mixed
-     */
-    public function updateImage(Image $image)
-    {
-
-    }
-
-    /**
-	 * Deletes one or more images by $image_srl or $module_srl
-	 *
-	 * @author Dan Dragan (dev@xpressengine.org)
-	 * @param $args array
-	 */
-	public function deleteImages($args)
-	{
-
-	}
-
-    /**
-     * Retrieve a list of Images object from the database by product_srl
-     * @author Dan Dragan (dev@xpressengine.org)
-     * @param $product_srl int
-     * @return Image list
-     */
-    public function getImagesList($product_srl)
-    {
-
-    }
 
 	/**
 	 * Retrieve a Images object from the database by image_srls

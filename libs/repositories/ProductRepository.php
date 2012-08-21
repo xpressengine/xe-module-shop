@@ -634,7 +634,7 @@ class ProductRepository extends BaseRepository
 		$args->image_srls = $product->delete_images;
 		$shopModel = getModel('shop');
 		$imageRepository = $shopModel->getImageRepository();
-		if(isset($product->primary_image)) $this->updatePrimaryImage($product);
+		$this->updatePrimaryImage($product);
 		if(isset($args->image_srls)){
 			$delete_images = $imageRepository->getImages($args->image_srls);
 			foreach($delete_images as $delete_image){
@@ -668,12 +668,14 @@ class ProductRepository extends BaseRepository
 		{
 			throw new Exception($output->getMessage(), $output->getError());
 		}
-		$args->primary_image = $product->primary_image;
-		$args->is_primary = "Y";
-		$output = executeQuery('shop.updatePrimaryImage', $args);
-		if(!$output->toBool())
-		{
-			throw new Exception($output->getMessage(), $output->getError());
+		if(isset($product->primary_image)){
+			$args->primary_image = $product->primary_image;
+			$args->is_primary = "Y";
+			$output = executeQuery('shop.updatePrimaryImage', $args);
+			if(!$output->toBool())
+			{
+				throw new Exception($output->getMessage(), $output->getError());
+			}
 		}
 	}
 }
