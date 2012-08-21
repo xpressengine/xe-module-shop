@@ -1,17 +1,6 @@
 <include target="_tool_header.html" />
 <load target="css/form.css" />
 
-<style type="text/css">
-#http_prefix
-{
-	margin-left: 8px;
-}
-#text_url
-{
-	margin-left: 0;
-}
-</style>
-
 <script type="text/javascript">
     jQuery(document).ready(function($){
 	    var showUrl = function() {
@@ -96,7 +85,7 @@
 
 	    <p id="text_url_container" style="display: none">
 			<label for="text_url">URL</label>
-			<span id="http_prefix">http:// <span><input type="text" id="text_url" name="text_url" />
+			<input type="text" id="text_url" name="text_url" />
 	    </p>
 
 		<p id="mid_url_container" style="display: none">

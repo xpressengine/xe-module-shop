@@ -962,7 +962,7 @@
 
 			$module_type = Context::get('module_type');
 			if($module_type != 'url')
-				$mid = 'http:// ' .  Context::get('mid_url');
+				$mid = Context::get('mid_url');
 			else
 				$mid = Context::get('text_url');
 			$menu_name = Context::get('menu_name');
