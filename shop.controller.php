@@ -961,12 +961,36 @@
 
 			$module_type = Context::get('module_type');
 			if($module_type != 'url')
-				$mid = Context::get('mid_url');
+				$mid = 'http:// ' .  Context::get('mid_url');
 			else
 				$mid = Context::get('text_url');
 			$menu_name = Context::get('menu_name');
 
 			$shopModel->insertMenuItem($shop_menu_srl, 0, $mid, $menu_name);
+
+			$returnUrl = getNotEncodedUrl('', 'vid', $this->vid, 'act', 'dispShopToolExtraMenuList');
+			$this->setRedirectUrl($returnUrl);
+		}
+
+		/**
+		 * Updates a menu item
+		 */
+		public function procShopToolUpdateMenuItem()
+		{
+			$menu_item_srl = Context::get('menu_item_srl');
+			if(!$menu_item_srl)
+			{
+				return new Object(-1, "msg_invalid_request");
+			}
+
+			/**
+			 * @var shopModel $shopModel
+			 */
+			$shopModel = getModel('shop');
+
+			$menu_name = Context::get('menu_name');
+
+			$shopModel->updateMenuItem($menu_item_srl, $menu_name);
 
 			$returnUrl = getNotEncodedUrl('', 'vid', $this->vid, 'act', 'dispShopToolExtraMenuList');
 			$this->setRedirectUrl($returnUrl);
@@ -1014,6 +1038,25 @@
 				}
 				$list_order++;
 			}
+		}
+
+		/**
+		 * Delete menu item
+		 */
+		public function procShopToolExtraMenuDelete()
+		{
+			$menu_item_srl = Context::get('menu_item_srl');
+			if(!$menu_item_srl)
+			{
+				return new Object(-1, "msg_invalid_request");
+			}
+
+			/**
+			 * @var shopModel $shopModel
+			 */
+			$shopModel = getModel('shop');
+			$shopModel->deleteMenuItem($menu_item_srl);
+
 		}
 
 		// endregion

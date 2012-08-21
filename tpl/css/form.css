@@ -29,6 +29,7 @@ form select {
 
 form p input,
 form p textarea,
-form p select{
+form p select,
+form p span {
     margin: 8px;
 }

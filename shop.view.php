@@ -799,6 +799,24 @@ class shopView extends shop {
 	}
 
 	/**
+	 * Edit menu item
+	 *
+	 * @return Object
+	 */
+	function dispShopToolExtraMenuEdit(){
+		$menu_item_srl = Context::get('menu_item_srl');
+		if(!$menu_item_srl)
+			return new Object(-1, 'msg_invalid_request');
+
+		/**
+		 * @var menuAdminModel $menuModel
+		 */
+		$menuModel = getAdminModel('menu');
+		$menu_item = $menuModel->getMenuItemInfo($menu_item_srl);
+		Context::set('menu_item', $menu_item);
+	}
+
+	/**
 	 * Add existing module to the the custom menu
 	 *
 	 * @return Object

@@ -28,11 +28,11 @@
 		<tbody class="sort">
 		<!--@foreach($menu_list as $k => $menu)-->
 			<tr style="cursor:n-resize">
-				<td><a href="{getUrl('','mid',$menu->mid)}">{$menu->name}</a></td>
+				<td><a href="{$menu->url}" target="_blank">{$menu->name}</a></td>
 				<td>{$menu->url}</td>
 				<td>
 					<input type="hidden" name="" class="menu_item_srl" value="{$menu->menu_item_srl}" />
-					<a href="{getUrl('','act','dispShopToolExtraMenuModuleInsert','menu_item_srl',$menu->menu_item_srl)}">{$lang->cmd_modify}...</a>
+					<a href="{getUrl('','act','dispShopToolExtraMenuEdit','menu_item_srl',$menu->menu_item_srl)}">{$lang->cmd_modify}...</a>
 				</td>
 				<td>
 				<button type="button" onclick="deleteExtraMenu('{$menu->menu_item_srl}','{$lang->confirm_delete}')" class="text">{$lang->cmd_delete}</button>
@@ -44,7 +44,7 @@
 		</table>
 
 		<div class="btnArea">
-			<span class="btn"><a href="{getUrl('','act','dispShopToolExtraMenuInsert')}">{$lang->cmd_insert}</a></span>
+			<span class="btn"><a href="{getUrl('','act','dispShopToolExtraMenuModuleInsert')}">{$lang->cmd_insert}</a></span>
 		</div>
 	</div>
 </div>

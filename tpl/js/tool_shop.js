@@ -131,6 +131,14 @@ function sortExtraMenu(menu_items){
     exec_xml('shop', 'procShopToolExtraMenuSort', params, function(){}, response_tags);
 }
 
+function deleteExtraMenu(menu_item_srl,confirm_msg){
+    if(confirm(confirm_msg)){
+        var response_tags = new Array('error','message');
+        var params = {'menu_item_srl':menu_item_srl}
+        exec_xml('shop', 'procShopToolExtraMenuDelete', params, completeReload, response_tags);
+    }
+}
+
 function completeInsertCategory(){
 	jQuery('#category_info').html("");
 	Tree(xml_url);

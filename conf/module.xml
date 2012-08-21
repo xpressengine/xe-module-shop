@@ -126,9 +126,12 @@
         <action name="dispShopToolExtraMenuList" type="view" />
         <action name="dispShopToolExtraMenuInsert" type="view" />
         <action name="dispShopToolExtraMenuModuleInsert" type="view" />
+        <action name="dispShopToolExtraMenuEdit" type="view" />
         <action name="procShopServiceGetModulesByType" type="controller" standalone="true"/>
         <action name="procShopToolInsertMenuItem" type="controller" standalone="true"/>
+        <action name="procShopToolUpdateMenuItem" type="controller" standalone="true"/>
         <action name="procShopToolExtraMenuSort" type="controller" standalone="true"/>
+        <action name="procShopToolExtraMenuDelete" type="controller" standalone="true"/>
 
 
 

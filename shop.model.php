@@ -373,6 +373,29 @@ class shopModel extends shop
 		$output = executeQuery('menu.insertMenuItem', $args);
 		return $args->menu_item_srl;
 	}
+
+	/**
+	 * Update menu item
+	 */
+	public function updateMenuItem($menu_item_srl, $menu_title)
+	{
+		$args = new stdClass();
+		$args->menu_item_srl = $menu_item_srl;
+		$args->name = $menu_title;
+		$output = executeQuery('menu.updateMenuItem', $args);
+
+	}
+
+	/**
+	 * Delete menu item
+	 */
+	public function deleteMenuItem($menu_item_srl)
+	{
+		$args = new stdClass();
+		$args->menu_item_srl = $menu_item_srl;
+		$output = executeQuery("menu.deleteMenuItem", $args);
+		if(!$output->toBool()) return $output;
+	}
 	// endregion
 
 }
