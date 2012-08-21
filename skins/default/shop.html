@@ -21,7 +21,7 @@
 				<!--@if($product->isSimple())-->
 				<input type="text" disabled="disabled" id="product_srl" name="product_srl" value="{$product->product_srl}" />
 				<!--@end-->
-				<a href="{getUrl('', 'act','procShopToolCartAddProduct', 'entry', $product->friendly_url, 'quantity', 1)}" class="add_to_cart">Add to cart</a>
+				<a href="{getUrl('', 'act','procShopToolCartAddProduct', 'entry', 'REPLACE', 'quantity', 1)}" class="add_to_cart">Add to cart</a>
 			</form>
 
 		</div>

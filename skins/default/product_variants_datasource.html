@@ -21,6 +21,12 @@ jQuery(document).ready(function($){
 		});
 	};
 
+    $('.product').find('.add_to_cart').click(function(e){
+        e.preventDefault();
+        $(this).attr('href', $(this).attr('href').replace('REPLACE', $(this).parents('.product').find('.product_srl').val()));
+        window.location = $(this).attr('href');
+    });
+
 
 	$(".product_variants select.level_1").change(function(){
 		// When the first select changes ...
@@ -29,12 +35,15 @@ jQuery(document).ready(function($){
 
 		$selected_value = $first_select.val();
 
-		// If it's value is not set, we make sure product srl is reset and return
+        $addToCart = $(this).parents('.product').find('.add_to_cart');
+        // If it's value is not set, we make sure product srl is reset and return
 		if(!$selected_value)
 		{
 			$current_container.find("#product_srl").val("");
+            $addToCart.hide();
 			return;
 		}
+        else $addToCart.filter(':hidden').css('display', 'inline-block');
 
 		$product_srl = $current_container.attr("id").substr("product_variants_".length);
 

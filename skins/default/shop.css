@@ -148,17 +148,9 @@ img{border:0}
     display: block;
     clear: both;
 }
-
-#cart
-{
-    display: inline-block;
-    background-color: #b5ff49;
-    padding: 5px 10px;
-    border: 1px solid #4f4c69;
-}
 .add_to_cart
 {
-    display: inline-block;
+    display: none;
     clear: both;
     padding: 5px;
     margin: 5px;

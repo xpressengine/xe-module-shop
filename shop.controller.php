@@ -283,9 +283,13 @@
             /* @var CartRepository $cartRepository */
             $cartRepository = $this->model->getCartRepository();
 
-            if ($friendly_url = Context::get('entry')) {
+            if ($product_srl = Context::get('entry')) {
                 $productsRepo = $this->model->getProductRepository();
-                if ($product = $productsRepo->getProductByFriendlyUrl($friendly_url)) {
+                if ($product = $productsRepo->getProduct($product_srl)) {
+                    if (!($product instanceof SimpleProduct)) {
+                        //TODO: 404
+                        throw new Exception('Not a valid product');
+                    }
                     $logged_info = Context::get('logged_info');
                     $module_srl = $this->module_info->module_srl;
                     if ($member_srl = $logged_info->member_srl) {
@@ -297,7 +301,7 @@
                     $quantity = (is_numeric(Context::get('quantity')) && Context::get('quantity') > 0 ? Context::get('quantity') : 1);
                     $output = $cart->addProduct($product, $quantity);
                 }
-                //TODO: throw proper 404 instead of exception
+                //TODO: 404
                 else throw new Exception('404 product not found?');
             }
             else throw new Exception('Missing product friendly_url');
