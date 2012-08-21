@@ -203,6 +203,7 @@
 						$returnUrl = getNotEncodedUrl('', 'act', 'dispShopToolManageProducts');
 					}
                 }
+				$productRepository->updatePrimaryImageFilename($product);
             }
             catch(Exception $e)
             {

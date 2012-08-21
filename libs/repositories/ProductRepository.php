@@ -20,6 +20,7 @@ class ProductRepository extends BaseRepository
 	public function insertProduct(Product $product)
 	{
 		$product->product_srl = getNextSequence();
+
 		$output = executeQuery('shop.insertProduct', $product);
 		if(!$output->toBool())
 		{
@@ -637,6 +638,9 @@ class ProductRepository extends BaseRepository
 		$this->updatePrimaryImage($product);
 		if(isset($args->image_srls)){
 			$delete_images = $imageRepository->getImages($args->image_srls);
+			if(in_array($product->primary_image, $args->image_srls)) {
+				$this->setNewPrimaryImage($product);
+			}
 			foreach($delete_images as $delete_image){
 				$path = sprintf('./files/attach/images/shop/%d/product-images/%d/%s', $product->module_srl,$product->product_srl,$delete_image->filename);
 				FileHandler::removeFile($path);
@@ -677,5 +681,59 @@ class ProductRepository extends BaseRepository
 				throw new Exception($output->getMessage(), $output->getError());
 			}
 		}
+	}
+
+	/**
+	 * Set primary image filename for product
+	 *
+	 * @author Dan Dragan (dev@xpressengine.org)
+	 * @param $product Product
+	 * @return boolean
+	 */
+	public function updatePrimaryImageFilename($product)
+	{
+		$args = new stdClass();
+		$args->product_srl = $product->product_srl;
+		$args->is_primary = "Y";
+		$output = executeQuery('shop.getPrimaryImageFilename', $args);
+		if(!$output->toBool())
+		{
+			throw new Exception($output->getMessage(), $output->getError());
+		}
+		$args->primary_image_filename = $output->data->filename;
+		$output = executeQuery('shop.updatePrimaryImageFilename', $args);
+		return TRUE;
+	}
+
+	/**
+	 * Set new primary image for product in case of deletion
+	 *
+	 * @author Dan Dragan (dev@xpressengine.org)
+	 * @param $product Product
+	 * @return boolean
+	 */
+	public function setNewPrimaryImage($product)
+	{
+		$args = new stdClass();
+		$args->product_srl = $product->product_srl;
+		$output = executeQueryArray('shop.getProductImages', $args);
+		if(!$output->toBool())
+		{
+			throw new Exception($output->getMessage(), $output->getError());
+		}
+		$args->primary_image_filename = $output->data[0]->filename;
+		$args->primary_image = $output->data[0]->image_srl;
+		$output = executeQuery('shop.updatePrimaryImageFilename', $args);
+		if(!$output->toBool())
+		{
+			throw new Exception($output->getMessage(), $output->getError());
+		}
+		$args->is_primary = 'Y';
+		$output = executeQuery('shop.updatePrimaryImage', $args);
+		if(!$output->toBool())
+		{
+			throw new Exception($output->getMessage(), $output->getError());
+		}
+		return TRUE;
 	}
 }

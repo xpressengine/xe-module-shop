@@ -730,47 +730,49 @@ class shopView extends shop {
 		if($reverse) $datasource_name = 'reverse_' . $datasource_name;
 
 		 $datasource = "var $datasource_name = new Object();" . PHP_EOL;
-
-		 foreach($products as $product)
-		 {
-			 if($product->isSimple()) continue;
-
-			 $datasource .= $datasource_name . "[$product->product_srl] = new Object();" . PHP_EOL;
-
-			 $already_added = array();
-			 foreach($product->associated_products as $asoc_product)
+		 if(isset($products)){
+			 foreach($products as $product)
 			 {
-				 $attribute_values = array_values($asoc_product->attributes);
+				 if($product->isSimple()) continue;
 
-				 // Take just first two attributes
-				 if(!$reverse)
-				 {
-					 $attribute1 = $attribute_values[0];
-					 $attribute2 = $attribute_values[1];
-				 }
-				 else
-				 {
-					 $attribute2 = $attribute_values[0];
-					 $attribute1 = $attribute_values[1];
-				 }
+				 $datasource .= $datasource_name . "[$product->product_srl] = new Object();" . PHP_EOL;
 
-
-				 if($attribute2)
+				 $already_added = array();
+				 foreach($product->associated_products as $asoc_product)
 				 {
-					 if(!$already_added[$attribute1])
+					 $attribute_values = array_values($asoc_product->attributes);
+
+					 // Take just first two attributes
+					 if(!$reverse)
 					 {
-						 $datasource .= $datasource_name . "[$product->product_srl]['$attribute1'] = new Object();" . PHP_EOL;
-						 $already_added[$attribute1] = TRUE;
+						 $attribute1 = $attribute_values[0];
+						 $attribute2 = $attribute_values[1];
+					 }
+					 else
+					 {
+						 $attribute2 = $attribute_values[0];
+						 $attribute1 = $attribute_values[1];
 					 }
 
-					 $datasource .= $datasource_name . "[$product->product_srl]['$attribute1']['$attribute2'] = $asoc_product->product_srl;" . PHP_EOL;
-				 }
-				 else
-				 {
-					 $datasource .= $datasource_name . "[$product->product_srl]['$attribute1'] = $asoc_product->product_srl;" . PHP_EOL;
+
+					 if($attribute2)
+					 {
+						 if(!$already_added[$attribute1])
+						 {
+							 $datasource .= $datasource_name . "[$product->product_srl]['$attribute1'] = new Object();" . PHP_EOL;
+							 $already_added[$attribute1] = TRUE;
+						 }
+
+						 $datasource .= $datasource_name . "[$product->product_srl]['$attribute1']['$attribute2'] = $asoc_product->product_srl;" . PHP_EOL;
+					 }
+					 else
+					 {
+						 $datasource .= $datasource_name . "[$product->product_srl]['$attribute1'] = $asoc_product->product_srl;" . PHP_EOL;
+					 }
 				 }
 			 }
 		 }
+
 		return $datasource;
 	}
 

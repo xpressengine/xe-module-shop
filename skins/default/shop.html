@@ -7,8 +7,8 @@
 <div id="products" class="mainContent">
 	<!--@foreach($products as $product)-->
 		<div id="product_{$product->product_srl}" class="product {$product->product_type}">
-			<!--@if($product->file_srl)-->
-				<!-- TODO Add product image here -->
+			<!--@if($product->primary_image_filename)-->
+                <img src="./files/attach/images/shop/{$product->module_srl}/product-images/{$product->product_srl}/{$product->primary_image_filename}" width="150px" height="150px" />
 			<!--@else-->
 				<img src="img/missingProductLarge.png" width="150px" height="150px" />
 			<!--@end-->
