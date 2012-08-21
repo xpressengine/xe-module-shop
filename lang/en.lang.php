@@ -237,9 +237,9 @@
             'dispShopToolManageCustommers'=>'Manage Accounts',
         ),
 		array(
-			'dispShopToolExtraMenuList'=>'All Pages',
-			'dispShopToolExtraMenuInsert'=>'New Text Page',
-			'dispShopToolExtraMenuModuleInsert'=>'New Menu item'
+			'dispShopToolExtraMenuList'=>'All items',
+			'dispShopToolExtraMenuInsert'=>'Add page item',
+			'dispShopToolExtraMenuModuleInsert'=>'Add menu item'
 		),
         array(
             'dispShopToolStatisticsVisitor'=>'Visitor statistics',
