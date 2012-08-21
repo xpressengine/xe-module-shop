@@ -9,8 +9,8 @@ function makeFileList(){
     var browserName=navigator.appName;
     var list = document.getElementById('fileList');
     if (browserName=="Microsoft Internet Explorer") {
-        index++;
-        if(index == 1) var currentinput = input;
+
+        if(index == 0) var currentinput = input;
         else var currentinput = document.getElementById('filesToUpload'+(index-1));
         var newfileuploadinput = jQuery(currentinput).clone(true);
         jQuery(newfileuploadinput).removeAttr("id");
@@ -39,6 +39,7 @@ function makeFileList(){
 
             jQuery(p).insertBefore(list);
         }
+        index++;
     }
     else {
         chrome_index++;
