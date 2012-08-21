@@ -1,6 +1,7 @@
 var index =0;
 var numfiles =0;
 var id = '';
+var chrome_index = 0;
 
 function makeFileList(){
     var i=0;
@@ -8,86 +9,93 @@ function makeFileList(){
     var browserName=navigator.appName;
     var list = document.getElementById('fileList');
     if (browserName=="Microsoft Internet Explorer") {
-    index++;
-    if(index == 1) var currentinput = input;
-    else var currentinput = document.getElementById('filesToUpload'+(index-1));
-    var newfileuploadinput = jQuery(currentinput).clone(true);
-    jQuery(newfileuploadinput).removeAttr("id");
-    jQuery(newfileuploadinput).attr('id', 'filesToUpload'+index);
-    jQuery(currentinput).hide(0.1);
-    jQuery(newfileuploadinput).insertAfter(currentinput);
+        index++;
+        if(index == 1) var currentinput = input;
+        else var currentinput = document.getElementById('filesToUpload'+(index-1));
+        var newfileuploadinput = jQuery(currentinput).clone(true);
+        jQuery(newfileuploadinput).removeAttr("id");
+        jQuery(newfileuploadinput).attr('id', 'filesToUpload'+index);
+        jQuery(currentinput).hide(0.1);
+        jQuery(newfileuploadinput).insertAfter(currentinput);
 
 
-    var li = document.createElement('li');
-    var checkbox = document.createElement('input');
-    checkbox.type = "radio";
-    checkbox.name = "primary_image";
-    checkbox.value = index;
-    checkbox.id = index;
+        var li = document.createElement('li');
+        var checkbox = document.createElement('input');
+        checkbox.type = "radio";
+        checkbox.name = "primary_image";
+        checkbox.value = index;
+        checkbox.id = index;
 
-    jQuery(list).append(li);
+        jQuery(list).append(li);
 
 
-    var elem = currentinput.value.split("\\");
-    var filename = elem[elem.length-1];
-    li.innerHTML = outerHTML(checkbox) + 'File ' + index + ':  ' + filename;
+        var elem = currentinput.value.split("\\");
+        var filename = elem[elem.length-1];
+        li.innerHTML = outerHTML(checkbox) + 'File ' + index + ':  ' + filename;
 
-    if(index == 1){
-    var p = document.createElement('p');
-    p.innerHTML = "Select primary product image";
+        if(index == 1){
+            var p = document.createElement('p');
+            p.innerHTML = "Select primary product image";
 
-    jQuery(p).insertBefore(list);
+            jQuery(p).insertBefore(list);
+        }
     }
-}
-else {
-    numfiles = input.files.length;
-    for (var x = 0; x < numfiles; x++) {
+    else {
+        chrome_index++;
+        if(chrome_index == 1) var currentinput = input;
+        else var currentinput = document.getElementById('filesToUpload'+(chrome_index-1));
+        var newfileuploadinput = jQuery(currentinput).clone(true);
+        jQuery(newfileuploadinput).removeAttr("id");
+        jQuery(newfileuploadinput).attr('id', 'filesToUpload'+chrome_index);
+        jQuery(currentinput).hide();
+        jQuery(newfileuploadinput).insertAfter(currentinput);
 
-    //add to list
-    var li = document.createElement('li');
+        numfiles = currentinput.files.length;
+        for (var x = 0; x < numfiles; x++) {
 
-    var checkbox = document.createElement('input');
-    checkbox.type = "radio";
-    checkbox.name = "primary_image";
-    checkbox.value = index;
-    checkbox.id = index;
+            //add to list
+            var li = document.createElement('li');
+
+            var checkbox = document.createElement('input');
+            checkbox.type = "radio";
+            checkbox.name = "primary_image";
+            checkbox.value = index;
+            checkbox.id = index;
 
 
 
-    jQuery(list).append(li);
+            jQuery(list).append(li);
 
-    var image = document.createElement('image');
-    image.name = "image_"+index;
-    image.id = "image_"+index;
-    image.src="#";
+            var image = document.createElement('image');
+            image.name = "image_"+index;
+            image.id = "image_"+index;
+            image.src="#";
 
-    li.innerHTML = outerHTML(checkbox) + 'Not yet saved:  ' + input.files[x].name + outerHTML(image);
-    index++;
+            li.innerHTML = outerHTML(checkbox) + 'Not yet saved:  ' + currentinput.files[x].name + outerHTML(image);
+            index++;
+        }
+        if(index == numfiles){
+            var p = document.createElement('p');
+            p.innerHTML = "Select primary product image";
+
+            jQuery(p).insertBefore(list);
+        }
     }
-if(index == numfiles){
-    var p = document.createElement('p');
-    p.innerHTML = "Select primary product image";
 
-    jQuery(p).insertBefore(list);
+    if (browserName!="Microsoft Internet Explorer") {
+        var reader = new FileReader();
+        reader.readAsDataURL(currentinput.files[0]);
+        reader.onload = function (e) {
+        if(i < numfiles){
+        id = "image_"+(index-(numfiles-i));
+        image = document.getElementById(id);
+        image.src =  e.target.result ;
+        image.width = 100;
+        image.height = 100;
+        i++;
+        reader.readAsDataURL(currentinput.files[i]);
+        }
     }
-}
-
-
-
-if (browserName!="Microsoft Internet Explorer") {
-    var reader = new FileReader();
-    reader.readAsDataURL(input.files[0]);
-    reader.onload = function (e) {
-    if(i < numfiles){
-    id = "image_"+(index-(numfiles-i));
-    image = document.getElementById(id);
-    image.src =  e.target.result ;
-    image.width = 100;
-    image.height = 100;
-    i++;
-    reader.readAsDataURL(input.files[i]);
-    }
-}
 }
 
 }

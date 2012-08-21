@@ -24,7 +24,7 @@ class ImageRepository extends BaseRepository
 		if($image->file_size > 0){
 			$output = executeQuery('shop.insertImage', $image);
 			$this->saveImage($image);
-			if (!$output->toBool()) throw new Exception($output->getMessage(), $output->getError());
+			//if (!$output->toBool()) throw new Exception($output->getMessage(), $output->getError());
 			return $output;
 		}
 		else return;
