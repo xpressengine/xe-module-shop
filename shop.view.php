@@ -620,6 +620,14 @@ class shopView extends shop {
 		$datasourceJS = $this->getAssociatedProductsAttributesAsJavascriptArray(array($product));
 		Context::set('datasourceJS', $datasourceJS);
 
+		// Setup attributes names for display
+		if(count($product->attributes))
+		{
+			$attribute_repository = $shopModel->getAttributeRepository();
+			$attributes = $attribute_repository->getAttributes(array_keys($product->attributes));
+			Context::set('attributes', $attributes);
+		}
+
 		// Categories left tree
 		// Retrieve existing categories
 		$category_repository = $shopModel->getCategoryRepository();

@@ -21,6 +21,12 @@
 		<b> Price </b> {$product->price}
 	</p>
 
+	<!--@foreach($product->attributes as $attribute_srl => $attribute_value)-->
+	    <p>
+	    	<b>{$attributes[$attribute_srl]->title}</b> {$attribute_value}
+		</p>
+	<!--@end-->
+
 	<include target="product_variants" />
 
 	<a href="{getUrl('vid', $mid, 'act', 'dispShop', 'product_srl', '')}">Go back</a>

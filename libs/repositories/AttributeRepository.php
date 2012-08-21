@@ -148,7 +148,7 @@ class AttributeRepository extends BaseRepository
             return $attribute;
         }
         foreach ($output->data as $data) {
-            $rez[] = new Attribute($data);
+            $rez[$data->attribute_srl] = new Attribute($data);
             $this->getAttributeScope($rez[key($rez)]);
         }
 		if( empty($rez)) return false;
