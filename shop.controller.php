@@ -947,6 +947,30 @@
 
 			$this->add('mid_list', $mid_list);
 		}
+
+		/**
+		 * Insert a new menu item
+		 */
+		public function procShopToolInsertMenuItem()
+		{
+			/**
+			 * @var shopModel $shopModel
+			 */
+			$shopModel = getModel('shop');
+			$shop_menu_srl = $shopModel->getShopMenuSrl($this->site_srl);
+
+			$module_type = Context::get('module_type');
+			if($module_type != 'url')
+				$mid = Context::get('mid_url');
+			else
+				$mid = Context::get('text_url');
+			$menu_name = Context::get('menu_name');
+
+			$shopModel->insertMenuItem($shop_menu_srl, 0, $mid, $menu_name);
+
+			$returnUrl = getNotEncodedUrl('', 'vid', $this->vid, 'act', 'dispShopToolExtraMenuList');
+			$this->setRedirectUrl($returnUrl);
+		}
 		// endregion
     }
 ?>

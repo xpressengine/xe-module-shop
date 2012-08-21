@@ -32,7 +32,7 @@
 				    $mid_list = data.mid_list;
 
 					// Remove previous entries
-					$("#mid_url_container select").html("");
+					$("#mid_url_container select").html("<option value=''></option>");
 				    // Add new mids
 				    for(var $mid in $mid_list)
 					{
@@ -79,7 +79,9 @@
 		<p class="info">{$lang->about_shop_extra_menu}</p>
 	</div>
 
-	<form>
+	<form action="./">
+	    <input type="hidden" name="vid" value="{$vid}" />
+		<input type="hidden" name="act" value="procShopToolInsertMenuItem" />
 	    <p>
 		    <label for="module_type">Type</label>
 			<select id="module_type" name="module_type">
@@ -105,7 +107,7 @@
 
 	    <p>
 		    <label for="menu_name">Menu name</label>
-		    <input type="text" id="menu_name" value="" />
+		    <input type="text" id="menu_name" name="menu_name" value="" />
 	    </p>
 
 		<p class="submit">

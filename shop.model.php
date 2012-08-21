@@ -306,4 +306,73 @@ class shopModel extends shop
         return new GuestRepository();
     }
 
+	// region Menu
+	/**
+	 * Get shop menu
+	 */
+	public function getShopMenuSrl($site_srl)
+	{
+		/**
+		 * @var menuModel $menuModel
+		 */
+		$menuAdminModel = getAdminModel('menu');
+		$menus = $menuAdminModel->getMenus($site_srl);
+		if(!$menus)
+		{
+			$menu_srl = $this->makeMenu($site_srl, "Shop", "Menu");
+			return $menu_srl;
+		}
+		return $menus[0]->menu_srl;
+	}
+
+	/**
+	 * Insert a menu
+	 *
+	 * @param $site_srl
+	 * @param $title
+	 * @param $menu_title
+	 * @return object
+	 */
+	public function makeMenu($site_srl, $title, $menu_title) {
+		$args = new stdClass();
+		$args->site_srl = $site_srl;
+		$args->title = $title.' - '.$menu_title;
+		$args->menu_srl = getNextSequence();
+		$args->listorder = $args->menu_srl * -1;
+
+		$output = executeQuery('menu.insertMenu', $args);
+		if(!$output->toBool()) return $output;
+
+		return $args->menu_srl;
+	}
+
+	/**
+	 * Insert a menu item
+	 *
+	 * @param     $menu_srl
+	 * @param int $parent_srl
+	 * @param     $mid
+	 * @param     $name
+	 * @return mixed
+	 */
+	public function insertMenuItem($menu_srl, $parent_srl = 0, $mid, $name) {
+		// 변수를 다시 정리 (form문의 column과 DB column이 달라서)
+		$args = new stdClass();
+		$args->menu_srl = $menu_srl;
+		$args->menu_item_srl = getNextSequence();
+		$args->parent_srl = $parent_srl;
+		$args->name = $name;
+		$args->url = $mid;
+		$args->open_window = 'N';
+		$args->expand = 'N';
+		$args->normal_btn = NULL;
+		$args->hover_btn = NULL;
+		$args->active_btn = NULL;
+		$args->group_srls = NULL;
+		$args->listorder = $args->menu_item_srl*-1;
+		$output = executeQuery('menu.insertMenuItem', $args);
+		return $args->menu_item_srl;
+	}
+	// endregion
+
 }
