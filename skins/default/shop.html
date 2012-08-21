@@ -6,7 +6,7 @@
 
 <div id="products" class="mainContent">
 	<!--@foreach($products as $product)-->
-		<div id="product_{$product->product_srl}" class="product">
+		<div id="product_{$product->product_srl}" class="product {$product->product_type}">
 			<!--@if($product->file_srl)-->
 				<!-- TODO Add product image here -->
 			<!--@else-->
@@ -21,7 +21,7 @@
 				<!--@if($product->isSimple())-->
 				<input type="text" disabled="disabled" id="product_srl" name="product_srl" value="{$product->product_srl}" />
 				<!--@end-->
-				<a href="{getUrl('', 'act','procShopToolCartAddProduct', 'entry', 'REPLACE', 'quantity', 1)}" class="add_to_cart">Add to cart</a>
+				<a href="{getUrl('', 'act','procShopToolCartAddProduct', 'entry',   $product->product_type=='simple' ? $product->product_srl : 'REPLACE'  , 'quantity', 1)}" class="add_to_cart">Add to cart</a>
 			</form>
 
 		</div>

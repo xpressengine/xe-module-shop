@@ -21,11 +21,11 @@ jQuery(document).ready(function($){
 		});
 	};
 
-    $('.product').find('.add_to_cart').click(function(e){
+    $('.product.configurable').find('.add_to_cart').click(function(e){
         e.preventDefault();
         $(this).attr('href', $(this).attr('href').replace('REPLACE', $(this).parents('.product').find('.product_srl').val()));
         window.location = $(this).attr('href');
-    });
+    }).hide();
 
 
 	$(".product_variants select.level_1").change(function(){

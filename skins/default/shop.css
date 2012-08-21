@@ -150,7 +150,7 @@ img{border:0}
 }
 .add_to_cart
 {
-    display: none;
+    display: inline-block;
     clear: both;
     padding: 5px;
     margin: 5px;
