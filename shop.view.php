@@ -8,12 +8,18 @@
 
 class shopView extends shop {
 
-	/**
+    /** @var shopModel */
+    protected $model;
+    /** @var shopInfo */
+    protected $shop;
+
+    /**
 	 * @brief Initialization
 	 **/
 	public function init() {
-		$oShopModel = getModel('shop');
-		if(preg_match("/ShopTool/",$this->act) ) {
+		$this->model = getModel('shop');
+        $this->shop = $this->model->getShop($this->module_info->module_srl);
+        if(preg_match("/ShopTool/",$this->act) ) {
 			$this->initTool($this);
 
 		} else {
@@ -60,7 +66,6 @@ class shopView extends shop {
 			Context::set('current_module_info', $this->module_info);
 		}
 
-		$this->shop = $oShopModel->getShop($this->module_info->module_srl);
 		$this->site_srl = $this->shop->site_srl;
 		Context::set('shop',$this->shop);
 
@@ -149,14 +154,13 @@ class shopView extends shop {
 		else Context::set('admin_url', getSiteUrl($shop->domain,'','mid','shop','act','dispShopToolLogin'));
 		Context::set('shop_title', $this->shop->get('shop_title'));
 
-
 		// set browser title
 		Context::setBrowserTitle($this->shop->get('browser_title'));
 
-
         $cartRepo = $oShopModel->getCartRepository();
-        $productsInCart = $cartRepo->countCartProductsBySessionId(session_id());
-        Context::set('productsInCart', $productsInCart);
+        $logged_info = Context::get('logged_info');
+        $cart = $cartRepo->getCart($this->module_srl, null, $logged_info->member_srl, session_id());
+        Context::set('cart', $cart);
 	}
 
 
@@ -655,6 +659,60 @@ class shopView extends shop {
 
 
 		$this->setTemplateFile('product.html');
+	}
+
+	public function dispShopCart()
+	{
+        $cart = Context::get('cart');
+
+        if (!($cart instanceof Cart)) $
+
+		/**
+		 * @var shopModel $shopModel
+		 */
+		$shopModel = getModel('shop');
+		$product_repository = $shopModel->getProductRepository();
+
+		$product = $product_repository->getProduct($product_srl);
+		Context::set('product', $product);
+
+		// Setup Javscript datasource for linked dropdowns
+		$datasourceJS = $this->getAssociatedProductsAttributesAsJavascriptArray(array($product));
+		Context::set('datasourceJS', $datasourceJS);
+
+		// Setup attributes names for display
+		if(count($product->attributes))
+		{
+			$attribute_repository = $shopModel->getAttributeRepository();
+			$attributes = $attribute_repository->getAttributes(array_keys($product->attributes));
+			Context::set('attributes', $attributes);
+		}
+
+		// Categories left tree
+		// Retrieve existing categories
+		$category_repository = $shopModel->getCategoryRepository();
+		$tree = $category_repository->getCategoriesTree($this->module_srl);
+
+		// Prepare tree for display
+		$tree_config = new HtmlCategoryTreeConfig();
+		$tree_config->linkCategoryName = TRUE;
+		$tree_config->linkGetUrlParams = array('vid', $this->mid, 'act', 'dispShop');
+		$tree_config->selected = $product->categories;
+		$HTML_tree = $tree->toHTML($tree_config);
+		Context::set('HTML_tree', $HTML_tree);
+
+		// Current category details
+		$category_srl = Context::get('category_srl');
+		if($category_srl)
+		{
+			$current_category = $category_repository->getCategory($category_srl);
+			Context::set('current_category', $current_category);
+
+			$breadcrumbs_items = $category_repository->getCategoryParents($current_category);
+			Context::set('breadcrumbs_items', $breadcrumbs_items);
+		}
+
+		$this->setTemplateFile('cart.html');
 	}
 
 	/**

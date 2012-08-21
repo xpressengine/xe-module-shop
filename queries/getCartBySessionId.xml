@@ -1,4 +1,4 @@
-<query id="getCartByGuest" action="select">
+<query id="getCartBySessionId" action="select">
     <tables>
         <table name="shop_cart" />
     </tables>

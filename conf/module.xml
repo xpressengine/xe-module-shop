@@ -53,7 +53,7 @@
         <!-- Shop frontend -->
         <action name="dispShop" type="view" index="true" />
         <action name="dispShopProduct" type="view" />
-
+        <action name="dispShopCart" type="view" />
 
         <action name="dispShopToolLogin" type="view" />
         <action name="dispShopProfile" type="view" />
