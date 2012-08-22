@@ -272,6 +272,7 @@
     $lang->cmd_change_password = 'Change Password';
     $lang->cmd_restore = 'Restore';
     $lang->cmd_empty = 'Empty';
+	$lang->cmd_duplicate = 'Duplicate';
     $lang->cmd_change_category = 'Change Category';
     $lang->cmd_publish = 'Publish';
     $lang->cmd_save_publish = 'Publish';

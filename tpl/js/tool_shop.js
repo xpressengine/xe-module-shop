@@ -449,10 +449,11 @@ function deleteUserImage(filename){
     });
 }
 
-function deleteProductItem(srl){
+function deleteProductItem(srl,product_type){
     if (!confirm(xe.lang.msg_confirm_delete_product)) return false;
     var params = new Array();
     params['product_srl'] = srl;
+    params['product_type'] = product_type;
     var response_tags = new Array('error','message','page','mid');
     exec_xml('shop', 'procShopToolDeleteProduct', params, completeReload, response_tags);
 }

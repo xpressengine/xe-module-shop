@@ -342,6 +342,34 @@ Patrioque conceptam in mea. Est ad ullum ceteros, pro quem accumsan appareat id,
 		}
 	}
 
+	public function testDeleteProduct(){
+		/**
+		 * @var shopModel $shopModel
+		 */
+		$shopModel = getModel('shop');
+		$product_repository = $shopModel->getProductRepository();
 
+		// Delete product
+		$args = new stdClass();
+		$args->product_srl = 297;
+		$args->product_type = 'configurable';
+		$product_repository->deleteProduct($args);
+
+		// Check that product was deleted
+		$this->assertNull($product_repository->getProduct(297));
+
+		// Check that associated product was deleted
+		$this->assertNull($product_repository->getProduct(298));
+		$this->assertNull($product_repository->getProduct(299));
+		$this->assertNull($product_repository->getProduct(300));
+		$this->assertNull($product_repository->getProduct(301));
+		$this->assertNull($product_repository->getProduct(302));
+		$this->assertNull($product_repository->getProduct(303));
+
+		// Check that other products are not deleted
+		$other_product = $product_repository->getProduct(304);
+		var_dump($other_product);
+		$this->assertNotNull($product_repository->getProduct(304));
+	}
 
 }

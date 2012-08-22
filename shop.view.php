@@ -441,9 +441,17 @@ class shopView extends shop {
 	}
 
 	/**
-	 * @brief Shop display product tool page
+	 * @brief Shop display product edit page
 	 */
 	public function dispShopToolEditProduct(){
+		$this->dispShopToolAddProduct();
+		$this->setTemplateFile('AddProduct');
+	}
+
+	/**
+	 * @brief Shop display product dplicate page
+	 */
+	public function dispShopToolDuplicateProduct(){
 		$this->dispShopToolAddProduct();
 		$this->setTemplateFile('AddProduct');
 	}

@@ -323,8 +323,8 @@
             $repository = $shopModel->getProductRepository();
 
             $args = new stdClass();
-			$args->module_srl = $this->module_info->module_srl;
             $args->product_srl = Context::get('product_srl');
+			$args->product_type = Context::get('product_type');
 
             $repository->deleteProduct($args);
             $this->setMessage("success_deleted");

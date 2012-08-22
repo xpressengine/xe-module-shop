@@ -17,6 +17,7 @@
 <th scope="col">{$lang->status}</th>
 <th scope="col">&nbsp;</th>
 <th scope="col">&nbsp;</th>
+<th scope="col">&nbsp;</th>
 </tr>
 </thead>
 <tbody>
@@ -40,10 +41,12 @@
 <td class="small">{$product_item->status}</td>
 <td>
 <span class="btnGray small"><a href="{getUrl('act','dispShopToolEditProduct','product_srl',$product_item->product_srl)}">{$lang->cmd_edit}</a></span>
-
 </td>
 <td>
-<button type="button" class="btnTableData" onclick="deleteProductItem({$product_item->product_srl})"><span>{$lang->cmd_delete}</span></button>
+    <span class="btnGray small"><a href="{getUrl('act','dispShopToolDuplicateProduct','product_srl',$product_item->product_srl)}">{$lang->cmd_duplicate}</a></span>
+</td>
+<td>
+<button type="button" class="btnTableData" onclick="deleteProductItem({$product_item->product_srl},'{$product_item->product_type}')"><span>{$lang->cmd_delete}</span></button>
 </td>
 </tr>
 <!--@end-->

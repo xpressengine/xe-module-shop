@@ -192,7 +192,7 @@ class ProductRepository extends BaseRepository
 	 */
 	public function deleteProduct($args)
 	{
-		if(!isset($args->product_srl) && !isset($args->module_srl))
+		if(!isset($args->product_srl))
 			throw new Exception("Missing arguments for Product delete: please provide [product_srl] or [module_srl]");
 
 		$output = executeQuery('shop.deleteProduct', $args);
@@ -200,9 +200,12 @@ class ProductRepository extends BaseRepository
 		{
 			throw new Exception($output->getMessage(), $output->getError());
 		}
-		$product = new SimpleProduct();
-		$product->product_srl = $args->product_srl;
-		$product->module_srl = $args->module_srl;
+		if($args->product_type == 'simple') {
+			$product = new SimpleProduct($args);
+		}else {
+			$product = new ConfigurableProduct($args);
+		}
+		if($product->product_type == 'configurable') $this->deleteAssociatedProducts($product);
 		$this->deleteProductCategories($product);
 		$this->deleteProductAttributes($product);
 		$this->deleteProductImages($product);
@@ -264,6 +267,22 @@ class ProductRepository extends BaseRepository
         if (!$output->toBool()) throw new Exception($output->getMessage(), $output->getError());
         return TRUE;
     }
+
+	/**
+	 * Delete associated products
+	 *
+	 * @author Dan Dragan (dev@xpressengine.org)
+	 * @param $product Product
+	 * @return boolean
+	 */
+	public function deleteAssociatedProducts(Product &$product)
+	{
+		$args = new stdClass();
+		$args->parent_product_srl = $product->product_srl;
+		$output = executeQuery('shop.deleteAssociatedProducts',$args);
+		if (!$output->toBool()) throw new Exception($output->getMessage(), $output->getError());
+		return TRUE;
+	}
 
 	/**
 	 * Delete product attributes
