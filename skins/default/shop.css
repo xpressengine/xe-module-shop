@@ -78,7 +78,19 @@ img{border:0}
     width:40%;
     float: left;
 }
-
+#main_menu
+{
+    display: inline;
+}
+#main_menu ul
+{
+    list-style-type: none;
+    display: inline;
+}
+#main_menu ul li
+{
+    display: inline;
+}
 #top_links
 {
     border: 1px solid gray;
@@ -92,6 +104,15 @@ img{border:0}
 {
     display: inline;
     padding-left: 20px;
+}
+#top_links a
+{
+    padding: 0 5px;
+}
+
+#top_links a:hover
+{
+    background-color: #ffff00;
 }
 
 #content

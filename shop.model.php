@@ -371,30 +371,39 @@ class shopModel extends shop
 		$args->group_srls = NULL;
 		$args->listorder = 0;
 		$output = executeQuery('menu.insertMenuItem', $args);
+
+		$menuAdminController = getAdminController('menu');
+		$menuAdminController->makeXmlFile($menu_srl);
+
 		return $args->menu_item_srl;
 	}
 
 	/**
 	 * Update menu item
 	 */
-	public function updateMenuItem($menu_item_srl, $menu_title)
+	public function updateMenuItem($menu_srl, $menu_item_srl, $menu_title)
 	{
 		$args = new stdClass();
 		$args->menu_item_srl = $menu_item_srl;
 		$args->name = $menu_title;
 		$output = executeQuery('menu.updateMenuItem', $args);
 
+		$menuAdminController = getAdminController('menu');
+		$menuAdminController->makeXmlFile($menu_srl);
 	}
 
 	/**
 	 * Delete menu item
 	 */
-	public function deleteMenuItem($menu_item_srl)
+	public function deleteMenuItem($memnu_srl, $menu_item_srl)
 	{
 		$args = new stdClass();
 		$args->menu_item_srl = $menu_item_srl;
 		$output = executeQuery("menu.deleteMenuItem", $args);
 		if(!$output->toBool()) return $output;
+
+		$menuAdminController = getAdminController('menu');
+		$menuAdminController->makeXmlFile($menu_srl);
 	}
 	// endregion
 

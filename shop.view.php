@@ -580,6 +580,19 @@ class shopView extends shop {
 			Context::set('breadcrumbs_items', $breadcrumbs_items);
 		}
 
+		// Main menu
+		$shop_menu_srl = $shopModel->getShopMenuSrl($this->site_srl);
+		/**
+		 * @var menuAdminModel $menuModel
+		 */
+		$menuModel = getAdminModel('menu');
+		$shop_menu = $menuModel->getMenu($shop_menu_srl);
+		if(file_exists($shop_menu->php_file))
+		{
+			@include($shop_menu->php_file);
+		}
+		Context::set('menu', $menu);
+		Context::set('menu_srl', $shop_menu_srl);
 
 		// Products list
 		$product_repository = $shopModel->getProductRepository();

@@ -12,14 +12,28 @@
 
 <div id="top_links">
 
-<a href="#">My Account</a>
-<a href="#">Cart [{$cart->items}]</a>
-<a href="#">Support</a>
+	<!-- Menu -->
+		<div id="main_menu">
+			<ul>
+				<li loop="$menu->list=>$key1,$val1" class="active"|cond="$val1['selected']"><a href="{$val1['href']}" target="_blank"|cond="$val1['open_window']=='Y'">{$val1['link']}</a>
+					<ul cond="$val1['list']">
+						<li loop="$val1['list']=>$key2,$val2" class="active"|cond="$val2['selected']"><a href="{$val2['href']}" target="_blank"|cond="$val2['open_window']=='Y'">{$val2['link']}</a></li>
+					</ul>
+				</li>
+			</ul>
+		</div>
+	<!-- /Menu -->
 
-<form>
-<input type="text" name="search" value=""/>
-<input type="submit" value="Search"/>
-</form>
+	<!-- Cart -->
+	<a href="#">Cart [{$cart->items}]</a>
+	<!-- /Cart -->
+
+	<!-- Search box -->
+		<form>
+			<input type="text" name="search" value=""/>
+			<input type="submit" value="Search"/>
+		</form>
+	<!-- /Search box -->
 </div>
 
 <div class="clear"/>
