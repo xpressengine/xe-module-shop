@@ -26,7 +26,9 @@ class CategoryTest extends Shop_Generic_Tests_DatabaseTestCase
 				array('category_srl' => 1004, 'module_srl' => 1003, 'title' => 'Dummy category 1004', 'parent_srl' => 0),
 				array('category_srl' => 1006, 'module_srl' => 1001, 'title' => 'Dummy category 1006', 'parent_srl' => 0),
 				array('category_srl' => 1008, 'module_srl' => 1001, 'title' => 'Dummy category 1008', 'parent_srl' => 1000)
-			)
+			),
+			'xe_shop_products' => array(),
+			'xe_shop_product_categories' => array()
 		));
 	}
 
@@ -366,8 +368,53 @@ class CategoryTest extends Shop_Generic_Tests_DatabaseTestCase
 		// Check that count was increased
 		$category = $category_repository->getCategory(1000);
 		$this->assertEquals(1, $category->product_count);
+	}
 
+	/**
+	 * Test that product count gets updated correctly when product is configurable
+	 * This means it should only count the main product, not including
+	 * its variants (aka associated products).
+	 *
+	 * @return void
+	 */
+	public function testProductCountDoesntIncludeAssociatedProducts()
+	{
+		/**
+		 * @var shopModel $shopModel
+		 */
+		$shopModel = getModel('shop');
 
+		// Make sure product count is 0 at the beginning
+		$category_repository = $shopModel->getCategoryRepository();
+		$category = $category_repository->getCategory(1000);
+
+		$this->assertEquals(0, $category->product_count);
+
+		// Add new product
+		$product_repository = $shopModel->getProductRepository();
+
+		$product = new ConfigurableProduct();
+		$product->product_srl = 12;
+		$product->title = "Some product";
+		$product->member_srl = 4;
+		$product->module_srl = 1;
+		$product->sku = 'some-product';
+		$product->friendly_url = $product->sku;
+		$product->price = 100;
+		$product->categories[] = 1000;
+		$product->configurable_attributes[21] = "Attribute1";
+		$product->configurable_attributes[22] = "Attribute2";
+		$product_repository->insertProduct($product);
+
+		$associated_product1 = $product_repository->createProductFromParent($product, array("a", "b"));
+		$product_repository->insertProduct($associated_product1);
+
+		$associated_product2 = $product_repository->createProductFromParent($product, array("c", "d"));
+		$product_repository->insertProduct($associated_product2);
+
+		// Check that count was increased
+		$category = $category_repository->getCategory(1000);
+		$this->assertEquals(1, $category->product_count);
 	}
 }
 
