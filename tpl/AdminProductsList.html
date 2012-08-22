@@ -43,7 +43,9 @@
 <span class="btnGray small"><a href="{getUrl('act','dispShopToolEditProduct','product_srl',$product_item->product_srl)}">{$lang->cmd_edit}</a></span>
 </td>
 <td>
-    <span class="btnGray small"><a href="{getUrl('act','dispShopToolDuplicateProduct','product_srl',$product_item->product_srl)}">{$lang->cmd_duplicate}</a></span>
+    <!--@if($product_item->product_type != 'configurable')-->
+        <span class="btnGray small"><a href="{getUrl('act','dispShopToolDuplicateProduct','product_srl',$product_item->product_srl)}">{$lang->cmd_duplicate}</a></span>
+    <!--@endif-->
 </td>
 <td>
 <button type="button" class="btnTableData" onclick="deleteProductItem({$product_item->product_srl},'{$product_item->product_type}')"><span>{$lang->cmd_delete}</span></button>

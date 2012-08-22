@@ -63,6 +63,7 @@
 	$lang->images = 'Images';
 	$lang->delete = 'Delete';
 	$lang->upload_files = 'Upload Files';
+	$lang->notice_update_configurable = 'When updating a configurable product the values of associated products will not be affected. You will have to edit them sepparatly.';
 
 	$lang->cmd_open_id = 'Open ID Login';
 	$lang->cmd_common_id = 'Default Login';
