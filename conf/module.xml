@@ -52,7 +52,11 @@
 
     </permissions>
     <actions>
+        <!-- Shop frontend -->
         <action name="dispShop" type="view" index="true" />
+        <action name="dispShopProduct" type="view" />
+        <action name="dispShopCart" type="view" />
+
         <action name="dispShopToolLogin" type="view" />
         <action name="dispShopProfile" type="view" />
         <action name="dispShopLogin" type="view" />
@@ -120,6 +124,17 @@
         <action name="procUpdateShopDeleteGateway" type="controller" />
         <action name="procShopUploadGateway" type="controller" />
         <action name="procSanitizeGateway" type="controller" />
+
+        <!-- Extra menu -->
+        <action name="dispShopToolExtraMenuList" type="view" />
+        <action name="dispShopToolExtraMenuInsert" type="view" />
+        <action name="dispShopToolExtraMenuModuleInsert" type="view" />
+        <action name="dispShopToolExtraMenuEdit" type="view" />
+        <action name="procShopServiceGetModulesByType" type="controller" standalone="true"/>
+        <action name="procShopToolInsertMenuItem" type="controller" standalone="true"/>
+        <action name="procShopToolUpdateMenuItem" type="controller" standalone="true"/>
+        <action name="procShopToolExtraMenuSort" type="controller" standalone="true"/>
+        <action name="procShopToolExtraMenuDelete" type="controller" standalone="true"/>
 
     </actions>
 </module>
