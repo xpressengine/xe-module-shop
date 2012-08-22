@@ -677,53 +677,8 @@ class shopView extends shop {
 	public function dispShopCart()
 	{
         $cart = Context::get('cart');
-
-        if (!($cart instanceof Cart)) $
-
-		/**
-		 * @var shopModel $shopModel
-		 */
-		$shopModel = getModel('shop');
-		$product_repository = $shopModel->getProductRepository();
-
-		$product = $product_repository->getProduct($product_srl);
-		Context::set('product', $product);
-
-		// Setup Javscript datasource for linked dropdowns
-		$datasourceJS = $this->getAssociatedProductsAttributesAsJavascriptArray(array($product));
-		Context::set('datasourceJS', $datasourceJS);
-
-		// Setup attributes names for display
-		if(count($product->attributes))
-		{
-			$attribute_repository = $shopModel->getAttributeRepository();
-			$attributes = $attribute_repository->getAttributes(array_keys($product->attributes));
-			Context::set('attributes', $attributes);
-		}
-
-		// Categories left tree
-		// Retrieve existing categories
-		$category_repository = $shopModel->getCategoryRepository();
-		$tree = $category_repository->getCategoriesTree($this->module_srl);
-
-		// Prepare tree for display
-		$tree_config = new HtmlCategoryTreeConfig();
-		$tree_config->linkCategoryName = TRUE;
-		$tree_config->linkGetUrlParams = array('vid', $this->mid, 'act', 'dispShop');
-		$tree_config->selected = $product->categories;
-		$HTML_tree = $tree->toHTML($tree_config);
-		Context::set('HTML_tree', $HTML_tree);
-
-		// Current category details
-		$category_srl = Context::get('category_srl');
-		if($category_srl)
-		{
-			$current_category = $category_repository->getCategory($category_srl);
-			Context::set('current_category', $current_category);
-
-			$breadcrumbs_items = $category_repository->getCategoryParents($current_category);
-			Context::set('breadcrumbs_items', $breadcrumbs_items);
-		}
+        $cartRepo = $this->model->getCartRepository();
+        $productsRepo = $this->model->getProductRepository();
 
 		$this->setTemplateFile('cart.html');
 	}

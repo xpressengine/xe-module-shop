@@ -384,11 +384,20 @@
 
 
         public function procShopToolLayoutResetConfigSkin() {
+            /** @var $oModuleModel moduleModel */
             $oModuleModel = getModel('module');
             $module_info  = $oModuleModel->getModuleInfoByModuleSrl($this->module_srl);
             $skin = $module_info->skin;
-
             $this->resetSkin($this->module_srl,$skin);
+        }
+
+        public function procShopToolResetSkin()
+        {
+            /** @var $oModuleModel moduleModel */
+            $oModuleModel = getModel('module');
+            $module_info = $oModuleModel->getModuleInfoByModuleSrl($this->module_srl);
+            $skin = $module_info->skin;
+            $this->resetSkin($this->module_srl, $skin);
         }
 
         public function resetSkin($module_srl,$skin=NULL){

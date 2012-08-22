@@ -152,6 +152,12 @@ img{border:0}
     width: 79%;
     background-color: #add8e6;
 }
+.mainContent#cart
+{
+    background: #fff;
+    padding: 20px;
+    width: 76%;
+}
 
 #products div.product
 {

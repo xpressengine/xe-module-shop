@@ -1,12 +1,25 @@
 <div id="container">
 
 <div id="top_menu">
-<!--@if($logged_info)-->
-<span>Welcome {$logged_info->user_id}!</span>
-<!--@end-->
-<a href="{$admin_url}" accesskey="A">Admin Page</a>
-<a href="{getURL('act','dispShopToolSelectPaymentMethod')}">Payment test page</a>
+    <!--@if($logged_info)-->
+    <span>Welcome {$logged_info->user_id}!</span>
+    <!--@end-->
+    <a href="{$admin_url}" accesskey="A">Admin Page</a>
+    <a href="{getURL('act','dispShopToolSelectPaymentMethod')}">Payment test page</a>
+    <a href="{getUrl('act', 'procShopToolResetSkin')}" style="color:#bc8f8f;" id="reset_skin">Refresh</a>
 </div>
+
+<script type="text/javascript">
+    jQuery(function(){
+        var $ = jQuery;
+        $('#reset_skin').click(function(e){
+            e.preventDefault();
+            $.get($(this).attr('href'), {}, function(data) {
+                window.location = window.location;
+            });
+        });
+    });
+</script>
 
 <include target="breadcrumbs.html" />
 
@@ -25,7 +38,7 @@
 	<!-- /Menu -->
 
 	<!-- Cart -->
-	<a href="#">Cart [{$cart->items}]</a>
+	<a href="{getURL('act','dispShopCart')}">Cart [{$cart->items}]</a>
 	<!-- /Cart -->
 
 	<!-- Search box -->
