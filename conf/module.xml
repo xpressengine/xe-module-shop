@@ -35,7 +35,6 @@
         <permission action="procShopToolDeleteProduct" target="manager" />
         <permission action="procShopToolDeleteProducts" target="manager" />
         <permission action="procShopToolDeleteAttributes" target="manager" />
-        <permission action="procShopToolCartAddProduct" target="manager" />
 
         <!-- Product categories -->
         <permission action="dispShopToolManageCategories" target="manager" />
@@ -56,11 +55,11 @@
         <!-- Shop frontend -->
         <action name="dispShop" type="view" index="true" />
         <action name="dispShopProduct" type="view" />
-        <action name="dispShopCart" type="view" />
 
         <action name="dispShopToolLogin" type="view" />
         <action name="dispShopProfile" type="view" />
         <action name="dispShopLogin" type="view" />
+        <action name="dispShopCart" type="view" />
 		<action name="dispShopToolLayoutConfigSkin" type="view" />
 		<action name="dispShopToolLayoutConfigEdit" type="view" />
         <action name="dispShopToolManageProducts" type="view" />
@@ -98,6 +97,7 @@
         <action name="procShopToolDeleteProducts" type="controller" />
         <action name="procShopToolDeleteAttributes" type="controller" />
         <action name="procShopToolCartAddProduct" type="controller" />
+        <action name="procShopCartRemoveProducts" type="controller" />
 
         <action name="dispShopAdminList" type="view" standalone="true" admin_index="true" />
         <action name="dispShopAdminInsert" type="view" standalone="true" />

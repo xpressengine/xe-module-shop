@@ -192,3 +192,17 @@ img{border:0}
 {
     font-weight: bold;
 }
+
+#cart th {
+    text-align: left;
+}
+#cart .quantity {
+    width: 100px;
+}
+#cart .quantity input {
+    border: 1px dashed #cecbb1;
+    width: 40px;
+}
+#cart .title {
+    width: 300px;
+}

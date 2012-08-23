@@ -27,4 +27,10 @@ abstract class BaseItem
 		}
 	}
 
+    public function query($name, $params = null, $array = false)
+    {
+        if (!isset($this->repo)) throw new Exception(get_called_class() . " doesn't have a repository.");
+        return $this->repo->query($name, $params, $array);
+    }
+
 }

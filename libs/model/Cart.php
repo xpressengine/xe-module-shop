@@ -67,7 +67,7 @@ class Cart extends BaseItem
     /**
      * Returns an array necessary for selecting the cart object
      *
-     * @return array sufficient data for cart identification (more exactly for the select query)
+     * @return array sufficient data for cart identification (for the select query)
      * @throws Exception Invalid input
      */
     public static function validateParamsForUniqueIdentification($module_srl=null, $cart_srl=null, $member_srl=null, $session_id=null)
@@ -90,6 +90,29 @@ class Cart extends BaseItem
             throw new Exception('Count not identify cart by session_id (module_srl needed)');
         }
         throw new Exception('Invalid input for cart identification');
+    }
+
+
+    public function getProductsList(array $args=array())
+    {
+        $output = $this->query('getCartProductsList', array_merge(array('cart_srl'=>$this->cart_srl), $args));
+        foreach ($output->data as $i=>&$data) {
+            if ($data->product_srl) {
+                $product = new SimpleProduct($data);
+                $product->quantity = $data->quantity;
+                $data = $product;
+            }
+            else unset($output->data[$i]);
+        }
+        return $output;
+    }
+
+    public function removeProducts(array $product_srls)
+    {
+        $output = $this->query('deleteCartProducts', array('cart_srl'=>$this->cart_srl, 'product_srls'=>$product_srls));
+        //TODO: get rid of one of the 2 queries below
+        $this->items = $this->count(true);
+        $this->save();
     }
 
 }

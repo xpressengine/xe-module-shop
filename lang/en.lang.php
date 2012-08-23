@@ -364,4 +364,7 @@
     $lang->unable_to_delete = 'Unable to delete gateway folder';
     $lang->sanitise_gateway = 'Sanitize gateway list';
 
+    //cart
+    $lang->quantity = 'Quantity';
+
 ?>

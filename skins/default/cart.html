@@ -3,8 +3,77 @@
 <include target="_sidebar.html" />
 
 <div id="cart" class="mainContent">
-    <h1>Shopping Cart</h1>zzz
-    sasas
+
+    <h1>Shopping Cart</h1>
+
+    <div cond="!$cart">is empty</div>
+
+    <div cond="$XE_VALIDATOR_MESSAGE" class="message {$XE_VALIDATOR_MESSAGE_TYPE}">
+        <p>{$XE_VALIDATOR_MESSAGE}</p>
+    </div>
+
+    <div class="listHeader" cond="!empty($products->data)">
+        <p class="info">
+            <!--@if($search_keyword)-->{sprintf($lang->search_result_count,$page_navigation->total_count)}
+            <!--@else-->{sprintf($lang->total_result_count,$products->total_count)}<!--@end-->
+        </p>
+    </div>
+
+    <fieldset>
+        <form action="" method="post">
+            <table border="0" cellspacing="0" summary="{$lang->content_list}" class="tableData">
+                <thead>
+                <tr cond="!empty($products)">
+                    <th scope="col">
+                        <input type="checkbox" class="inputCheck" onclick="jQuery('input.boxlist').click()"/>
+                    </th>
+                    <th scope="col" class="title">Product</th>
+                    <th scope="col">{$lang->quantity}</th>
+                    <th scope="col">&nbsp;</th>
+                </tr>
+                </thead>
+                <tbody>
+<!--@foreach($products->data as $no => $product)-->
+                <tr>
+                    <td>
+                        <input type="checkbox" name="attribute_srl" value="{$product->attribute_srl}" class="inputCheck boxlist"/>
+                    </td>
+                    <td class="title"><a href="{getUrl('act','dispShopProduct','product_srl',$product->product_srl)}">{$product->title}</a></td>
+                    <td class="quantity">
+                        <input type="text" value="{$product->quantity}" name="quantity[{$product->product_srl}]">
+                    </td>
+                    <td>
+                        <a href="{getUrl('act','procShopCartRemoveProducts','cart_srl',$cart->cart_srl, 'product_srls', $product->product_srl)}">{$lang->cmd_delete}</a>
+                    </td>
+                </tr>
+<!--@end-->
+                </tbody>
+            </table>
+
+            <div class="listFooter" cond="!empty($products->data)">
+
+                <div class="change">
+                    <input type="submit" value="{$lang->cmd_delete}" name="del_cart_products">
+                </div>
+
+                <div class="pagination" cond="$products->page_navigation->total_page > 1">
+                    <a href="{getUrl('page','','mid',$mid)}" class="prev"><span>{$lang->first_page}</span></a>
+
+            <!--@while ($page_no = $products->page_navigation->getNextPage())-->
+                <!--@if ($page == $page_no)-->
+                    <strong>{$page_no}</strong>
+                <!--@else-->
+                    <a href="{getUrl('page',$page_no,'mid',$mid)}">{$page_no}</a>
+                <!--@end-->
+            <!--@end-->
+
+                    <a href="{getUrl('page',$products->page_navigation->last_page,'module_srl','')}" class="next"><span>{$lang->last_page}</span></a>
+                </div>
+
+            </div>
+
+        </form>
+    </fieldset>
 </div>
 
 <include target="_footer.html"/>

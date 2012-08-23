@@ -108,4 +108,5 @@ class CartRepository extends BaseRepository
         $what = ($sumQuantities ? 'total' : 'count');
         return $this->query('getCartCount', $params)->data->$what;
     }
+
 }

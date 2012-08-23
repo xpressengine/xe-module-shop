@@ -2,8 +2,9 @@
 abstract class BaseRepository
 {
 
-    public function query($name, array $params = null, $array=false)
+    public function query($name, $params = null, $array=false)
     {
+        if (!is_array($params) && !($params instanceof stdClass)) throw new Exception('Wrong $params type');
         if (!strpos($name, '.')) $name = "shop.$name";
         if ($params) $params = (object) $params;
         $function = 'executeQuery' . ($array ? 'Array' : '');

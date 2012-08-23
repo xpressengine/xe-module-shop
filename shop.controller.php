@@ -336,6 +336,22 @@
             $this->setRedirectUrl($returnUrl);
         }
 
+        /*
+         * @author Florin Ercus (dev@xpressengine.org)
+         */
+        public function procShopCartRemoveProducts() {
+            $cart_srl = Context::get('cart_srl');
+            if ($cart_srl && !is_numeric($cart_srl)) throw new Exception('Invalid cart_srl');
+            if (!is_array($product_srls = Context::get('product_srls'))) {
+                if (!is_numeric($product_srls)) throw new Exception('Invalid product_srl for single product delete');
+                $product_srls = array($product_srls);
+            }
+            $cartRepo = $this->model->getCartRepository();
+            $logged_info = Context::get('logged_info');
+            $cart = $cartRepo->getCart($this->module_srl, $cart_srl, $logged_info->member_srl, session_id());
+            $cart->removeProducts($product_srls);
+            $this->setRedirectUrl(getNotEncodedUrl('', 'act', 'dispShopCart'));
+        }
 
         /*
         * @brief function for product delete

@@ -354,7 +354,9 @@ class shopView extends shop {
 
 	public function dispShopToolManageAttributes()
 	{
+        /** @var $shopModel shopModel */
 		$shopModel = getModel('shop');
+        /** @var $repository AttributeRepository */
 		$repository = $shopModel->getAttributeRepository();
 		$output = $repository->getAttributesList($this->module_info->module_srl);
 
@@ -615,9 +617,7 @@ class shopView extends shop {
 	{
 		$product_srl = Context::get('product_srl');
 
-		/**
-		 * @var shopModel $shopModel
-		 */
+		/** @var shopModel $shopModel */
 		$shopModel = getModel('shop');
 		$product_repository = $shopModel->getProductRepository();
 
@@ -660,18 +660,19 @@ class shopView extends shop {
 			Context::set('breadcrumbs_items', $breadcrumbs_items);
 		}
 
-
-
 		$this->setTemplateFile('product.html');
 	}
 
 	public function dispShopCart()
 	{
-        $cart = Context::get('cart');
+        /** @var $cart Cart */
         $cartRepo = $this->model->getCartRepository();
-        $productsRepo = $this->model->getProductRepository();
-
-		$this->setTemplateFile('cart.html');
+        $productRepo = $this->model->getProductRepository();
+        if ($cart = Context::get('cart')) {
+            $output = $cart->getProductsList(array('page' => Context::get('page')));
+            Context::set('products', $output);
+        }
+        $this->setTemplateFile('cart.html');
 	}
 
 	/**

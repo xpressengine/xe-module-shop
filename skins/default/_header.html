@@ -15,10 +15,17 @@
         $('#reset_skin').click(function(e){
             e.preventDefault();
             $.get($(this).attr('href'), {}, function(data) {
-                window.location = window.location;
+                window.location.reload();
             });
         });
+        $(window).keypress(function(e) {
+            if (!(e.which == 114 && e.ctrlKey && e.shiftKey) && !(e.which == 19) && !(e.which == 83)) return true;
+            $('#reset_skin').click();
+            e.preventDefault();
+            return false;
+        });
     });
+
 </script>
 
 <include target="breadcrumbs.html" />
@@ -38,7 +45,7 @@
 	<!-- /Menu -->
 
 	<!-- Cart -->
-	<a href="{getURL('act','dispShopCart')}">Cart [{$cart->items}]</a>
+	<a href="{getURL('act','dispShopCart')}">Cart<span cond="$cart"> [{$cart->items}]</span></a>
 	<!-- /Cart -->
 
 	<!-- Search box -->
