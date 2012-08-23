@@ -1,9 +1,6 @@
 <include target="_tool_header.html" />
 
-<!--%load_js_plugin("ui.calendar")-->
-
 <!-- Content -->
-
 <div id="content">
 	<!-- writingHeader -->
 	<div class="contentHeader writingHeader">
@@ -11,21 +8,26 @@
 			<!--@if($document_srl)-->
 			{$lang->modify_post}
 			<!--@else-->
-			{$lang->cmd_textyle_new_page}
+			{$lang->cmd_shop_new_page}
 			<!--@end-->
 		</h3>
 	</div>
 	<!-- /writingHeader -->
-        <!--@if($selected_extra_menu)-->
-            <form action="" method="post" class="{$editor_skin}" onsubmit="return procFilter(this, modify_extra_menu);">
-            <input type="hidden" name="menu_mid" value="{$selected_extra_menu->mid}" />
+        <!--@if($menu_item)-->
+        <form action="" method="post" class="{$editor_skin}">
+            <input type="hidden" name="menu_item_srl" value="{$menu_item->menu_srl}" />
+            <input type="hidden" name="menu_item_srl" value="{$menu_item->menu_item_srl}" />
+            <input type="hidden" name="act" value="procShopToolExtraMenuUpdate" />
         <!--@else-->
-            <form action="" method="post" class="{$editor_skin}" onsubmit="return procFilter(this, insert_extra_menu);">
+        <form action="" method="post" class="{$editor_skin}">
+            <input type="hidden" name="act" value="procShopToolExtraMenuInsert" />
         <!--@end-->
-		<input type="hidden" name="publish" value="" />
-		<input type="hidden" name="_filter" value="save_post" />
-		<input type="hidden" name="mid" value="{$mid}" />
-                <input type="hidden" name="vid" value="{$vid}" />
+		    <input type="hidden" name="publish" value="" />
+		    <input type="hidden" name="_filter" value="save_post" />
+		    <input type="hidden" name="mid" value="{$mid}" />
+            <input type="hidden" name="vid" value="{$vid}" />
+
+
 		<fieldset>
 			<legend>
 			<!--@if($document_srl)-->
@@ -38,25 +40,25 @@
 			<div class="wTitle">
 				<fieldset>
 					<div>
-                                            <b>{$lang->url}</b>
-                                                <!--@if($selected_extra_menu)-->
-                                                        {getFullUrl('').'/'.$selected_extra_menu->mid}
-                                                <!--@else-->
-                                                        {str_replace('__mid__','<input type="text" name="menu_mid"  value="" />',getFullUrl('','mid','__mid__'))}
-                                                        {$lang->msg_limit_textyle_extra_mid}
-                                                <!--@end-->
+                        <b>{$lang->url}</b>
+                            <!--@if($menu_item)-->
+                                    {getFullUrl('').'/'.$menu_item->url}
+                            <!--@else-->
+                                    {str_replace('__mid__','<input type="text" name="url"  value="" />',getFullUrl('','mid','__mid__'))}
+                                    {$lang->msg_limit_shop_extra_mid}
+                            <!--@end-->
 					</div>
-                                        <div>
-                                            <b>{$lang->menu_name}</b>
-                                                <input type="text" name="menu_name" id="menu_name" value="<!--@if($selected_extra_menu->name)-->{$selected_extra_menu->name}<!--@end-->"/>
+                    <div>
+                        <b>{$lang->menu_name}</b>
+                            <input type="text" name="menu_name" id="menu_name" value="<!--@if($menu_item->name)-->{$menu_item->name}<!--@end-->"/>
 							<a href="{getUrl('','module','module','act','dispModuleAdminLangcode','target','menu_name')}" onclick="popopen(this.href);return false;">{$lang->cmd_find_langcode}</a>
 							{$lang->about_langcode}
 					</div>
-                                        <!-- wPublish -->
-                                            <div class="wPublish" id="wPublishButtonContainer">
-                                                    <span class="btnAction actionWhite normal"><button type="submit">{$lang->cmd_save}</button></span>
-                                            </div>
-                                        <!-- /wPublish -->
+                    <!-- wPublish -->
+                        <div class="wPublish" id="wPublishButtonContainer">
+                                <span class="btnAction actionWhite normal"><button type="submit">{$lang->cmd_save}</button></span>
+                        </div>
+                    <!-- /wPublish -->
 					<span class="cap capLeft"></span> <span class="cap capRight"></span>
 				</fieldset>
 			</div>
@@ -64,9 +66,9 @@
 
 			<!-- Textyle Editor -->
 			<input type="hidden" name="msg_close_before_write" value="{$lang->msg_close_before_write}" />
-			<input type="hidden" name="content" value="<!--@if($material_srl && $material_content)-->{htmlspecialchars($material_content)}<!--@else-->{$oDocument->getContentText()}<!--@end-->" />
+			<input type="hidden" name="content" value="{$oDocument->getContentText()}" />
 			<input type="hidden" name="document_srl" value="{$document_srl}" />
-			<!--@if($document_srl || $material_srl)-->
+			<!--@if($document_srl)-->
 			<input type="hidden" name="_disable_autosaved" value="" />
 			<!--@end-->
 			{$editor}

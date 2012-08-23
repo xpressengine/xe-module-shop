@@ -1117,6 +1117,76 @@
 
 		}
 
-		// endregion
+        /**
+         * Insert menu page
+         *
+         * @return object
+         */
+        function procShopToolExtraMenuInsert(){
+            $args = Context::getRequestVars();
+            $menu_name = trim(Context::get('menu_name'));
+            $menu_mid = Context::get('url');
+
+            $oModuleController = &getController('module');
+            $oDocumentController = &getController('document');
+
+            if(!$menu_name || !$menu_mid) return new Object(-1,'msg_invalid_request');
+
+            // 1. Insert document
+            $output = $oDocumentController->insertDocument($args);
+            // 2. Insert page module
+            $args->site_srl = $this->site_srl;
+            $args->mid = $menu_mid;
+            $args->browser_title = $menu_name;
+            $args->module = 'page';
+            $args->page_type = 'WIDGET';
+            $args->content = '<img src="./common/tpl/images/widget_bg.jpg" class="zbxe_widget_output" widget="widgetContent" style="float: left; width: 100%;" body="" document_srl="'.$output->get('document_srl').'" widget_padding_left="0" widget_padding_right="0" widget_padding_top="0" widget_padding_bottom="0"  /> ';
+            $output = $oModuleController->insertModule($args);
+            if(!$output->toBool()) return $output;
+
+            // 3. Insert menu item
+            /**
+             * @var shopModel $shopModel
+             */
+            $shopModel = getModel('shop');
+            $shop_menu_srl = $shopModel->getShopMenuSrl($this->site_srl);
+            $shopModel->insertMenuItem($shop_menu_srl, 0, $menu_mid, $menu_name);
+        }
+
+        /**
+         * Update page menu entry
+         *
+         * @return Object
+         */
+        function procShopToolExtraMenuUpdate(){
+            $args = Context::getRequestVars();
+            $menu_name = trim(Context::get('menu_name'));
+            $menu_mid= Context::get('menu_mid');
+            if(!$menu_name || !$menu_mid) return new Object(-1,'msg_invalid_request');
+
+            $oModuleModel = &getModel('module');
+            $oDocumentModel = &getModel('document');
+            $oDocumentController = &getController('document');
+            $module_info = $oModuleModel->getModuleInfoByMid($menu_mid,$this->site_srl);
+            if(!$module_info) return new Object(-1,'msg_invalid_request');
+
+            $buff = trim($module_info->content);
+            $oXmlParser = new XmlParser();
+            $xml_doc = $oXmlParser->parse(trim($buff));
+            $document_srl = $xml_doc->img->attrs->document_srl;
+            $args->document_srl = $document_srl;
+            $oDocument = $oDocumentModel->getDocument($document_srl);
+            $args->module_srl = $oDocument->module_srl;
+            $args->category_srl = $oDocument->category_srl;
+            $output = $oDocumentController->updateDocument($oDocument, $args);
+
+            $args->name = $menu_name;
+            $args->module_srl = $module_info->module_srl;
+            $output = executeQuery('textyle.updateExtraMenuName',$args);
+        }
+
+
+
+        // endregion
     }
 ?>

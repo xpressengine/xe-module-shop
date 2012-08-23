@@ -137,6 +137,9 @@
         <action name="procShopToolUpdateMenuItem" type="controller" standalone="true"/>
         <action name="procShopToolExtraMenuSort" type="controller" standalone="true"/>
         <action name="procShopToolExtraMenuDelete" type="controller" standalone="true"/>
+        <action name="procShopToolExtraMenuInsert" type="controller" standalone="true"/>
+        <action name="procShopToolExtraMenuUpdate" type="controller" standalone="true"/>
+
 
     </actions>
 </module>

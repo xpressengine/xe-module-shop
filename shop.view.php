@@ -860,66 +860,45 @@ class shopView extends shop {
 	 * @return Object
 	 */
 	function dispShopToolExtraMenuInsert(){
-		// set filter
-		$menu_mid = Context::get('menu_mid');
-		if($menu_mid){
-			$oModuleModel = &getModel('module');
-			$module_info = $oModuleModel->getModuleInfoByMid($menu_mid,$this->site_srl);
-			if(!$module_info) return new Object(-1,'msg_invalid_request');
+		// Check if editing an existing page
+        $menu_item_srl = Context::get('menu_item_srl');
 
-			$oWidgetController = &getController('widget');
-			$buff = trim($module_info->content);
-			$oXmlParser = new XmlParser();
-			$xml_doc = $oXmlParser->parse(trim($buff));
-			$document_srl = $xml_doc->img->attrs->document_srl;
-			$args->module_srl = $module_info->module_srl;
-			$output = executeQuery('textyle.getExtraMenu',$args);
-			if($output->data){
-				$selected_extra_menu = $output->data;
-			}
-		}
-		if($selected_extra_menu){
-			Context::set('selected_extra_menu',$selected_extra_menu);
-			Context::addJsFilter($this->module_path.'tpl/filter', 'modify_extra_menu.xml');
-		}else{
-			Context::addJsFilter($this->module_path.'tpl/filter', 'insert_extra_menu.xml');
-		}
+        $document_srl = null;
+        if($menu_item_srl){
+            // Editing existing item
 
+            // TODO Retrieve menu info: mid, name
+            // TODO Retrieve page module info: document_srl
+            $menu_item = null;
+            Context::set('menu_item', $menu_item);
+        }
 
 		$oDocumentModel = &getModel('document');
-		$material_srl = Context::get('material_srl');
 
 		if($document_srl){
 			$oDocument = $oDocumentModel->getDocument($document_srl,FALSE,FALSE);
 		}else{
 			$document_srl=0;
 			$oDocument = $oDocumentModel->getDocument(0);
-			if($material_srl){
-				$oMaterialModel = &getModel('material');
-				$output = $oMaterialModel->getMaterial($material_srl);
-				if($output->data){
-					$material_content = $output->data[0]->content;
-					Context::set('material_content',$material_content);
-				}
-			}
-
 		}
 
-//		$oEditorModel = &getModel('editor');
-//		$option->skin = $this->textyle->getPostEditorSkin();
-//		$option->primary_key_name = 'document_srl';
-//		$option->content_key_name = 'content';
-//		$option->allow_fileupload = TRUE;
-//		$option->enable_autosave = TRUE;
-//		$option->enable_default_component = TRUE;
-//		$option->enable_component = $option->skin =='dreditor' ? FALSE : TRUE;
-//		$option->resizable = TRUE;
-//		$option->height = 500;
-//		$option->content_font = $this->textyle->getFontFamily();
-//		$option->content_font_size = $this->textyle->getFontSize();
-//		$editor = $oEditorModel->getEditor($document_srl, $option);
-//		Context::set('editor', $editor);
-//		Context::set('editor_skin', $option->skin);
+        /**
+         * @var editorModel $oEditorModel
+         */
+        $oEditorModel = &getModel('editor');
+        $option = new stdClass();
+        $option->skin = 'xpresseditor';
+		$option->primary_key_name = 'document_srl';
+		$option->content_key_name = 'content';
+		$option->allow_fileupload = TRUE;
+		$option->enable_autosave = TRUE;
+		$option->enable_default_component = TRUE;
+		$option->enable_component = $option->skin =='dreditor' ? FALSE : TRUE;
+		$option->resizable = TRUE;
+		$option->height = 500;
+		$editor = $oEditorModel->getEditor($document_srl, $option);
+		Context::set('editor', $editor);
+		Context::set('editor_skin', $option->skin);
 
 		if($oDocument->get('module_srl') != $this->module_srl && !$document_srl){
 			Context::set('from_saved',TRUE);
