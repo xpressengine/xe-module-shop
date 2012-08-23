@@ -309,6 +309,34 @@ class shopModel extends shop
 	// region Menu
 	/**
 	 * Get shop menu
+	 * Menu structure can be seen in the php cache file
+	 *
+	 * @param int $site_srl Virtual side srl
+	 *
+	 * @return null
+	 */
+	public function getShopMenu($site_srl)
+	{
+		$shop_menu_srl = $this->getShopMenuSrl($site_srl);
+		/**
+		 * @var menuAdminModel $menuModel
+		 */
+		$menuModel = getAdminModel('menu');
+		$shop_menu = $menuModel->getMenu($shop_menu_srl);
+		if(!file_exists($shop_menu->php_file))
+		{
+			$menuAdminController = getAdminController('menu');
+			$menuAdminController->makeXmlFile($shop_menu_srl);
+		}
+
+		$menu = NULL;
+		@include($shop_menu->php_file); // Populates $menu with menu data
+		return $menu;
+	}
+
+
+	/**
+	 * Get shop menu srl
 	 */
 	public function getShopMenuSrl($site_srl)
 	{
