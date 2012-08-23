@@ -214,6 +214,29 @@
         }
 
 		/*
+		* brief function for product insert duplicate
+		* @author Dan Dragan (dev@xpressengine.org)
+		*/
+		public function procShopToolInsertDuplicate(){
+			$shopModel = $this->model;
+			$productRepository = $shopModel->getProductRepository();
+
+			$product_srl = Context::get('product_srl');
+			$product = $productRepository->getProduct($product_srl);
+			$product->title = 'Copy of '.$product->title;
+			foreach($product->images as $image){
+				unset($image->image_srl);
+				$path = sprintf('./files/attach/images/shop/%d/product-images/%d/', $image->module_srl , $image->product_srl);
+				$image->source_filename = sprintf('%s%s', $path, $image->filename);
+			}
+			unset($product_srl);
+			$productRepository->insertProduct($product);
+
+			$returnUrl = getNotEncodedUrl('', 'act', 'dispShopToolManageProducts');
+			$this->setRedirectUrl($returnUrl);
+		}
+
+		/*
 		* brief function for associated products insert
 		* @author Dan Dragan (dev@xpressengine.org)
 		*/

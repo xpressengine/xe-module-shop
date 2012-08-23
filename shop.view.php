@@ -66,6 +66,7 @@ class shopView extends shop {
 			Context::set('current_module_info', $this->module_info);
 		}
 
+		$this->shop = $oShopModel->getShop($this->module_info->module_srl);
 		$this->site_srl = $this->shop->site_srl;
 		Context::set('shop',$this->shop);
 
@@ -444,14 +445,6 @@ class shopView extends shop {
 	 * @brief Shop display product edit page
 	 */
 	public function dispShopToolEditProduct(){
-		$this->dispShopToolAddProduct();
-		$this->setTemplateFile('AddProduct');
-	}
-
-	/**
-	 * @brief Shop display product dplicate page
-	 */
-	public function dispShopToolDuplicateProduct(){
 		$this->dispShopToolAddProduct();
 		$this->setTemplateFile('AddProduct');
 	}

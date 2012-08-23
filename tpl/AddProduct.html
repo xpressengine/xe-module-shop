@@ -6,22 +6,18 @@
 <div id="content">
     <!-- contentHeader -->
     <div class="contentHeader postListHeader">
-        <!--@if($act == 'dispShopToolDuplicateProduct')-->
-            <h3 class="h3">Duplicate simple product</h3>
-        <!--@else-->
-            <!--@if(!$product->product_srl)-->
-                <!--@if($product->isConfigurable())-->
-                    <h3 class="h3">Add configurable product</h3>
-                <!--@else-->
-                    <h3 class="h3">Add simple product</h3>
-                <!--@endif-->
+        <!--@if(!$product->product_srl)-->
+            <!--@if($product->isConfigurable())-->
+                <h3 class="h3">Add configurable product</h3>
             <!--@else-->
-                <!--@if($product->isConfigurable())-->
-                    <h3 class="h3">Edit configurable product</h3>
-                    <p><span>!Notice: {$lang->notice_update_configurable}</span></p>
-                <!--@else-->
-                    <h3 class="h3">Edit simple product</h3>
-                <!--@endif-->
+                <h3 class="h3">Add simple product</h3>
+            <!--@endif-->
+        <!--@else-->
+            <!--@if($product->isConfigurable())-->
+                <h3 class="h3">Edit configurable product</h3>
+                <p><span>!Notice: {$lang->notice_update_configurable}</span></p>
+            <!--@else-->
+                <h3 class="h3">Edit simple product</h3>
             <!--@endif-->
         <!--@endif-->
     </div>
@@ -36,28 +32,23 @@
         <!--@end-->
 
         <fieldset class="visualFieldset">
-            <!--@if($act == 'dispShopToolDuplicateProduct')-->
-                <legend class="visualLabel">Duplicate simple product</legend>
-            <!--@else-->
-                <!--@if(!$product->product_srl)-->
-                    <!--@if($product->isConfigurable())-->
-                        <legend class="visualLabel">Add configurable product</legend>
-                    <!--@else-->
-                        <legend class="visualLabel">Add simple product</legend>
-                    <!--@endif-->
+            <!--@if(!$product->product_srl)-->
+                <!--@if($product->isConfigurable())-->
+                    <legend class="visualLabel">Add configurable product</legend>
                 <!--@else-->
-                    <!--@if($product->isConfigurable())-->
-                        <legend class="visualLabel">Edit configurable product</legend>
-                    <!--@else-->
-                        <legend class="visualLabel">Edit simple product</legend>
-                    <!--@endif-->
+                    <legend class="visualLabel">Add simple product</legend>
+                <!--@endif-->
+            <!--@else-->
+                <!--@if($product->isConfigurable())-->
+                    <legend class="visualLabel">Edit configurable product</legend>
+                <!--@else-->
+                    <legend class="visualLabel">Edit simple product</legend>
                 <!--@endif-->
             <!--@endif-->
 
             <form action="./" method="post" ruleset="insert_product" class="" enctype="multipart/form-data" >
             <input type="hidden" name="act" value="procShopToolInsertProduct" />
-
-            <!--@if(isset($product->product_srl) && $act != 'dispShopToolDuplicateProduct')-->
+            <!--@if(isset($product->product_srl))-->
             <input type="hidden" name="product_srl" value="{$product->product_srl}" />
             <!--@endif-->
             <!--@if(isset($product->parent_product_srl))-->
@@ -283,14 +274,10 @@
                     <th scope="row">
                     </th>
                     <td class="title">
-                        <!--@if($act == 'dispShopToolDuplicateProduct')-->
-                            <span class="btn"><input type="submit" value="{$lang->cmd_duplicate}" /></span>
+                        <!--@if(!isset($product->product_srl))-->
+                            <span class="btn"><input type="submit" value="{$lang->cmd_submit}" /></span>
                         <!--@else-->
-                            <!--@if(!isset($product->product_srl))-->
-                                <span class="btn"><input type="submit" value="{$lang->cmd_submit}" /></span>
-                            <!--@else-->
-                                <span class="btn"><input type="submit" value="{$lang->cmd_update}" /></span>
-                            <!--@endif-->
+                            <span class="btn"><input type="submit" value="{$lang->cmd_update}" /></span>
                         <!--@endif-->
                     </td>
                 </tr>
