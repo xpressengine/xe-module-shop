@@ -194,12 +194,8 @@ class ProductRepository extends BaseRepository
 	{
 		if(!isset($args->product_srl))
 			throw new Exception("Missing arguments for Product delete: please provide [product_srl] or [module_srl]");
+		$this->query('deleteProduct',$args);
 
-		$output = executeQuery('shop.deleteProduct', $args);
-		if(!$output->toBool())
-		{
-			throw new Exception($output->getMessage(), $output->getError());
-		}
 		if($args->product_type == 'simple') {
 			$product = new SimpleProduct($args);
 		}else {
@@ -224,26 +220,13 @@ class ProductRepository extends BaseRepository
         if(!isset($args->product_srls))
             throw new Exception("Missing arguments for Products delete: please provide [product_srls]");
 
-        $output = executeQuery('shop.deleteProducts', $args);
-        if(!$output->toBool())
-        {
-            throw new Exception($output->getMessage(), $output->getError());
-        }
-        $output = executeQuery('shop.deleteProductCategories', $args);
-        if(!$output->toBool())
-        {
-            throw new Exception($output->getMessage(), $output->getError());
-        }
-		$output = executeQuery('shop.deleteProductAttributes', $args);
-		if(!$output->toBool())
-		{
-			throw new Exception($output->getMessage(), $output->getError());
-		}
-		$output = executeQuery('shop.deleteProductImages', $args);
-		if(!$output->toBool())
-		{
-			throw new Exception($output->getMessage(), $output->getError());
-		}
+		$this->query('deleteProducts',$args);
+		$args->parent_product_srls = $args->product_srls;
+		$this->query('deleteAssociatedProducts',$args);
+		$this->query('deleteProductCategories',$args);
+		$this->query('deleteProductAttributes',$args);
+		$this->query('deleteProductImages',$args);
+
 		foreach($args->product_srls as $product_srl){
 			$path = sprintf('./files/attach/images/shop/%d/product-images/%d/', $args->module_srl,$product_srl);
 			FileHandler::removeDir($path);
@@ -278,7 +261,7 @@ class ProductRepository extends BaseRepository
 	public function deleteAssociatedProducts(Product &$product)
 	{
 		$args = new stdClass();
-		$args->parent_product_srl = $product->product_srl;
+		$args->parent_product_srls = $product->product_srl;
 		$output = executeQuery('shop.deleteAssociatedProducts',$args);
 		if (!$output->toBool()) throw new Exception($output->getMessage(), $output->getError());
 		return TRUE;

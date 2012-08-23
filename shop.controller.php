@@ -224,6 +224,7 @@
 			$product_srl = Context::get('product_srl');
 			$product = $productRepository->getProduct($product_srl);
 			$product->title = 'Copy of '.$product->title;
+			$product->sku = 'Copy-'.$product->sku;
 			foreach($product->images as $image){
 				unset($image->image_srl);
 				$path = sprintf('./files/attach/images/shop/%d/product-images/%d/', $image->module_srl , $image->product_srl);
