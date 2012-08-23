@@ -112,6 +112,10 @@ class SimpleProduct extends Product
 		$this->product_type = 'simple';
 	}
 
+    public function getRepo()
+    {
+        return 'ProductRepository';
+    }
 }
 
 /**
@@ -127,6 +131,11 @@ class ConfigurableProduct extends Product
 		parent::__construct($args);
 		$this->product_type = 'configurable';
 	}
+
+    public function getRepo()
+    {
+        return 'ProductRepository';
+    }
 }
 
 /* End of file Product.class.php */

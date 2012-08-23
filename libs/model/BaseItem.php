@@ -15,9 +15,14 @@ abstract class BaseItem
          * Look for Item repository.
          * For IDE purposes like code completion $this->repo's type should be hinted in each Item the way I did in Cart.
          */
-        $reflection = new ReflectionClass($repoClass = get_called_class() . 'Repository');
-        if ($reflection->isInstantiable()) $this->repo = new $repoClass;
+        $this->repo = $this->getRepo();
 	}
+
+    public function getRepo()
+    {
+        $reflection = new ReflectionClass($repoClass = get_called_class() . 'Repository');
+        return $reflection->isInstantiable() ? new $repoClass : null;
+    }
 
 	protected function loadFromArray(array $data)
 	{
