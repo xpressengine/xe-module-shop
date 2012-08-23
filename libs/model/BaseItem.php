@@ -11,15 +11,17 @@ abstract class BaseItem
 		if ($data) {
 			$this->loadFromArray((array)$data);
 		}
-        $repoClass = get_called_class() . 'Repository';
-        if (class_exists($repoClass)) {
-            $this->repo = new $repoClass;
-        }
+        /**
+         * Look for Item repository.
+         * For IDE purposes like code completion $this->repo's type should be hinted in each Item the way I did in Cart.
+         */
+        $reflection = new ReflectionClass($repoClass = get_called_class() . 'Repository');
+        if ($reflection->isInstantiable()) $this->repo = new $repoClass;
 	}
 
 	protected function loadFromArray(array $data)
 	{
-		foreach($data as $field=> $value)
+		foreach ($data as $field=> $value)
 		{
 			if (property_exists(get_called_class(), $field)) {
 				$this->$field = $value;
