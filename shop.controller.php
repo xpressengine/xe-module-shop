@@ -1158,6 +1158,7 @@
             $args = Context::getRequestVars();
             $menu_name = trim(Context::get('menu_name'));
             $menu_mid = Context::get('url');
+            $vid = Context::get('vid');
 
             $oModuleController = &getController('module');
             $oDocumentController = &getController('document');
@@ -1182,7 +1183,11 @@
              */
             $shopModel = getModel('shop');
             $shop_menu_srl = $shopModel->getShopMenuSrl($this->site_srl);
-            $shopModel->insertMenuItem($shop_menu_srl, 0, $menu_mid, $menu_name);
+            $menu_url = getUrl('', 'mid', $menu_mid, 'vid', $vid);
+            $shopModel->insertMenuItem($shop_menu_srl, 0, $menu_url, $menu_name);
+
+            $this->setMessage('success_registed');
+            $this->setRedirectUrl(getNotEncodedUrl('', 'vid', $this->mid, 'act', 'dispShopToolExtraMenuList'));
         }
 
         /**
