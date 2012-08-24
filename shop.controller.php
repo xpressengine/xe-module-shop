@@ -629,13 +629,24 @@
             $xml_info = $oModuleModel->getModuleActionXml('shop');
             if($oModule->mid == $this->shop_mid && isset($xml_info->action->{$oModule->act})) return new Object();
 
-            $oShopModel = $this->model;
             $oShopView = getView('shop');
 
             Context::set('layout',NULL);
 
-            $oShopView->initTool($oModule, TRUE);
-            // $oShopView->initService($oModule, true);
+            // When shop pages are accessed from other modules (a page, for instance)
+            // Load the appropriate layout:
+            //  - tool: backend
+            //  - service: frontend
+            if(strpos($oModule->act, "ShopTool") !== false) {
+                $oShopView->initTool($oModule, true);
+            } else {
+                if(Mobile::isFromMobilePhone())
+                {
+                    $oShopView = &getMobile('shop');
+                }
+                $oShopView->initService($oModule, true);
+            }
+
             return new Object();
         }
 
