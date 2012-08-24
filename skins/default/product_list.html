@@ -1,0 +1,52 @@
+<!--
+    Shop layout page
+-->
+<include target="_header.html" />
+<include target="_sidebar.html" />
+<include target="product_variants_datasource.html" />
+
+<div id="products" class="mainContent">
+    <!--@foreach($products as $product)-->
+    <div id="product_{$product->product_srl}" class="product {$product->product_type}">
+        <!--@if($product->primary_image_filename)-->
+        <img src="./files/attach/images/shop/{$product->module_srl}/product-images/{$product->product_srl}/{$product->primary_image_filename}" width="150px" height="150px" />
+        <!--@else-->
+        <img src="img/missingProductLarge.png" width="150px" height="150px" />
+        <!--@end-->
+        <span><a href="{getUrl('vid', $mid, 'act', 'dispShopProduct', 'product_srl', $product->product_srl, 'category_srl', $category_srl)}">{$product->product_srl} - {$product->title}</a></span>
+        <span>Price: {$product->price}</span>
+
+        <form action="./">
+            <include target="product_variants" />
+
+            <!--@if($product->isSimple())-->
+            <input type="text" disabled="disabled" id="product_srl" name="product_srl" value="{$product->product_srl}" />
+            <!--@end-->
+            <a href="{getUrl('', 'act','procShopToolCartAddProduct', 'entry',   $product->product_type=='simple' ? $product->product_srl : 'REPLACE'  , 'quantity', 1)}" class="add_to_cart">Add to cart</a>
+        </form>
+
+    </div>
+    <!--@end-->
+    <div class="clear"/>
+
+    <!-- Pagination -->
+    <!--@if($page_navigation)-->
+    <div class="pagination">
+        <a href="{getUrl('page','','mid',$mid)}" class="prev"><span>{$lang->first_page}</span></a>
+
+        <!--@while($page_no = $page_navigation->getNextPage())-->
+        <!--@if($page == $page_no)-->
+        <strong>{$page_no}</strong>
+        <!--@else-->
+        <a href="{getUrl('page',$page_no,'mid',$mid)}">{$page_no}</a>
+        <!--@end-->
+        <!--@end-->
+
+        <a href="{getUrl('page',$page_navigation->last_page,'module_srl','')}" class="next"><span>{$lang->last_page}</span></a>
+    </div>
+    <!--@end-->
+    <!-- /Pagination -->
+
+</div>
+
+<include target="_footer.html"/>

@@ -158,10 +158,15 @@ class shopView extends shop {
 		// set browser title
 		Context::setBrowserTitle($this->shop->get('browser_title'));
 
+        // Load cart for display on all pages (in header)
         $cartRepo = $oShopModel->getCartRepository();
         $logged_info = Context::get('logged_info');
         $cart = $cartRepo->getCart($this->module_srl, null, $logged_info->member_srl, session_id());
         Context::set('cart', $cart);
+
+        // Load menu for display on all pages (in header)
+        $shop_menu = $shopModel->getShopMenu($this->site_srl);
+        Context::set('menu', $shop_menu);
 	}
 
 
@@ -583,10 +588,6 @@ class shopView extends shop {
 			Context::set('breadcrumbs_items', $breadcrumbs_items);
 		}
 
-		// Main menu
-		$shop_menu = $shopModel->getShopMenu($this->site_srl);
-		Context::set('menu', $shop_menu);
-
 		// Products list
 		$product_repository = $shopModel->getProductRepository();
 		try{
@@ -603,6 +604,8 @@ class shopView extends shop {
 
 			$datasourceJS = $this->getAssociatedProductsAttributesAsJavascriptArray($output->products);
 			Context::set('datasourceJS', $datasourceJS);
+
+            $this->setTemplateFile("product_list.html");
 		}
 		catch(Exception $e)
 		{
