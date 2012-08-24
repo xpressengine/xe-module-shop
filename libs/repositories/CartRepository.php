@@ -106,7 +106,8 @@ class CartRepository extends BaseRepository
     {
         $params = Cart::validateParamsForUniqueIdentification($module_srl, $cart_srl, $member_srl, $session_id);
         $what = ($sumQuantities ? 'total' : 'count');
-        return $this->query('getCartCount', $params)->data->$what;
+        $rez = $this->query('getCartCount', $params)->data->$what;
+        return $rez ? $rez : 0;
     }
 
 }

@@ -670,7 +670,13 @@ class shopView extends shop {
         $productRepo = $this->model->getProductRepository();
         if ($cart = Context::get('cart')) {
             $output = $cart->getProductsList(array('page' => Context::get('page')));
+            $total = 0;
+            /** @var $product Product */
+            foreach ($output->data as $product) {
+                $total += $product->price * $product->quantity;
+            }
             Context::set('products', $output);
+            Context::set('total_price', $total);
         }
         $this->setTemplateFile('cart.html');
 	}

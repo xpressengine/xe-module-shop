@@ -98,6 +98,7 @@
         <action name="procShopToolDeleteAttributes" type="controller" />
         <action name="procShopToolCartAddProduct" type="controller" />
         <action name="procShopCartRemoveProducts" type="controller" />
+        <action name="procShopCartUpdateProducts" type="controller" />
 
         <action name="dispShopAdminList" type="view" standalone="true" admin_index="true" />
         <action name="dispShopAdminInsert" type="view" standalone="true" />

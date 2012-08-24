@@ -2,59 +2,103 @@
 
 <include target="_sidebar.html" />
 
+<script type="text/javascript">
+jQuery(function () {
+    var $ = jQuery;
+
+    $('a.remove').click(function(e){
+        if (!confirm('Are you sure?')) e.preventDefault();
+    });
+
+    $('td.quantity input').live('change', function(){
+        var flag = 'quantity';
+        var self = $(this);
+        var upd = $('a.update', self.parents('.product'));
+        if (self.val() != self.data(flag)) {
+            upd.attr('href', upd.attr('href')).fadeIn();
+        }
+        else upd.fadeOut();
+    });
+    $('a.update').live('click', function(e){
+        e.preventDefault();
+        var box = $('td.quantity input', $(this).parents('.product'));
+        if (box.val() == 0 && !confirm('Are you sure you want to remove the product from your cart?')) return false;
+        window.location = $(this).attr('href').replace('QUANTITY', box.val());
+    });
+});
+</script>
+
 <div id="cart" class="mainContent">
 
     <h1>Shopping Cart</h1>
-
-    <div cond="!$cart">is empty</div>
 
     <div cond="$XE_VALIDATOR_MESSAGE" class="message {$XE_VALIDATOR_MESSAGE_TYPE}">
         <p>{$XE_VALIDATOR_MESSAGE}</p>
     </div>
 
-    <div class="listHeader" cond="!empty($products->data)">
+    <div cond="!$cart->items">is empty</div>
+
+    <div class="listHeader" cond="$cart->items">
         <p class="info">
             <!--@if($search_keyword)-->{sprintf($lang->search_result_count,$page_navigation->total_count)}
             <!--@else-->{sprintf($lang->total_result_count,$products->total_count)}<!--@end-->
         </p>
     </div>
 
-    <fieldset>
+    <fieldset cond="!empty($products->data)">
         <form action="" method="post">
             <table border="0" cellspacing="0" summary="{$lang->content_list}" class="tableData">
                 <thead>
-                <tr cond="!empty($products)">
-                    <th scope="col">
-                        <input type="checkbox" class="inputCheck" onclick="jQuery('input.boxlist').click()"/>
-                    </th>
-                    <th scope="col" class="title">Product</th>
-                    <th scope="col">{$lang->quantity}</th>
-                    <th scope="col">&nbsp;</th>
-                </tr>
+                    <tr cond="!empty($products)">
+                        <th scope="col">
+                            <input type="checkbox" class="inputCheck" onclick="jQuery('input.boxlist').click()"/>
+                        </th>
+                        <th scope="col" class="title">Product</th>
+                        <th scope="col">{$lang->quantity}</th>
+                        <th scope="col">{$lang->price}</th>
+                        <th scope="col">&nbsp;</th>
+                        <th scope="col">&nbsp;</th>
+                    </tr>
                 </thead>
                 <tbody>
+
 <!--@foreach($products->data as $no => $product)-->
-                <tr>
+                <tr class="product" data-price="{$product->price}">
                     <td>
-                        <input type="checkbox" name="attribute_srl" value="{$product->attribute_srl}" class="inputCheck boxlist"/>
+                        <input type="checkbox" name="product_srl" value="{$product->product_srl}" class="inputCheck boxlist"/>
                     </td>
-                    <td class="title"><a href="{getUrl('act','dispShopProduct','product_srl',$product->product_srl)}">{$product->title}</a></td>
+                    <td class="title">
+                        <a href="{getUrl('act','dispShopProduct','product_srl',$product->product_srl)}">{$product->title}</a>
+                    </td>
                     <td class="quantity">
-                        <input type="text" value="{$product->quantity}" name="quantity[{$product->product_srl}]">
+                        <input type="text" data-quantity="{$product->quantity}" value="{$product->quantity}" name="quantity[{$product->product_srl}]">
+                    </td>
+                    <td class="price">
+                        {$product->price * $product->quantity}
                     </td>
                     <td>
-                        <a href="{getUrl('act','procShopCartRemoveProducts','cart_srl',$cart->cart_srl, 'product_srls', $product->product_srl)}">{$lang->cmd_delete}</a>
+                        <a class="remove" href="{getUrl('act','procShopCartRemoveProducts','cart_srl',$cart->cart_srl, 'product_srls', $product->product_srl)}">{$lang->cmd_delete}</a>
+                    </td>
+                    <td>
+                        <a class="update" href="{getUrl('act','procShopCartUpdateProducts','cart_srl',$cart->cart_srl, 'products['.$product->product_srl.']', 'QUANTITY')}">{$lang->cmd_update}</a>
                     </td>
                 </tr>
 <!--@end-->
+                <tr class="bottom">
+                    <td colspan="3">
+                    </td>
+                    <td>
+                        {$total_price}
+                    </td>
+                    <td>
+                        <input type="submit" value="{$lang->cmd_delete}" name="del_cart_products">
+                    </td>
+                </tr>
+
                 </tbody>
             </table>
 
             <div class="listFooter" cond="!empty($products->data)">
-
-                <div class="change">
-                    <input type="submit" value="{$lang->cmd_delete}" name="del_cart_products">
-                </div>
 
                 <div class="pagination" cond="$products->page_navigation->total_page > 1">
                     <a href="{getUrl('page','','mid',$mid)}" class="prev"><span>{$lang->first_page}</span></a>

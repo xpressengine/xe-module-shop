@@ -110,7 +110,20 @@ class Cart extends BaseItem
     public function removeProducts(array $product_srls)
     {
         $output = $this->query('deleteCartProducts', array('cart_srl'=>$this->cart_srl, 'product_srls'=>$product_srls));
-        //TODO: get rid of one of the 2 queries below
+        //TODO: optimize queries here
+        $this->items = $this->count(true);
+        $this->save();
+    }
+
+
+    public function updateProducts(array $quantities)
+    {
+        foreach ($quantities as $product_srl=>$quantity) {
+            if (!is_numeric($product_srl) || !is_numeric($quantity)) throw new Exception('Problem with input $quantities array');
+            if ($quantity == 0) $this->removeProducts(array($product_srl));
+            else $this->query('updateCartProduct', array('cart_srl'=>$this->cart_srl, 'product_srl'=>$product_srl, 'quantity'=>$quantity));
+        }
+        //TODO: and here
         $this->items = $this->count(true);
         $this->save();
     }

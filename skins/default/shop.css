@@ -206,3 +206,12 @@ img{border:0}
 #cart .title {
     width: 300px;
 }
+#cart a.update {
+    display: none;
+}
+#cart .price {
+    width: 70px;
+}
+#cart tr.bottom {
+    font-weight: bold;
+}

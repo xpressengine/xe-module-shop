@@ -18,6 +18,9 @@ abstract class BaseItem
         $this->repo = $this->getRepo();
 	}
 
+    /**
+     * Override this for custom repositories
+     */
     public function getRepo()
     {
         $reflection = new ReflectionClass($repoClass = get_called_class() . 'Repository');

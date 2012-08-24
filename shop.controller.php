@@ -338,6 +338,7 @@
         }
 
         /*
+         * Remove products from cart
          * @author Florin Ercus (dev@xpressengine.org)
          */
         public function procShopCartRemoveProducts() {
@@ -355,10 +356,30 @@
         }
 
         /*
+         * Update product quantities in cart
+         * Expects $quantities to be something like array('prod_srl'=>$newQuantity, ...)
+         * @author Florin Ercus (dev@xpressengine.org)
+         */
+        public function procShopCartUpdateProducts() {
+            $cart_srl = Context::get('cart_srl');
+            if ($cart_srl && !is_numeric($cart_srl)) throw new Exception('Invalid cart_srl');
+            if (!is_array($quantities = Context::get('products'))) {
+                throw new Exception('Invalid products array input.');
+            }
+            $cartRepo = $this->model->getCartRepository();
+            $logged_info = Context::get('logged_info');
+            if (!$cart = $cartRepo->getCart($this->module_srl, $cart_srl, $logged_info->member_srl, session_id())) {
+                throw new Exception('No cart');
+            }
+            $cart->updateProducts($quantities);
+            $this->setRedirectUrl(getNotEncodedUrl('', 'act', 'dispShopCart'));
+        }
+
+        /*
         * @brief function for product delete
         * @author Dan Dragan (dev@xpressengine.org)
         */
-        public function procShopToolDeleteProduct(){
+        public function procShopToolDeleteProduct() {
             $shopModel = $this->model;
             $repository = $shopModel->getProductRepository();
 
