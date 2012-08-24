@@ -165,7 +165,7 @@ class shopView extends shop {
         Context::set('cart', $cart);
 
         // Load menu for display on all pages (in header)
-        $shop_menu = $shopModel->getShopMenu($this->site_srl);
+        $shop_menu = $oShopModel->getShopMenu($this->site_srl);
         Context::set('menu', $shop_menu);
 	}
 
