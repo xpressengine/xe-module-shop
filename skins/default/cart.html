@@ -6,11 +6,21 @@
 jQuery(function () {
     var $ = jQuery;
 
+    //remove
     $('a.remove').click(function(e){
         if (!confirm('Are you sure?')) e.preventDefault();
     });
 
-    $('td.quantity input').live('change', function(){
+    //multiple delete
+    $('#cart #delete_multiple').click(function (e) {
+        e.preventDefault();
+        var form = $(this).parents('form');
+        form.find('input[name=act]').val('procShopCartRemoveProducts');
+        form.submit();
+    });
+
+    //update
+    $('td.quantity input').on('change', function(){
         var flag = 'quantity';
         var self = $(this);
         var upd = $('a.update', self.parents('.product'));
@@ -19,18 +29,11 @@ jQuery(function () {
         }
         else upd.fadeOut();
     });
-    $('a.update').live('click', function(e){
+    $('a.update').on('click', function(e){
         e.preventDefault();
         var box = $('td.quantity input', $(this).parents('.product'));
         if (box.val() == 0 && !confirm('Are you sure you want to remove the product from your cart?')) return false;
         window.location = $(this).attr('href').replace('QUANTITY', box.val());
-    });
-
-    $('#cart #delete_multiple').click(function(e){
-        e.preventDefault();
-        var form = $(this).parents('form');
-        form.find('input[name=act]').val('procShopCartRemoveProducts');
-        form.submit();
     });
 });
 </script>
@@ -58,7 +61,7 @@ jQuery(function () {
                 <thead>
                     <tr cond="!empty($products)">
                         <th scope="col">
-                            <input type="checkbox" class="inputCheck" onclick="jQuery('input.boxlist').click()"/>
+                            <input type="checkbox" class="inputCheck" onclick="jQuery(this).parents('table').find('input[type=checkbox].boxlist').attr('checked', jQuery(this).is(':checked'))"/>
                         </th>
                         <th scope="col" class="title">Product</th>
                         <th scope="col">{$lang->quantity}</th>
