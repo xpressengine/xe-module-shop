@@ -1,4 +1,6 @@
 jQuery(document).ready(function($){
+    $( ".attribute.date" ).datepicker();
+
     $("#categories input[type='checkbox']").change(function(){
         // Get list of visible categories
         var visible_categories = new Array();
