@@ -25,6 +25,13 @@ jQuery(function () {
         if (box.val() == 0 && !confirm('Are you sure you want to remove the product from your cart?')) return false;
         window.location = $(this).attr('href').replace('QUANTITY', box.val());
     });
+
+    $('#cart #delete_multiple').click(function(e){
+        e.preventDefault();
+        var form = $(this).parents('form');
+        form.find('input[name=act]').val('procShopCartRemoveProducts');
+        form.submit();
+    });
 });
 </script>
 
@@ -65,7 +72,7 @@ jQuery(function () {
 <!--@foreach($products->data as $no => $product)-->
                 <tr class="product" data-price="{$product->price}">
                     <td>
-                        <input type="checkbox" name="product_srl" value="{$product->product_srl}" class="inputCheck boxlist"/>
+                        <input type="checkbox" name="product_srls[]" value="{$product->product_srl}" class="inputCheck boxlist"/>
                     </td>
                     <td class="title">
                         <a href="{getUrl('act','dispShopProduct','product_srl',$product->product_srl)}">{$product->title}</a>
@@ -91,7 +98,7 @@ jQuery(function () {
                         {$total_price}
                     </td>
                     <td>
-                        <input type="submit" value="{$lang->cmd_delete}" name="del_cart_products">
+                        <input type="submit" value="{$lang->cmd_delete}" name="del_cart_products" id="delete_multiple">
                     </td>
                 </tr>
 
