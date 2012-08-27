@@ -229,7 +229,7 @@ class CategoryTreeNode
 		$html = '';
 		if($config->showCheckbox)
 		{
-			$html .= '<ul class="multiple_checkbox">';
+			$html .= '<ul class="multiple_checkbox" id="' . $config->checkboxesName . '">';
 		}
 		else
 		{

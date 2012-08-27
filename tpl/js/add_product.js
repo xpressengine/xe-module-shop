@@ -1,12 +1,12 @@
 jQuery(document).ready(function($){
     $("#categories input[type='checkbox']").change(function(){
         // Get list of visible categories
-        var visible_categories = new Array;
+        var visible_categories = new Array();
         $("#categories input[type='checkbox']:checked").each(function(){
             visible_categories.push($(this).val());
         });
 
-        // Show/hide rows refering to current category (the one that triggered the change event)
+        // Show/hide rows referring to current category (the one that triggered the change event)
         var attributes = $(".attribute." + $(this).val());
         var rows = attributes.parent("div").parent("td").parent("tr");
 
