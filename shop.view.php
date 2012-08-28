@@ -861,6 +861,16 @@ class shopView extends shop {
 			$service_modules[] = $val;
 		}
 		Context::set('service_modules', $service_modules);
+
+
+        /**
+         * @var adminAdminModel $adminModel
+         */
+        $adminModel = getAdminModel('admin');
+        // Retrieve all sites in XE
+        // This sets 'sites_list' in context
+        $site_list = $adminModel->getAllSitesThatHaveModules();
+        Context::set("site_list", $site_list);
 	}
 
 	/**

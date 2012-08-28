@@ -7,11 +7,18 @@
 			hideAll();
 			$("#text_url_container").show();
 		};
-	    var showMidList = function($module_type) {
-			hideAll();
 
-			$.exec_json('shop.procShopServiceGetModulesByType'
-				, { module_type : $module_type}
+        var showSitesList = function() {
+            hideAll();
+            $("#site_srl_container").show();
+        }
+
+	    var showMidListAndLoadData = function($module_type, $site_srl) {
+			hideAll();
+            $("#site_srl_container").show();
+
+			$.exec_json('shop.procShopServiceGetModulesByTypeAndSiteSrl'
+				, { module_type : $module_type, site_srl : $site_srl}
 				, function(data) {
 					if(data.error != 0)
 					{
@@ -34,24 +41,39 @@
 	    var hideAll = function() {
 			$("#mid_url_container").hide();
 			$("#text_url_container").hide();
+            $("#site_srl_container").hide();
 		}
 
-	    $("#module_type").change(function(){
-		    $selected_value = $(this).val();
+   	    $("#module_type").change(function(){
+		    $module_type = $(this).val();
 
-			if(!$selected_value)
+			if(!$module_type)
 			{
 			    hideAll();
 			}
-		    else if($selected_value == 'url')
+		    else if($module_type == 'url')
 			{
 			    showUrl();
 			}
 			else
 			{
-			    showMidList($selected_value);
+                showSitesList();
 			}
 		});
+
+        $("#site_srl").change(function(){
+            $("#domain").val($(this).find(":selected").text());
+
+            $site_srl = $(this).val();
+            if($site_srl === "")
+            {
+                return;
+            }
+
+            $module_type = $("#module_type").val();
+
+            showMidListAndLoadData($module_type, $site_srl);
+        });
 	});
 </script>
 
@@ -88,8 +110,19 @@
 			<input type="text" id="text_url" name="text_url" />
 	    </p>
 
-		<p id="mid_url_container" style="display: none">
-			<label for="mid_url">Module</label>
+        <p id="site_srl_container" style="display: none">
+            <label for="site_srl">Site</label>
+            <select id="site_srl" name="site_srl">
+                <option value="" />
+                <!--@foreach($site_list as $site)-->
+                <option value="{$site->site_srl}">{$site->domain}</option>
+                <!--@end-->
+            </select>
+            <input type="hidden" name="domain" id="domain" />
+        </p>
+
+        <p id="mid_url_container" style="display: none">
+            <label for="mid_url">Module</label>
 			<select id="mid_url" name="mid_url">
 			</select>
 		</p>

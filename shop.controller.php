@@ -1011,18 +1011,21 @@
 
         // endregion
 
-		// region Extra menu
-		/**
+        /**
 		 * Retrieves all module instances of a certain type
 		 * Called through AJAX
 		 *
 		 * @author Corina Udrescu (dev@xpressengine.org)
 		 * @return Object
 		 */
-		public function procShopServiceGetModulesByType()
+		public function procShopServiceGetModulesByTypeAndSiteSrl()
 		{
 			$module_type = Context::get('module_type');
-			if(!isset($module_type)) return new Object(-1, 'msg_invalid_request');
+            $site_srl = Context::get('site_srl');
+			if(!isset($module_type) || !isset($site_srl))
+            {
+                return new Object(-1, 'msg_invalid_request');
+            }
 
 			/**
 			 * @var moduleModel $oModuleModel
@@ -1030,7 +1033,9 @@
 			$oModuleModel = getModel('module');
 			$args = new stdClass();
 			$args->module = $module_type;
+            $args->site_srl = $site_srl;
 			$mid_list = $oModuleModel->getMidList($args, array("mid"));
+            if(!$mid_list) $mid_list = array();
 
 			$this->add('mid_list', $mid_list);
 		}
@@ -1047,8 +1052,14 @@
 			$shop_menu_srl = $shopModel->getShopMenuSrl($this->site_srl);
 
 			$module_type = Context::get('module_type');
-			if($module_type != 'url')
-				$mid = Context::get('mid_url');
+			if($module_type != 'url'){
+				$mid_url = Context::get('mid_url');
+                $site_srl = Context::get('site_srl');
+                $domain = Context::get('domain');
+
+                $mid = getFullSiteUrl($domain, '', 'mid', $mid_url);
+
+            }
 			else
 				$mid = Context::get('text_url');
 			$menu_name = Context::get('menu_name');
