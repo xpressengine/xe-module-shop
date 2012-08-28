@@ -13,6 +13,13 @@ jQuery(function () {
 
     //multiple delete
     $('#cart #delete_multiple').click(function (e) {
+        if (!$(this).parents('table').find('input[type=checkbox].boxlist').filter(':checked').length) {
+            alert('nothing selected for delete');
+            return false;
+        }
+        if (!confirm('Are you sure you want to remove these products from your shopping cart?')) {
+            return false;
+        }
         e.preventDefault();
         var form = $(this).parents('form');
         form.find('input[name=act]').val('procShopCartRemoveProducts');
@@ -24,10 +31,15 @@ jQuery(function () {
         var flag = 'quantity';
         var self = $(this);
         var upd = $('a.update', self.parents('.product'));
+        var massUpd = $('#cart #update_multiple');
         if (self.val() != self.data(flag)) {
-            upd.attr('href', upd.attr('href')).fadeIn();
+            upd.attr('href', upd.attr('href')).fadeIn(function(){
+                massUpd.fadeIn();
+            });
         }
-        else upd.fadeOut();
+        else upd.fadeOut(function(){
+            massUpd.fadeOut();
+        });
     });
     $('a.update').on('click', function(e){
         e.preventDefault();
@@ -102,6 +114,9 @@ jQuery(function () {
                     </td>
                     <td>
                         <input type="submit" value="{$lang->cmd_delete}" name="del_cart_products" id="delete_multiple">
+                    </td>
+                    <td>
+                        <input type="submit" value="{$lang->cmd_update}" name="upd_cart_products" id="update_multiple">
                     </td>
                 </tr>
 

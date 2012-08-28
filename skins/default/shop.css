@@ -206,7 +206,7 @@ img{border:0}
 #cart .title {
     width: 300px;
 }
-#cart a.update {
+#cart a.update, #cart #update_multiple {
     display: none;
 }
 #cart .price {
