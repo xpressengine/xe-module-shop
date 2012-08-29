@@ -423,12 +423,15 @@ class shopModel extends shop
 	/**
 	 * Delete menu item
 	 */
-	public function deleteMenuItem($memnu_srl, $menu_item_srl)
+	public function deleteMenuItem($menu_srl, $menu_item_srl)
 	{
 		$args = new stdClass();
 		$args->menu_item_srl = $menu_item_srl;
 		$output = executeQuery("menu.deleteMenuItem", $args);
-		if(!$output->toBool()) return $output;
+		if(!$output->toBool())
+        {
+            throw new Exception($output->getMessage());
+        }
 
 		$menuAdminController = getAdminController('menu');
 		$menuAdminController->makeXmlFile($menu_srl);

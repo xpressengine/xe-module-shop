@@ -23,6 +23,7 @@
 			<tr>
 			<th scope="col">{$lang->menu_name}</th>
 			<th scope="col">{$lang->url}</th>
+            <th scope="col">-</th>
 			<th scope="col">-</th>
 			<th scope="col">-</th>
 			</tr>
@@ -31,15 +32,22 @@
 		<!--@if($menu_list)-->
 		<tbody class="sort">
 		<!--@foreach($menu_list as $k => $menu)-->
+            {@ $is_page_menu_item = (strpos($menu->url, 'http') === 0) ? 'N' : 'Y'; }
 			<tr style="cursor:n-resize">
 				<td><a href="{$menu->url}" target="_blank">{$menu->name}</a></td>
 				<td>{$menu->url}</td>
+                <td>
+                    <!--@ // If url does not start with http, it means we have a local page -->
+                    <!--@if($is_page_menu_item == 'Y')-->
+                        <a href="{$menu->url . '?act=dispPageAdminContentModify'}" target="_blank">Edit page</a>
+                    <!--@end-->
+                </td>
 				<td>
 					<input type="hidden" name="" class="menu_item_srl" value="{$menu->menu_item_srl}" />
 					<a href="{getUrl('','act','dispShopToolExtraMenuEdit','menu_item_srl',$menu->menu_item_srl)}">{$lang->cmd_modify}...</a>
 				</td>
 				<td>
-				<button type="button" onclick="deleteExtraMenu('{$menu->menu_srl}', '{$menu->menu_item_srl}','{$lang->confirm_delete}')" class="text">{$lang->cmd_delete}</button>
+				<button type="button" onclick="deleteExtraMenu('{$menu->menu_srl}', '{$menu->menu_item_srl}','{$is_page_menu_item}', '{$lang->confirm_delete}')" class="text">{$lang->cmd_delete}</button>
 				</td>
 			</tr>
 		<!--@end-->

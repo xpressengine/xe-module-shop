@@ -868,7 +868,6 @@ class shopView extends shop {
          */
         $adminModel = getAdminModel('admin');
         // Retrieve all sites in XE
-        // This sets 'sites_list' in context
         $site_list = $adminModel->getAllSitesThatHaveModules();
         Context::set("site_list", $site_list);
 	}
