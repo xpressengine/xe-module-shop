@@ -233,6 +233,7 @@ class AttributeRepository extends BaseRepository
         $attributes = array();
         foreach ($output->data as $properties) {
             $o = new Attribute($properties);
+            $this->getAttributeScope($o);
             $attributes[] = $o;
         }
         $output->attributes = $attributes;

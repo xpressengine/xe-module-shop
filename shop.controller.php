@@ -238,6 +238,29 @@
 		}
 
 		/*
+		* brief function for export products to csv
+		* @author Dan Dragan (dev@xpressengine.org)
+		*/
+		public function procShopToolExportProducts(){
+			$shopModel = $this->model;
+			$productRepository = $shopModel->getProductRepository();
+            $categoryRepository = $shopModel->getCategoryRepository();
+            $attributeRepository = $shopModel->getAttributeRepository();
+
+			$args = new stdClass();
+			$args->module_srl = $this->module_info->module_srl;
+
+			$products = $productRepository->getAllProducts($args);
+            $categories = $categoryRepository->getCategoriesTree($args->module_srl)->toFlatStructure();
+            $attributes = $attributeRepository->getAttributesList($args->module_srl)->attributes;
+
+			$productRepository->downloadProductsWithCSV($products,$categories, $attributes);
+
+
+
+		}
+
+		/*
 		* brief function for associated products insert
 		* @author Dan Dragan (dev@xpressengine.org)
 		*/
