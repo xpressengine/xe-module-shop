@@ -317,8 +317,18 @@ class shopModel extends shop
         require_once dirname(__FILE__) . '/libs/ZipHandler.class.php';
     }
 
-	// region Menu
-	/**
+    /**
+     * Returns an instance of the Shipping repository
+     */
+    public function getShippingRepository()
+    {
+        require_once dirname(__FILE__) . '/libs/repositories/ShippingRepository.php';
+        return new ShippingRepository();
+
+    }
+
+    // region Menu
+    /**
 	 * Get shop menu
 	 * Menu structure can be seen in the php cache file
 	 *

@@ -1,0 +1,38 @@
+<include target="_tool_header.html" />
+
+<!-- Content -->
+<div id="content">
+    <!-- contentHeader -->
+    <div class="contentHeader">
+        <h3 class="h3">Shipping</h3>
+    </div>
+
+    <div cond="$XE_VALIDATOR_MESSAGE" class="message {$XE_VALIDATOR_MESSAGE_TYPE}">
+        <p>{$XE_VALIDATOR_MESSAGE}</p>
+    </div>
+    <!-- /contentHeader -->
+
+    <table class="tableData">
+        <thead>
+            <tr>
+                <th scope="col">Shipping method</th>
+                <th scope="col">Active</th>
+            </tr>
+        </thead>
+        <tbody>
+        <!--@foreach($shipping_methods as $shipping_method)-->
+            <tr>
+                <td>{get_class($shipping_method)}</td>
+                <td></td>
+            </tr>
+        <!--@end-->
+        </tbody>
+    </table>
+
+
+
+</div>
+<!-- /Content -->
+
+<include target="_tool_menu.html" />
+<include target="_tool_footer.html" />

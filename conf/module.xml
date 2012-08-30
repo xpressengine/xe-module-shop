@@ -147,6 +147,9 @@
         <action name="procShopToolExtraMenuInsert" type="controller" standalone="true"/>
         <action name="procShopToolExtraMenuUpdate" type="controller" standalone="true"/>
 
+        <!-- Shipping -->
+        <action name="dispShopToolShippingList" type="view" />
+
 
     </actions>
 </module>

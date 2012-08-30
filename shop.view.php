@@ -941,6 +941,19 @@ class shopView extends shop {
 
 	// endregion
 
+    // region Shipping
+    public function dispShopToolShippingList()
+    {
+        /**
+         * @var shopModel $shopModel
+         */
+        $shopModel = getModel('shop');
+        $shipping_repository = $shopModel->getShippingRepository();
+
+        $shipping_methods = $shipping_repository->getAvailableShippingMethods();
+        Context::set('shipping_methods', $shipping_methods);
+    }
+
 
 }
 ?>

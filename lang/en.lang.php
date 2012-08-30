@@ -258,6 +258,7 @@
         array(
             'dispShopToolManageAdminAccount'=>'Admin account',
             'dispShopToolConfigInfo'=>'Shop Configuration',
+            'dispShopToolShippingList'=>'Shipping',
         ),
         array('dispShopToolManagePaymentGateways'=>'Payment Gateways')
     );
