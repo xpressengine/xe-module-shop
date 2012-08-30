@@ -254,11 +254,39 @@
             $categories = $categoryRepository->getCategoriesTree($args->module_srl)->toFlatStructure();
             $attributes = $attributeRepository->getAttributesList($args->module_srl)->attributes;
 
-			$productRepository->downloadProductsWithCSV($products,$categories, $attributes);
+            FileHandler::makeDir('./files/attach/shop/export-import/');
 
+			$productRepository->addProductsToExportFolder($products);
+            $categoryRepository->addCategoriesToExportFolder($categories);
+            $attributeRepository->addAttributesToExportFolder($attributes);
 
+            $shopModel->includeZipHandler();
 
+            ZipHandler::zip('./files/attach/shop/export-import/','./files/attach/shop/export.zip');
+
+            header("Content-type: application/zip");
+            header("Content-Disposition: attachment; filename=export.zip");
+            header("Pragma: no-cache");
+            header("Expires: 0");
+
+            readfile('./files/attach/shop/export.zip');
+
+            FileHandler::removeFile('./files/attach/shop/export.zip');
+            FileHandler::removeDir('./files/attach/shop/export-import/');
+
+            exit;
 		}
+
+        /*
+          * brief function for import products to csv
+          * @author Dan Dragan (dev@xpressengine.org)
+          */
+        public function procShopToolImportProducts(){
+            $shopModel = $this->model;
+            $productRepository = $shopModel->getProductRepository();
+            $categoryRepository = $shopModel->getCategoryRepository();
+            $attributeRepository = $shopModel->getAttributeRepository();
+        }
 
 		/*
 		* brief function for associated products insert

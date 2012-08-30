@@ -241,6 +241,50 @@ class AttributeRepository extends BaseRepository
     }
 
     /**
+     * Add attributes info to export folder
+     * @author Dan Dragan (dev@xpressengine.org)
+     *
+     * @param array $attributes
+     *
+     * @return exit after file is ready for download
+     */
+    public function addAttributesToExportFolder($attributes)
+    {
+        $buff = '';
+        //table header for attributes csv
+        foreach($attributes[0] as $key => $value)
+        {
+            if(!in_array($key,array('member_srl','module_srl','regdate','last_update','repo')))
+            {
+                if($key == 'attribute_srl') $buff = $buff.'id,';
+                else $buff = $buff.$key.",";
+            }
+        }
+        $buff = $buff."\r\n";
+        //table values  for products  csv
+        foreach($attributes as $attribute){
+            foreach($attribute as $key => $value){
+                if(!in_array($key,array('member_srl','module_srl','regdate','last_update','repo','category_scope')))
+                {
+                    $buff = $buff.$value.",";
+                }
+                $category_scope = '';
+                if($key == 'category_scope'){
+                    foreach($value as $category){
+                        if($category_scope == '') $category_scope = $category;
+                        else $category_scope = $category_scope.'|'.$category;
+                    }
+                    $buff = $buff.$category_scope.",";
+                }
+            }
+            $buff = $buff."\r\n";
+        }
+        $attribute_csv_filename = 'attributes.csv';
+        $attribute_csv_path = sprintf('./files/attach/shop/export-import/%s', $attribute_csv_filename);
+        FileHandler::writeFile($attribute_csv_path, $buff);
+    }
+
+    /**
      * Retrieve a list of configurable Attributes object from the database by modul_srl
      * @author Dan Dragan (dev@xpressengine.org)
      * @param $module_srl int

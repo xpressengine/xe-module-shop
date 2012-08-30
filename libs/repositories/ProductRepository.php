@@ -2,7 +2,7 @@
 
 require_once dirname(__FILE__) . '/../model/Product.php';
 require_once dirname(__FILE__) . '/BaseRepository.php';
-require_once dirname(__FILE__) . '/../ZipHandler.class.php';
+
 
 /**
  * Handles database operations for Product
@@ -597,19 +597,16 @@ class ProductRepository extends BaseRepository
 	}
 
 	/**
-	 * Create csv file for download with all products from export
+	 * Add products info to export folder
 	 * @author Dan Dragan (dev@xpressengine.org)
 	 *
 	 * @param array $products
-     * @param array $categories
-     * @param array $attributes
 	 *
 	 * @return exit after file is ready for download
 	 */
-	public function downloadProductsWithCSV($products, $categories, $attributes)
+	public function addProductsToExportFolder($products)
 	{
 
-        FileHandler::makeDir('./files/attach/shop/export-import/');
         $buff = '';
 		//table header for products csv
 		foreach($products[0] as $key => $value)
@@ -627,14 +624,15 @@ class ProductRepository extends BaseRepository
             foreach($product->images as $image){
                 $path = sprintf('./files/attach/images/shop/%d/product-images/%d/', $image->module_srl , $image->product_srl);
                 $filename = sprintf('%s%s', $path, $image->filename);
-                $export_filename = sprintf('./files/attach/shop/export-import/images/%s',$image->filename);
+                $export_filename = sprintf('./files/attach/shop/export-import/images/%s',$image->product_srl.$image->filename);
                 FileHandler::copyFile($filename,$export_filename);
             }
 			foreach($product as $key => $value){
-				if(!in_array($key,array('member_srl','module_srl','regdate','last_updated','primary_image','repo','categories','attributes','images')))
+				if(!in_array($key,array('member_srl','module_srl','regdate','last_updated','primary_image','primary_image_filename','repo','categories','attributes','images')))
 				{
 					$buff = $buff.$value.",";
 				}
+                if($key == 'primary_image_filename') $buff = $buff.$product->product_srl.$value.",";
                 $product_categories = '';
                 if($key == 'categories'){
                     foreach($value as $category){
@@ -656,8 +654,8 @@ class ProductRepository extends BaseRepository
                 $images = '';
                 if($key == 'images'){
                     foreach($value as $image){
-                        if($images == '') $images = $image->filename;
-                        else $images = $images.'|'.$image->filename;
+                        if($images == '') $images = $product->product_srl.$image->filename;
+                        else $images = $images.'|'.$product->product_srl.$image->filename;
                     }
                     $buff = $buff.$images.",";
                 }
@@ -668,78 +666,7 @@ class ProductRepository extends BaseRepository
         $product_csv_path = sprintf('./files/attach/shop/export-import/%s', $product_csv_filename);
         FileHandler::writeFile($product_csv_path, $buff);
 
-        $buff = '';
-        //table header for categories csv
-        foreach($categories[0]->category as $key => $value)
-        {
-            if(!in_array($key,array('member_srl','module_srl','regdate','last_update','repo','product_count')))
-            {
-                if($key == 'category_srl') $buff = $buff.'id,';
-                else $buff = $buff.$key.",";
-            }
-        }
-        $buff = $buff."\r\n";
-        //table values  for categories csv
-        foreach($categories as $category){
-            foreach($category->category as $key => $value){
-                if(!in_array($key,array('member_srl','module_srl','regdate','last_update','repo','product_count')))
-                {
-                    $buff = $buff.$value.",";
-                }
-            }
-            $buff = $buff."\r\n";
-        }
-        $category_csv_filename = 'categories.csv';
-        $category_csv_path = sprintf('./files/attach/shop/export-import/%s', $category_csv_filename);
-        FileHandler::writeFile($category_csv_path, $buff);
 
-        $buff = '';
-        //table header for attributes csv
-        foreach($attributes[0] as $key => $value)
-        {
-            if(!in_array($key,array('member_srl','module_srl','regdate','last_update','repo')))
-            {
-                if($key == 'attribute_srl') $buff = $buff.'id,';
-                else $buff = $buff.$key.",";
-            }
-        }
-        $buff = $buff."\r\n";
-        //table values  for products  csv
-        foreach($attributes as $attribute){
-            foreach($attribute as $key => $value){
-                if(!in_array($key,array('member_srl','module_srl','regdate','last_update','repo','category_scope')))
-                {
-                    $buff = $buff.$value.",";
-                }
-                $category_scope = '';
-                if($key == 'category_scope'){
-                    foreach($value as $category){
-                        if($category_scope == '') $category_scope = $category;
-                        else $category_scope = $category_scope.'|'.$category;
-                    }
-                    $buff = $buff.$category_scope.",";
-                }
-            }
-            $buff = $buff."\r\n";
-        }
-        $attribute_csv_filename = 'attributes.csv';
-        $attribute_csv_path = sprintf('./files/attach/shop/export-import/%s', $attribute_csv_filename);
-        FileHandler::writeFile($attribute_csv_path, $buff);
-
-
-        ZipHandler::zip('./files/attach/shop/export-import/','./files/attach/shop/export.zip');
-
-        header("Content-type: application/zip");
-        header("Content-Disposition: attachment; filename=export.zip");
-        header("Pragma: no-cache");
-        header("Expires: 0");
-
-        readfile('./files/attach/shop/export.zip');
-
-        FileHandler::removeFile('./files/attach/shop/export.zip');
-        FileHandler::removeDir('./files/attach/shop/export-import/');
-
-        exit;
 	}
 
 

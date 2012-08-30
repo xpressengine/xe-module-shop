@@ -15,6 +15,7 @@
         <permission action="dispShopToolAddAssociatedProducts" target="manager" />
         <permission action="dispShopToolEditProduct" target="manager" />
         <permission action="dispShopToolManageAttributes" target="manager"/>
+        <permission action="dispShopToolImportProducts" target="manager"/>
         <permission action="dispShopToolAddAttribute" target="manager"/>
         <permission action="dispShopToolEditAttribute" target="manager"/>
 		<permission action="dispShopToolManagePaymentGateways" target="manager" />
@@ -36,6 +37,7 @@
         <permission action="procShopToolDeleteProducts" target="manager" />
         <permission action="procShopToolDeleteAttributes" target="manager" />
         <permission action="procShopToolExportProducts" target="manager" />
+        <permission action="procShopToolImportProducts" target="manager" />
 
         <!-- Product categories -->
         <permission action="dispShopToolManageCategories" target="manager" />
@@ -69,6 +71,7 @@
         <action name="dispShopToolAddAssociatedProducts" type="view" />
         <action name="dispShopToolEditProduct" type="view" />
         <action name="dispShopToolManageAttributes" type="view"/>
+        <action name="dispShopToolImportProducts" type="view"/>
         <action name="dispShopToolAddAttribute" type="view" />
         <action name="dispShopToolEditAttribute" type="view" />
         <action name="dispShopToolManagePaymentGateways" type="view" />
@@ -101,6 +104,7 @@
         <action name="procShopCartRemoveProducts" type="controller" />
 		<action name="procShopToolExportProducts" type="controller" />
 		<action name="procShopCartUpdateProducts" type="controller" />
+        <action name="procShopToolImportProducts" type="controller" ruleset="import_products"/>
 
         <action name="dispShopAdminList" type="view" standalone="true" admin_index="true" />
         <action name="dispShopAdminInsert" type="view" standalone="true" />

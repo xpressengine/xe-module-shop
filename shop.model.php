@@ -306,6 +306,17 @@ class shopModel extends shop
         return new GuestRepository();
     }
 
+    /**
+     * Includes Zip Handler Class
+     *
+     * @author Dan Dragan(dev@xpressengine.org)
+     * @return GuestRepository
+     */
+    public function includeZipHandler()
+    {
+        require_once dirname(__FILE__) . '/libs/ZipHandler.class.php';
+    }
+
 	// region Menu
 	/**
 	 * Get shop menu

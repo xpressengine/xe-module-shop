@@ -448,6 +448,20 @@ class shopView extends shop {
 		Context::set('category_list', $flat_tree);
 	}
 
+    /**
+     * @brief Shop display page for import products
+     */
+    public function dispShopToolImportProducts(){
+        $shopModel = getModel('shop');
+
+        $product_repository = $shopModel->getProductRepository();
+        $module_srl = $this->module_info->module_srl;
+
+        $args = new stdClass();
+        $args->module_srl = $module_srl;
+
+    }
+
 	/**
 	 * @brief Shop display product edit page
 	 */

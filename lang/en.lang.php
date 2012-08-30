@@ -66,6 +66,8 @@
 	$lang->notice_update_configurable = 'When updating a configurable product the values of associated products will not be affected. You will have to edit them sepparatly.';
 	$lang->import_products = 'Import products';
 	$lang->export_products = 'Export products';
+    $lang->select_import_file = 'Select import file';
+    $lang->about_select_import_file = 'The file must be a zip file';
 
 	$lang->cmd_open_id = 'Open ID Login';
 	$lang->cmd_common_id = 'Default Login';

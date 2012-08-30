@@ -161,6 +161,42 @@ class CategoryRepository extends BaseRepository
 		return $nodes[0];
 	}
 
+    /**
+     * Add categories info to export folder
+     * @author Dan Dragan (dev@xpressengine.org)
+     *
+     * @param array $categories
+     *
+     * @return exit after file is ready for download
+     */
+    public function addCategoriesToExportFolder($categories)
+    {
+        $buff = '';
+        //table header for categories csv
+        foreach($categories[0]->category as $key => $value)
+        {
+            if(!in_array($key,array('member_srl','module_srl','regdate','last_update','repo','product_count')))
+            {
+                if($key == 'category_srl') $buff = $buff.'id,';
+                else $buff = $buff.$key.",";
+            }
+        }
+        $buff = $buff."\r\n";
+        //table values  for categories csv
+        foreach($categories as $category){
+            foreach($category->category as $key => $value){
+                if(!in_array($key,array('member_srl','module_srl','regdate','last_update','repo','product_count')))
+                {
+                    $buff = $buff.$value.",";
+                }
+            }
+            $buff = $buff."\r\n";
+        }
+        $category_csv_filename = 'categories.csv';
+        $category_csv_path = sprintf('./files/attach/shop/export-import/%s', $category_csv_filename);
+        FileHandler::writeFile($category_csv_path, $buff);
+    }
+
 	/**
 	 * Save category image to disc
 	 *
