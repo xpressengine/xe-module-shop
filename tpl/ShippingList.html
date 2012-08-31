@@ -22,8 +22,12 @@
         <tbody>
         <!--@foreach($shipping_methods as $shipping_method)-->
             <tr>
-                <td>{get_class($shipping_method)}</td>
-                <td></td>
+                <td>
+                    <a href="#">
+                    {$shipping_method->getName()}
+                    </a>
+                </td>
+                <td>{$shipping_method->isActive()}</td>
             </tr>
         <!--@end-->
         </tbody>

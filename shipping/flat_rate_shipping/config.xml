@@ -1,0 +1,5 @@
+<shipping_method>
+    <name>Flat rate shipping</name>
+    <is_active>1</is_active>
+    <type>per_order</type>
+</shipping_method>

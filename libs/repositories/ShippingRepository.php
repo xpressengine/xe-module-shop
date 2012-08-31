@@ -38,7 +38,7 @@ class ShippingRepository extends BaseRepository
             require_once $shipping_class_path;
 
             $shipping_instance = new $shipping_class_name;
-            if(!($shipping_instance instanceof Shipping)) continue;
+            if(!($shipping_instance instanceof ShippingMethodInterface)) continue;
 
             $shipping_methods[] = $shipping_instance;
         }
