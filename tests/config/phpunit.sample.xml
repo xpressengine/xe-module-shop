@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+ Copy and rename this file to db.config.php to load database configuration
+-->
+<phpunit>
+    <php>
+        <var name="DB_DSN" value="db_type:dbname=db_name;host=db_host"/>
+        <var name="DB_USER" value="db_user"/>
+        <var name="DB_PASSWD" value="db_pass"/>
+        <var name="DB_DBNAME" value="db_name"/>
+    </php>
+</phpunit>
