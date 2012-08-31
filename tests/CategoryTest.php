@@ -25,7 +25,8 @@ class CategoryTest extends Shop_Generic_Tests_DatabaseTestCase
 				array('category_srl' => 1002, 'module_srl' => 1001, 'title' => 'Dummy category 1002', 'parent_srl' => 1000),
 				array('category_srl' => 1004, 'module_srl' => 1003, 'title' => 'Dummy category 1004', 'parent_srl' => 0),
 				array('category_srl' => 1006, 'module_srl' => 1001, 'title' => 'Dummy category 1006', 'parent_srl' => 0),
-				array('category_srl' => 1008, 'module_srl' => 1001, 'title' => 'Dummy category 1008', 'parent_srl' => 1000)
+				array('category_srl' => 1008, 'module_srl' => 1001, 'title' => 'Dummy category 1008', 'parent_srl' => 1000),
+                array('category_srl' => 1010, 'module_srl' => 1004, 'title' => 'Dummy category 1010', 'parent_srl' => 2)
 			),
 			'xe_shop_products' => array(),
 			'xe_shop_product_categories' => array()
@@ -416,6 +417,24 @@ class CategoryTest extends Shop_Generic_Tests_DatabaseTestCase
 		$category = $category_repository->getCategory(1000);
 		$this->assertEquals(1, $category->product_count);
 	}
+
+    /**
+     * Test that when invalid categories are found, they are ignored
+     */
+    public function testThatInvalidCategoriesAreIgnored()
+    {
+        /**
+         * @var shopModel $shopModel
+         */
+        $shopModel = getModel('shop');
+        $category_repository = $shopModel->getCategoryRepository();
+
+        // This method will return a PHP fatal error if invalid child is found
+        // PHP Fatal error:  Call to a member function addChild() on a non-object
+        $tree = $category_repository->getCategoriesTree(1004);
+
+        $this->assertNotNull($tree);
+    }
 }
 
 /* End of file CategoryTest.php */

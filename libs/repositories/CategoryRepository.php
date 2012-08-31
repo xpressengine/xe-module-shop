@@ -155,7 +155,10 @@ class CategoryRepository extends BaseRepository
 		foreach($output->data as $pc)
 		{
 			$nodes[$pc->category_srl] = new CategoryTreeNode(new Category($pc));
-			$nodes[$pc->parent_srl]->addChild($nodes[$pc->category_srl]);
+            if(isset($nodes[$pc->parent_srl]))
+            {
+                $nodes[$pc->parent_srl]->addChild($nodes[$pc->category_srl]);
+            }
 		}
 
 		return $nodes[0];
