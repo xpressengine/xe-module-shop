@@ -1,5 +1,35 @@
 <include target="_tool_header.html" />
 
+<script type="text/javascript">
+    jQuery(document).ready(function($){
+        $("form.activateShippingMethod input[type='checkbox'][name='is_active']").change(function(){
+            if($(this).is(':checked'))
+            {
+                $is_active = 'Y';
+            }
+            else
+            {
+                $is_active = 'N';
+            }
+            $code = $(this).prev("input").val();
+
+            $.exec_json('shop.procShopServiceActivateShippingMethod'
+                    , { code : $code, is_active :  $is_active}
+                    , function(data){
+                        if(data.error != 0)
+                        {
+                            alert("Error " + data.error + " " + data.message);
+                            return;
+                        }
+
+                        alert(data.message);
+                    }
+            );
+
+        });
+    });
+</script>
+
 <!-- Content -->
 <div id="content">
     <!-- contentHeader -->
@@ -16,6 +46,7 @@
         <thead>
             <tr>
                 <th scope="col">Shipping method</th>
+                <th scope="col">Display name</th>
                 <th scope="col">Active</th>
             </tr>
         </thead>
@@ -23,11 +54,18 @@
         <!--@foreach($shipping_methods as $shipping_method)-->
             <tr>
                 <td>
-                    <a href="#">
+                    <a href="{getUrl('act', 'dispShopToolEditShipping', 'code', $shipping_method->getCode())}">
                     {$shipping_method->getName()}
                     </a>
                 </td>
-                <td>{$shipping_method->isActive()}</td>
+                <td>{$shipping_method->getDisplayName()}</td>
+                <td>
+                    <form action="./" method="post" class="activateShippingMethod">
+                        <input type="hidden" name="code" value="{$shipping_method->getCode()}" />
+
+                        <input type="checkbox" name="is_active" <!--@if($shipping_method->isActive())-->checked<!--@end--> />
+                    </form>
+                </td>
             </tr>
         <!--@end-->
         </tbody>

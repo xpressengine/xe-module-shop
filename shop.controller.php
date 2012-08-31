@@ -1342,5 +1342,63 @@
 
 
         // endregion
+
+        // region Shipping
+        public function procShopToolShippingUpdate()
+        {
+            $shipping_info = Context::getRequestVars();
+
+            /**
+             * @var shopModel $shopModel
+             */
+            $shopModel = getModel('shop');
+            $shipping_repository = $shopModel->getShippingRepository();
+            try
+            {
+                $shipping_repository->updateShippingMethod($shipping_info);
+            }
+            catch(Exception $e)
+            {
+                return new Object(-1, 'msg_invalid_request');
+            }
+
+            $this->setMessage('success_updated');
+
+            $vid = Context::get('vid');
+            $mid = Context::get('mid');
+            $this->setRedirectUrl(getNotEncodedUrl('', 'vid', $vid, 'mid', $mid, 'act', 'dispShopToolShippingList'));
+        }
+
+        public function procShopServiceActivateShippingMethod()
+        {
+            $code = Context::get('code');
+            $is_active = Context::get('is_active');
+
+            if(!isset($code) || !isset($is_active))
+            {
+                return new Object(-1, 'msg_invalid_request');
+            }
+
+            /**
+             * @var shopModel $shopModel
+             */
+            $shopModel = getModel('shop');
+            $shipping_repository = $shopModel->getShippingRepository();
+            try
+            {
+                $shipping_info = new stdClass();
+                $shipping_info->code = $code;
+                $shipping_info->is_active = $is_active;
+                $shipping_repository->updateShippingMethod($shipping_info);
+            }
+            catch(Exception $e)
+            {
+                return new Object(-1, 'msg_invalid_request');
+            }
+
+            $this->setMessage('Shipping method successfully updated!');
+        }
+
+        // endregion
     }
 ?>

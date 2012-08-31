@@ -954,6 +954,21 @@ class shopView extends shop {
         Context::set('shipping_methods', $shipping_methods);
     }
 
+    public function dispShopToolEditShipping()
+    {
+        $code = Context::get('code');
+        /**
+         * @var shopModel $shopModel
+         */
+        $shopModel = getModel('shop');
+        $shipping_repository = $shopModel->getShippingRepository();
+        $shipping_instance = $shipping_repository->getShippingMethod($code);
+        Context::set('shipping_method', $shipping_instance);
+
+        $shipping_form_html = $shipping_instance->getFormHtml();
+        Context::set('shipping_form_html', $shipping_form_html);
+    }
+
 
 }
 ?>

@@ -10,4 +10,32 @@ class FlatRateShipping extends ShippingMethodAbstract implements ShippingMethodI
         parent::__construct();
     }
 
+    public function getType()
+    {
+        return $this->shipping_info->type;
+    }
+
+    private function setType($type)
+    {
+        if(!isset($type)) return;
+        $this->shipping_info->type = $type;
+    }
+
+    public function getPrice()
+    {
+        return $this->shipping_info->price;
+    }
+
+    private function setPrice($price)
+    {
+        if(!isset($price)) return;
+        $this->shipping_info->price = $price;
+    }
+
+    protected function saveShippingInfo($shipping_info)
+    {
+        $this->setPrice($shipping_info->price);
+        $this->setType($shipping_info->type);
+    }
+
 }

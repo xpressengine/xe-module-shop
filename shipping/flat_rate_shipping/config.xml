@@ -1,5 +1,10 @@
+<?xml version="1.0"?>
 <shipping_method>
+    <code>flat_rate_shipping</code>
     <name>Flat rate shipping</name>
-    <is_active>1</is_active>
+
+    <display_name>Fan Courier</display_name>
+    <is_active>Y</is_active>
     <type>per_order</type>
+    <price>12</price>
 </shipping_method>

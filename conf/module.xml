@@ -149,7 +149,8 @@
 
         <!-- Shipping -->
         <action name="dispShopToolShippingList" type="view" />
-
-
+        <action name="dispShopToolEditShipping" type="view" />
+        <action name="procShopToolShippingUpdate" type="controller" />
+        <action name="procShopServiceActivateShippingMethod" type="controller" />
     </actions>
 </module>

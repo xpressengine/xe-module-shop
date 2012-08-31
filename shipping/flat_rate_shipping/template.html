@@ -1,20 +1,14 @@
-<h3>$shipping_method->getName()</h3>
+<p>
+    <label for="type">
+        Type
+    </label>
+    <select name="type" id="type">
+        <option value="per_order" <!--@if($shipping_method->getType() == 'per_order')-->selected<!--@endif-->>Per order</option>
+        <option value="per_item" <!--@if($shipping_method->getType() == 'per_item')-->selected<!--@endif-->>Per item</option>
+    </select>
+</p>
 
-<form>
-    <p>
-        <label for="is_active">Is active</label>
-        <select name="is_active" id="is_active">
-            <option value="1" <!--@if($shipping_method->isActive())-->selected<!--@endif-->>Yes</option>
-            <option value="0" <!--@if(!$shipping_method->isActive())-->selected<!--@endif-->>No</option>
-        </select>
-    </p>
-
-    <p>
-        <select name="type" id="type">
-            <option value="per_order" <!--@if($shipping_method->getType() == 'per_order')-->selected<!--@endif-->>Per order</option>
-            <option value="per_item" <!--@if($shipping_method->getType() == 'per_item')-->selected<!--@endif-->>Per item</option>
-        </select>
-    </p>
-
-    <input type="submit" value="Save" />
-</form>
+<p>
+    <label for="price">Price</label>
+    <input type="text" name="price" id="price" value="{$shipping_method->getPrice()}" />
+</p>
