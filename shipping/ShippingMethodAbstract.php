@@ -17,7 +17,12 @@ abstract class ShippingMethodAbstract implements ShippingMethodInterface
 
     protected function getConfigFilePath()
     {
-        return $this->shipping_method_dir . DIRECTORY_SEPARATOR . self::$config_file_name;
+        $config_path = $this->shipping_method_dir . DIRECTORY_SEPARATOR . self::$config_file_name;
+        if(!file_exists($config_path))
+        {
+            throw new Exception("You must add a config.xml file describing your shipping class");
+        }
+        return $config_path;
     }
 
     public function getName()
@@ -74,6 +79,11 @@ abstract class ShippingMethodAbstract implements ShippingMethodInterface
 
     public function getFormHtml()
     {
+        if(!file_exists($this->shipping_method_dir . DIRECTORY_SEPARATOR . self::$template_file_name))
+        {
+            return '';
+        }
+
         $oTemplate = &TemplateHandler::getInstance();
         return $oTemplate->compile($this->shipping_method_dir, self::$template_file_name);
     }
