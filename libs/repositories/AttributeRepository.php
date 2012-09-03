@@ -246,7 +246,7 @@ class AttributeRepository extends BaseRepository
      *
      * @param array $attributes
      *
-     * @return exit after file is ready for download
+     * @return boolean
      */
     public function addAttributesToExportFolder($attributes)
     {
@@ -282,6 +282,50 @@ class AttributeRepository extends BaseRepository
         $attribute_csv_filename = 'attributes.csv';
         $attribute_csv_path = sprintf('./files/attach/shop/export-import/%s', $attribute_csv_filename);
         FileHandler::writeFile($attribute_csv_path, $buff);
+
+        return TRUE;
+    }
+
+    /**
+     * import attributes from import folder
+     * @author Dan Dragan (dev@xpressengine.org)
+     *
+     * @param $args for module_srl and member_srl
+     *
+     * @return  boolean
+     */
+    public function insertAttributesFromImportFolder($params)
+    {
+        $csvString = file_get_contents('./files/attach/shop/export-import/attributes.csv');
+        $csvData = str_getcsv($csvString, "\n");
+        $keys = explode(',',$csvData[0]);
+
+        foreach ($csvData as $idx=>$csvLine){
+            if($idx != 0){
+                $cat = explode(',',$csvLine);
+                foreach($cat as $key=>$value){
+                    if($keys[$key] != ''){
+                        $args[$keys[$key]] = $value;
+                    }
+                }
+                $args = (object) $args;
+                $attributes[] = $args;
+                unset($args);
+            }
+        }
+
+        foreach($attributes as $attribute){
+            $category_scope = explode('|',$attribute->category_scope);
+            unset($attribute->category_scope);
+            foreach($category_scope as $scope){
+                $attribute->category_scope[] = $scope;
+            }
+            $att = new Attribute($attribute);
+            $att->module_srl = $params->module_srl;
+            $att->member_srl = $params->member_srl;
+            $att->attribute_srl_srl = $this->insertAttribute($att);
+            $oAttributes[] = $att;
+        }
     }
 
     /**

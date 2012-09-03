@@ -602,7 +602,7 @@ class ProductRepository extends BaseRepository
 	 *
 	 * @param array $products
 	 *
-	 * @return exit after file is ready for download
+	 * @return boolean
 	 */
 	public function addProductsToExportFolder($products)
 	{
@@ -611,13 +611,13 @@ class ProductRepository extends BaseRepository
 		//table header for products csv
 		foreach($products[0] as $key => $value)
 		{
-			if(!in_array($key,array('member_srl','module_srl','regdate','last_updated','primary_image','repo')))
+			if(!in_array($key,array('member_srl','module_srl','regdate','last_updated','primary_image','repo','associated_products')))
 			{
                 if($key == 'product_srl') $buff = $buff.'id,';
 				else $buff = $buff.$key.",";
 			}
 		}
-		$buff = $buff."\r\n";
+		$buff = $buff."configurable_attributes\r\n";
 		//table values  for products  csv
 		foreach($products as $product){
             // add images to temp folder
@@ -628,11 +628,14 @@ class ProductRepository extends BaseRepository
                 FileHandler::copyFile($filename,$export_filename);
             }
 			foreach($product as $key => $value){
-				if(!in_array($key,array('member_srl','module_srl','regdate','last_updated','primary_image','primary_image_filename','repo','categories','attributes','images')))
+				if(!in_array($key,array('member_srl','module_srl','regdate','last_updated','primary_image','primary_image_filename','repo','categories','attributes','images','associated_products','configurable_attributes')))
 				{
 					$buff = $buff.$value.",";
 				}
-                if($key == 'primary_image_filename') $buff = $buff.$product->product_srl.$value.",";
+                if($key == 'primary_image_filename') {
+                    if(isset($product->primary_image_filename)) $buff = $buff.$product->product_srl.$value.",";
+                    else $buff = $buff.",";
+                }
                 $product_categories = '';
                 if($key == 'categories'){
                     foreach($value as $category){
@@ -645,8 +648,8 @@ class ProductRepository extends BaseRepository
                 $product_attributes = '';
                 if($key == 'attributes'){
                     foreach($value as $attribute_srl => $attribute_value){
-                        if($product_attributes == '') $product_attributes = $attribute_srl.'+'.$attribute_value;
-                        else $product_attributes = $product_attributes.'|'.$attribute_srl.'+'.$attribute_value;
+                        if($product_attributes == '') $product_attributes = $attribute_srl.'='.$attribute_value;
+                        else $product_attributes = $product_attributes.'|'.$attribute_srl.'='.$attribute_value;
                     }
                     $buff = $buff.$product_attributes.",";
                 }
@@ -659,17 +662,90 @@ class ProductRepository extends BaseRepository
                     }
                     $buff = $buff.$images.",";
                 }
-			}
-			$buff = $buff."\r\n";
+
+
+                if($key == 'configurable_attributes'){
+                    $configurable_attributes = '';
+                    foreach($value as $attribute_srl => $attribute_value){
+                        if($configurable_attributes == '') $configurable_attributes = $attribute_srl;
+                        else $configurable_attributes = $configurable_attributes.'+'.$attribute_srl;
+                    }
+                }
+
+            }
+			$buff = $buff.$configurable_attributes."\r\n";
 		}
         $product_csv_filename = 'products.csv';
         $product_csv_path = sprintf('./files/attach/shop/export-import/%s', $product_csv_filename);
         FileHandler::writeFile($product_csv_path, $buff);
 
-
+        return TRUE;
 	}
 
+    /**
+     * import products from import folder
+     * @author Dan Dragan (dev@xpressengine.org)
+     *
+     * @param $args for module_srl and member_srl
+     *
+     * @return  boolean
+     */
+    public function insertProductsFromImportFolder($params)
+    {
+        $shopModel = getModel('shop');
+        $imageRepository = $shopModel->getImageRepository();
 
+        $csvString = file_get_contents('./files/attach/shop/export-import/products.csv');
+        $csvData = str_getcsv($csvString, "\n");
+        $keys = explode(',',$csvData[0]);
+
+        foreach ($csvData as $idx=>$csvLine){
+            if($idx != 0){
+                $cat = explode(',',$csvLine);
+                foreach($cat as $key=>$value){
+                    if($keys[$key] != ''){
+                        $args[$keys[$key]] = $value;
+                    }
+                }
+                $args = (object) $args;
+                $products[] = $args;
+                unset($args);
+            }
+        }
+
+        foreach($products as $product){
+            $product->module_srl = $params->module_srl;
+            $product->member_srl = $params->member_srl;
+            $product->categories = explode('|',$product->categories);
+            if($product->qty == "") unset($product->qty);
+            if($product->weight == "") unset($product->weight);
+            if($product->parent_product_srl == "") unset($product->parent_product_srl);
+            $atts = explode('|',$product->attributes);
+            unset($product->attributes);
+            foreach($atts as $att){
+               $aux = explode('=',$att);
+               $product->attributes[$aux[0]] = $aux[1];
+            }
+            $images = explode('|',$product->images);
+            unset($product->images);
+            $args = new stdClass();
+            foreach($images as $image){
+                $args->source_filename = sprintf('./files/attach/shop/export-import/images/%s',$image);
+                $args->filename = $image;
+                $new_image = new Image($args);
+                $product->images[] = $new_image;
+            }
+            if($product->product_type == 'simple') {
+                $prod = new SimpleProduct($product);
+            }
+            elseif($product->product_type == 'configurable') {
+                $product->configurable_attributes = explode('+',$product->configurable_attributes);
+                $prod = new ConfigurableProduct($product);
+            }
+            $this->insertProduct($prod);
+            $oProducts[] = $prod;
+        }
+    }
 
 	/**
 	 * Update a product

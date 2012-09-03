@@ -255,11 +255,15 @@
             $attributes = $attributeRepository->getAttributesList($args->module_srl)->attributes;
 
             FileHandler::makeDir('./files/attach/shop/export-import/');
-
-			$productRepository->addProductsToExportFolder($products);
-            $categoryRepository->addCategoriesToExportFolder($categories);
-            $attributeRepository->addAttributesToExportFolder($attributes);
-
+            if(count($products)) $productRepository->addProductsToExportFolder($products);
+            if(count($categories)) $categoryRepository->addCategoriesToExportFolder($categories);
+            if(count($attributes)) $attributeRepository->addAttributesToExportFolder($attributes);
+            if(!count($products) && !count($categories) && !count($attributes)){
+                $this->setMessage("No data to export");
+                $returnUrl = getNotEncodedUrl('', 'act', 'dispShopToolManageProducts');
+                $this->setRedirectUrl($returnUrl);
+                return;
+            }
             $shopModel->includeZipHandler();
 
             ZipHandler::zip('./files/attach/shop/export-import/','./files/attach/shop/export.zip');
@@ -283,9 +287,26 @@
           */
         public function procShopToolImportProducts(){
             $shopModel = $this->model;
+            $args = new stdClass();
+            $args->module_srl = $this->module_info->module_srl;
+            $logged_info = Context::get('logged_info');
+            $args->member_srl = $logged_info->member_srl;
+
             $productRepository = $shopModel->getProductRepository();
             $categoryRepository = $shopModel->getCategoryRepository();
             $attributeRepository = $shopModel->getAttributeRepository();
+
+            $import_file = Context::get('import_file');
+            $zip = new ZipArchive;
+            $res = $zip->open($import_file['tmp_name']);
+            if ($res === TRUE) {
+                $zip->extractTo('./files/attach/shop/export-import/');
+            }
+
+            $categoryRepository->insertCategoriesFromImportFolder($args);
+            $attributeRepository->insertAttributesFromImportFolder($args);
+            $productRepository->insertProductsFromImportFolder($args);
+            exit;
         }
 
 		/*

@@ -170,7 +170,7 @@ class CategoryRepository extends BaseRepository
      *
      * @param array $categories
      *
-     * @return exit after file is ready for download
+     * @return boolean
      */
     public function addCategoriesToExportFolder($categories)
     {
@@ -184,20 +184,71 @@ class CategoryRepository extends BaseRepository
                 else $buff = $buff.$key.",";
             }
         }
-        $buff = $buff."\r\n";
+        $buff = $buff."include_in_navigation_menu\r\n";
         //table values  for categories csv
         foreach($categories as $category){
+            // add image to temp folder
+            $filename = $category->category->filename;
+            $export_filename = sprintf('./files/attach/shop/export-import/images/%s',basename($category->category->filename));
+            FileHandler::copyFile($filename,$export_filename);
+
             foreach($category->category as $key => $value){
-                if(!in_array($key,array('member_srl','module_srl','regdate','last_update','repo','product_count')))
+                if(!in_array($key,array('member_srl','module_srl','regdate','last_update','repo','product_count','filename')))
                 {
                     $buff = $buff.$value.",";
                 }
+                if($key == 'filename'){
+                    $buff = $buff.basename($value).",";
+                }
             }
-            $buff = $buff."\r\n";
+            $buff = $buff.$category->category->include_in_navigation_menu."\r\n";
         }
         $category_csv_filename = 'categories.csv';
         $category_csv_path = sprintf('./files/attach/shop/export-import/%s', $category_csv_filename);
         FileHandler::writeFile($category_csv_path, $buff);
+
+        return TRUE;
+    }
+
+    /**
+     * import categories from import folder
+     * @author Dan Dragan (dev@xpressengine.org)
+     *
+     * @param $args for module_srl
+     *
+     * @return  boolean
+     */
+    public function insertCategoriesFromImportFolder($params)
+    {
+        $csvString = file_get_contents('./files/attach/shop/export-import/categories.csv');
+        $csvData = str_getcsv($csvString, "\n");
+        $keys = explode(',',$csvData[0]);
+
+        foreach ($csvData as $idx=>$csvLine){
+            if($idx != 0){
+                $cat = explode(',',$csvLine);
+                foreach($cat as $key=>$value){
+                    if($keys[$key] != ''){
+                        $args[$keys[$key]] = $value;
+                    }
+                }
+                $args = (object) $args;
+                $categories[] = $args;
+                unset($args);
+            }
+        }
+        $category_ids = new ArrayObject();
+        foreach($categories as $category){
+            $cat = new Category($category);
+            $cat->filename = $this->saveCategoryImage($params->module_srl, $cat->filename,'./files/attach/shop/export-import/images/'.$cat->filename);
+            $cat->module_srl = $params->module_srl;
+            if($cat->parent_srl){
+               $cat->parent_srl = $category_ids[$cat->parent_srl];
+            }
+            $cat->category_srl = $this->insertCategory($cat);
+            $category_ids[$category->id] = $cat->category_srl;
+            $oCategories[] = $cat;
+        }
     }
 
 	/**
