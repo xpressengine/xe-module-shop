@@ -95,7 +95,7 @@ class Cart extends BaseItem
 
     public function getProducts()
     {
-        $output = $this->query('getCartProductsList', array_merge(array('cart_srl'=>$this->cart_srl)));
+        $output = $this->query('getCartAllProducts', array_merge(array('cart_srl'=>$this->cart_srl)));
         foreach ($output->data as $i=>&$data) {
             if ($data->product_srl) {
                 $product = new SimpleProduct($data);
