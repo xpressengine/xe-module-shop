@@ -3,8 +3,12 @@
 <div id="top_menu">
     <!--@if($logged_info)-->
     <span>Welcome {$logged_info->user_id}!</span>
+    <a href="{getURL('','act','dispMemberLogout')}">Logout</a>
+    <!--@else-->
+    <a href="{getURL('','act','dispMemberLoginForm')}">Login</a>
     <!--@end-->
     <a href="{$admin_url}" accesskey="A">Admin Page</a>
+
     <a href="{getURL('act','dispShopToolSelectPaymentMethod')}">Payment test page</a>
     <a href="{getUrl('act', 'procShopToolResetSkin')}" style="color:#bc8f8f; text-decoration: none;" id="reset_skin" title="Ctrl+Shift+S">refresh skin</a>
 </div>
