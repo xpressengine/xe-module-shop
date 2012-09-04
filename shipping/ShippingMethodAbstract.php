@@ -88,4 +88,14 @@ abstract class ShippingMethodAbstract implements ShippingMethodInterface
         return $oTemplate->compile($this->shipping_method_dir, self::$template_file_name);
     }
 
+    /**
+     * Calculates shipping rates
+     *
+     * // TODO Enforce parameter type Address when class is ready
+     *
+     * @param Cart $cart SHipping cart for which to calculate shipping
+     * @param Address $shipping_address Address to which products should be shipped
+     */
+    abstract public function calculateShipping(Cart $cart, $shipping_address);
+
 }

@@ -92,6 +92,19 @@ class Cart extends BaseItem
         throw new Exception('Invalid input for cart identification');
     }
 
+    public function getProducts()
+    {
+        $output = $this->query('getCartProductsList', array_merge(array('cart_srl'=>$this->cart_srl)));
+        foreach ($output->data as $i=>&$data) {
+            if ($data->product_srl) {
+                $product = new SimpleProduct($data);
+                $product->quantity = $data->quantity;
+                $data = $product;
+            }
+            else unset($output->data[$i]);
+        }
+        return $output->data;
+    }
 
     public function getProductsList(array $args=array())
     {

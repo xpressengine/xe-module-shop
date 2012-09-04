@@ -38,4 +38,25 @@ class FlatRateShipping extends ShippingMethodAbstract implements ShippingMethodI
         $this->setType($shipping_info->type);
     }
 
+    /**
+     * Calculates shipping rates
+     *
+     * // TODO Enforce parameter type Address when class is ready
+     *
+     * @param Cart $cart SHipping cart for which to calculate shipping
+     * @param Address $shipping_address Address to which products should be shipped
+     */
+    public function calculateShipping(Cart $cart, $shipping_address)
+    {
+        if($this->getType() == 'per_item')
+        {
+            $products = $cart->getProducts();
+            $total_quantity = 0;
+            foreach($products as $product)
+                $total_quantity += $product->quantity;
+            return $total_quantity * $this->getPrice();
+        }
+
+        return $this->getPrice();
+    }
 }
