@@ -168,7 +168,8 @@ class Cart extends BaseItem
         if (self::validateFormBlock($login = $input['login'])) {
             //login or exception
             return true;
-        } elseif (self::validateFormBlock($billing = $input['billing'])) {
+        }
+        if (self::validateFormBlock($billing = $input['billing'])) {
             $data['billing_address'] = serialize(array(
                 'address' => $billing['address'],
                 'country' => $billing['country'],
@@ -182,9 +183,9 @@ class Cart extends BaseItem
             $data['client_email'] = $billing['email'];
             $data['client_company'] = $billing['company'];
         }
-        elseif (self::validateFormBlock($billing = $input['shipping'])) {
+        if (self::validateFormBlock($billing = $input['shipping'])) {
         }
-        elseif (self::validateFormBlock($billing = $input['payment'])) {
+        if (self::validateFormBlock($billing = $input['payment'])) {
         }
         return empty($data) ? null : $data;
     }
