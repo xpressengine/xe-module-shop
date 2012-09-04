@@ -698,6 +698,14 @@ class shopView extends shop {
         $this->setTemplateFile('cart.html');
 	}
 
+    public function dispShopCheckout()
+    {
+        /** @var $cart Cart */
+        $cartRepo = $this->model->getCartRepository();
+        if (!$cart = Context::get('cart')) throw new Exception('no cart');
+        $this->setTemplateFile('checkout.html');
+    }
+
 	/**
 	 * Returns the javascript code used as datasource for linked dropdowns
 	 */

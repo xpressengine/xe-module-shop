@@ -2,6 +2,7 @@
 
 require_once dirname(__FILE__) . '/../model/Cart.php';
 require_once "BaseRepository.php";
+require_once "OrderRepository.php";
 
 /**
  * Handles database operations for the shopping Cart
@@ -92,6 +93,7 @@ class CartRepository extends BaseRepository
     }
 
     /**
+     * This returns a cart object corresponding for the input parameters or null
      * @return Cart|null
      */
     public function getCart($module_srl=null, $cart_srl=null, $member_srl=null, $session_id=null)

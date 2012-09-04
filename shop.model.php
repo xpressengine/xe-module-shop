@@ -295,6 +295,30 @@ class shopModel extends shop
     }
 
     /**
+     * Returns an instance of the Order repository
+     *
+     * @author Florin Ercus (dev@xpressengine.org)
+     * @return OrderRepository
+     */
+    public function getOrderRepository()
+    {
+        require_once dirname(__FILE__) . '/libs/repositories/OrderRepository.php';
+        return new OrderRepository();
+    }
+
+    /**
+     * Returns an instance of the Address repository
+     *
+     * @author Florin Ercus (dev@xpressengine.org)
+     * @return AddressRepository
+     */
+    public function getAddressRepository()
+    {
+        require_once dirname(__FILE__) . '/libs/repositories/AddressRepository.php';
+        return new AddressRepository();
+    }
+
+    /**
      * Returns an instance of the Guest repository
      *
      * @author Florin Ercus (dev@xpressengine.org)

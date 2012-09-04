@@ -21,6 +21,7 @@ class Cart extends BaseItem
         return $this->cart_srl ? $this->repo->updateCart($this) : $this->repo->insertCart($this);
     }
 
+    #region cart & stuff
     /**
      * @param      $product Product or product_srl
      * @param int  $quantity
@@ -139,6 +140,68 @@ class Cart extends BaseItem
         //TODO: and here
         $this->items = $this->count(true);
         $this->save();
+    }
+    #endregion
+
+    /**
+     * Checkout processor
+     *
+     * @param array $orderData
+     *
+     * @return Order
+     * @throws Exception
+     */
+    public function checkout(array $orderData)
+    {
+        $data = array('cart_srl' => $this->cart_srl, 'module_srl' => $this->module_srl);
+        $data = array_merge( $data, $this->formTranslation($orderData) );
+        $order = new Order($data);
+        $order->save();
+        return $order;
+    }
+
+    private function formTranslation(array $input)
+    {
+        // $data should be in the format compatible with Order's constructor
+        $data = array();
+
+        if (self::validateFormBlock($login = $input['login'])) {
+            //login or exception
+            return true;
+        } elseif (self::validateFormBlock($billing = $input['billing'])) {
+            $data['billing_address'] = serialize(array(
+                'address' => $billing['address'],
+                'country' => $billing['country'],
+                'region'  => $billing['region'],
+                'city'    => $billing['city'],
+                'zip'     => $billing['zip'],
+                'fax'     => $billing['fax'],
+                'phone'   => $billing['phone']
+            ));
+            $data['client_name'] = $billing['firstname'] . ' ' . $billing['lastname'];
+            $data['client_email'] = $billing['email'];
+            $data['client_company'] = $billing['company'];
+        }
+        elseif (self::validateFormBlock($billing = $input['shipping'])) {
+        }
+        elseif (self::validateFormBlock($billing = $input['payment'])) {
+        }
+        return empty($data) ? null : $data;
+    }
+
+
+    /**
+     * @static Used to check if a form block has valid input (ex has any value)
+     *
+     * @param array $array
+     *
+     * @return bool
+     */
+    private static function validateFormBlock(array $array = null)
+    {
+        //Checks if $array has at least one value, but this could get more complex
+        foreach ($array as $val) if ($val) return true;
+        return false;
     }
 
 }

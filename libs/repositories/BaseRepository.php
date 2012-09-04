@@ -4,6 +4,7 @@ abstract class BaseRepository
 
     public function query($name, $params = null, $array=false)
     {
+        if ($params instanceof BaseItem) $params = get_object_vars($params);
         if (!is_array($params) && !($params instanceof stdClass)) throw new Exception('Wrong $params type');
         if (!strpos($name, '.')) $name = "shop.$name";
         if ($params) $params = (object) $params;

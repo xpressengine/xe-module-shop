@@ -1,0 +1,20 @@
+<query id="insertOrder" action="insert">
+    <tables>
+        <table name="shop_order" />
+    </tables>
+    <columns>
+        <column name="order_srl" var="order_srl" filter="number" notnull="notnull" />
+        <column name="cart_srl" var="cart_srl" filter="number" />
+        <column name="module_srl" var="module_srl" filter="number" notnull="notnull" />
+        <column name="billing_address" var="billing_address"/>
+        <column name="shipping_address" var="shipping_address"/>
+        <column name="payment_method" var="payment_method"/>
+        <column name="shipping_method" var="shipping_method"/>
+        <column name="shipping_cost" var="shipping_cost" filter="number"/>
+        <column name="total" var="total"/>
+        <column name="vat" var="vat" filter="number"/>
+        <column name="order_status" var="order_status"/>
+        <column name="ip" var="ip"/>
+        <column name="regdate" var="regdate" default="curdate()"/>
+    </columns>
+</query>

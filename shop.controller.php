@@ -383,6 +383,30 @@
         /*
          * @author Florin Ercus (dev@xpressengine.org)
          */
+        public function procShopToolCheckout()
+        {
+            /* @var CartRepository $cartRepo */
+            $cartRepo = $this->model->getCartRepository();
+            $logged_info = Context::get('logged_info');
+            if ($cart = $cartRepo->getCart($this->module_info->module_srl, null, $logged_info->member_srl, session_id())) {
+
+                //check input arrays
+                if (!is_array(Context::get('login')) || !is_array(Context::get('billing'))) {
+                    throw new Exception('Wrong input parameters for checkout');
+                }
+                $order = $cart->checkout(array(
+                    'login'    => Context::get('login'),
+                    'billing'  => Context::get('billing'),
+                    'shipping' => Context::get('shipping'),
+                    'payment'  => Context::get('payment'),
+                ));
+            }
+            else throw new Exception('No cart');
+        }
+
+        /*
+         * @author Florin Ercus (dev@xpressengine.org)
+         */
         public function procShopToolCartAddProduct() {
             /* @var CartRepository $cartRepository */
             $cartRepository = $this->model->getCartRepository();
@@ -395,13 +419,7 @@
                         throw new Exception('Not a valid product');
                     }
                     $logged_info = Context::get('logged_info');
-                    $module_srl = $this->module_info->module_srl;
-                    if ($member_srl = $logged_info->member_srl) {
-                        $cart = $cartRepository->getCartByMember($member_srl, $module_srl);
-                    }
-                    else {
-                        $cart = $cartRepository->getCartBySessionId(session_id(), $module_srl);
-                    }
+                    $cart = $cartRepository->getCart($this->module_info->module_srl, null, $logged_info->member_srl, session_id());
                     $quantity = (is_numeric(Context::get('quantity')) && Context::get('quantity') > 0 ? Context::get('quantity') : 1);
                     $cart->addProduct($product, $quantity);
                 }
@@ -410,7 +428,6 @@
             }
             else throw new Exception('Missing product friendly_url');
 
-            //$returnUrl = getNotEncodedUrl('', 'act', 'dispShopToolManageAttributes');
             $shop = $this->model->getShop($this->module_srl);
             $returnUrl = getSiteUrl($shop->domain);
             $this->setRedirectUrl($returnUrl);

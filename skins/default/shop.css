@@ -4,8 +4,10 @@
 
 
 /* Element Reset */
+/* removed by Florin (while making the checkout form) because it was affecting too much stuff */
+/*
 html{
-    background:#fff /*url(img/bgHtml.gif)*/
+    background:#fff;
 }
 body{font-family:AppleGothic, Tahoma, Sans-serif;font-size:12px;margin:0;color:#000}
 address{font-style:normal}
@@ -13,6 +15,7 @@ hr{display:none;position:absolute}
 legend{position:absolute;width:0;height:0;font-size:0;line-height:0;visibility:hidden}
 fieldset{border:0;padding:0;margin:0}
 img{border:0}
+*/
 
 /* Pagination Reset */
 .pagination{padding:15px 0;margin:0;text-align:center}
@@ -150,13 +153,12 @@ img{border:0}
     float: right;
     position: relative;
     width: 79%;
-    background-color: #add8e6;
 }
-.mainContent#cart
+
+.mainContent#cart, .mainContent#checkout
 {
-    background: #fff;
     padding: 20px;
-    width: 76%;
+    width: 97%;
 }
 
 #products div.product

@@ -63,6 +63,7 @@
         <action name="dispShopProfile" type="view" />
         <action name="dispShopLogin" type="view" />
         <action name="dispShopCart" type="view" />
+        <action name="dispShopCheckout" type="view" />
 		<action name="dispShopToolLayoutConfigSkin" type="view" />
 		<action name="dispShopToolLayoutConfigEdit" type="view" />
         <action name="dispShopToolManageProducts" type="view" />
@@ -104,6 +105,7 @@
         <action name="procShopCartRemoveProducts" type="controller" />
 		<action name="procShopToolExportProducts" type="controller" />
 		<action name="procShopCartUpdateProducts" type="controller" />
+		<action name="procShopToolCheckout" type="controller" />
         <action name="procShopToolImportProducts" type="controller" ruleset="import_products"/>
 
         <action name="dispShopAdminList" type="view" standalone="true" admin_index="true" />
