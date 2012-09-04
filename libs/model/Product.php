@@ -99,6 +99,21 @@ abstract class Product extends BaseItem
 	{
 		return $this->product_type == 'configurable';
 	}
+
+    /**
+     * Return path to product image
+     */
+    public function getPrimaryImagePath()
+    {
+        if($this->primary_image_filename)
+        {
+            return "./files/attach/images/shop/$this->module_srl/product-images/$this->product_srl/$this->primary_image_filename";
+        }
+        else
+        {
+            return "img/missingProductLarge.png";
+        }
+    }
 }
 
 /**

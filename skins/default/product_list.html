@@ -8,11 +8,7 @@
 <div id="products" class="mainContent">
     <!--@foreach($products as $product)-->
     <div id="product_{$product->product_srl}" class="product {$product->product_type}">
-        <!--@if($product->primary_image_filename)-->
-        <img src="./files/attach/images/shop/{$product->module_srl}/product-images/{$product->product_srl}/{$product->primary_image_filename}" width="150px" height="150px" />
-        <!--@else-->
-        <img src="img/missingProductLarge.png" width="150px" height="150px" />
-        <!--@end-->
+        <img src="{$product->getPrimaryImagePath()}" width="150px" height="150px" />
         <span><a href="{getUrl('vid', $mid, 'act', 'dispShopProduct', 'product_srl', $product->product_srl, 'category_srl', $category_srl)}">{$product->product_srl} - {$product->title}</a></span>
         <span>Price: {$product->price}</span>
 

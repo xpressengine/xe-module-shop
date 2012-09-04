@@ -5,6 +5,8 @@
 <div id="product" class="mainContent">
 	<h2>{$product->title}</h2>
 
+    <img src="{$product->getPrimaryImagePath()}" width="150px" height="150px" />
+
 	<p>{$product->short_description}</p>
 
 	<p>{$product->description}</p>
