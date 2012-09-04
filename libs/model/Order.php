@@ -36,7 +36,7 @@ class Order extends BaseItem
         if ($data) {
             foreach (array('billing_address', 'shipping_address', 'shipping_method', 'payment_method') as $val) {
                 if (!isset($orderData[$val])) {
-                    throw new Exception("Missing $val, can't continue.");
+                    //throw new Exception("Missing $val, can't continue.");
                 }
             }
         }

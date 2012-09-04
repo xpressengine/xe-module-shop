@@ -153,7 +153,7 @@ class Cart extends BaseItem
      */
     public function checkout(array $orderData)
     {
-        $data = array('cart_srl' => $this->cart_srl, 'module_srl' => $this->module_srl);
+        $data = array('cart_srl' => $this->cart_srl, 'module_srl' => $this->module_srl, 'member_srl'=>$this->member_srl);
         $data = array_merge( $data, $this->formTranslation($orderData) );
         $order = new Order($data);
         $order->save();

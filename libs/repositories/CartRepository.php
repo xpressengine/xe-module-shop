@@ -100,7 +100,7 @@ class CartRepository extends BaseRepository
     {
         $params = Cart::validateParamsForUniqueIdentification($module_srl, $cart_srl, $member_srl, $session_id);
         $output = $this->query('getCart', $params);
-        if (empty($output->data)) return null;
+        if (empty($output->data)) return $this->getNewCart($module_srl, $member_srl, $session_id);
         return new Cart($output->data);
     }
 
