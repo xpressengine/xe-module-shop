@@ -303,10 +303,17 @@
                 $zip->extractTo('./files/attach/shop/export-import/');
             }
 
-            $categoryRepository->insertCategoriesFromImportFolder($args);
-            $attributeRepository->insertAttributesFromImportFolder($args);
+            $category_ids = $categoryRepository->insertCategoriesFromImportFolder($args);
+            foreach($category_ids as $key => $id){
+                $args->category_ids[$key]=$id;
+            }
+            $args->attribute_ids = $attributeRepository->insertAttributesFromImportFolder($args);
             $productRepository->insertProductsFromImportFolder($args);
-            exit;
+
+            FileHandler::removeDir('./files/attach/shop/export-import/');
+            $this->setMessage("Products have been successfully imported");
+            $returnUrl = getNotEncodedUrl('', 'act', 'dispShopToolManageProducts');
+            $this->setRedirectUrl($returnUrl);
         }
 
 		/*

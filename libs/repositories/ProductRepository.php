@@ -712,37 +712,66 @@ class ProductRepository extends BaseRepository
                 unset($args);
             }
         }
-
+        $product_ids = new ArrayObject();
         foreach($products as $product){
             $product->module_srl = $params->module_srl;
             $product->member_srl = $params->member_srl;
+
+            //correlate new category srls
             $product->categories = explode('|',$product->categories);
+            unset($new_categories);
+            foreach($product->categories as $category){
+                if(isset($params->category_ids[$category])) $new_categories[] = $params->category_ids[$category];
+            }
+            unset($product->categories);
+            $product->categories = $new_categories;
+
             if($product->qty == "") unset($product->qty);
             if($product->weight == "") unset($product->weight);
             if($product->parent_product_srl == "") unset($product->parent_product_srl);
+
+            //correlate product attributes
             $atts = explode('|',$product->attributes);
             unset($product->attributes);
             foreach($atts as $att){
                $aux = explode('=',$att);
+               $aux[0] = $params->attribute_ids[$aux[0]];
                $product->attributes[$aux[0]] = $aux[1];
             }
+
+            //correleate product images
             $images = explode('|',$product->images);
             unset($product->images);
             $args = new stdClass();
             foreach($images as $image){
                 $args->source_filename = sprintf('./files/attach/shop/export-import/images/%s',$image);
+                $args->file_size = filesize($args->source_filename);
+                if($image == $product->primary_image_filename) $args->is_primary = 'Y';
                 $args->filename = $image;
                 $new_image = new Image($args);
                 $product->images[] = $new_image;
             }
+
             if($product->product_type == 'simple') {
                 $prod = new SimpleProduct($product);
             }
             elseif($product->product_type == 'configurable') {
                 $product->configurable_attributes = explode('+',$product->configurable_attributes);
+                //correlate configurable attributes
+                unset($new_configurable_attributes);
+                foreach($product->configurable_attributes as $configurable_attribute){
+                    if(isset($params->attribute_ids[$configurable_attribute])) $new_configurable_attributes[] = $params->attribute_ids[$configurable_attribute];
+                }
+                unset($product->configurable_attributes);
+                $product->configurable_attributes = $new_configurable_attributes;
                 $prod = new ConfigurableProduct($product);
             }
-            $this->insertProduct($prod);
+            if($prod->parent_product_srl){
+                $prod->parent_product_srl= $product_ids[$prod->parent_product_srl];
+            }
+            $prod->product_srl = $this->insertProduct($prod);
+            $product_ids[$product->id] = $prod->product_srl;
+            $this->updatePrimaryImageFilename($prod);
             $oProducts[] = $prod;
         }
     }

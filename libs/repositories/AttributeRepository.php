@@ -318,14 +318,17 @@ class AttributeRepository extends BaseRepository
             $category_scope = explode('|',$attribute->category_scope);
             unset($attribute->category_scope);
             foreach($category_scope as $scope){
-                $attribute->category_scope[] = $scope;
+                if(isset($params->category_ids[$scope]))$attribute->category_scope[] = $params->category_ids[$scope];
             }
+
             $att = new Attribute($attribute);
             $att->module_srl = $params->module_srl;
             $att->member_srl = $params->member_srl;
             $att->attribute_srl_srl = $this->insertAttribute($att);
+            $attribute_ids[$attribute->id] = $att->attribute_srl;
             $oAttributes[] = $att;
         }
+        return $attribute_ids;
     }
 
     /**

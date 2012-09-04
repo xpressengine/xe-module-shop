@@ -216,7 +216,7 @@ class CategoryRepository extends BaseRepository
      *
      * @param $args for module_srl
      *
-     * @return  boolean
+     * @return  $category_ids correlation
      */
     public function insertCategoriesFromImportFolder($params)
     {
@@ -249,6 +249,7 @@ class CategoryRepository extends BaseRepository
             $category_ids[$category->id] = $cat->category_srl;
             $oCategories[] = $cat;
         }
+        return $category_ids;
     }
 
 	/**
