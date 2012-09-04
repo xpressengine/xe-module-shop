@@ -657,7 +657,7 @@ class ProductRepository extends BaseRepository
                 $images = '';
                 if($key == 'images'){
                     foreach($value as $image){
-                        if($image->flename){
+                        if($image->filename){
                             if($images == '') $images = $product->product_srl.$image->filename;
                             else $images = $images.'|'.$product->product_srl.$image->filename;
                         }
