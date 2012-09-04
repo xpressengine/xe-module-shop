@@ -630,7 +630,7 @@ class ProductRepository extends BaseRepository
 			foreach($product as $key => $value){
 				if(!in_array($key,array('member_srl','module_srl','regdate','last_updated','primary_image','primary_image_filename','repo','categories','attributes','images','associated_products','configurable_attributes')))
 				{
-					$buff = $buff.$value.",";
+					$buff = $buff.str_replace(",",";;",$value).",";
 				}
                 if($key == 'primary_image_filename') {
                     if(isset($product->primary_image_filename)) $buff = $buff.$product->product_srl.$value.",";
@@ -657,8 +657,10 @@ class ProductRepository extends BaseRepository
                 $images = '';
                 if($key == 'images'){
                     foreach($value as $image){
-                        if($images == '') $images = $product->product_srl.$image->filename;
-                        else $images = $images.'|'.$product->product_srl.$image->filename;
+                        if($image->flename){
+                            if($images == '') $images = $product->product_srl.$image->filename;
+                            else $images = $images.'|'.$product->product_srl.$image->filename;
+                        }
                     }
                     $buff = $buff.$images.",";
                 }
@@ -704,7 +706,7 @@ class ProductRepository extends BaseRepository
                 $cat = explode(',',$csvLine);
                 foreach($cat as $key=>$value){
                     if($keys[$key] != ''){
-                        $args[$keys[$key]] = $value;
+                        $args[$keys[$key]] = str_replace(";;",",",$value);
                     }
                 }
                 $args = (object) $args;
