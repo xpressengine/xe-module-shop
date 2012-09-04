@@ -747,6 +747,7 @@ class ProductRepository extends BaseRepository
                 $args->source_filename = sprintf('./files/attach/shop/export-import/images/%s',$image);
                 $args->file_size = filesize($args->source_filename);
                 if($image == $product->primary_image_filename) $args->is_primary = 'Y';
+                else $args->is_primary = 'N';
                 $args->filename = $image;
                 $new_image = new Image($args);
                 $product->images[] = $new_image;
