@@ -40,13 +40,14 @@ class CategoryTest extends Shop_Generic_Tests_DatabaseTestCase
 	 */
 	public function testInsertCategory_ValidData()
 	{
-		// Create new Product category object
-		$category = new Category();
-		$category->module_srl = 2;
-		$category->title = "Product category 1";
-
 		$shopModel = getModel('shop');
 		$repository = $shopModel->getCategoryRepository();
+
+        // Create new Product category object
+        $category = new Category();
+        $category->module_srl = 2;
+        $category->title = "Product category 1";
+
 		try
 		{
 			// Try to insert the new Category
