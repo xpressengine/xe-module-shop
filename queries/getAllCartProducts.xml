@@ -1,0 +1,16 @@
+<query id="getAllCartProducts" action="select">
+    <tables>
+        <table name="shop_cart" alias="c"/>
+        <table name="shop_cart_products" alias="cp" type="left join">
+            <conditions>
+                <condition operation="equal" column="c.cart_srl" default="cp.cart_srl"/>
+            </conditions>
+        </table>
+    </tables>
+    <columns>
+        <column name="cp.*" />
+    </columns>
+    <conditions>
+        <condition operation="equal" column="c.cart_srl" var="cart_srl" notnull="notnull" />
+    </conditions>
+</query>

@@ -77,7 +77,7 @@ class CartRepository extends BaseRepository
         return $this->query('getCartProducts', array('cart_srl' => $cart_srl, 'product_srls' => $product_srls));
     }
 
-    public function deleteCartProducts($cart_srl, array $product_srls)
+    public function deleteCartProducts($cart_srl, array $product_srls=null)
     {
         return $this->query('deleteCartProducts', array('cart_srl' => $cart_srl, 'product_srls' => $product_srls));
     }

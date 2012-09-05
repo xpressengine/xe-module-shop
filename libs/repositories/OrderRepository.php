@@ -19,7 +19,7 @@ class OrderRepository extends BaseRepository
         return $this->query('insertOrder', get_object_vars($order));
     }
 
-    public function update(Cart $order)
+    public function update(Order $order)
     {
         if (!is_numeric($order->order_srl)) throw new Exception('You must specify a srl for the updated order');
         return $this->query('updateOrder', get_object_vars($order));
@@ -43,5 +43,17 @@ class OrderRepository extends BaseRepository
             'cart_srl' => $cart->cart_srl,
         ));
     }
+
+
+    public function insertOrderProduct($order_srl, $product_srl, $quantity = 1)
+    {
+        return $this->query('insertOrderProduct', array('order_srl' => $order_srl, 'product_srl' => $product_srl, 'quantity' => $quantity));
+    }
+
+    public function deleteOrderProducts($order_srl, array $product_srls=null)
+    {
+        return $this->query('deleteOrderProducts', array('order_srl' => $order_srl, 'product_srls' => $product_srls));
+    }
+
 
 }

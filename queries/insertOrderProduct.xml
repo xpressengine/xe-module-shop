@@ -1,0 +1,10 @@
+<query id="insertOrderProduct" action="insert">
+    <tables>
+        <table name="shop_order_products" />
+    </tables>
+    <columns>
+        <column name="order_srl" var="order_srl" filter="number" notnull="notnull"/>
+        <column name="product_srl" var="product_srl" filter="number" notnull="notnull"/>
+        <column name="quantity" var="quantity" default="1" />
+    </columns>
+</query>

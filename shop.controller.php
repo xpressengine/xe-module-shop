@@ -394,7 +394,7 @@
                 if (!is_array(Context::get('login')) || !is_array(Context::get('billing'))) {
                     throw new Exception('Wrong input parameters for checkout');
                 }
-                $order = $cart->checkout(array(
+                $cart->checkout(array(
                     'login'    => Context::get('login'),
                     'billing'  => Context::get('billing'),
                     'shipping' => Context::get('shipping'),

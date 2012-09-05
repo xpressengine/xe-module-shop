@@ -95,7 +95,8 @@ class Cart extends BaseItem
 
     public function getProducts()
     {
-        $output = $this->query('getCartAllProducts', array_merge(array('cart_srl'=>$this->cart_srl)));
+        if (!$this->cart_srl) throw new Exception('Cart is not persisted');
+        $output = $this->query('getCartAllProducts', array('cart_srl'=> $this->cart_srl));
         foreach ($output->data as $i=>&$data) {
             if ($data->product_srl) {
                 $product = new SimpleProduct($data);
@@ -107,8 +108,15 @@ class Cart extends BaseItem
         return $output->data;
     }
 
+    public function getCartProducts()
+    {
+        if (!$this->cart_srl) throw new Exception('Cart is not persisted');
+        return $this->query('getAllCartProducts', array('cart_srl'=> $this->cart_srl))->data;
+    }
+
     public function getProductsList(array $args=array())
     {
+        if (!$this->cart_srl) throw new Exception('Cart is not persisted');
         $output = $this->query('getCartProductsList', array_merge(array('cart_srl'=>$this->cart_srl), $args));
         foreach ($output->data as $i=>&$data) {
             if ($data->product_srl) {
@@ -123,6 +131,7 @@ class Cart extends BaseItem
 
     public function removeProducts(array $product_srls)
     {
+        if (empty($product_srls)) throw new Exception('Empty array $products_srls');
         $output = $this->query('deleteCartProducts', array('cart_srl'=>$this->cart_srl, 'product_srls'=>$product_srls));
         //TODO: optimize queries here
         $this->items = $this->count(true);
@@ -132,6 +141,7 @@ class Cart extends BaseItem
 
     public function updateProducts(array $quantities)
     {
+        if (empty($product_srls)) throw new Exception('Empty array $quantities');
         foreach ($quantities as $product_srl=>$quantity) {
             if (!is_numeric($product_srl) || !is_numeric($quantity)) throw new Exception('Problem with input $quantities array');
             if ($quantity == 0) $this->removeProducts(array($product_srl));
@@ -156,8 +166,22 @@ class Cart extends BaseItem
         $data = array('cart_srl' => $this->cart_srl, 'module_srl' => $this->module_srl, 'member_srl'=>$this->member_srl);
         $data = array_merge( $data, $this->formTranslation($orderData) );
         $order = new Order($data);
+        //for a functional re-checkout (Order update)
+        //@TODO: throw exception?
+        if ($existingOrder = $this->getOrder()) $order->order_srl = $existingOrder->order_srl;
         $order->save();
+        $order->saveCartProducts($this);
         return $order;
+    }
+
+    /**
+     * Gets Order attached to cart or null
+     * @return null|Order
+     */
+    public function getOrder()
+    {
+        $output = $this->query('getCartOrder', array('cart_srl'=>$this->cart_srl));
+        return empty($output->data) ? null : new Order((array) $output->data);
     }
 
     private function formTranslation(array $input)
@@ -200,8 +224,7 @@ class Cart extends BaseItem
      */
     private static function validateFormBlock(array $array = null)
     {
-        //Checks if $array has at least one value, but this could get more complex
-        foreach ($array as $val) if ($val) return true;
+        if ($array) foreach ($array as $val) if ($val) return true;
         return false;
     }
 
