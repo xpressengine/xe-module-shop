@@ -10,9 +10,9 @@
     <column name="shipping_address" type="text"/>
     <column name="payment_method" type="varchar" size="255"/>
     <column name="shipping_method" type="varchar" size="255"/>
-    <column name="shipping_cost" type="number" size="11" notnull="notnull"/>
-    <column name="total" type="number" size="11" notnull="notnull"/>
-    <column name="vat" type="number" size="11" notnull="notnull"/>
+    <column name="shipping_cost" type="number" size="11"/>
+    <column name="total" type="number" size="11"/>
+    <column name="vat" type="number" size="11"/>
     <column name="order_status" type="varchar" size="255"/>
     <column name="ip" type="varchar" size="255"/>
     <column name="regdate" type="date" />
