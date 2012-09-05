@@ -15,6 +15,8 @@
         <permission action="dispShopToolAddAssociatedProducts" target="manager" />
         <permission action="dispShopToolEditProduct" target="manager" />
         <permission action="dispShopToolManageAttributes" target="manager"/>
+        <permission action="dispShopToolManageOrders" target="manager"/>
+        <permission action="dispShopToolViewOrder" target="manager"/>
         <permission action="dispShopToolImportProducts" target="manager"/>
         <permission action="dispShopToolAddAttribute" target="manager"/>
         <permission action="dispShopToolEditAttribute" target="manager"/>
@@ -72,6 +74,8 @@
         <action name="dispShopToolAddAssociatedProducts" type="view" />
         <action name="dispShopToolEditProduct" type="view" />
         <action name="dispShopToolManageAttributes" type="view"/>
+        <action name="dispShopToolManageOrders" type="view"/>
+        <action name="dispShopToolViewOrder" type="view"/>
         <action name="dispShopToolImportProducts" type="view"/>
         <action name="dispShopToolAddAttribute" type="view" />
         <action name="dispShopToolEditAttribute" type="view" />

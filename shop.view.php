@@ -357,6 +357,14 @@ class shopView extends shop {
 		Context::set('user_image_list',$user_image_list);
 	}
 
+    public function dispShopToolManageOrders()
+    {}
+
+    public function dispShopToolViewOrder()
+    {}
+
+
+
 	public function dispShopToolManageAttributes()
 	{
         /** @var $shopModel shopModel */
@@ -705,12 +713,13 @@ class shopView extends shop {
         $shippingRepo = $this->model->getShippingRepository();
         $paymentRepo = $this->model->getPaymentGatewayRepository();
 
-        if (!$cart = Context::get('cart')) throw new Exception('no cart');
+        if ((!$cart = Context::get('cart')) || !$cart->items) throw new Exception('No cart, you shouldn\'t be here');
         $shipping = array();
         /** @var $shippingMethod ShippingMethodAbstract */
         foreach ($shippingRepo->getAvailableShippingMethods() as $shippingMethod) {
             $shipping[$shippingMethod->getCode()] = $shippingMethod->getDisplayName();
         }
+        Context::set('shipping_methods', $shipping);
         $this->setTemplateFile('checkout.html');
     }
 

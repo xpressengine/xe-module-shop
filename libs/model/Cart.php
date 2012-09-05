@@ -21,6 +21,12 @@ class Cart extends BaseItem
         return $this->cart_srl ? $this->repo->updateCart($this) : $this->repo->insertCart($this);
     }
 
+    public function delete()
+    {
+        $this->query('deleteCarts', array('cart_srls' => array($this->cart_srl)));
+        $this->query('deleteCartProducts', array('cart_srl'=> $this->cart_srl));
+    }
+
     #region cart & stuff
     /**
      * @param      $product Product or product_srl
@@ -164,21 +170,19 @@ class Cart extends BaseItem
     public function checkout(array $orderData)
     {
         if (!$this->cart_srl) throw new Exception('Cart is not persisted');
-        $data = array('cart_srl' => $this->cart_srl, 'module_srl' => $this->module_srl, 'member_srl'=>$this->member_srl);
-        $data = array_merge( $data, $this->formTranslation($orderData) );
+        $data = array_merge( $this->formTranslation($orderData), array('cart_srl' => $this->cart_srl, 'module_srl' => $this->module_srl, 'member_srl'=> $this->member_srl) );
         $order = new Order($data);
         if ($existingOrder = $this->getOrder()) {
             throw new Exception('Order already placed for current cart');
         }
         $order->save(); //obtain srl
         $order->saveCartProducts($this);
-        //remove originating cart
-        $order->removeCart();
+        $this->delete();
         return $order;
     }
 
     /**
-     * Gets Order attached to cart or null
+     * retrieves Order attached to cart or null
      * @return null|Order
      */
     public function getOrder()
@@ -197,7 +201,7 @@ class Cart extends BaseItem
             return true;
         }
         if (self::validateFormBlock($billing = $input['billing'])) {
-            $data['billing_address'] = serialize(array(
+            $data['billing_address'] = json_encode(array(
                 'address' => $billing['address'],
                 'country' => $billing['country'],
                 'region'  => $billing['region'],
@@ -210,9 +214,10 @@ class Cart extends BaseItem
             $data['client_email'] = $billing['email'];
             $data['client_company'] = $billing['company'];
         }
-        if (self::validateFormBlock($billing = $input['shipping'])) {
+        if (self::validateFormBlock($shipping = $input['shipping'])) {
+            $data['shipping_method'] = $shipping['method'];
         }
-        if (self::validateFormBlock($billing = $input['payment'])) {
+        if (self::validateFormBlock($payment = $input['payment'])) {
         }
         return empty($data) ? null : $data;
     }

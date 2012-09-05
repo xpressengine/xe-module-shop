@@ -94,6 +94,12 @@
         <fieldset id="shipping">
             <input type="hidden" name="marker[shipping]" value="false">
             <legend>Shipping</legend>
+            <label for="shipping_method">method</label>
+            <select name="shipping[method]" id="shipping_method">
+                <!--@foreach($shipping_methods as $value=>$name)-->
+                <option value="{$value}">{$name}</option>
+                <!--@endforeach-->
+            </select>
         </fieldset>
 
         <fieldset id="payment">

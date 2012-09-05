@@ -93,7 +93,7 @@ class CartRepository extends BaseRepository
     }
 
     /**
-     * This returns a cart object corresponding for the input parameters or null
+     * This returns a cart object corresponding for the input parameters or creates a new cart
      * @return Cart|null
      */
     public function getCart($module_srl=null, $cart_srl=null, $member_srl=null, $session_id=null)
@@ -101,6 +101,18 @@ class CartRepository extends BaseRepository
         $params = Cart::validateParamsForUniqueIdentification($module_srl, $cart_srl, $member_srl, $session_id);
         $output = $this->query('getCart', $params);
         if (empty($output->data)) return $this->getNewCart($module_srl, $member_srl, $session_id);
+        return new Cart($output->data);
+    }
+
+    /**
+     * Returns a cart object corresponding for the input parameters or null
+     * @return Cart|null
+     */
+    public function hasCart($module_srl=null, $cart_srl=null, $member_srl=null, $session_id=null)
+    {
+        $params = Cart::validateParamsForUniqueIdentification($module_srl, $cart_srl, $member_srl, $session_id);
+        $output = $this->query('getCart', $params);
+        if (empty($output->data)) return null;
         return new Cart($output->data);
     }
 

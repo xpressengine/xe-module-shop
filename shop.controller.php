@@ -388,8 +388,7 @@
             /* @var CartRepository $cartRepo */
             $cartRepo = $this->model->getCartRepository();
             $logged_info = Context::get('logged_info');
-            if ($cart = $cartRepo->getCart($this->module_info->module_srl, null, $logged_info->member_srl, session_id())) {
-
+            if ($cart = $cartRepo->hasCart($this->module_info->module_srl, null, $logged_info->member_srl, session_id())) {
                 //check input arrays
                 if (!is_array(Context::get('login')) || !is_array(Context::get('billing'))) {
                     throw new Exception('Wrong input parameters for checkout');

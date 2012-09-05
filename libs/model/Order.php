@@ -47,19 +47,12 @@ class Order extends BaseItem
     {
         if (!$this->order_srl) throw new Exception('Order not persisted');
         if (!$cart->cart_srl) throw new Exception('Cart not persisted');
-        if (!$this->cart_srl) throw new Exception('No cart attached to order');
         //remove all already existing links
         $this->repo->deleteOrderProducts($this->order_srl);
         //set the new links
         foreach ($cart->getCartProducts() as $cp) {
             $this->repo->insertOrderProduct($this->order_srl, $cp->product_srl, $cp->quantity);
         }
-    }
-
-    public function removeCart()
-    {
-        if (!$this->cart_srl) throw new Exception('No cart_srl');
-        return $this->query('deleteCarts', array('cart_srls' => array($this->cart_srl)));
     }
 
 }
