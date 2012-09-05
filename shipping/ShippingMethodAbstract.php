@@ -27,12 +27,12 @@ abstract class ShippingMethodAbstract implements ShippingMethodInterface
 
     public function getName()
     {
-        return $this->shipping_info->name;
+        return (string) $this->shipping_info->name;
     }
 
     public function getCode()
     {
-        return $this->shipping_info->code;
+        return (string) $this->shipping_info->code;
     }
 
     public function isActive()
@@ -48,7 +48,7 @@ abstract class ShippingMethodAbstract implements ShippingMethodInterface
 
     public function getDisplayName()
     {
-        return $this->shipping_info->display_name;
+        return (string) $this->shipping_info->display_name;
     }
 
     private function setDisplayName($display_name)

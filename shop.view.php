@@ -701,8 +701,16 @@ class shopView extends shop {
     public function dispShopCheckout()
     {
         /** @var $cart Cart */
-        $cartRepo = $this->model->getCartRepository();
+        $this->model->getCartRepository();
+        $shippingRepo = $this->model->getShippingRepository();
+        $paymentRepo = $this->model->getPaymentGatewayRepository();
+
         if (!$cart = Context::get('cart')) throw new Exception('no cart');
+        $shipping = array();
+        /** @var $shippingMethod ShippingMethodAbstract */
+        foreach ($shippingRepo->getAvailableShippingMethods() as $shippingMethod) {
+            $shipping[$shippingMethod->getCode()] = $shippingMethod->getDisplayName();
+        }
         $this->setTemplateFile('checkout.html');
     }
 

@@ -167,10 +167,12 @@ class Cart extends BaseItem
         $data = array_merge( $data, $this->formTranslation($orderData) );
         $order = new Order($data);
         //for a functional re-checkout (Order update)
-        //@TODO: throw exception?
+        //@TODO: throw exception in case order's already placed?
         if ($existingOrder = $this->getOrder()) $order->order_srl = $existingOrder->order_srl;
         $order->save();
         $order->saveCartProducts($this);
+        //TODO: remove cart
+        $order->removeCart();
         return $order;
     }
 

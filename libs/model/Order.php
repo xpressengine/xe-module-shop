@@ -56,4 +56,10 @@ class Order extends BaseItem
         }
     }
 
+    public function removeCart()
+    {
+        if (!$this->cart_srl) throw new Exception('No cart_srl');
+        return $this->query('deleteCarts', array('cart_srls' => array($this->cart_srl)));
+    }
+
 }
