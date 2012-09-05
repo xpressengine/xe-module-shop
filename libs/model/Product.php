@@ -111,7 +111,7 @@ abstract class Product extends BaseItem
         }
         else
         {
-            return "img/missingProductLarge.png";
+            return "./files/attach/shop/$this->module_srl/img/missingProduct.png";
         }
     }
 }
