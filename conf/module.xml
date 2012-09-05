@@ -82,6 +82,9 @@
         <action name="dispShopToolManagePaymentGateways" type="view" />
     	<action name="dispShopToolDashboard" type="view" />
 		<action name="dispShopMenu" type="view" />
+        <action name="dispShopMyAccount" type="view" />
+        <action name="dispShopAddressBook" type="view" />
+        <action name="dispShopAddAddress" type="view" />
 
 
         <action name="procShopLogin" type="controller" ruleset="shop_login" />
@@ -89,6 +92,8 @@
 		<action name="procShopProfileUpdate" type="controller" />
 		<action name="procShopProfileImageUpload" type="controller" />
 		<action name="procShopInfoUpdate" type="controller" />
+        <action name="procShopAddAddress" type="controller" ruleset="add_address" />
+
 		<action name="procShopToolLayoutConfigSkin" type="controller" />
 		<action name="procShopToolLayoutConfigMobileSkin" type="controller" />
 		<action name="procShopToolLayoutConfigEdit" type="controller" />

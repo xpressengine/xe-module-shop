@@ -12,10 +12,12 @@ class Address extends BaseItem
         $region,
         $city,
         $postal_code,
-        $phone,
+        $telephone,
         $fax,
-        $type,
-        $info,
+        $company,
+        $default_shipping,
+        $default_billing,
+        $additional_info,
         $regdate,
         $last_update;
 

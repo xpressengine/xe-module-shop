@@ -1,0 +1,24 @@
+<!--
+    My account page
+-->
+<include target="_header.html" />
+<include target="_my_account_sidebar.html" />
+
+<div cond="$XE_VALIDATOR_MESSAGE" class="message {$XE_VALIDATOR_MESSAGE_TYPE}">
+    <p>{$XE_VALIDATOR_MESSAGE}</p>
+</div>
+
+<div id="my_account" class="mainContent">
+    <h1>Address book</h1>
+    <!--@if(Context::get('act') == 'dispShopAddAddress')-->
+    <include target="address_form.html" />
+    <!--@else-->
+    <a href="{getURL('','act','dispShopAddAddress')}">Add a new address</a>
+
+    <h3>Default shipping address</h3>
+
+    <h3>Default billing address</h3>
+    <!--@end-->
+</div>
+
+<include target="_footer.html"/>

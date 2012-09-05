@@ -1428,8 +1428,8 @@ CREATE TABLE IF NOT EXISTS `xe_shop` (
 -- Structura de tabel pentru tabelul `xe_shop_address`
 --
 
-DROP TABLE IF EXISTS `xe_shop_address`;
-CREATE TABLE IF NOT EXISTS `xe_shop_address` (
+DROP TABLE IF EXISTS `xe_shop_addresses`;
+CREATE TABLE IF NOT EXISTS `xe_shop_addresses` (
   `address_srl` bigint(11) NOT NULL,
   `member_srl` bigint(11) DEFAULT NULL,
   `address` varchar(255) NOT NULL,

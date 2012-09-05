@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ruleset version="1.5.0">
+    <customrules>
+    </customrules>
+    <fields>
+        <field name="address" required="true" />
+        <field name="city" required="true"  />
+        <field name="region" required="true"  />
+        <field name="country" required="true"  />
+        <field name="telephone" required="true" rule="number"/>
+        <field name="fax" required="true" rule="number"/>
+        <field name="postal_code" required="true"  />
+    </fields>
+</ruleset>

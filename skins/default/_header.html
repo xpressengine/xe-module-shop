@@ -4,6 +4,7 @@
     <!--@if($logged_info)-->
     <span>Welcome {$logged_info->user_id}!</span>
     <a href="{getURL('','act','dispMemberLogout')}">Logout</a>
+    <a href="{getURL('','act','dispShopMyAccount')}">My Account</a>
     <!--@else-->
     <a href="{getURL('','act','dispMemberLoginForm')}">Login</a>
     <!--@end-->

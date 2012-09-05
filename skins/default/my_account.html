@@ -1,0 +1,13 @@
+<!--
+    My account page
+-->
+<include target="_header.html" />
+<include target="_my_account_sidebar.html" />
+
+<div id="my_account" class="mainContent">
+    <h3>My Dashboard</h3>
+    {var_dump(Context::get('logged_info'))}
+
+</div>
+
+<include target="_footer.html"/>

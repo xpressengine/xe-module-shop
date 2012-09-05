@@ -72,6 +72,18 @@
 			$this->setRedirectUrl($returnUrl);
         }
 
+        public function procShopAddAddress() {
+            $shopModel = getModel('shop');
+            $addressRepository = $shopModel->getAddressRepository();
+
+            $args = Context::getRequestVars();
+            $logged_info = Context::get('logged_info');
+            $args->member_srl = $logged_info->member_srl;
+
+            $address = new Address($args);
+            $addressRepository->insert($address);
+        }
+
 
         public function updateShop($args){
             $output = executeQuery('shop.updateShop', $args);

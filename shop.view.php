@@ -688,6 +688,18 @@ class shopView extends shop {
 		$this->setTemplateFile('product.html');
 	}
 
+    public function dispShopMyAccount(){
+        $this->setTemplateFile('my_account.html');
+    }
+
+    public function dispShopAddressBook(){
+        $this->setTemplateFile('address_book.html');
+    }
+
+    public function dispShopAddAddress(){
+        $this->setTemplateFile('address_book.html');
+    }
+
 	public function dispShopCart()
 	{
         /** @var $cart Cart */

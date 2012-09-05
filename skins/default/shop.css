@@ -123,11 +123,27 @@ img{border:0}
     padding: 10px;
 }
 
-#categories
+.sidebar
 {
     width: 20%;
     float: left;
     background-color: #fafad2;
+}
+
+#my_account_sidebar{
+    width: 20%;
+    float: left;
+    background-color: #fafad2;
+}
+
+#my_account_sidebar ul{
+    list-style-type: none;
+    margin-top: 5px;
+}
+
+#my_account_sidebar li{
+    padding: 5px 0;
+    padding-left: 10px;
 }
 
 #categories ul
@@ -216,4 +232,16 @@ img{border:0}
 }
 #cart tr.bottom {
     font-weight: bold;
+}
+
+#checkout fieldset {
+    border-top: 1px dashed black;
+    border-bottom: 0px;
+    border-left: 0px;
+    border-right: 0px;
+    margin: 20px 0 30px 0;
+}
+#checkout form#big {
+    margin: 20px 0 0 0;
+    display: block;
 }
