@@ -143,7 +143,7 @@ jQuery(function () {
 
     </fieldset>
 
-    <div class="checkout">proceed to <a href="{getUrl('act','dispShopCheckout')}">checkout</a>?</div>
+    <div class="checkout" cond="$cart->items">proceed to <a href="{getUrl('act','dispShopCheckout')}">checkout</a>?</div>
 
 </div>
 

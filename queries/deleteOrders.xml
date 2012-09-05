@@ -1,6 +1,6 @@
 <query id="deleteOrders" action="delete">
     <tables>
-        <table name="shop_order"/>
+        <table name="shop_orders"/>
     </tables>
     <conditions>
         <condition operation="in" column="order_srl" var="order_srls" />

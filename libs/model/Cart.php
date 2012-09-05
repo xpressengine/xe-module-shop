@@ -163,15 +163,16 @@ class Cart extends BaseItem
      */
     public function checkout(array $orderData)
     {
+        if (!$this->cart_srl) throw new Exception('Cart is not persisted');
         $data = array('cart_srl' => $this->cart_srl, 'module_srl' => $this->module_srl, 'member_srl'=>$this->member_srl);
         $data = array_merge( $data, $this->formTranslation($orderData) );
         $order = new Order($data);
-        //for a functional re-checkout (Order update)
-        //@TODO: throw exception in case order's already placed?
-        if ($existingOrder = $this->getOrder()) $order->order_srl = $existingOrder->order_srl;
-        $order->save();
+        if ($existingOrder = $this->getOrder()) {
+            throw new Exception('Order already placed for current cart');
+        }
+        $order->save(); //obtain srl
         $order->saveCartProducts($this);
-        //TODO: remove cart
+        //remove originating cart
         $order->removeCart();
         return $order;
     }

@@ -1,6 +1,6 @@
 <query id="updateOrder" action="update">
     <tables>
-        <table name="shop_order" />
+        <table name="shop_orders" />
     </tables>
     <columns>
         <column name="cart_srl" var="cart_srl" filter="number"/>

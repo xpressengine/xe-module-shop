@@ -1,6 +1,6 @@
 <query id="insertOrder" action="insert">
     <tables>
-        <table name="shop_order" />
+        <table name="shop_orders" />
     </tables>
     <columns>
         <column name="order_srl" var="order_srl" filter="number" notnull="notnull" />

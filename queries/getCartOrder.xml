@@ -1,6 +1,6 @@
 <query id="getCartOrder" action="select">
     <tables>
-        <table name="shop_order" />
+        <table name="shop_orders" />
     </tables>
     <columns></columns>
     <conditions>
