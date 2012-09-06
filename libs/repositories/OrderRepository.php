@@ -12,6 +12,15 @@ require_once "CartRepository.php";
 class OrderRepository extends BaseRepository
 {
 
+    public function getList($module_srl, $member_srl=null)
+    {
+        $params = array('module_srl'=> $module_srl);
+        if ($member_srl) $params = array_merge($params, array('member_srl'=> $member_srl));
+        $output = $this->query('getOrdersList', $params);
+        foreach ($output->data as $i=>$data) $output->data[$i] = new Order((array) $data);
+        return $output;
+    }
+
     public function insert(Order &$order)
     {
         if ($order->order_srl) throw new Exception('A srl must NOT be specified for the insert operation!');
@@ -53,6 +62,12 @@ class OrderRepository extends BaseRepository
     public function deleteOrderProducts($order_srl, array $product_srls=null)
     {
         return $this->query('deleteOrderProducts', array('order_srl' => $order_srl, 'product_srls' => $product_srls));
+    }
+
+    public function getOrderBySrl($srl)
+    {
+        $output = $this->query('getOrderBySrl', array('order_srl'=> $srl));
+        return empty($output->data) ? null : new Order((array) $output->data);
     }
 
 

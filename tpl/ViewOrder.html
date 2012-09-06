@@ -1,0 +1,21 @@
+<!--#include("_tool_header.html")-->
+
+<div id="content">
+    <div class="dashboardHeader">
+        <h3 class="h3">Order {$order->order_srl}</h3>
+    </div>
+    <div cond="$XE_VALIDATOR_MESSAGE" class="message {$XE_VALIDATOR_MESSAGE_TYPE}">
+        <p>{$XE_VALIDATOR_MESSAGE}</p>
+    </div>
+
+    <pre>
+{print_r($order)}
+</pre>
+
+    <a href="{getUrl('act', 'dispShopToolManageOrders')}">Back to orders</a>
+
+</div>
+
+<!--#include("_tool_menu.html")-->
+
+<!--#include("_tool_footer.html")-->

@@ -43,16 +43,20 @@ class Order extends BaseItem
         parent::__construct($data);
     }
 
-    public function saveCartProducts(Cart $cart)
+    public function saveCartProducts(Cart $cart, $calculateTotal=true)
     {
         if (!$this->order_srl) throw new Exception('Order not persisted');
         if (!$cart->cart_srl) throw new Exception('Cart not persisted');
         //remove all already existing links
         $this->repo->deleteOrderProducts($this->order_srl);
         //set the new links
+        $total = 0;
         foreach ($cart->getCartProducts() as $cp) {
             $this->repo->insertOrderProduct($this->order_srl, $cp->product_srl, $cp->quantity);
+            $total += $cp->quantity * $cp->price;
         }
+        $this->total = $total;
+        if ($calculateTotal) $this->save();
     }
 
 }

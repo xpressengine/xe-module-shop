@@ -358,10 +358,21 @@ class shopView extends shop {
 	}
 
     public function dispShopToolManageOrders()
-    {}
+    {
+        $repo = $this->model->getOrderRepository();
+        $orders = $repo->getList($this->module_info->module_srl);
+        Context::set('orders', $orders->data);
+        Context::set('page_navigation', $orders->page_navigation);
+    }
 
     public function dispShopToolViewOrder()
-    {}
+    {
+        $repo = $this->model->getOrderRepository();
+        if ($order = $repo->getOrderBySrl(Context::get('order_srl'))) {
+            Context::set('order', $order);
+        }
+        else throw new Exception('No such order');
+    }
 
 
 
