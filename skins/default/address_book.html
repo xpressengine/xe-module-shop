@@ -17,43 +17,61 @@
     <!--@else-->
         <h1>Address book</h1>
         <a href="{getURL('','act','dispShopAddAddress')}">Add a new address</a>
-
-        <h3>Default shipping address</h3>
-        <!--@if(isset($addresses->default_shipping))-->
-        <div id="default_shipping">
-            <b>Company:</b>{$addresses->default_shipping->company}
-            <b>Telephone:</b>{$addresses->default_shipping->telephone}
-            <b>Fax:</b>{$addresses->default_shipping->fax}
-            <b>Address:</b>{$addresses->default_shipping->address}
-            <b>Additional Info:</b>{$addresses->default_shipping->additional_info}
-            <b>City:</b>{$addresses->default_shipping->city}
-            <b>Region:</b>{$addresses->default_shipping->region}
-            <b>Postal Code:</b>{$addresses->default_shipping->postal_code}
-            <b>Country:</b>{$addresses->default_shipping->country}
-            <a href="{getURL('','act','dispShopEditAddress','address_srl',$addresses->default_shipping->address_srl)}">Edit</a>
-        </div>
+        <!--@if($addresses->default_shipping->address_srl == $addresses->default_billing->address_srl && isset($addresses->default_shipping))-->
+            <h3>Default shipping and billing address</h3>
+            <!--@if(isset($addresses->default_shipping))-->
+            <div id="default_shipping_billing">
+                <b>Company:</b>{$addresses->default_shipping->company}
+                <b>Telephone:</b>{$addresses->default_shipping->telephone}
+                <b>Fax:</b>{$addresses->default_shipping->fax}
+                <b>Address:</b>{$addresses->default_shipping->address}
+                <b>Additional Info:</b>{$addresses->default_shipping->additional_info}
+                <b>City:</b>{$addresses->default_shipping->city}
+                <b>Region:</b>{$addresses->default_shipping->region}
+                <b>Postal Code:</b>{$addresses->default_shipping->postal_code}
+                <b>Country:</b>{$addresses->default_shipping->country}
+                <a href="{getURL('','act','dispShopEditAddress','address_srl',$addresses->default_shipping->address_srl)}">Edit</a>
+            </div>
+            <!--@end-->
         <!--@else-->
-        Not yet set
+            <h3>Default shipping address</h3>
+            <!--@if(isset($addresses->default_shipping))-->
+            <div id="default_shipping">
+                <b>Company:</b>{$addresses->default_shipping->company}
+                <b>Telephone:</b>{$addresses->default_shipping->telephone}
+                <b>Fax:</b>{$addresses->default_shipping->fax}
+                <b>Address:</b>{$addresses->default_shipping->address}
+                <b>Additional Info:</b>{$addresses->default_shipping->additional_info}
+                <b>City:</b>{$addresses->default_shipping->city}
+                <b>Region:</b>{$addresses->default_shipping->region}
+                <b>Postal Code:</b>{$addresses->default_shipping->postal_code}
+                <b>Country:</b>{$addresses->default_shipping->country}
+                <a href="{getURL('','act','dispShopEditAddress','address_srl',$addresses->default_shipping->address_srl)}">Edit</a>
+            </div>
+            <!--@else-->
+            Not yet set
+            <!--@end-->
+
+
+            <h3>Default billing address</h3>
+            <!--@if(isset($addresses->default_billing))-->
+            <div id="default_billing">
+                <b>Company:</b>{$addresses->default_billing->company}
+                <b>Telephone:</b>{$addresses->default_billing->telephone}
+                <b>Fax:</b>{$addresses->default_billing->fax}
+                <b>Address:</b>{$addresses->default_billing->address}
+                <b>Additional Info:</b>{$addresses->default_billing->additional_info}
+                <b>City:</b>{$addresses->default_billing->city}
+                <b>Region:</b>{$addresses->default_billing->region}
+                <b>Postal Code:</b>{$addresses->default_billing->postal_code}
+                <b>Country:</b>{$addresses->default_billing->country}
+                <a href="{getURL('','act','dispShopEditAddress','address_srl',$addresses->default_billing->address_srl)}">Edit</a>
+            </div>
+            <!--@else-->
+            Not yet set
+            <!--@end-->
         <!--@end-->
 
-
-        <h3>Default billing address</h3>
-        <!--@if(isset($addresses->default_billing))-->
-        <div id="default_billing">
-            <b>Company:</b>{$addresses->default_billing->company}
-            <b>Telephone:</b>{$addresses->default_billing->telephone}
-            <b>Fax:</b>{$addresses->default_billing->fax}
-            <b>Address:</b>{$addresses->default_billing->address}
-            <b>Additional Info:</b>{$addresses->default_billing->additional_info}
-            <b>City:</b>{$addresses->default_billing->city}
-            <b>Region:</b>{$addresses->default_billing->region}
-            <b>Postal Code:</b>{$addresses->default_billing->postal_code}
-            <b>Country:</b>{$addresses->default_billing->country}
-            <a href="{getURL('','act','dispShopEditAddress','address_srl',$addresses->default_billing->address_srl)}">Edit</a>
-        </div>
-        <!--@else-->
-        Not yet set
-        <!--@end-->
 
         <h3>Addition addresses</h3>
         <!--@if(isset($addresses->additional_addresses))-->
