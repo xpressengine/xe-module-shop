@@ -23,11 +23,11 @@
                 window.location.reload();
             });
         });
-        $(window).keypress(function(e) {
-            if (!(e.which == 114 && e.ctrlKey && e.shiftKey) && !(e.which == 19) && !(e.which == 83)) return true;
-            $('#reset_skin').click();
-            e.preventDefault();
-            return false;
+        $(window).keydown(function(e) {
+            if (e.which == 83 && e.shiftKey && e.ctrlKey) {
+                e.preventDefault();
+                $('#reset_skin').click();
+            }
         });
     });
 
