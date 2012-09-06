@@ -922,32 +922,24 @@
 
             $name = Context::get('name');
 
-            if ($name != '') {
-
-                $shopModel = $this->model;
-                $repository = $shopModel->getPaymentGatewayRepository();
-
-                $pg = new PaymentGateway();
-                $pg->status = 1;
-                $pg->name = $name;
-
-                $args = new stdClass();
-                $args->name = $name;
-                $gatewayData = $repository->getGateway($args);
-
-                // if we cannot find the selected gateway we insert it else we update it
-                if ($gatewayData) {
-
-                    $repository->updatePaymentGatewayStatus($pg);
-
-                } else {
-
-                    $repository->insertPaymentGateway($pg);
-
-                }
-
+            if(!$name)
+            {
+                return new Object(-1, 'msg_invalid_request');
             }
 
+            /**
+             * @var shopModel $shopModel
+             */
+            $shopModel = getModel('shop');
+            $payment_repository = $shopModel->getPaymentGatewayRepository();
+
+            $gateway = new PaymentGateway();
+            $gateway->name = $name;
+            $gateway->status = 1;
+
+            $payment_repository->updatePaymentGateway($gateway);
+
+            $vid = Context::get('vid');
             $returnUrl = getNotEncodedUrl('', 'vid', $vid, 'act', 'dispShopToolManagePaymentGateways');
             $this->setRedirectUrl($returnUrl);
         }
@@ -961,19 +953,24 @@
 
             $name = Context::get('name');
 
-            if ($name != '') {
-
-                $shopModel = $this->model;
-                $repository = $shopModel->getPaymentGatewayRepository();
-
-                $gateway = new PaymentGateway();
-                $gateway->name = $name;
-                $gateway->status = 0;
-
-                $repository->updatePaymentGatewayStatus($gateway);
-
+            if(!$name)
+            {
+                return new Object(-1, 'msg_invalid_request');
             }
 
+            /**
+             * @var shopModel $shopModel
+             */
+            $shopModel = getModel('shop');
+            $payment_repository = $shopModel->getPaymentGatewayRepository();
+
+            $gateway = new PaymentGateway();
+            $gateway->name = $name;
+            $gateway->status = 0;
+
+            $payment_repository->updatePaymentGateway($gateway);
+
+            $vid = Context::get('vid');
             $returnUrl = getNotEncodedUrl('', 'vid', $vid, 'act', 'dispShopToolManagePaymentGateways');
             $this->setRedirectUrl($returnUrl);
 

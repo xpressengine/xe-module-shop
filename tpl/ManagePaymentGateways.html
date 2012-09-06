@@ -46,19 +46,19 @@
             </tr>
         </thead>
         <tbody>
-        <!--@if(count((array)$gatewayManager))-->
-            <!--@foreach($gatewayManager->allGateways as $obj)-->
+        <!--@if(count((array)$payment_methods))-->
+            <!--@foreach($payment_methods as $obj)-->
                 <tr>
                     <td>
-                        <input type="checkbox" name="product_srl" value="{$product->product_srl}" class="inputCheck boxlist" />
+                        <input type="checkbox" name="payment_method_srl" value="" class="inputCheck boxlist" />
                     </td>
                     <td>
                         <span class="btnGray medium"><a class="pg" href="#">{$lang->gateway_settings}</a></span>
                     </td>
                     <td>
-                        {$obj->name}
+                        {$obj->display_name}
                         <div class="pgSettings">
-                            {@$obj->loadAdminTemplate();}
+
                         </div>
                     </td>
                     <td>

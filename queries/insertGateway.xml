@@ -3,7 +3,9 @@
         <table name="shop_payment_gateways" />
     </tables>
     <columns>
+        <column name="id" var="id" filter="number" />
         <column name="name" var="name" notnull="notnull" />
+        <column name="display_name" var="display_name" filter="varchar" />
         <column name="status" var="status" filter="number" />
     </columns>
 </query>

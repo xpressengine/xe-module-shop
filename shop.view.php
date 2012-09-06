@@ -862,18 +862,15 @@ class shopView extends shop {
 			 */
 	public function dispShopToolManagePaymentGateways()
 	{
-
 		// get gateways
 		/**
 		 * @var shopModel $shopModel
 		 */
 		$shopModel = getModel('shop');
 		$repository = $shopModel->getPaymentGatewayRepository();
-		$gatewayManager = $shopModel->getPaymentGatewayManager();
-		$gatewayManager->allGateways = $gatewayManager->getAllGateways();
+        $payment_methods = $repository->getAvailablePaymentMethods();
 
-		Context::set('gatewayManager',$gatewayManager);
-
+		Context::set('payment_methods',$payment_methods);
 	}
 
 	/*
