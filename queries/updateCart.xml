@@ -7,7 +7,6 @@
         <column name="member_srl" var="member_srl" filter="number"/>
         <column name="session_id" var="session_id"/>
         <column name="items" var="items" filter="number"/>
-        <column name="regdate" var="regdate" default="curdate()"/>
         <column name="last_update" var="last_update" default="curdate()"/>
     </columns>
     <conditions>

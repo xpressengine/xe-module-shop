@@ -10,7 +10,6 @@
         <column name="status" var="status" />
         <column name="values" var="values" />
         <column name="default_value" var="default_value" />
-        <column name="regdate" var="regdate" default="curdate()" />
         <column name="last_update" var="last_update" default="curdate()" />
     </columns>
     <conditions>
