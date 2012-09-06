@@ -79,16 +79,37 @@
             $args = Context::getRequestVars();
             $logged_info = Context::get('logged_info');
             $args->member_srl = $logged_info->member_srl;
-
+            if($args->first_address == 'Y') {
+                $args->default_billing = 'Y';
+                $args->default_shipping = 'Y';
+            }
             $address = new Address($args);
             if($address->default_billing == 'Y') {
                 $addressRepository->unsetDefaultBillingAddress($args->member_srl);
             }
             if($address->default_shipping == 'Y') $addressRepository->unsetDefaultShippingAddress($args->member_srl);
+            if($address->address_srl){
+                $addressRepository->update($address);
+                $this->setMessage("Address has been updated successfully");
+            }else {
+                $addressRepository->insert($address);
+                $this->setMessage("Address has been saved successfully");
+            }
 
-            $addressRepository->insert($address);
 
-            $this->setMessage("Address has been saved succesfully");
+
+            $returnUrl = getNotEncodedUrl('', 'act', 'dispShopAddressBook');
+            $this->setRedirectUrl($returnUrl);
+        }
+
+        public function procShopDeleteAddress(){
+            $shopModel = getModel('shop');
+            $addressRepository = $shopModel->getAddressRepository();
+
+            $address_srl = Context::get('address_srl');
+            $addressRepository->deleteAddress($address_srl);
+
+            $this->setMessage("Address has been deleted succesfully");
             $returnUrl = getNotEncodedUrl('', 'act', 'dispShopAddressBook');
             $this->setRedirectUrl($returnUrl);
         }

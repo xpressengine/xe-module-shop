@@ -5,6 +5,7 @@
     <column name="country" type="varchar" size="45"/>
     <column name="region" type="varchar" size="45"/>
     <column name="city" type="varchar" size="45"/>
+    <column name="company" type="varchar" size="100"/>
     <column name="postal_code" type="varchar" size="45"/>
     <column name="telephone" type="varchar" size="45"/>
     <column name="fax" type="varchar" size="45"/>

@@ -9,13 +9,17 @@
 </div>
 
 <div id="my_account" class="mainContent">
-    <h1>Address book</h1>
-    <!--@if(Context::get('act') == 'dispShopAddAddress' || $addresses->count == 0)-->
+    <!--@if(Context::get('act') == 'dispShopAddAddress' || Context::get('act') == 'dispShopEditAddress' ||$addresses->count == 0)-->
+        <!--@if(isset($addresses->count))-->
+            <h1>No addresses yet</h1>
+        <!--@end-->
         <include target="address_form.html" />
     <!--@else-->
+        <h1>Address book</h1>
         <a href="{getURL('','act','dispShopAddAddress')}">Add a new address</a>
 
         <h3>Default shipping address</h3>
+        <!--@if(isset($addresses->default_shipping))-->
         <div id="default_shipping">
             <b>Company:</b>{$addresses->default_shipping->company}
             <b>Telephone:</b>{$addresses->default_shipping->telephone}
@@ -26,9 +30,15 @@
             <b>Region:</b>{$addresses->default_shipping->region}
             <b>Postal Code:</b>{$addresses->default_shipping->postal_code}
             <b>Country:</b>{$addresses->default_shipping->country}
+            <a href="{getURL('','act','dispShopEditAddress','address_srl',$addresses->default_shipping->address_srl)}">Edit</a>
         </div>
+        <!--@else-->
+        Not yet set
+        <!--@end-->
+
 
         <h3>Default billing address</h3>
+        <!--@if(isset($addresses->default_billing))-->
         <div id="default_billing">
             <b>Company:</b>{$addresses->default_billing->company}
             <b>Telephone:</b>{$addresses->default_billing->telephone}
@@ -39,21 +49,31 @@
             <b>Region:</b>{$addresses->default_billing->region}
             <b>Postal Code:</b>{$addresses->default_billing->postal_code}
             <b>Country:</b>{$addresses->default_billing->country}
+            <a href="{getURL('','act','dispShopEditAddress','address_srl',$addresses->default_billing->address_srl)}">Edit</a>
         </div>
+        <!--@else-->
+        Not yet set
+        <!--@end-->
 
         <h3>Addition addresses</h3>
-        <!--@foreach($addresses->additional_addresses as $address)-->
-            <div class="additional_addresses">
-                <b>Company:</b>{$address->company}
-                <b>Telephone:</b>{$address->telephone}
-                <b>Fax:</b>{$address->fax}
-                <b>Address:</b>{$address->address}
-                <b>Additional Info:</b>{$address->additional_info}
-                <b>City:</b>{$address->city}
-                <b>Region:</b>{$address->region}
-                <b>Postal Code:</b>{$address->postal_code}
-                <b>Country:</b>{$address->country}
-            </div>
+        <!--@if(isset($addresses->additional_addresses))-->
+            <!--@foreach($addresses->additional_addresses as $address)-->
+                <div class="additional_addresses">
+                    <b>Company:</b>{$address->company}
+                    <b>Telephone:</b>{$address->telephone}
+                    <b>Fax:</b>{$address->fax}
+                    <b>Address:</b>{$address->address}
+                    <b>Additional Info:</b>{$address->additional_info}
+                    <b>City:</b>{$address->city}
+                    <b>Region:</b>{$address->region}
+                    <b>Postal Code:</b>{$address->postal_code}
+                    <b>Country:</b>{$address->country}
+                    <a href="{getURL('','act','dispShopEditAddress','address_srl',$address->address_srl)}">Edit</a>
+                    <a href="{getURL('','act','procShopDeleteAddress','address_srl',$address->address_srl)}">Delete</a>
+                </div>
+            <!--@end-->
+        <!--@else-->
+            No additional addresses
         <!--@end-->
     <!--@end-->
 </div>

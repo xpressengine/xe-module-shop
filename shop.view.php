@@ -704,6 +704,21 @@ class shopView extends shop {
     }
 
     public function dispShopAddAddress(){
+        $shopModel = getModel('shop');
+        $addressRepository = $shopModel->getAddressRepository();
+
+        $address_srl = Context::get('address_srl');
+        if($address_srl){
+            $address = $addressRepository->getAddress($address_srl);
+        } else {
+            $address = new Address();
+        }
+        Context::set('address',$address);
+        $this->setTemplateFile('address_book.html');
+    }
+
+    public function dispShopEditAddress(){
+        $this->dispShopAddAddress();
         $this->setTemplateFile('address_book.html');
     }
 

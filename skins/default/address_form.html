@@ -1,54 +1,66 @@
 <form action="./" method="post" id="">
+    <!--@if($address->address_srl)-->
+    <input type="hidden" id="address_srl" name="address_srl" value="{$address->address_srl}">
+    <!--@end-->
+    <input type="hidden" id="act" name="act" value="procShopAddAddress" ruleset="add_adress"/>
 
-    <input type="hidden" id="act" name="act" value="procShopAddAddress" ruleset align="add_adress"/>
+
 
     <fieldset id="address_form">
-        <legend>Add a new address</legend>
+        <!--@if($address->address_srl)-->
+            <legend>Edit address</legend>
+        <!--@else-->
+            <legend>Add a new address</legend>
+        <!--@end-->
         <ul>
             <li>
                 <label for="company">Company</label>
-                <input type="text" name="company" id="company">
+                <input type="text" name="company" id="company" value="{$address->company}">
             </li>
             <li>
                 <label for="telephone">Telephone</label>
-                <input type="text" name="telephone" id="telephone">
+                <input type="text" name="telephone" id="telephone" value="{$address->telephone}">
             </li>
             <li>
                 <label for="fax">Fax</label>
-                <input type="fax" name="fax" id="fax">
+                <input type="fax" name="fax" id="fax" value="{$address->fax}">
             </li>
             <li>
                 <label for="address">Address</label>
-                <textarea rows="5" id="address" name="address"></textarea>
+                <textarea rows="5" id="address" name="address">{$address->address}</textarea>
             </li>
             <li>
                 <label for="additional_info">Additional Info</label>
-                <textarea rows="5" id="additional_info" name="additional_info"></textarea>
+                <textarea rows="5" id="additional_info" name="additional_info">{$address->additional_info}</textarea>
             </li>
             <li>
                 <label for="city">City</label>
-                <input type="text" name="city" id="city">
+                <input type="text" name="city" id="city" value="{$address->city}">
             </li>
             <li>
                 <label for="region">Region</label>
-                <input type="text" name="region" id="region">
+                <input type="text" name="region" id="region" value="{$address->region}">
             </li>
             <li>
                 <label for="postal_code">Postal Code</label>
-                <input type="text" name="postal_code" id="postal_code">
+                <input type="text" name="postal_code" id="postal_code" value="{$address->postal_code}">
             </li>
             <li>
                 <label for="country">Country</label>
-                <input type="text" name="country" id="country">
+                <input type="text" name="country" id="country" value="{$address->country}">
             </li>
+            <!--@if(isset($addresses->count))-->
+            <input type="hidden" name="first_address" id="first_address" value="Y">
+            <!--@else-->
             <li>
                 <label for="default_billing">Use as default billing address</label>
-                <input type="checkbox" name="default_billing" id="default_billing" value="Y">
+                <input type="checkbox" name="default_billing" id="default_billing" value="Y" <!--@if($address->default_billing == 'Y')-->checked="checked" <!--@endif-->>
             </li>
             <li>
                 <label for="default_shipping">Use as default shipping address</label>
-                <input type="checkbox" name="default_shipping" id="default_shipping" value="Y">
+                <input type="checkbox" name="default_shipping" id="default_shipping" value="Y" <!--@if($address->default_shipping == 'Y')-->checked="checked" <!--@endif-->>
             </li>
+            <!--@end-->
         </ul>
     </fieldset>
 

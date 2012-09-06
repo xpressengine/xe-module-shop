@@ -20,9 +20,23 @@ class AddressRepository extends BaseRepository
      */
     public function insert(Address &$address)
     {
-        if ($address->order_srl) throw new Exception('A srl must NOT be specified for the insert operation!');
+        if ($address->address_srl) throw new Exception('A srl must NOT be specified for the insert operation!');
         $address->address_srl = getNextSequence();
         return $this->query('insertAddress', get_object_vars($address));
+    }
+
+    /**
+     * update Address
+     *
+     * @author Dan Dragan
+     * @param Address $address
+     * @return mixed
+     * @throws Exception
+     */
+    public function update(Address &$address)
+    {
+        if (!$address->address_srl) throw new Exception('A srl must be specified for the update operation!');
+        return $this->query('updateAddress', get_object_vars($address));
     }
 
     /**
@@ -54,6 +68,20 @@ class AddressRepository extends BaseRepository
     }
 
     /**
+     * get address by address_srl
+     *
+     * @author Dan Dragan
+     * @param $address_srl
+     * @return Address
+     */
+    public function getAddress($address_srl){
+        $args = new stdClass();
+        $args->address_srl = $address_srl;
+        $output = $this->query('getAddress',$args);
+        return new Address($output->data);
+    }
+
+    /**
      * return all addresses separated into default and additional addresses
      *
      * @author Dan Dragan
@@ -63,12 +91,14 @@ class AddressRepository extends BaseRepository
     public function getAddresses($member_srl){
         $args = new stdClass();
         $args->member_srl = $member_srl;
-        $output = $this->query('getAddresses',$args);
-        foreach($output->data as $data){
-            $address = new Address($data);
-            if($address->default_billing == 'Y') $default_billing = $address;
-                elseif($address->default_shipping == 'Y') $default_shipping = $address;
-                    else $additional_addresses[] = $address;
+        $output = $this->query('getAddresses',$args,true);
+        if(count($output->data)){
+            foreach($output->data as $data){
+                $address = new Address($data);
+                if($address->default_billing == 'Y') $default_billing = $address;
+                if($address->default_shipping == 'Y') $default_shipping = $address;
+                if($address->default_billing == 'N' && $address->default_shipping == 'N') $additional_addresses[] = $address;
+            }
         }
         $addresses = new stdClass();
         $addresses->default_billing = $default_billing;
@@ -76,5 +106,18 @@ class AddressRepository extends BaseRepository
         $addresses->additional_addresses = $additional_addresses;
         $addresses->count = count($output->data);
         return $addresses;
+    }
+
+    /**
+     * delete address by address_srl
+     *
+     * @author Dan Dragan
+     * @param $address_srl
+     * @return mixed
+     */
+    public function deleteAddress($address_srl){
+        $args = new stdClass();
+        $args->address_srl = $address_srl;
+        return $this->query('deleteAddress',$args);
     }
 }
