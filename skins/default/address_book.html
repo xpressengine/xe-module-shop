@@ -10,14 +10,51 @@
 
 <div id="my_account" class="mainContent">
     <h1>Address book</h1>
-    <!--@if(Context::get('act') == 'dispShopAddAddress')-->
-    <include target="address_form.html" />
+    <!--@if(Context::get('act') == 'dispShopAddAddress' || $addresses->count == 0)-->
+        <include target="address_form.html" />
     <!--@else-->
-    <a href="{getURL('','act','dispShopAddAddress')}">Add a new address</a>
+        <a href="{getURL('','act','dispShopAddAddress')}">Add a new address</a>
 
-    <h3>Default shipping address</h3>
+        <h3>Default shipping address</h3>
+        <div id="default_shipping">
+            <b>Company:</b>{$addresses->default_shipping->company}
+            <b>Telephone:</b>{$addresses->default_shipping->telephone}
+            <b>Fax:</b>{$addresses->default_shipping->fax}
+            <b>Address:</b>{$addresses->default_shipping->address}
+            <b>Additional Info:</b>{$addresses->default_shipping->additional_info}
+            <b>City:</b>{$addresses->default_shipping->city}
+            <b>Region:</b>{$addresses->default_shipping->region}
+            <b>Postal Code:</b>{$addresses->default_shipping->postal_code}
+            <b>Country:</b>{$addresses->default_shipping->country}
+        </div>
 
-    <h3>Default billing address</h3>
+        <h3>Default billing address</h3>
+        <div id="default_billing">
+            <b>Company:</b>{$addresses->default_billing->company}
+            <b>Telephone:</b>{$addresses->default_billing->telephone}
+            <b>Fax:</b>{$addresses->default_billing->fax}
+            <b>Address:</b>{$addresses->default_billing->address}
+            <b>Additional Info:</b>{$addresses->default_billing->additional_info}
+            <b>City:</b>{$addresses->default_billing->city}
+            <b>Region:</b>{$addresses->default_billing->region}
+            <b>Postal Code:</b>{$addresses->default_billing->postal_code}
+            <b>Country:</b>{$addresses->default_billing->country}
+        </div>
+
+        <h3>Addition addresses</h3>
+        <!--@foreach($addresses->additional_addresses as $address)-->
+            <div class="additional_addresses">
+                <b>Company:</b>{$address->company}
+                <b>Telephone:</b>{$address->telephone}
+                <b>Fax:</b>{$address->fax}
+                <b>Address:</b>{$address->address}
+                <b>Additional Info:</b>{$address->additional_info}
+                <b>City:</b>{$address->city}
+                <b>Region:</b>{$address->region}
+                <b>Postal Code:</b>{$address->postal_code}
+                <b>Country:</b>{$address->country}
+            </div>
+        <!--@end-->
     <!--@end-->
 </div>
 

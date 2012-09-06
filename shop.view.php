@@ -693,6 +693,13 @@ class shopView extends shop {
     }
 
     public function dispShopAddressBook(){
+        $shopModel = getModel('shop');
+        $addressRepository = $shopModel->getAddressRepository();
+
+        $logged_info = Context::get('logged_info');
+        $addresses = $addressRepository->getAddresses($logged_info->member_srl);
+
+        Context::set('addresses',$addresses);
         $this->setTemplateFile('address_book.html');
     }
 

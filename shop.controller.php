@@ -81,7 +81,16 @@
             $args->member_srl = $logged_info->member_srl;
 
             $address = new Address($args);
+            if($address->default_billing == 'Y') {
+                $addressRepository->unsetDefaultBillingAddress($args->member_srl);
+            }
+            if($address->default_shipping == 'Y') $addressRepository->unsetDefaultShippingAddress($args->member_srl);
+
             $addressRepository->insert($address);
+
+            $this->setMessage("Address has been saved succesfully");
+            $returnUrl = getNotEncodedUrl('', 'act', 'dispShopAddressBook');
+            $this->setRedirectUrl($returnUrl);
         }
 
 
