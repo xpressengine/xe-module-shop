@@ -3,6 +3,8 @@
     <column name="module_srl" type="number" size="11" notnull="notnull" />
     <column name="member_srl" type="number" size="11" />
     <column name="session_id" type="varchar" size="255"/>
+    <column name="billing_address_srl" type="number" size="11"/>
+    <column name="shipping_address_srl" type="number" size="11"/>
     <column name="items" type="number" size="11" />
     <column name="regdate" type="date" />
     <column name="last_update" type="date" />

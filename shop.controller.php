@@ -35,7 +35,7 @@
             Context::set('shop',$this->shop);
         }
 
-        public function procShopLogin() {
+        public function procShopLogin($user_id = null, $password = null, $keep_signed = null) {
             $oMemberController = getController('member');
 
             if(!$user_id) $user_id = Context::get('user_id');
@@ -431,16 +431,25 @@
             $cartRepo = $this->model->getCartRepository();
             $logged_info = Context::get('logged_info');
             if ($cart = $cartRepo->hasCart($this->module_info->module_srl, null, $logged_info->member_srl, session_id())) {
-                //check input arrays
-                if (!is_array(Context::get('login')) || !is_array(Context::get('billing'))) {
-                    throw new Exception('Wrong input parameters for checkout');
+
+                $login = Context::get('login');
+                if ($user = $login['user']) {
+                    if (!$pass = $login['pass']) throw new Exception('No password');
+                    /** @var $oMemberController memberController */
+                    $oMemberController = getController('member');
+                    $result = $oMemberController->procMemberLogin($user, $pass);
+                    //@TODO: check password expiration?
+                    $this->setRedirectUrl(getNotEncodedUrl('', 'act', 'dispShopCheckout'));
+                    return $result;
                 }
+
                 $cart->checkout(array(
-                    'login'    => Context::get('login'),
                     'billing'  => Context::get('billing'),
                     'shipping' => Context::get('shipping'),
                     'payment'  => Context::get('payment'),
                 ));
+
+                $this->setRedirectUrl(getNotEncodedUrl('', 'act', 'dispShopCheckout', 'done', true));
             }
             else throw new Exception('No cart');
         }

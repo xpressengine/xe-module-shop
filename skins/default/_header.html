@@ -23,6 +23,7 @@
             });
         });
         $(window).keydown(function(e) {
+            //ctrl + shift + s
             if (e.which == 83 && e.shiftKey && e.ctrlKey) {
                 e.preventDefault();
                 $('#reset_skin').click();

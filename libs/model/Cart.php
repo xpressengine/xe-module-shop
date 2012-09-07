@@ -9,6 +9,8 @@ class Cart extends BaseItem
         $module_srl,
         $member_srl,
         $session_id,
+        $billing_address_srl,
+        $shopping_address_srl,
         $items = 0,
         $regdate,
         $last_update;
@@ -196,10 +198,6 @@ class Cart extends BaseItem
         // $data should be in the format compatible with Order's constructor
         $data = array();
 
-        if (self::validateFormBlock($login = $input['login'])) {
-            //login or exception
-            return true;
-        }
         if (self::validateFormBlock($billing = $input['billing'])) {
             $data['billing_address'] = json_encode(array(
                 'address' => $billing['address'],

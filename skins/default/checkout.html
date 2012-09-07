@@ -11,8 +11,7 @@
 
         <input type="hidden" id="act" name="act" value="procShopToolCheckout"/>
 
-        <fieldset id="login">
-            <input type="hidden" name="marker[login]" value="false">
+        <fieldset id="login" cond="!$is_logged">
             <legend>Already a customer</legend>
             <ul>
                 <li>
@@ -27,7 +26,6 @@
         </fieldset>
 
         <fieldset id="billing">
-            <input type="hidden" name="marker[billing]" value="false">
             <legend>Billing</legend>
             <ul>
                 <li>
@@ -78,7 +76,6 @@
         </fieldset>
 
         <fieldset id="shipping">
-            <input type="hidden" name="marker[shipping]" value="false">
             <legend>Shipping</legend>
             <label for="shipping_method">method</label>
             <select name="shipping[method]" id="shipping_method">
@@ -89,12 +86,10 @@
         </fieldset>
 
         <fieldset id="payment">
-            <input type="hidden" name="marker[payment]" value="false">
             <legend>Payment</legend>
         </fieldset>
 
         <fieldset id="review">
-            <input type="hidden" name="marker[review]" value="false">
             <legend>Order review</legend>
         </fieldset>
 
