@@ -1,6 +1,6 @@
 <?php
 
-require_once dirname(__FILE__) . '/../model/PaymentGateway.php';
+require_once dirname(__FILE__) . '/../../payment_gateways/PaymentGatewayAbstract.php';
 require_once dirname(__FILE__) . '/BaseRepository.php';
 
 /**
@@ -17,7 +17,7 @@ class PaymentGatewayRepository extends BaseRepository
         self::$PAYMENT_METHODS_DIR = _XE_PATH_ . 'modules/shop/payment_gateways';
     }
 
-    private function getPaymentMethodInstanceByFolderName($payment_extension_name)
+    private function getPaymentMethodInstanceByName($payment_extension_name)
     {
         // Skip files (we are only interested in the folders)
         if(!is_dir(self::$PAYMENT_METHODS_DIR . DIRECTORY_SEPARATOR . $payment_extension_name))
@@ -60,13 +60,13 @@ class PaymentGatewayRepository extends BaseRepository
         // If payment gateway exists in the database, return it as is
         if($output->data)
         {
-            $payment_gateway = PaymentGateway::getInstanceFromDatabaseInfo($output->data);
+            $payment_gateway = $this->getPaymentMethodInstanceByName($output->data->name);
+            $payment_gateway->setProperties($output->data);
             return $payment_gateway;
         }
 
         // Otherwise, initialize it with info from the extension class and insert in database
-        $payment_instance = $this->getPaymentMethodInstanceByFolderName($name);
-        $payment_gateway = PaymentGateway::getInstanceFromPaymentExtensionClass($payment_instance);
+        $payment_gateway = $this->getPaymentMethodInstanceByName($name);
 
         $this->insertPaymentGateway($payment_gateway);
 
@@ -111,7 +111,7 @@ class PaymentGatewayRepository extends BaseRepository
       * @throws exception
       * @return boolean
      */
-    public function updatePaymentGateway(PaymentGateway $pg) {
+    public function updatePaymentGateway($pg) {
         $output = executeQuery('shop.updateGateway', $pg);
 
         if(!$output->toBool()) {

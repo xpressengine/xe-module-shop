@@ -942,7 +942,7 @@
             $shopModel = getModel('shop');
             $payment_repository = $shopModel->getPaymentGatewayRepository();
 
-            $gateway = new PaymentGateway();
+            $gateway = new stdClass();
             $gateway->name = $name;
             $gateway->status = 1;
 
@@ -973,7 +973,7 @@
             $shopModel = getModel('shop');
             $payment_repository = $shopModel->getPaymentGatewayRepository();
 
-            $gateway = new PaymentGateway();
+            $gateway = new stdClass();
             $gateway->name = $name;
             $gateway->status = 0;
 
@@ -1004,7 +1004,7 @@
                 $shopModel = $this->model;
                 $repository = $shopModel->getPaymentGatewayRepository();
 
-                $gateway = new PaymentGateway();
+                $gateway = new stdClass();
                 $gateway->name = $name;
 
                 $repository->deleteGateway($gateway);
@@ -1071,7 +1071,7 @@
                                 $shopModel = $this->model;
                                 $repository = $shopModel->getPaymentGatewayRepository();
 
-                                $pg = new PaymentGateway();
+                                $pg = new stdClass();
                                 $pg->name = $name[0];
                                 $pg->status = 1;
                                 $output = $repository->getGateway($pg);

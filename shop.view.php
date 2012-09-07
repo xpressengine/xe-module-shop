@@ -881,10 +881,32 @@ class shopView extends shop {
 		Context::set('payment_methods',$payment_methods);
 	}
 
-	// endregion
+    /**
+     * Display settings for a payment gateway
+     */
+    public function dispShopToolEditPaymentGatewaySettings()
+    {
+        $name = Context::get('name');
+        if(!$name)
+        {
+            return new Object(-1, 'msg_invalid_request');
+        }
+        /**
+         * @var shopModel $shopModel
+         */
+        $shopModel = getModel('shop');
+        $payment_repository = $shopModel->getPaymentGatewayRepository();
+        $payment_gateway = $payment_repository->getPaymentGateway($name);
+        $payment_gateway_settings_HTML = $payment_gateway->getBackendFormHTML();
 
-	// region Extra menu
-	/**
+        Context::set('payment_gateway', $payment_gateway);
+        Context::set('payment_gateway_settings_HTML', $payment_gateway_settings_HTML);
+    }
+
+    // endregion
+
+    // region Extra menu
+    /**
 	 * Displays all extra menu elements
 	 * @return object
 	 */
