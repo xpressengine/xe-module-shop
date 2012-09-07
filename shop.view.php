@@ -895,10 +895,13 @@ class shopView extends shop {
          */
         $shopModel = getModel('shop');
         $payment_repository = $shopModel->getPaymentMethodRepository();
-        $payment_method = $payment_repository->getPaymentMethod($name);
-        $payment_method_settings_HTML = $payment_method->getBackendFormHTML();
 
+        // Retrieve payment method, and save in context for it to be accessible from the plugin template
+        $payment_method = $payment_repository->getPaymentMethod($name);
         Context::set('payment_method', $payment_method);
+
+        // Retrieve backend form fields
+        $payment_method_settings_HTML = $payment_method->getBackendFormHTML();
         Context::set('payment_method_settings_HTML', $payment_method_settings_HTML);
     }
 

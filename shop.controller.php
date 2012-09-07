@@ -1023,6 +1023,45 @@
 
         }
 
+        public function procShopPaymentMethodUpdate()
+        {
+            $name = Context::get('name');
+            if(!$name)
+            {
+                return new Object(-1, 'msg_invalid_request');
+            }
+
+            /**
+             * @var shopModel $shopModel
+             */
+            $shopModel = getModel('shop');
+            $payment_repository = $shopModel->getPaymentMethodRepository();
+
+            // Retrieve payment method from database
+            $payment_method = $payment_repository->getPaymentMethod($name);
+
+            // Update object with values submitted by user
+            $data = Context::getRequestVars();
+            $property_names = array_keys(get_object_vars($data));
+            foreach($property_names as $property_name)
+            {
+                if(in_array($property_name, array('mid', 'vid','error_return_url', 'xe_form_id', 'act')))
+                {
+                    unset($data->$property_name);
+                }
+            }
+            $payment_method->setProperties($data);
+
+            // Save changes
+            $payment_repository->updatePaymentMethod($payment_method);
+
+            $this->setMessage('success_registed');
+            $vid = Context::get('vid');
+            $returnUrl = getNotEncodedUrl('', 'vid', $vid, 'act', 'dispShopToolManagePaymentMethods');
+            $this->setRedirectUrl($returnUrl);
+        }
+
+
         /**
          * Uploads and installs a new payment gateway
          *

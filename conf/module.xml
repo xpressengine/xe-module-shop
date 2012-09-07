@@ -144,6 +144,7 @@
         <action name="procUpdateShopDeletePaymentMethod" type="controller" />
         <action name="procShopUploadPaymentPlugin" type="controller" />
         <action name="procSanitizePaymentMethods" type="controller" />
+        <action name="procShopPaymentMethodUpdate" type="controller" />
 
         <!-- Extra menu -->
         <action name="dispShopToolExtraMenuList" type="view" />

@@ -15,7 +15,7 @@
 
     <form action="./" method="POST">
         <input type="hidden" id="name" name="name" value="{$payment_method->name}" />
-        <input type="hidden" id="act" name="act" value="procShopToolPaymentGatewayUpdate" />
+        <input type="hidden" id="act" name="act" value="procShopPaymentMethodUpdate" />
         <p>
             <label for="display_name">Display name</label>
             <input type="text" name="display_name" id="display_name" value="{$payment_method->display_name}" />
@@ -23,7 +23,7 @@
 
         <p>
             <label for="is_active">Is active</label>
-            <select name="is_active" id="is_active">
+            <select name="status" id="is_active">
                 <option value="1" <!--@if($payment_method->isActive())-->selected<!--@endif-->>Yes</option>
                 <option value="0" <!--@if(!$payment_method->isActive())-->selected<!--@endif-->>No</option>
             </select>

@@ -60,6 +60,9 @@ class PaymentMethodRepository extends BaseRepository
         // If payment gateway exists in the database, return it as is
         if($output->data)
         {
+            $output->data->properties = unserialize($output->data->props);
+            unset($output->data->props);
+
             $payment_gateway = $this->getPaymentMethodInstanceByName($output->data->name);
             $payment_gateway->setProperties($output->data);
             return $payment_gateway;
@@ -107,12 +110,19 @@ class PaymentMethodRepository extends BaseRepository
       * Status: active = 1; inactive = 0
       *
       * @author Daniel Ionescu (dev@xpressengine.org)
-      * @param  $pg
+      * @param  $payment_method
       * @throws exception
       * @return boolean
      */
-    public function updatePaymentMethod($pg) {
-        $output = executeQuery('shop.updateGateway', $pg);
+    public function updatePaymentMethod($payment_method) {
+
+        if(isset($payment_method->properties) && !is_string($payment_method->properties))
+        {
+            $serialized_properties = serialize($payment_method->properties);
+            $payment_method->properties = $serialized_properties;
+        }
+
+        $output = executeQuery('shop.updateGateway', $payment_method);
 
         if(!$output->toBool()) {
             throw new Exception($output->getMessage(), $output->getError());

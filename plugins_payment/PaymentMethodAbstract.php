@@ -9,7 +9,7 @@ abstract class PaymentMethodAbstract
     public $display_name;  /// Display name
     public $name; /// Unique name = folder name
     public $status = 0;
-    public $props = array();
+    public $properties;
 
     /**
      * Returns the payment gateway's name
@@ -35,16 +35,25 @@ abstract class PaymentMethodAbstract
 
     public function setProperties($data)
     {
-        $this->id = $data->id;
-        $this->name = $data->name;
-        $this->display_name = $data->display_name;
-        $this->status = $data->status;
-        $this->props = $data->props;
+        foreach($data as $property_name => $property_value)
+        {
+            $this->{$property_name} = $property_value;
+        }
     }
 
     public function isActive()
     {
         return $this->status ? true : false;
+    }
+
+    public function __set($name, $value)
+    {
+        $this->properties->$name = $value;
+    }
+
+    public function __get($name)
+    {
+        return $this->properties->$name;
     }
 
 
