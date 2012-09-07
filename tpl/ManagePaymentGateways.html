@@ -53,7 +53,7 @@
                         <input type="checkbox" name="payment_method_srl" value="" class="inputCheck boxlist" />
                     </td>
                     <td>
-                        <span class="btnGray medium"><a class="pg" href="#">{$lang->gateway_settings}</a></span>
+                        <span class="btnGray medium"><a class="pg" href="{getUrl('act','procUpdateShopDeactivateGateway','name',$obj->name)}">{$lang->gateway_settings}</a></span>
                     </td>
                     <td>
                         {$obj->display_name}

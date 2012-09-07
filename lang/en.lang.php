@@ -229,8 +229,7 @@
 		array('','Menu'),
         array('','Statistics'),
         array('','Design'),
-        array('','Configuration'),
-        array('dispShopToolManagePaymentGateways','Payment Gateways'),
+        array('','Configuration')
     );
 
     $lang->shop_second_menus = array(
@@ -265,8 +264,8 @@
             'dispShopToolManageAdminAccount'=>'Admin account',
             'dispShopToolConfigInfo'=>'Shop Configuration',
             'dispShopToolShippingList'=>'Shipping',
-        ),
-        array('dispShopToolManagePaymentGateways'=>'Payment Gateways')
+            'dispShopToolManagePaymentGateways'=>'Payment Gateways'
+        )
     );
 
     $lang->cmd_go_help = 'Help Desk';

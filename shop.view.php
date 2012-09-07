@@ -863,11 +863,11 @@ class shopView extends shop {
 	}
 	// endregion
 
-	// startregion Payment Gateways
+	// region Payment Gateways
 
-	/*
-			 * Displays the PG management page
-			 */
+	/**
+	 * Displays the Payment Gateways management page
+	 */
 	public function dispShopToolManagePaymentGateways()
 	{
 		// get gateways
@@ -879,17 +879,6 @@ class shopView extends shop {
         $payment_methods = $repository->getAvailablePaymentMethods();
 
 		Context::set('payment_methods',$payment_methods);
-	}
-
-	/*
-			 * Displays the payment method selection page
-			 */
-	public function dispShopToolSelectPaymentMethod() {
-
-		$shopModel = getModel('shop');
-		$repository = $shopModel->getPaymentGatewayRepository();
-		//$repository->includeActiveGateways();
-
 	}
 
 	// endregion

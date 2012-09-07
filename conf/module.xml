@@ -138,7 +138,6 @@
 
 		<!-- Payment Gateway -->
         <action name="dispShopToolManagePaymentGateways" type="view" />
-        <action name="dispShopToolSelectPaymentMethod" type="view" />
         <action name="procUpdateShopActivateGateway" type="controller" />
         <action name="procUpdateShopDeactivateGateway" type="controller" />
         <action name="procUpdateShopDeleteGateway" type="controller" />
