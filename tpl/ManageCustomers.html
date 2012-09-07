@@ -5,13 +5,19 @@
 <div id="content">
     <!-- contentHeader -->
     <div class="dashboardHeader">
-        <h3 class="h3">{$lang->shop_second_menus[1]['dispShopToolManageCustommers']}</h3>
+        <h3 class="h3">{$lang->shop_second_menus[3]['dispShopToolManageCustomers']}</h3>
     </div>
     <!-- /contentHeader -->
     <div cond="$XE_VALIDATOR_MESSAGE" class="message {$XE_VALIDATOR_MESSAGE_TYPE}">
         <p>{$XE_VALIDATOR_MESSAGE}</p>
     </div>
-
+    <!-- contentNavigation -->
+    <div class="contentNavigation">
+        <ul class="sortDefault">
+            <a href="{getUrl('act','dispShopToolAddCustomer')}">Add a new customer</a>
+        </ul>
+    </div>
+    <!-- /contentNavigation -->
     <!-- listHeader -->
     <div class="listHeader" cond="!empty($customers_list)">
         <p class="info"> <!--@if($search_keyword)-->{sprintf($lang->search_result_count,$page_navigation->total_count)}<!--@else-->{sprintf($lang->total_result_count,$page_navigation->total_count)}<!--@end--></p>
@@ -66,7 +72,7 @@
                     <td class="title"><a href="{getUrl('act','dispShopToolEditCustomer','member_srl',$customer->member_srl)}" class="customerName">{$customer->user_name}</a></td>
                     <td class="small">{$customer->email_address}</td>
                     <td class="small">{$customer->telephone}</td>
-                    <td class="small">{$customer->code_postal}</td>
+                    <td class="small">{$customer->postal_code}</td>
                     <td class="small">{$customer->country}</td>
                     <td class="small">{$customer->region}</td>
                     <td class="small">{$customer->regdate}</td>
@@ -88,7 +94,7 @@
                 <!-- Change-->
                 <div class="change">
                     <p class="p1">{$lang->selected_articles}</p>
-                    <span class="btnGray large"><button type="button" onclick="deleteCustomersItems({$page})"><img src="img/buttonTableDataX.gif" width="7" height="7" alt="" class="icon" />{$lang->cmd_delete}</button></span>
+                    <span class="btnGray large"><button type="button" onclick="deleteCustomerItems({$page})"><img src="img/buttonTableDataX.gif" width="7" height="7" alt="" class="icon" />{$lang->cmd_delete}</button></span>
 
                 </div>
                 <!-- /Change -->

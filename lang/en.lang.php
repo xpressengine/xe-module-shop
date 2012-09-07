@@ -43,10 +43,18 @@
     $lang->no = 'No';
     $lang->id = 'Id';
     $lang->name = 'Name';
+    $lang->about_name = 'Add your Full name';
+    $lang->about_user_id = 'User Id';
+    $lang->about_nick_name = 'Nick Name';
+    $lang->about_password = 'Password';
+    $lang->change_password = 'Change existing password';
+    $lang->customer_about_email_address = 'Email address';
     $lang->product_type = 'Product Type';
     $lang->no_product = 'There is no product added, <a href="%s">Add a simple product</a> or <a href="%s">Add a configurable product</a>. ';
     $lang->msg_confirm_delete_product = "Are you sure you want to delete this product?";
     $lang->msg_confirm_delete_attribute = "Are you sure you want to delete this attribute?";
+    $lang->msg_confirm_delete_customer = "Are you sure you want to delete this customer?";
+    $lang->msg_confirm_delete_customers = "Are you sure you want to delete these customers?";
     $lang->msg_confirm_delete_products = "Are you sure you want to delete these products?";
     $lang->msg_confirm_delete_attributes = "Are you sure you want to delete these attributes?";
     $lang->category_scope = "Category Scope";
@@ -148,6 +156,7 @@
         'select_multiple' => 'Multiple select'
     );
     $lang->no_attribute = 'No attributes, <a href="%s">add one!</a>';
+    $lang->no_customers = 'No customers, <a href="%s">add one!</a>';
     $lang->new_attribute = 'New attribute';
     $lang->edit_attribute = 'Edit attribute';
     $lang->attribute_about_title = 'Attribute name/title';
@@ -188,6 +197,9 @@
     $lang->region = 'Region';
     $lang->telephone = 'Telephone';
     $lang->postal_code = 'Postal Code';
+
+    $lang->edit_customer = 'Edit Customer';
+    $lang->new_customer = 'New Customer';
 
     $lang->daily = 'Daily';
     $lang->weekly = 'Weekly';

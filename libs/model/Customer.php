@@ -24,6 +24,10 @@ class Customer extends BaseItem
         $profile_image,
         $regdate,
         $last_update,
-        $addresses = array(),
+        $telephone,
+        $postal_code,
+        $country,
+        $region,
+        $addresses,
         $groups = array();
 }

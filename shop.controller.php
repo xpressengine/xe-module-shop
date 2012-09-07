@@ -577,6 +577,30 @@
             $this->setRedirectUrl(getNotEncodedUrl('', 'act', 'dispShopToolManageAttributes'));
         }
 
+        /*
+        * @brief function for multiple customers delete
+        * @author Dan Dragan (dev@xpressengine.org)
+        */
+        public function procShopToolDeleteCustomers(){
+            $shopModel = $this->model;
+            $repository = $shopModel->getAttributeRepository();
+            $target_member_srls = Context::get('target_member_srls');
+            if(!$target_member_srls) return new Object(-1, 'msg_invalid_request');
+            $member_srls = explode(',', $target_member_srls);
+            $oMemberController = &getController('member');
+            $oMemberController->memberInfo = null;
+
+            foreach($member_srls as $member) {
+                $output = $oMemberController->deleteMember($member);
+                if(!$output->toBool()) {
+                    $this->setMessage('failed_deleted');
+                    return $output;
+                }
+            }
+
+            $this->setMessage('success_deleted');
+        }
+
         public function procShopToolLayoutConfigSkin() {
             $oModuleModel = getModel('module');
             $oModuleController = getController('module');

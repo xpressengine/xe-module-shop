@@ -473,6 +473,28 @@ function deleteProductItems(page){
     exec_xml('shop', 'procShopToolDeleteProducts', params, completeReload, response_tags);
 }
 
+function deleteCustomerItem(srl){
+    if (!confirm(xe.lang.msg_confirm_delete_customer)) return false;
+    var response_tags = new Array('error','message','page','mid');
+    exec_xml('shop', 'procShopToolDeleteCustomers', { target_member_srls: srl }, completeReload, response_tags);
+}
+
+function deleteCustomerItems(page){
+    if (!confirm(xe.lang.msg_confirm_delete_customers)) return false;
+    var val, srls = [];
+    jQuery("input[name=customer_srl]:checked").each(function(){
+        val = jQuery(this).val();
+        if(val) srls.push(val);
+    });
+    if (srls.length < 1) return;
+    var response_tags = new Array('error','message','page','mid');
+    var params = {
+        target_member_srls: srls.join(','),
+        page: page
+    }
+    exec_xml('shop', 'procShopToolDeleteCustomers', params, completeReload, response_tags);
+}
+
 function deleteAttributeItem(srl){
     if (!confirm(xe.lang.msg_confirm_delete_attribute)) return false;
     var response_tags = new Array('error','message','page','mid');

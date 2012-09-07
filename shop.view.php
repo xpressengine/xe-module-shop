@@ -831,13 +831,48 @@ class shopView extends shop {
 		return $datasource;
 	}
 
+    /**
+     * Customer management view (Admin)
+     */
     public function dispShopToolManageCustomers(){
         $shopModel = getModel('shop');
         $customerRepository = $shopModel->getCustomerRepository();
-        $customers_list = $customerRepository->getCustomers($this->site_srl);
+        $output = $customerRepository->getCustomersList($this->site_srl);
 
-        Context::set('customers_list',$customers_list);
+        Context::set('customers_list',$output->customers);
+        Context::set('page_navigation',$output->page_navigation);
     }
+
+    /**
+     * Customer management view (Admin)
+     */
+    public function dispShopToolAddCustomer(){
+        $shopModel = getModel('shop');
+        $oMemberAdminView = getAdminView('member');
+        $oMemberModel = getModel('member');
+        $customerRepository = $shopModel->getCustomerRepository();
+        $member_srl = Context::get('member_srl');
+        if($member_srl){
+            $member_info = $oMemberModel->getMemberInfoByMemberSrl($member_srl);
+            $customer = new Customer($member_info);
+            if($customer->password) Context::set('password_exists','Y');
+            unset($customer->password);
+        }
+
+        $oMemberAdminView->dispMemberAdminInsert();
+        $default_group = $oMemberModel->getDefaultGroup($this->module_info->site_srl);
+        Context::set('customer',$customer);
+        Context::set('default_group',$default_group->group_srl);
+    }
+
+    /**
+     * Edit customer view (Admin)
+     */
+    public function dispShopToolEditCustomer(){
+        $this->dispShopToolAddCustomer();
+        $this->setTemplateFile('AddCustomer');
+    }
+
 
 	// region Product category
 	/**
