@@ -905,6 +905,22 @@ class shopView extends shop {
         Context::set('payment_method_settings_HTML', $payment_method_settings_HTML);
     }
 
+    /**
+     * Test page for payment - simulates the checkout page
+     */
+    public function dispShopTestCheckout()
+    {
+        /**
+         * @var shopModel $shopModel
+         */
+        $shopModel = getModel('shop');
+        $payment_repository = $shopModel->getPaymentMethodRepository();
+        $payment_methods = $payment_repository->getActivePaymentMethods();
+        Context::set('payment_methods', $payment_methods);
+
+        $this->setTemplateFile('test_checkout.html');
+    }
+
     // endregion
 
     // region Extra menu

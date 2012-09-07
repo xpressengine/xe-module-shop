@@ -1061,6 +1061,14 @@
             $this->setRedirectUrl($returnUrl);
         }
 
+        /**
+         * Test checkout
+         */
+        public function procShopToolTestCheckout()
+        {
+
+        }
+
 
         /**
          * Uploads and installs a new payment gateway

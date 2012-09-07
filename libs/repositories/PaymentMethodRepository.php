@@ -47,6 +47,16 @@ class PaymentMethodRepository extends BaseRepository
         return $payment_instance;
     }
 
+    private function getPaymentMethodFromProperties($data)
+    {
+        $data->properties = unserialize($data->props);
+        unset($data->props);
+
+        $payment_gateway = $this->getPaymentMethodInstanceByName($data->name);
+        $payment_gateway->setProperties($data);
+        return $payment_gateway;
+    }
+
     public function getPaymentMethod($name)
     {
         $args = new stdClass();
@@ -60,12 +70,7 @@ class PaymentMethodRepository extends BaseRepository
         // If payment gateway exists in the database, return it as is
         if($output->data)
         {
-            $output->data->properties = unserialize($output->data->props);
-            unset($output->data->props);
-
-            $payment_gateway = $this->getPaymentMethodInstanceByName($output->data->name);
-            $payment_gateway->setProperties($output->data);
-            return $payment_gateway;
+            return $this->getPaymentMethodFromProperties($output->data);
         }
 
         // Otherwise, initialize it with info from the extension class and insert in database
@@ -160,14 +165,20 @@ class PaymentMethodRepository extends BaseRepository
 
         $args = new stdClass();
         $args->status = 1;
-        $output = executeQuery('shop.getActiveGateways',$args);
+        $output = executeQueryArray('shop.getGateways',$args);
 
         if (!$output->toBool())
         {
             throw new Exception($output->getMessage(), $output->getError());
         }
 
-        return $output->data;
+        $active_payment_gateways = array();
+        foreach($output->data as $data)
+        {
+            $active_payment_gateways[] = $this->getPaymentMethodFromProperties($data);
+        }
+
+        return $active_payment_gateways;
     }
 
     /**

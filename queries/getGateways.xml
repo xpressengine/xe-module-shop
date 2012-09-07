@@ -1,9 +1,10 @@
-<query id="getAllGateways" action="select">
+<query id="getGateways" action="select">
     <tables>
         <table name="shop_payment_gateways" />
     </tables>
     <columns>
     </columns>
     <conditions>
+        <condition operation="equal" column="status" var="status"/>
     </conditions>
 </query>

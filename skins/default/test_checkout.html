@@ -1,0 +1,111 @@
+<include target="_header.html"/>
+
+<div id="checkout" class="mainContent" cond="isset($cart) && $cart->items">
+    <h1>Checkout</h1>
+
+    <div cond="$XE_VALIDATOR_MESSAGE" class="message {$XE_VALIDATOR_MESSAGE_TYPE}">
+        <p>{$XE_VALIDATOR_MESSAGE}</p>
+    </div>
+
+    <form action="./" method="post" id="big">
+
+        <input type="hidden" id="act" name="act" value="procShopToolTestCheckout"/>
+
+        <fieldset id="login" cond="!$is_logged">
+            <legend>Already a customer</legend>
+            <ul>
+                <li>
+                    <label for="login_user">User</label>
+                    <input type="text" name="login[user]" id="login_user">
+                </li>
+                <li>
+                    <label for="login_pass">Pass</label>
+                    <input type="text" name="login[pass]" id="login_pass">
+                </li>
+            </ul>
+        </fieldset>
+
+        <fieldset id="billing">
+            <legend>Billing</legend>
+            <ul>
+                <li>
+                    <label for="billing_firstname">First name</label>
+                    <input type="text" name="billing[firstname]" id="billing_firstname">
+                </li>
+                <li>
+                    <label for="billing_lastname">Last name</label>
+                    <input type="text" name="billing[lastname]" id="billing_lastname">
+                </li>
+                <li>
+                    <label for="billing_email">Email</label>
+                    <input type="text" name="billing[email]" id="billing_email">
+                </li>
+                <li>
+                    <label for="billing_company">Company</label>
+                    <input type="text" name="billing[company]" id="billing_company">
+                </li>
+                <li>
+                    <label for="billing_address">Address</label>
+                    <input type="text" name="billing[address]" id="billing_address">
+                </li>
+                <li>
+                    <label for="billing_country">Country</label>
+                    <input type="text" name="billing[country]" id="billing_country">
+                </li>
+                <li>
+                    <label for="billing_region">Region</label>
+                    <input type="text" name="billing[region]" id="billing_region">
+                </li>
+                <li>
+                    <label for="billing_city">City</label>
+                    <input type="text" name="billing[city]" id="billing_city">
+                </li>
+                <li>
+                    <label for="billing_zip">Postal code</label>
+                    <input type="text" name="billing[zip]" id="billing_zip">
+                </li>
+                <li>
+                    <label for="billing_phone">Phone</label>
+                    <input type="text" name="billing[phone]" id="billing_phone">
+                </li>
+                <li>
+                    <label for="billing_fax">Fax</label>
+                    <input type="text" name="billing[fax]" id="billing_fax">
+                </li>
+            </ul>
+        </fieldset>
+
+        <fieldset id="shipping">
+            <legend>Shipping</legend>
+            <label for="shipping_method">Shipping method</label>
+            <select name="shipping[method]" id="shipping_method">
+                <!--@foreach($shipping_methods as $value=>$name)-->
+                <option value="{$value}">{$name}</option>
+                <!--@endforeach-->
+            </select>
+        </fieldset>
+
+        <fieldset id="payment">
+            <legend>Payment</legend>
+            <label for="payment_method">Payment method</label>
+            <select name="payment[method]" id="payment_method">
+                <!--@foreach($payment_methods as $payment_method)-->
+                    <option value="{$payment_method->name}">{$payment_method->display_name}</option>
+                <!--@end-->
+            </select>
+
+        </fieldset>
+
+        <fieldset id="review">
+            <legend>Order review</legend>
+        </fieldset>
+
+        <input type="submit" value="Submit">
+
+    </form>
+
+    <p>Forgot something? Edit your <a href="{getUrl('act','dispShopCart')}" title="cart">cart</a>.</p>
+
+</div>
+
+<include target="_footer.html"/>
