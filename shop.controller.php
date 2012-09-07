@@ -430,26 +430,33 @@
             /* @var CartRepository $cartRepo */
             $cartRepo = $this->model->getCartRepository();
             $logged_info = Context::get('logged_info');
-            if ($cart = $cartRepo->hasCart($this->module_info->module_srl, null, $logged_info->member_srl, session_id())) {
+            //get or create cart:
+            if ($cart = $cartRepo->getCart($this->module_info->module_srl, null, $logged_info->member_srl, session_id(), true)) {
 
                 $login = Context::get('login');
                 if ($user = $login['user']) {
+                    if (Context::get('is_logged')) throw new Exception('Already logged in, this should not happen');
                     if (!$pass = $login['pass']) throw new Exception('No password');
                     /** @var $oMemberController memberController */
                     $oMemberController = getController('member');
                     $result = $oMemberController->procMemberLogin($user, $pass);
                     //@TODO: check password expiration?
+                    if (!$result->error) { //login successful
+                        $logged_info = Context::get('logged_info');
+                        $cart->member_srl = $logged_info->member_srl;
+                        $cart->save();
+                    }
                     $this->setRedirectUrl(getNotEncodedUrl('', 'act', 'dispShopCheckout'));
                     return $result;
                 }
 
-                $cart->checkout(array(
+                $order = $cart->checkout(array(
                     'billing'  => Context::get('billing'),
                     'shipping' => Context::get('shipping'),
                     'payment'  => Context::get('payment'),
                 ));
 
-                $this->setRedirectUrl(getNotEncodedUrl('', 'act', 'dispShopCheckout', 'done', true));
+                $this->setRedirectUrl(getNotEncodedUrl('', 'justCheckedOut', $order->order_srl));
             }
             else throw new Exception('No cart');
         }
@@ -469,7 +476,7 @@
                         throw new Exception('Not a valid product');
                     }
                     $logged_info = Context::get('logged_info');
-                    $cart = $cartRepository->getCart($this->module_info->module_srl, null, $logged_info->member_srl, session_id());
+                    $cart = $cartRepository->getCart($this->module_info->module_srl, null, $logged_info->member_srl, session_id(), true);
                     $quantity = (is_numeric(Context::get('quantity')) && Context::get('quantity') > 0 ? Context::get('quantity') : 1);
                     $cart->addProduct($product, $quantity);
                 }

@@ -73,34 +73,6 @@ class Cart extends BaseItem
         return $this->repo->updateCartProduct($this->cart_srl, $product_srl, $quantity);
     }
 
-    /**
-     * Returns an array necessary for selecting the cart object
-     *
-     * @return array sufficient data for cart identification (for the select query)
-     * @throws Exception Invalid input
-     */
-    public static function validateParamsForUniqueIdentification($module_srl=null, $cart_srl=null, $member_srl=null, $session_id=null)
-    {
-        if (is_numeric($cart_srl)) return array(
-            'cart_srl' => $cart_srl
-        );
-        if (is_numeric($member_srl)) {
-            if (is_numeric($module_srl)) return array(
-                'member_srl' => $member_srl,
-                'module_srl' => $module_srl
-            );
-            throw new Exception('Count not identify cart by member_srl (module_srl needed)');
-        }
-        if ($session_id) {
-            if (is_numeric($module_srl)) return array(
-                'session_id' => $session_id,
-                'module_srl' => $module_srl
-            );
-            throw new Exception('Count not identify cart by session_id (module_srl needed)');
-        }
-        throw new Exception('Invalid input for cart identification');
-    }
-
     public function getProducts()
     {
         if (!$this->cart_srl) throw new Exception('Cart is not persisted');

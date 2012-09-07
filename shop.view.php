@@ -758,7 +758,9 @@ class shopView extends shop {
         $shippingRepo = $this->model->getShippingRepository();
         $paymentRepo = $this->model->getPaymentMethodRepository();
 
-        if ((!$cart = Context::get('cart')) || !$cart->items) throw new Exception('No cart, you shouldn\'t be here');
+        if ((!$cart = Context::get('cart')) || !$cart->items) {
+            throw new Exception("No cart, you shouldn't be here");
+        }
         $shipping = array();
         /** @var $shippingMethod ShippingMethodAbstract */
         foreach ($shippingRepo->getAvailableShippingMethods() as $shippingMethod) {
