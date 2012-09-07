@@ -52,6 +52,7 @@
 
             $oAddonAdminController = getAdminController('addon');
             $oMemberModel = getModel('member');
+            $oMemberAdminController = getAdminController('member');
             $oModuleModel = getModel('module');
             $oModuleController = getController('module');
 
@@ -96,6 +97,14 @@
             $output = $oModuleController->updateSite($site);
 
             $output = $oModuleController->insertSiteAdmin($site_srl, $user_id_list);
+
+            //argx for default member group insertion
+            $argx = new stdClass();
+            $argx->site_srl = $site_srl;
+            $argx->title = $domain;
+            $argx->is_default = 'Y';
+            //$argx->list_order =
+            $output = $oMemberAdminController->insertGroup($argx);
 
             $args->shop_title = $shop->browser_title;
             $args->module_srl = $module_srl;

@@ -351,6 +351,16 @@ class shopModel extends shop
 
     }
 
+    /**
+     * Returns an instance of the Customer repository
+     */
+    public function getCustomerRepository()
+    {
+        require_once dirname(__FILE__) . '/libs/repositories/CustomerRepository.php';
+        return new CustomerRepository();
+
+    }
+
     // region Menu
     /**
 	 * Get shop menu

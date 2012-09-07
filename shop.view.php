@@ -829,6 +829,14 @@ class shopView extends shop {
 		return $datasource;
 	}
 
+    public function dispShopToolManageCustomers(){
+        $shopModel = getModel('shop');
+        $customerRepository = $shopModel->getCustomerRepository();
+        $customers_list = $customerRepository->getCustomers($this->site_srl);
+
+        Context::set('customers_list',$customers_list);
+    }
+
 	// region Product category
 	/**
 	 * Category management view (Admin)

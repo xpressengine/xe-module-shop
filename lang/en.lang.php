@@ -183,6 +183,12 @@
     $lang->about_shop_admin = 'You can enter more admins by just sepparating them with a comma (,).';
 	$lang->success_temp_saved = 'Temporary save succeeded.';
 
+    $lang->country = 'Country';
+    $lang->city = 'City';
+    $lang->region = 'Region';
+    $lang->telephone = 'Telephone';
+    $lang->postal_code = 'Postal Code';
+
     $lang->daily = 'Daily';
     $lang->weekly = 'Weekly';
     $lang->monthly = 'Monthly';

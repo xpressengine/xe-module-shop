@@ -10,5 +10,9 @@ require_once "BaseRepository.php";
  */
 class CustomerRepository extends BaseRepository
 {
-
+      public function getCustomers($site_srl){
+          $oMemberModel = getAdminModel('member');
+          $members = $oMemberModel->getSiteMemberList($site_srl);
+          return $members;
+      }
 }
