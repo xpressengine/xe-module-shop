@@ -239,7 +239,7 @@
         	'dispShopToolManageInvoices'=>'Invoices',
         ),
         array(
-            'dispShopToolManageCustommers'=>'Manage Accounts',
+            'dispShopToolManageCustomers'=>'Manage Accounts',
         ),
 		array(
 			'dispShopToolExtraMenuList'=>'All items',
