@@ -1,6 +1,6 @@
 <?php
 
-abstract class PaymentGatewayAbstract
+abstract class PaymentMethodAbstract
 {
     static protected $frontend_form = 'frontend_form.html';
     static protected $backend_form = 'backend_form.html';

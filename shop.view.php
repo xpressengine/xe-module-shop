@@ -756,7 +756,7 @@ class shopView extends shop {
         /** @var $cart Cart */
         $this->model->getCartRepository();
         $shippingRepo = $this->model->getShippingRepository();
-        $paymentRepo = $this->model->getPaymentGatewayRepository();
+        $paymentRepo = $this->model->getPaymentMethodRepository();
 
         if ((!$cart = Context::get('cart')) || !$cart->items) throw new Exception('No cart, you shouldn\'t be here');
         $shipping = array();
@@ -866,16 +866,15 @@ class shopView extends shop {
 	// region Payment Gateways
 
 	/**
-	 * Displays the Payment Gateways management page
+	 * Displays the Payment methods management page
 	 */
-	public function dispShopToolManagePaymentGateways()
+	public function dispShopToolManagePaymentMethods()
 	{
-		// get gateways
 		/**
 		 * @var shopModel $shopModel
 		 */
 		$shopModel = getModel('shop');
-		$repository = $shopModel->getPaymentGatewayRepository();
+		$repository = $shopModel->getPaymentMethodRepository();
         $payment_methods = $repository->getAvailablePaymentMethods();
 
 		Context::set('payment_methods',$payment_methods);
@@ -884,7 +883,7 @@ class shopView extends shop {
     /**
      * Display settings for a payment gateway
      */
-    public function dispShopToolEditPaymentGatewaySettings()
+    public function dispShopToolEditPaymentMethod()
     {
         $name = Context::get('name');
         if(!$name)
@@ -895,12 +894,12 @@ class shopView extends shop {
          * @var shopModel $shopModel
          */
         $shopModel = getModel('shop');
-        $payment_repository = $shopModel->getPaymentGatewayRepository();
-        $payment_gateway = $payment_repository->getPaymentGateway($name);
-        $payment_gateway_settings_HTML = $payment_gateway->getBackendFormHTML();
+        $payment_repository = $shopModel->getPaymentMethodRepository();
+        $payment_method = $payment_repository->getPaymentMethod($name);
+        $payment_method_settings_HTML = $payment_method->getBackendFormHTML();
 
-        Context::set('payment_gateway', $payment_gateway);
-        Context::set('payment_gateway_settings_HTML', $payment_gateway_settings_HTML);
+        Context::set('payment_method', $payment_method);
+        Context::set('payment_method_settings_HTML', $payment_method_settings_HTML);
     }
 
     // endregion

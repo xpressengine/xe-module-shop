@@ -927,7 +927,7 @@
          *
          * @author Daniel Ionescu (dev@xpressengine.org)
          */
-        public function procUpdateShopActivateGateway() {
+        public function procUpdateShopActivatePaymentMethod() {
 
             $name = Context::get('name');
 
@@ -940,16 +940,16 @@
              * @var shopModel $shopModel
              */
             $shopModel = getModel('shop');
-            $payment_repository = $shopModel->getPaymentGatewayRepository();
+            $payment_repository = $shopModel->getPaymentMethodRepository();
 
             $gateway = new stdClass();
             $gateway->name = $name;
             $gateway->status = 1;
 
-            $payment_repository->updatePaymentGateway($gateway);
+            $payment_repository->updatePaymentMethod($gateway);
 
             $vid = Context::get('vid');
-            $returnUrl = getNotEncodedUrl('', 'vid', $vid, 'act', 'dispShopToolManagePaymentGateways');
+            $returnUrl = getNotEncodedUrl('', 'vid', $vid, 'act', 'dispShopToolManagePaymentMethods');
             $this->setRedirectUrl($returnUrl);
         }
 
@@ -958,7 +958,7 @@
          *
          * @author Daniel Ionescu (dev@xpressengine.org)
          */
-        public function procUpdateShopDeactivateGateway() {
+        public function procUpdateShopDeactivatePaymentMethod() {
 
             $name = Context::get('name');
 
@@ -971,16 +971,16 @@
              * @var shopModel $shopModel
              */
             $shopModel = getModel('shop');
-            $payment_repository = $shopModel->getPaymentGatewayRepository();
+            $payment_repository = $shopModel->getPaymentMethodRepository();
 
             $gateway = new stdClass();
             $gateway->name = $name;
             $gateway->status = 0;
 
-            $payment_repository->updatePaymentGateway($gateway);
+            $payment_repository->updatePaymentMethod($gateway);
 
             $vid = Context::get('vid');
-            $returnUrl = getNotEncodedUrl('', 'vid', $vid, 'act', 'dispShopToolManagePaymentGateways');
+            $returnUrl = getNotEncodedUrl('', 'vid', $vid, 'act', 'dispShopToolManagePaymentMethods');
             $this->setRedirectUrl($returnUrl);
 
         }
@@ -990,7 +990,7 @@
          *
          * @author Daniel Ionescu (dev@xpressengine.org)
          */
-        public function procUpdateShopDeleteGateway() {
+        public function procUpdateShopDeletePaymentMethod() {
 
             $name = Context::get('name');
 
@@ -1002,12 +1002,12 @@
                  * @var shopModel $shopModel
                  */
                 $shopModel = $this->model;
-                $repository = $shopModel->getPaymentGatewayRepository();
+                $repository = $shopModel->getPaymentMethodRepository();
 
                 $gateway = new stdClass();
                 $gateway->name = $name;
 
-                $repository->deleteGateway($gateway);
+                $repository->deletePaymentMethod($gateway);
 
                 $fullPath = $baseDir . $name;
                 if (!rmdir($fullPath)) {
@@ -1018,7 +1018,7 @@
 
             }
 
-            $returnUrl = getNotEncodedUrl('', 'vid', $vid, 'act', 'dispShopToolManagePaymentGateways');
+            $returnUrl = getNotEncodedUrl('', 'vid', $vid, 'act', 'dispShopToolManagePaymentMethods');
             $this->setRedirectUrl($returnUrl);
 
         }
@@ -1028,7 +1028,7 @@
          *
          * @author Daniel Ionescu (dev@xpressengine.org)
          */
-        public function procShopUploadGateway() {
+        public function procShopUploadPaymentPlugin() {
 
             $baseDir = _XE_PATH_ . 'modules/shop/payment_gateways/';
             $uploadedGateway = Context::get('uploadedPaymentGateway');
@@ -1069,7 +1069,7 @@
                                  * @var shopModel $shopModel
                                  */
                                 $shopModel = $this->model;
-                                $repository = $shopModel->getPaymentGatewayRepository();
+                                $repository = $shopModel->getPaymentMethodRepository();
 
                                 $pg = new stdClass();
                                 $pg->name = $name[0];
@@ -1120,7 +1120,7 @@
 
             }
 
-            $returnUrl = getNotEncodedUrl('', 'vid', $vid, 'act', 'dispShopToolManagePaymentGateways');
+            $returnUrl = getNotEncodedUrl('', 'vid', $vid, 'act', 'dispShopToolManagePaymentMethods');
             $this->setRedirectUrl($returnUrl);
 
         }
@@ -1128,17 +1128,17 @@
         /**
          * Sanitizes the payment gateway database
          */
-        public function procSanitizeGateway() {
+        public function procSanitizePaymentMethods() {
 
             /**
              * @var shopModel $shopModel
              */
             $shopModel = $this->model;
-            $repository = $shopModel->getPaymentGatewayRepository();
+            $repository = $shopModel->getPaymentMethodRepository();
 
             try {
 
-                $repository->sanitizeGateways();
+                $repository->sanitizePaymentMethods();
                 $this->setMessage('Successfully sanitized gateway','info');
 
             } catch (Exception $e) {
@@ -1147,7 +1147,7 @@
 
             }
 
-            $returnUrl = getNotEncodedUrl('', 'vid', $vid, 'act', 'dispShopToolManagePaymentGateways');
+            $returnUrl = getNotEncodedUrl('', 'vid', $vid, 'act', 'dispShopToolManagePaymentMethods');
             $this->setRedirectUrl($returnUrl);
 
         }

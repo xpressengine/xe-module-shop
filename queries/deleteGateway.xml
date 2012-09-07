@@ -1,4 +1,4 @@
-<query id="deleteGateway" action="delete">
+<query id="deletePaymentMethod" action="delete">
     <tables>
         <table name="shop_payment_gateways" />
     </tables>

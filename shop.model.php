@@ -262,12 +262,12 @@ class shopModel extends shop
      * Returns an instance of the Payment Gateways repository
      *
      * @author Daniel Ionescu (dev@xpressengine.org)
-     * @return PaymentGatewayRepository
+     * @return PaymentMethodRepository
      */
-    public function getPaymentGatewayRepository()
+    public function getPaymentMethodRepository()
     {
-        require_once dirname(__FILE__) . '/libs/repositories/PaymentGatewayRepository.php';
-        return new PaymentGatewayRepository();
+        require_once dirname(__FILE__) . '/libs/repositories/PaymentMethodRepository.php';
+        return new PaymentMethodRepository();
     }
 
     /**

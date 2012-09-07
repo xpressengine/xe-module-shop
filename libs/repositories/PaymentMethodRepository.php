@@ -1,6 +1,6 @@
 <?php
 
-require_once dirname(__FILE__) . '/../../payment_gateways/PaymentGatewayAbstract.php';
+require_once dirname(__FILE__) . '/../../payment_gateways/PaymentMethodAbstract.php';
 require_once dirname(__FILE__) . '/BaseRepository.php';
 
 /**
@@ -8,7 +8,7 @@ require_once dirname(__FILE__) . '/BaseRepository.php';
  *
  * @author Dan Dragan (dev@xpressengine.org)
  */
-class PaymentGatewayRepository extends BaseRepository
+class PaymentMethodRepository extends BaseRepository
 {
     public static $PAYMENT_METHODS_DIR;
 
@@ -26,7 +26,7 @@ class PaymentGatewayRepository extends BaseRepository
         }
 
         // Convert from under_scores to CamelCase in order to get class name
-        $payment_class_name = str_replace(' ', '', ucwords(str_replace('_', ' ', $payment_extension_name))) . 'Gateway';
+        $payment_class_name = str_replace(' ', '', ucwords(str_replace('_', ' ', $payment_extension_name)));
         $payment_class_path = self::$PAYMENT_METHODS_DIR
             . DIRECTORY_SEPARATOR . $payment_extension_name
             . DIRECTORY_SEPARATOR . $payment_class_name . '.php';
@@ -39,15 +39,15 @@ class PaymentGatewayRepository extends BaseRepository
         require_once $payment_class_path;
 
         $payment_instance = new $payment_class_name;
-        if(!($payment_instance instanceof PaymentGatewayAbstract))
+        if(!($payment_instance instanceof PaymentMethodAbstract))
         {
-            throw new Exception("Payment class does not extend required PaymentGatewayAbstract");
+            throw new Exception("Payment class does not extend required PaymentMethodAbstract");
         };
 
         return $payment_instance;
     }
 
-    public function getPaymentGateway($name)
+    public function getPaymentMethod($name)
     {
         $args = new stdClass();
         $args->name = $name;
@@ -68,9 +68,9 @@ class PaymentGatewayRepository extends BaseRepository
         // Otherwise, initialize it with info from the extension class and insert in database
         $payment_gateway = $this->getPaymentMethodInstanceByName($name);
 
-        $this->insertPaymentGateway($payment_gateway);
+        $this->insertPaymentMethod($payment_gateway);
 
-        return $this->getPaymentGateway($name);
+        return $this->getPaymentMethod($name);
     }
 
     /**
@@ -89,7 +89,7 @@ class PaymentGatewayRepository extends BaseRepository
         {
             try
             {
-                $payment_methods[] = $this->getPaymentGateway($payment_extension_name);
+                $payment_methods[] = $this->getPaymentMethod($payment_extension_name);
             }
             catch(Exception $e)
             {
@@ -102,7 +102,7 @@ class PaymentGatewayRepository extends BaseRepository
 
      /**
       *
-      * Updates a payment gateway
+      * Updates a payment method
       *
       * Status: active = 1; inactive = 0
       *
@@ -111,7 +111,7 @@ class PaymentGatewayRepository extends BaseRepository
       * @throws exception
       * @return boolean
      */
-    public function updatePaymentGateway($pg) {
+    public function updatePaymentMethod($pg) {
         $output = executeQuery('shop.updateGateway', $pg);
 
         if(!$output->toBool()) {
@@ -129,7 +129,7 @@ class PaymentGatewayRepository extends BaseRepository
      * @throws exception
      * @return boolean
      */
-    public function insertPaymentGateway($args)
+    public function insertPaymentMethod($args)
     {
         $args->id = getNextSequence();
         $output = executeQuery('shop.insertGateway', $args);
@@ -146,7 +146,7 @@ class PaymentGatewayRepository extends BaseRepository
      * @throws exception
      * @return object
      */
-    public function getActivePaymentGateways() {
+    public function getActivePaymentMethods() {
 
         $args = new stdClass();
         $args->status = 1;
@@ -168,9 +168,9 @@ class PaymentGatewayRepository extends BaseRepository
      * @throws exception
      * @return boolean
      */
-    public function deleteGateway($args) {
+    public function deletePaymentMethod($args) {
 
-        $output = executeQuery('shop.deleteGateway',$args);
+        $output = executeQuery('shop.deletePaymentMethod',$args);
 
         if (!$output->toBool()) {
 
@@ -188,13 +188,13 @@ class PaymentGatewayRepository extends BaseRepository
      * @author Daniel Ionescu (dev@xpressengine.org)
      * @param  none
      */
-    public function sanitizeGateways() {
+    public function sanitizePaymentMethods() {
         $pgByDatabase = $this->getAllGateways();
         $pgByFolders = $this->getPaymentGatewaysByFolders();
 
         foreach ($pgByDatabase as $obj) {
             if (!in_array($obj->name,$pgByFolders)) {
-                $this->deleteGateway($obj);
+                $this->deletePaymentMethod($obj);
             }
         }
     }

@@ -50,12 +50,12 @@
         <permission action="procShopToolDeleteAttributes" target="manager" />
 		
 		<!-- Payment Gateway -->
-        <permission action="dispShopToolManagePaymentGateways" target="manager" />
-        <permission action="procUpdateShopActivateGateway" target="manager" />
-        <permission action="procUpdateShopDeactivateGateway" target="manager" />
-        <permission action="procUpdateShopDeleteGateway" target="manager" />
-        <permission action="procShopUploadGateway" target="manager" />
-        <permission action="procSanitizeGateway" target="manager" />
+        <permission action="dispShopToolManagePaymentMethods" target="manager" />
+        <permission action="procUpdateShopActivatePaymentMethod" target="manager" />
+        <permission action="procUpdateShopDeactivatePaymentMethod" target="manager" />
+        <permission action="procUpdateShopDeletePaymentMethod" target="manager" />
+        <permission action="procShopUploadPaymentPlugin" target="manager" />
+        <permission action="procSanitizePaymentMethods" target="manager" />
 
         <!-- Customers -->
         <permission action="dispShopToolManageCustomers" target="manager" />
@@ -137,13 +137,13 @@
         <action name="procShopToolDeleteAttributes" type="controller" />
 
 		<!-- Payment Gateway -->
-        <action name="dispShopToolManagePaymentGateways" type="view" />
-        <action name="dispShopToolEditPaymentGatewaySettings" type="view" />
-        <action name="procUpdateShopActivateGateway" type="controller" />
-        <action name="procUpdateShopDeactivateGateway" type="controller" />
-        <action name="procUpdateShopDeleteGateway" type="controller" />
-        <action name="procShopUploadGateway" type="controller" />
-        <action name="procSanitizeGateway" type="controller" />
+        <action name="dispShopToolManagePaymentMethods" type="view" />
+        <action name="dispShopToolEditPaymentMethod" type="view" />
+        <action name="procUpdateShopActivatePaymentMethod" type="controller" />
+        <action name="procUpdateShopDeactivatePaymentMethod" type="controller" />
+        <action name="procUpdateShopDeletePaymentMethod" type="controller" />
+        <action name="procShopUploadPaymentPlugin" type="controller" />
+        <action name="procSanitizePaymentMethods" type="controller" />
 
         <!-- Extra menu -->
         <action name="dispShopToolExtraMenuList" type="view" />

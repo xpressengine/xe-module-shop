@@ -92,7 +92,7 @@ class PaymentGatewayManager {
         $shopModel = getModel('shop');
         $paymentGateways = new stdClass();
         $baseDir = _XE_PATH_ . 'modules/shop/payment_gateways/';
-        $repository = $shopModel->getPaymentGatewayRepository();
+        $repository = $shopModel->getPaymentMethodRepository();
         $gatewaysData = $repository->getAllGateways();
 
         if ($gatewaysData) {

@@ -5,7 +5,7 @@
 <div id="content">
     <!-- contentHeader -->
     <div class="contentHeader">
-        <h3 class="h3">{$payment_gateway->display_name}</h3>
+        <h3 class="h3">{$payment_method->display_name}</h3>
     </div>
 
     <div cond="$XE_VALIDATOR_MESSAGE" class="message {$XE_VALIDATOR_MESSAGE_TYPE}">
@@ -14,28 +14,28 @@
     <!-- /contentHeader -->
 
     <form action="./" method="POST">
-        <input type="hidden" id="name" name="name" value="{$payment_gateway->name}" />
+        <input type="hidden" id="name" name="name" value="{$payment_method->name}" />
         <input type="hidden" id="act" name="act" value="procShopToolPaymentGatewayUpdate" />
         <p>
             <label for="display_name">Display name</label>
-            <input type="text" name="display_name" id="display_name" value="{$payment_gateway->display_name}" />
+            <input type="text" name="display_name" id="display_name" value="{$payment_method->display_name}" />
         </p>
 
         <p>
             <label for="is_active">Is active</label>
             <select name="is_active" id="is_active">
-                <option value="1" <!--@if($payment_gateway->isActive())-->selected<!--@endif-->>Yes</option>
-                <option value="0" <!--@if(!$payment_gateway->isActive())-->selected<!--@endif-->>No</option>
+                <option value="1" <!--@if($payment_method->isActive())-->selected<!--@endif-->>Yes</option>
+                <option value="0" <!--@if(!$payment_method->isActive())-->selected<!--@endif-->>No</option>
             </select>
         </p>
 
-        {$payment_gateway_settings_HTML}
+        {$payment_method_settings_HTML}
 
 
         <p class="submit">
             <input type="submit" value="Save" />
             or
-            <a href="{getUrl('act','dispShopToolManagePaymentGateways','name',$obj->name)}">
+            <a href="{getUrl('act','dispShopToolManagePaymentMethods','name',$obj->name)}">
                 Go back
             </a>
         </p>
