@@ -1066,6 +1066,27 @@
          */
         public function procShopToolTestCheckout()
         {
+            /**
+             * @var shopModel $shopModel
+             */
+            $shopModel = getModel('shop');
+
+            // Retrieve checkout info and create order object
+            $order = new Order();
+
+            // Get selected payment method name
+            $payment = Context::get('payment');
+            $payment_method_name = $payment['method'];
+
+            // Get payment class
+            $payment_repository = $shopModel->getPaymentMethodRepository();
+            $payment_method = $payment_repository->getPaymentMethod($payment_method_name);
+
+
+
+
+
+
 
         }
 

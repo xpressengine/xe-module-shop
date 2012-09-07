@@ -89,10 +89,27 @@
             <legend>Payment</legend>
             <label for="payment_method">Payment method</label>
             <select name="payment[method]" id="payment_method">
+                <option value=""></option>
                 <!--@foreach($payment_methods as $payment_method)-->
                     <option value="{$payment_method->name}">{$payment_method->display_name}</option>
                 <!--@end-->
             </select>
+
+            <script type="text/javascript">
+                jQuery(document).ready(function($){
+                    $("#payment_method").change(function(){
+                        $selected = $(this).val();
+                        $(".payment_form").hide();
+                        $("#payment_" + $selected).show();
+                    });
+                });
+            </script>
+
+            <!--@foreach($payment_methods as $payment_method)-->
+            <div id="payment_{$payment_method->name}" class="payment_form" style="display:none">
+                {$payment_method->getFrontendFormHTML()}
+            </div>
+            <!--@end-->
 
         </fieldset>
 
