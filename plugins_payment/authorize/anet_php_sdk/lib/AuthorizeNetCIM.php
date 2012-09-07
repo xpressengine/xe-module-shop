@@ -82,7 +82,7 @@ class AuthorizeNetCIM extends AuthorizeNetRequest
     }
     
     /**
-     * Create a shipping address.
+     * Create a plugins_shipping address.
      *
      * @param int                        $customerProfileId
      * @param AuthorizeNetAddress        $shippingAddress
@@ -148,7 +148,7 @@ class AuthorizeNetCIM extends AuthorizeNetRequest
     }
     
     /**
-     * Delete a shipping address.
+     * Delete a plugins_shipping address.
      *
      * @param int $customerProfileId
      * @param int $customerAddressId
@@ -205,7 +205,7 @@ class AuthorizeNetCIM extends AuthorizeNetRequest
     }
     
     /**
-     * Get a shipping address.
+     * Get a plugins_shipping address.
      *
      * @param int $customerProfileId
      * @param int $customerAddressId
@@ -259,7 +259,7 @@ class AuthorizeNetCIM extends AuthorizeNetRequest
     }
     
     /**
-     * Update a shipping address.
+     * Update a plugins_shipping address.
      *
      * @param int                        $customerProfileId
      * @param int                        $customerShippingAddressId

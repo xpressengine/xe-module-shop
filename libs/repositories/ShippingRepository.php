@@ -13,7 +13,7 @@ class ShippingRepository extends BaseRepository
 
     public function __construct()
     {
-        self::$SHIPPING_METHODS_DIR = _XE_PATH_ . 'modules/shop/shipping';
+        self::$SHIPPING_METHODS_DIR = _XE_PATH_ . 'modules/shop/plugins_shipping';
 
     }
 
@@ -101,7 +101,7 @@ class ShippingRepository extends BaseRepository
         $shipping_method = $this->getShippingMethod($shipping_info->code);
         if(!$shipping_method)
         {
-            throw new Exception("Not shipping method exists for the code " . $shipping_info->code);
+            throw new Exception("No shipping method exists for the code " . $shipping_info->code);
         }
 
         $shipping_method->save($shipping_info);

@@ -81,7 +81,7 @@ class AuthorizeNetCIM_Test extends PHPUnit_Framework_TestCase
     $customerProfile->paymentProfiles[] = $paymentProfile2;
     
     
-    // Add shipping address.
+    // Add plugins_shipping address.
     $address = new AuthorizeNetAddress;
     $address->firstName = "john";
     $address->lastName = "Doe";
@@ -95,7 +95,7 @@ class AuthorizeNetCIM_Test extends PHPUnit_Framework_TestCase
     $address->faxNumber = "555-555-5556";
     $customerProfile->shipToList[] = $address;
     
-    // Add another shipping address.
+    // Add another plugins_shipping address.
     $address2 = new AuthorizeNetAddress;
     $address2->firstName = "jane";
     $address2->lastName = "Doe";
@@ -250,7 +250,7 @@ class AuthorizeNetCIM_Test extends PHPUnit_Framework_TestCase
     $response = $request->updateCustomerPaymentProfile($customerProfileId,$paymentProfileId, $paymentProfile);
     $this->assertTrue($response->isOk());
     
-    // Add shipping address.
+    // Add plugins_shipping address.
     $address = new AuthorizeNetAddress;
     $address->firstName = "john";
     $address->lastName = "Doe";
@@ -266,7 +266,7 @@ class AuthorizeNetCIM_Test extends PHPUnit_Framework_TestCase
     $this->assertTrue($response->isOk());
     $customerAddressId = $response->getCustomerAddressId();
     
-    // Update shipping address.
+    // Update plugins_shipping address.
     $address->address = "2 First Street";
     $response = $request->updateCustomerShippingAddress($customerProfileId, $customerAddressId, $address);
     $this->assertTrue($response->isOk());

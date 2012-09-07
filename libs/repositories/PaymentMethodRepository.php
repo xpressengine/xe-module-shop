@@ -1,6 +1,6 @@
 <?php
 
-require_once dirname(__FILE__) . '/../../payment_gateways/PaymentMethodAbstract.php';
+require_once dirname(__FILE__) . '/../../plugins_payment/PaymentMethodAbstract.php';
 require_once dirname(__FILE__) . '/BaseRepository.php';
 
 /**
@@ -14,7 +14,7 @@ class PaymentMethodRepository extends BaseRepository
 
     public function __construct()
     {
-        self::$PAYMENT_METHODS_DIR = _XE_PATH_ . 'modules/shop/payment_gateways';
+        self::$PAYMENT_METHODS_DIR = _XE_PATH_ . 'modules/shop/plugins_payment';
     }
 
     private function getPaymentMethodInstanceByName($payment_extension_name)
@@ -76,12 +76,12 @@ class PaymentMethodRepository extends BaseRepository
     /**
      * Returns all available payment methods
      *
-     * Looks in the database and also in the payment_gateways folder to see
+     * Looks in the database and also in the plugins_payment folder to see
      * if any new extension showed up. If yes, also adds it in the database
      */
     public function getAvailablePaymentMethods()
     {
-        // Scan through the shipping extension directory to retrieve available methods
+        // Scan through the plugins_shipping extension directory to retrieve available methods
         $payment_extensions = FileHandler::readDir(self::$PAYMENT_METHODS_DIR);
 
         $payment_methods = array();

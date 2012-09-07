@@ -366,7 +366,7 @@
     $lang->confirm_cancel_comment = 'Would you like to cancel editing your comment?';
 
     // Payment gateway
-    $lang->no_gateways = 'No payment plugins seem to be installed. Please check that your "./modules/shop/payment_gateways/" folder actually contains some payment plugins.';
+    $lang->no_gateways = 'No payment plugins seem to be installed. Please check that your "./modules/shop/plugins_payment/" folder actually contains some payment plugins.';
     $lang->activate = 'Activate';
     $lang->deactivate = 'Deactivate';
     $lang->gateway_settings = 'Settings';

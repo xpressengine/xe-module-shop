@@ -996,7 +996,7 @@
 
             if ($name != '') {
 
-                $baseDir = _XE_PATH_ . 'modules/shop/payment_gateways/';
+                $baseDir = _XE_PATH_ . 'modules/shop/plugins_payment/';
 
                 /**
                  * @var shopModel $shopModel
@@ -1030,7 +1030,7 @@
          */
         public function procShopUploadPaymentPlugin() {
 
-            $baseDir = _XE_PATH_ . 'modules/shop/payment_gateways/';
+            $baseDir = _XE_PATH_ . 'modules/shop/plugins_payment/';
             $uploadedGateway = Context::get('uploadedPaymentGateway');
             $fullName = $uploadedGateway['name'];
             $name = explode('.',$uploadedGateway['name']);
@@ -1046,7 +1046,7 @@
 
                 if(is_dir($folderPath)) {
 
-                    $this->setMessage('There is already a directory called "' . $name[0] . '" under ./modules/shop/payment_gateways/. Please delete the directory and try again.','error');
+                    $this->setMessage('There is already a directory called "' . $name[0] . '" under ./modules/shop/plugins_payment/. Please delete the directory and try again.','error');
 
                 } else {
 
@@ -1106,7 +1106,7 @@
 
                         } else {
 
-                            $this->setMessage('Unable to write in payment_gateways directory. Please set the appropriate permissions.','error');
+                            $this->setMessage('Unable to write in plugins_payment directory. Please set the appropriate permissions.','error');
 
                         }
 
