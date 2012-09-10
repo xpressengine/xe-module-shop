@@ -1,7 +1,6 @@
 <?php
 
 require_once dirname(__FILE__) . '/../../plugins_payment/PaymentMethodAbstract.php';
-require_once dirname(__FILE__) . '/BaseRepository.php';
 
 /**
  * Handles database operations for Product

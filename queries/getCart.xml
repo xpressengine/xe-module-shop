@@ -10,5 +10,4 @@
         <condition operation="equal" column="member_srl" var="member_srl" filter="number" pipe="and"/>
         <condition operation="equal" column="session_id" var="session_id" pipe="and"/>
     </conditions>
-
 </query>

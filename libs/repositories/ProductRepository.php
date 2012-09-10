@@ -1,9 +1,4 @@
 <?php
-
-require_once dirname(__FILE__) . '/../model/Product.php';
-require_once dirname(__FILE__) . '/BaseRepository.php';
-
-
 /**
  * Handles database operations for Product
  *

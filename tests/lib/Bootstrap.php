@@ -6,6 +6,7 @@ if(!defined('__ZBXE__')) define('__ZBXE__', TRUE);
 if(!defined('_XE_PATH_')) define('_XE_PATH_', realpath(dirname(__FILE__) . '/../../../../') . '/');
 
 require_once(_XE_PATH_ . 'config/config.inc.php');
+require_once(_XE_PATH_ . 'modules/shop/libs/autoload/autoload.php');
 
 // Delete any cache files
 FileHandler::removeDir(_XE_PATH_ . 'files/cache');

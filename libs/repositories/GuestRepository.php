@@ -1,8 +1,5 @@
 <?php
 
-require_once dirname(__FILE__) . '/../model/Guest.php';
-require_once "BaseRepository.php";
-
 /**
  * Handles database operations for Guests table
  *

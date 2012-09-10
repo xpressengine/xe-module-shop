@@ -1,8 +1,5 @@
 <?php
 
-require_once dirname(__FILE__) . '/BaseRepository.php';
-require_once dirname(__FILE__) . '/../model/Category.php';
-
 /**
  * Handles database operations for Product Category
  *

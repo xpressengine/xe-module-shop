@@ -1,9 +1,5 @@
 <?php
 
-require_once dirname(__FILE__) . '/../model/Cart.php';
-require_once "BaseRepository.php";
-require_once "OrderRepository.php";
-
 /**
  * Handles database operations for the shopping Cart
  *

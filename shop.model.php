@@ -218,7 +218,6 @@ class shopModel extends shop
      */
     public function getProductRepository()
     {
-        require_once dirname(__FILE__) . '/libs/repositories/ProductRepository.php';
         return new ProductRepository();
     }
 
@@ -230,7 +229,6 @@ class shopModel extends shop
 	 */
 	public function getImageRepository()
 	{
-		require_once dirname(__FILE__) . '/libs/repositories/ImageRepository.php';
 		return new ImageRepository();
 	}
 
@@ -242,7 +240,6 @@ class shopModel extends shop
      */
     public function getAttributeRepository()
     {
-        require_once dirname(__FILE__) . '/libs/repositories/AttributeRepository.php';
         return new AttributeRepository();
     }
 
@@ -254,7 +251,6 @@ class shopModel extends shop
 	 */
     public function getCategoryRepository()
 	{
-		require_once dirname(__FILE__) . '/libs/repositories/CategoryRepository.php';
 		return new CategoryRepository();
 	}
 
@@ -266,7 +262,6 @@ class shopModel extends shop
      */
     public function getPaymentMethodRepository()
     {
-        require_once dirname(__FILE__) . '/libs/repositories/PaymentMethodRepository.php';
         return new PaymentMethodRepository();
     }
 
@@ -290,7 +285,6 @@ class shopModel extends shop
      */
     public function getCartRepository()
     {
-        require_once dirname(__FILE__) . '/libs/repositories/CartRepository.php';
         return new CartRepository();
     }
 
@@ -302,7 +296,6 @@ class shopModel extends shop
      */
     public function getOrderRepository()
     {
-        require_once dirname(__FILE__) . '/libs/repositories/OrderRepository.php';
         return new OrderRepository();
     }
 
@@ -314,7 +307,6 @@ class shopModel extends shop
      */
     public function getAddressRepository()
     {
-        require_once dirname(__FILE__) . '/libs/repositories/AddressRepository.php';
         return new AddressRepository();
     }
 
@@ -326,7 +318,6 @@ class shopModel extends shop
      */
     public function getGuestRepository()
     {
-        require_once dirname(__FILE__) . '/libs/repositories/GuestRepository.php';
         return new GuestRepository();
     }
 
@@ -346,9 +337,7 @@ class shopModel extends shop
      */
     public function getShippingRepository()
     {
-        require_once dirname(__FILE__) . '/libs/repositories/ShippingRepository.php';
         return new ShippingRepository();
-
     }
 
     /**
@@ -356,9 +345,7 @@ class shopModel extends shop
      */
     public function getCustomerRepository()
     {
-        require_once dirname(__FILE__) . '/libs/repositories/CustomerRepository.php';
         return new CustomerRepository();
-
     }
 
     // region Menu

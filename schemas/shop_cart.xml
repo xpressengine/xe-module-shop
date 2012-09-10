@@ -6,6 +6,7 @@
     <column name="billing_address_srl" type="number" size="11"/>
     <column name="shipping_address_srl" type="number" size="11"/>
     <column name="items" type="number" size="11" />
+    <column name="extra" type="text" />
     <column name="regdate" type="date" />
     <column name="last_update" type="date" />
 </table>

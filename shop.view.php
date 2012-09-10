@@ -159,7 +159,7 @@ class shopView extends shop {
 		Context::setBrowserTitle($this->shop->get('browser_title'));
 
         // Load cart for display on all pages (in header)
-        $cartRepo = $oShopModel->getCartRepository();
+        $cartRepo = new CartRepository();
         $logged_info = Context::get('logged_info');
         $cart = $cartRepo->getCart($this->module_srl, null, $logged_info->member_srl, session_id());
         Context::set('cart', $cart);
@@ -359,7 +359,7 @@ class shopView extends shop {
 
     public function dispShopToolManageOrders()
     {
-        $repo = $this->model->getOrderRepository();
+        $repo = new OrderRepository();
         $orders = $repo->getList($this->module_info->module_srl);
         Context::set('orders', $orders->data);
         Context::set('page_navigation', $orders->page_navigation);
@@ -367,7 +367,7 @@ class shopView extends shop {
 
     public function dispShopToolViewOrder()
     {
-        $repo = $this->model->getOrderRepository();
+        $repo = new OrderRepository();
         if ($order = $repo->getOrderBySrl(Context::get('order_srl'))) {
             Context::set('order', $order);
         }
@@ -736,7 +736,7 @@ class shopView extends shop {
 	public function dispShopCart()
 	{
         /** @var $cart Cart */
-        $cartRepo = $this->model->getCartRepository();
+        $cartRepo = new CartRepository();
         $productRepo = $this->model->getProductRepository();
         if ($cart = Context::get('cart')) {
             $output = $cart->getProductsList(array('page' => Context::get('page')));
@@ -754,7 +754,6 @@ class shopView extends shop {
     public function dispShopCheckout()
     {
         /** @var $cart Cart */
-        $this->model->getCartRepository();
         $shippingRepo = $this->model->getShippingRepository();
         $paymentRepo = $this->model->getPaymentMethodRepository();
 

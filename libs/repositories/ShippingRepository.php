@@ -1,7 +1,5 @@
 <?php
 
-require_once dirname(__FILE__) . '/BaseRepository.php';
-
 /**
  * Handles logic for Shipping
  *

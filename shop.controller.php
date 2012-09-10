@@ -427,8 +427,7 @@
          */
         public function procShopToolCheckout()
         {
-            /* @var CartRepository $cartRepo */
-            $cartRepo = $this->model->getCartRepository();
+            $cartRepo = new CartRepository();
             $logged_info = Context::get('logged_info');
             //get or create cart:
             if ($cart = $cartRepo->getCart($this->module_info->module_srl, null, $logged_info->member_srl, session_id(), true)) {
@@ -465,9 +464,7 @@
          * @author Florin Ercus (dev@xpressengine.org)
          */
         public function procShopToolCartAddProduct() {
-            /* @var CartRepository $cartRepository */
-            $cartRepository = $this->model->getCartRepository();
-
+            $cartRepository = new CartRepository();
             if ($product_srl = Context::get('entry')) {
                 $productsRepo = $this->model->getProductRepository();
                 if ($product = $productsRepo->getProduct($product_srl)) {
@@ -501,7 +498,7 @@
                 if (!is_numeric($product_srls)) throw new Exception('Invalid product_srl for single product delete');
                 $product_srls = array($product_srls);
             }
-            $cartRepo = $this->model->getCartRepository();
+            $cartRepo = new CartRepository();
             $logged_info = Context::get('logged_info');
             $cart = $cartRepo->getCart($this->module_srl, $cart_srl, $logged_info->member_srl, session_id());
             $cart->removeProducts($product_srls);
@@ -519,7 +516,7 @@
             if (!is_array($quantities = Context::get('products'))) {
                 throw new Exception('Invalid products array input.');
             }
-            $cartRepo = $this->model->getCartRepository();
+            $cartRepo = new CartRepository();
             $logged_info = Context::get('logged_info');
             if (!$cart = $cartRepo->getCart($this->module_srl, $cart_srl, $logged_info->member_srl, session_id())) {
                 throw new Exception('No cart');
@@ -1103,7 +1100,7 @@
             $shopModel = getModel('shop');
 
             // Retrieve checkout info
-            $cartRepo = $shopModel->getCartRepository();
+            $cartRepo = new CartRepository();
             $logged_info = Context::get('logged_info');
             $cart = $cartRepo->getCart($this->module_info->module_srl, null, $logged_info->member_srl, session_id(), true);
 

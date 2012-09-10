@@ -1,5 +1,4 @@
 <?php
-require_once dirname(__FILE__) . '/BaseItem.php';
 class Customer extends BaseItem
 {
 
@@ -30,4 +29,8 @@ class Customer extends BaseItem
         $region,
         $addresses,
         $groups = array();
+
+    /** @var CustomerRepository */
+    public $repo;
+
 }

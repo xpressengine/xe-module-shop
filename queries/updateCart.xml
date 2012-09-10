@@ -9,6 +9,7 @@
         <column name="billing_address_srl" var="billing_address_srl" filter="number"/>
         <column name="billing_address_srl" var="billing_address_srl" filter="number"/>
         <column name="items" var="items" filter="number"/>
+        <column name="extra" var="extra"/>
         <column name="last_update" var="last_update" default="curdate()"/>
     </columns>
     <conditions>

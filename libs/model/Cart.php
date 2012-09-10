@@ -1,6 +1,7 @@
 <?php
-require_once dirname(__FILE__) . '/BaseItem.php';
-
+/**
+ * @author Florin Ercus (dev@xpressengine.org)
+ */
 class Cart extends BaseItem
 {
 
@@ -12,6 +13,7 @@ class Cart extends BaseItem
         $billing_address_srl,
         $shopping_address_srl,
         $items = 0,
+        $extra,
         $regdate,
         $last_update;
 
@@ -133,6 +135,7 @@ class Cart extends BaseItem
     }
     #endregion
 
+    //region checkout
     /**
      * Checkout processor
      *
@@ -144,15 +147,26 @@ class Cart extends BaseItem
     public function checkout(array $orderData)
     {
         if (!$this->cart_srl) throw new Exception('Cart is not persisted');
-        $data = array_merge( $this->formTranslation($orderData), array('cart_srl' => $this->cart_srl, 'module_srl' => $this->module_srl, 'member_srl'=> $this->member_srl) );
+
+        /* save as order:
+        $data = array_merge( $this->formTranslation($orderData), array(
+            'cart_srl' => $this->cart_srl,
+            'module_srl' => $this->module_srl,
+            'member_srl'=> $this->member_srl)
+        );
         $order = new Order($data);
-        if ($existingOrder = $this->getOrder()) {
+        if ($this->getOrder()) {
             throw new Exception('Order already placed for current cart');
         }
         $order->save(); //obtain srl
         $order->saveCartProducts($this);
         $this->delete();
         return $order;
+         * * */
+
+        $this->setExtra($orderData);
+        $this->save();
+
     }
 
     /**
@@ -205,5 +219,43 @@ class Cart extends BaseItem
         if ($array) foreach ($array as $val) if ($val) return true;
         return false;
     }
+    //endregion
+
+    //region extra
+    public function setExtraArray(array $extra)
+    {
+        $this->extra = json_encode($extra);
+        return $this;
+    }
+
+    /**
+     * @return array|null
+     */
+    public function getExtraArray()
+    {
+        return (array) json_decode($this->extra);
+    }
+
+    public function setExtra($key, $value=null)
+    {
+        if (!$a = $this->getExtraArray()) $a = array();
+        if (is_array($key)) {
+            foreach ($key as $k=>$v) {
+                $this->setExtra($k, $v);
+            }
+        }
+        else {
+            $a[$key] = $value;
+            $this->setExtraArray($a);
+        }
+        return $this;
+    }
+
+    public function getExtra($key)
+    {
+        $a = $this->getExtraArray();
+        return isset($a[$key]) ? $a[$key] : null;
+    }
+    //endregion
 
 }
