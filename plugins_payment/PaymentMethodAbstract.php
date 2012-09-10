@@ -2,14 +2,20 @@
 
 abstract class PaymentMethodAbstract
 {
-    static protected $frontend_form = 'frontend_form.html';
-    static protected $backend_form = 'backend_form.html';
+    static protected $frontend_form = 'form_payment.html';
+    static protected $backend_form = 'form_admin_settings.html';
 
     public $id = null;
     public $display_name;  /// Display name
     public $name; /// Unique name = folder name
     public $status = 0;
     public $properties;
+
+    public function __construct()
+    {
+        $this->name = $this->getName();
+        $this->display_name = $this->getDisplayName();
+    }
 
     /**
      * Returns the payment gateway's name
@@ -18,8 +24,12 @@ abstract class PaymentMethodAbstract
      */
     public function getDisplayName()
     {
-        $name = $this->getName();
-        return ucwords(str_replace('_', ' ', $name));
+        if(!isset($this->display_name))
+        {
+            $name = $this->getName();
+            $this->display_name = ucwords(str_replace('_', ' ', $name));
+        }
+        return $this->display_name;
     }
 
     /**
@@ -28,9 +38,13 @@ abstract class PaymentMethodAbstract
      */
     final public function getName()
     {
-        $payment_class_directory_path = $this->getPaymentMethodDir();
-        $folders = explode(DIRECTORY_SEPARATOR, $payment_class_directory_path);
-        return array_pop($folders);
+        if(!isset($this->name))
+        {
+            $payment_class_directory_path = $this->getPaymentMethodDir();
+            $folders = explode(DIRECTORY_SEPARATOR, $payment_class_directory_path);
+            $this->name = array_pop($folders);
+        }
+        return $this->name;
     }
 
     public function setProperties($data)
@@ -84,5 +98,48 @@ abstract class PaymentMethodAbstract
         return $this->getFormHtml(self::$backend_form);
     }
 
-    abstract public function validatePaymentForm(&$error_message);
+    /**
+     * Return redirect url
+     *
+     * @return string
+     */
+    public function processCheckoutForm()
+    {
+        $payment = Context::get('payment');
+        $payment_method_name = $payment['method'];
+        $vid = Context::get('vid');
+        return getNotEncodedUrl('', 'vid', $vid, 'act', 'dispShopTestOrderConfirmation', 'payment_method', $payment_method_name);
+    }
+
+    abstract public function processPayment(Cart $cart, &$error_message);
+
+}
+
+abstract class PaymentAPIAbstract
+{
+    // Convert data to name-value pairs string
+    public function getNameValuePairsAsString($data)
+    {
+        $post_string = '';
+        foreach( $data as $k => $v ) {
+            $post_string .= "$k=" . urlencode($v) . "&";
+        }
+        return rtrim($post_string, '& ');
+    }
+
+    public function request($url, $data)
+    {
+        $post_string = $this->getNameValuePairsAsString($data);
+
+        // Request
+        $request = curl_init($url);
+        curl_setopt($request, CURLOPT_HEADER, 0);
+        curl_setopt($request, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($request, CURLOPT_POSTFIELDS, $post_string);
+        curl_setopt($request, CURLOPT_SSL_VERIFYPEER, FALSE);
+        $response = curl_exec($request);
+        curl_close ($request);
+        return $response;
+    }
+
 }

@@ -1108,20 +1108,12 @@
             $payment = Context::get('payment');
             $payment_method_name = $payment['method'];
 
-//            // Get payment class
-//            $payment_repository = $shopModel->getPaymentMethodRepository();
-//            $payment_method = $payment_repository->getPaymentMethod($payment_method_name);
-//
-//            // Validate form inputs
-//            $error_message = '';
-//            if(!$payment_method->validatePaymentForm($error_message))
-//            {
-//                return new Object(-1, $error_message);
-//            }
+            // Get payment class
+            $payment_repository = $shopModel->getPaymentMethodRepository();
+            $payment_method = $payment_repository->getPaymentMethod($payment_method_name);
 
-            $vid = Context::get('vid');
-            $returnUrl = getNotEncodedUrl('', 'vid', $vid, 'act', 'dispShopTestOrderConfirmation', 'payment_method', $payment_method_name);
-            $this->setRedirectUrl($returnUrl);
+            $return_url = $payment_method->processCheckoutForm();
+            $this->setRedirectUrl($return_url);
         }
 
         public function procShopTestCompleteOrder()
