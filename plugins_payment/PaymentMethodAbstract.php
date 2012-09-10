@@ -18,7 +18,7 @@ abstract class PaymentMethodAbstract
      */
     public function getDisplayName()
     {
-        $name = $this->getUniqueName();
+        $name = $this->getName();
         return ucwords(str_replace('_', ' ', $name));
     }
 
@@ -74,13 +74,15 @@ abstract class PaymentMethodAbstract
         return $oTemplate->compile($this->getPaymentMethodDir(), $filename);
     }
 
-    public function getFrontendFormHTML()
+    public function getPaymentFormHTML()
     {
         return $this->getFormHtml(self::$frontend_form);
     }
 
-    public function getBackendFormHTML()
+    public function getAdminSettingsFormHTML()
     {
         return $this->getFormHtml(self::$backend_form);
     }
+
+    abstract public function validatePaymentForm(&$error_message);
 }

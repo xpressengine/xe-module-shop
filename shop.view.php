@@ -938,7 +938,7 @@ class shopView extends shop {
         Context::set('payment_method', $payment_method);
 
         // Retrieve backend form fields
-        $payment_method_settings_HTML = $payment_method->getBackendFormHTML();
+        $payment_method_settings_HTML = $payment_method->getAdminSettingsFormHTML();
         Context::set('payment_method_settings_HTML', $payment_method_settings_HTML);
     }
 

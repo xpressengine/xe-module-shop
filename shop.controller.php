@@ -1102,8 +1102,10 @@
              */
             $shopModel = getModel('shop');
 
-            // Retrieve checkout info and create order object
-            $order = new Order();
+            // Retrieve checkout info
+            $cartRepo = $shopModel->getCartRepository();
+            $logged_info = Context::get('logged_info');
+            $cart = $cartRepo->getCart($this->module_info->module_srl, null, $logged_info->member_srl, session_id(), true);
 
             // Get selected payment method name
             $payment = Context::get('payment');
@@ -1113,7 +1115,16 @@
             $payment_repository = $shopModel->getPaymentMethodRepository();
             $payment_method = $payment_repository->getPaymentMethod($payment_method_name);
 
+            // Validate form inputs
+            $error_message = '';
+            if(!$payment_method->validatePaymentForm($error_message))
+            {
+                return new Object(-1, $error_message);
+            }
 
+            // TODO Transfer context info into $cart object and persist
+
+            $payment_method->authorizePayment($cart);
 
 
 
