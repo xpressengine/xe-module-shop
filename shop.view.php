@@ -943,6 +943,30 @@ class shopView extends shop {
     }
 
     /**
+     * Order confirmation page
+     */
+    public function dispShopTestOrderConfirmation()
+    {
+        /**
+         * @var shopModel $shopModel
+         */
+        $shopModel = getModel('shop');
+
+        // Get selected payment method name
+        $payment_method_name = Context::get('payment_method');
+
+        // Get payment class
+        $payment_repository = $shopModel->getPaymentMethodRepository();
+        $payment_method = $payment_repository->getPaymentMethod($payment_method_name);
+
+        $payment_form = $payment_method->getPaymentFormHTML();
+        Context::set('payment_form', $payment_form);
+        Context::set('payment_method', $payment_method_name);
+
+        $this->setTemplateFile('test_order_confirmation.html');
+    }
+
+    /**
      * Test page for payment - simulates the checkout page
      */
     public function dispShopTestCheckout()

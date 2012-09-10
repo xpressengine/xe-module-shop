@@ -1,0 +1,29 @@
+<include target="_header.html"/>
+
+<div id="confirm_order" class="mainContent" cond="isset($cart) && $cart->items">
+    <h1>Confirm order</h1>
+
+    <div cond="$XE_VALIDATOR_MESSAGE" class="message {$XE_VALIDATOR_MESSAGE_TYPE}">
+        <p>{$XE_VALIDATOR_MESSAGE}</p>
+    </div>
+
+Please review your order:
+
+Payment will be made when you click Submit.
+
+<form action="./" method="post">
+    <input type="hidden" name="act" value="procShopTestCompleteOrder" />
+    <input type="hidden" name="payment_method" value="{$payment_method}" />
+
+    {$payment_form}
+
+    <input type="submit" value="Confirm order" />
+
+
+</form>
+
+    <p>Forgot something? Edit your <a href="{getUrl('act','dispShopCart')}" title="cart">cart</a>.</p>
+
+</div>
+
+<include target="_footer.html"/>

@@ -1111,25 +1111,72 @@
             $payment = Context::get('payment');
             $payment_method_name = $payment['method'];
 
+//            // Get payment class
+//            $payment_repository = $shopModel->getPaymentMethodRepository();
+//            $payment_method = $payment_repository->getPaymentMethod($payment_method_name);
+//
+//            // Validate form inputs
+//            $error_message = '';
+//            if(!$payment_method->validatePaymentForm($error_message))
+//            {
+//                return new Object(-1, $error_message);
+//            }
+
+            $vid = Context::get('vid');
+            $returnUrl = getNotEncodedUrl('', 'vid', $vid, 'act', 'dispShopTestOrderConfirmation', 'payment_method', $payment_method_name);
+            $this->setRedirectUrl($returnUrl);
+        }
+
+        public function procShopTestCompleteOrder()
+        {
+            /**
+             * @var shopModel $shopModel
+             */
+            $shopModel = getModel('shop');
+
+            // Retrieve checkout info
+            $cartRepo = $shopModel->getCartRepository();
+            $logged_info = Context::get('logged_info');
+            $cart = $cartRepo->getCart($this->module_info->module_srl, null, $logged_info->member_srl, session_id(), true);
+
+            // Get selected payment method name
+            $payment_method_name = Context::get('payment_method');
+
             // Get payment class
             $payment_repository = $shopModel->getPaymentMethodRepository();
             $payment_method = $payment_repository->getPaymentMethod($payment_method_name);
 
-            // Validate form inputs
+            // TODO Transfer context info into $cart object and persist
             $error_message = '';
-            if(!$payment_method->validatePaymentForm($error_message))
+            if(!$payment_method->processPayment($cart, $error_message))
             {
                 return new Object(-1, $error_message);
             }
 
-            // TODO Transfer context info into $cart object and persist
+            $fake_billing = array(
+                'firstname' => 'Corina',
+                'lastname' => 'Udrescu',
+                'email' => 'hello@gmail.com',
+                'company' => 'Arnia',
+                'address' => 'Some street',
+                'country' => 'Romania',
+                'region' => 'Bucuresti',
+                'city' => 'Bucuresti',
+                'zip' => '123456',
+                'phone' => '123456789'
+            );
+            $fake_shipping = array(
+                'method' => 'flat_rate_shipping'
+            );
+            $fake_payment = null;
 
-            $payment_method->authorizePayment($cart);
+            $order = $cart->checkout(array(
+                'billing'  => $fake_billing,
+                'shipping' => $fake_shipping,
+                'payment'  => $fake_payment
+            ));
 
-
-
-
-
+            $this->setRedirectUrl(getNotEncodedUrl('', 'justCheckedOut', $order->order_srl));
         }
 
 

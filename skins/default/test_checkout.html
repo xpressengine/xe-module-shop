@@ -105,26 +105,6 @@
                 <!--@end-->
             </select>
 
-            <script type="text/javascript">
-                jQuery(document).ready(function($){
-                    $("#payment_method").change(function(){
-                        $selected = $(this).val();
-                        $(".payment_form").hide();
-                        $("#payment_" + $selected).show();
-                    });
-                });
-            </script>
-
-            <!--@foreach($payment_methods as $payment_method)-->
-            <div id="payment_{$payment_method->name}" class="payment_form"
-                <!--@if($payment_method->name != $selected_payment_method)-->
-                     style="display:none"
-                <!--@end-->
-                    >
-                {$payment_method->getPaymentFormHTML()}
-            </div>
-            <!--@end-->
-
         </fieldset>
 
         <fieldset id="review">

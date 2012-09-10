@@ -1,6 +1,7 @@
 <?php
 
 require_once dirname(__FILE__) . '/../PaymentMethodAbstract.php';
+require_once dirname(__FILE__) . '/anet_php_sdk/AuthorizeNet.php';
 
 class Authorize extends PaymentMethodAbstract
 {
@@ -104,6 +105,27 @@ class Authorize extends PaymentMethodAbstract
         var_dump($response_array);
         exit();
 
+    }
+
+    public function processPayment(Cart $cart, &$error_message)
+    {
+        // TODO Add code for live calls
+        $transaction = new AuthorizeNetAim($this->api_login_id, $this->transaction_key);
+        $transaction->amount = '9.99';
+        $transaction->card_num = '4007000000027';
+        $transaction->exp_date = '10/16';
+
+        $response = $transaction->authorizeAndCapture();
+
+        if ($response->approved) {
+
+            // echo "<h1>Success! The test credit card has been charged!</h1>";
+            // echo "Transaction ID: " . $response->transaction_id;
+            return true;
+        } else {
+            $error_message = $response->error_message;
+            return false;
+        }
     }
 }
 
