@@ -4,7 +4,7 @@ class Paypal extends PaymentMethodAbstract
 {
     const PAYPAL_WEB_SANDBOX = 'https://www.sandbox.paypal.com/webscr';
 
-    public function processCheckoutForm()
+    public function onPaymentFormSubmit(&$error_message)
     {
         $vid = Context::get('vid');
         $success_url = getNotEncodedFullUrl('', 'vid', $vid
@@ -28,16 +28,15 @@ class Paypal extends PaymentMethodAbstract
 
         if(!$paypalAPI->success)
         {
-            $shopController = getController('shop');
-            $shopController->setMessage($paypalAPI->error_message);
-            $vid = Context::get('vid');
-            return getNotEncodedUrl('', 'vid', $vid, 'act', 'dispShopTestCheckout');
+            $error_message = $paypalAPI->error_message;
+            return false;
         }
         else
         {
-            return self::PAYPAL_WEB_SANDBOX
+            // Redirect to PayPal login
+            $this->redirect(self::PAYPAL_WEB_SANDBOX
                             . '?cmd=_express-checkout'
-                            . '&token=' . $paypalAPI->token;
+                            . '&token=' . $paypalAPI->token);
         }
     }
 

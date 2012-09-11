@@ -1115,7 +1115,17 @@
             $payment_repository = $shopModel->getPaymentMethodRepository();
             $payment_method = $payment_repository->getPaymentMethod($payment_method_name);
 
-            $return_url = $payment_method->processCheckoutForm();
+            $error_message = '';
+            if(!$payment_method->onPaymentFormSubmit($error_message))
+            {
+                $this->setMessage($error_message, 'error');
+                $vid = Context::get('vid');
+                $return_url = getNotEncodedUrl('', 'vid', $vid, 'act', 'dispShopTestCheckout');
+                $this->setRedirectUrl($return_url);
+            };
+
+            $vid = Context::get('vid');
+            $return_url = getNotEncodedUrl('', 'vid', $vid, 'act', 'dispShopTestOrderConfirmation', 'payment_method', $payment_method_name);
             $this->setRedirectUrl($return_url);
         }
 

@@ -98,14 +98,20 @@ abstract class PaymentMethodAbstract
         return $this->getFormHtml(self::$backend_form);
     }
 
+    protected function redirect($url)
+    {
+        header('location:' . $url);
+        exit();
+    }
+
     public function onPaymentFormLoad()
     {
 
     }
 
-    public function onPaymentFormSubmit()
+    public function onPaymentFormSubmit(&$error_message)
     {
-
+        return true;
     }
 
     public function onConfirmPaymentFormLoad()
@@ -116,20 +122,6 @@ abstract class PaymentMethodAbstract
     public function onConfirmPaymentFormSubmit()
     {
 
-    }
-
-
-    /**
-     * Return redirect url
-     *
-     * @return string
-     */
-    public function processCheckoutForm()
-    {
-        $payment = Context::get('payment');
-        $payment_method_name = $payment['method'];
-        $vid = Context::get('vid');
-        return getNotEncodedUrl('', 'vid', $vid, 'act', 'dispShopTestOrderConfirmation', 'payment_method', $payment_method_name);
     }
 
     abstract public function processPayment(Cart $cart, &$error_message);
