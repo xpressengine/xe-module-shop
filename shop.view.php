@@ -946,28 +946,6 @@ class shopView extends shop {
      */
     public function dispShopTestOrderConfirmation()
     {
-        /*
-         * http://www.shop.local.com/index.php?
-         *  mid=shop
-         * &amp;vid=shop
-         * &amp;act=dispShopTestOrderConfirmation
-         * &amp;billing[firstname]=
-         * &amp;billing[lastname]=
-         * &amp;billing[email]=
-         * &amp;billing[company]=
-         * &amp;billing[address]=
-         * &amp;billing[country]=
-         * &amp;billing[region]=
-         * &amp;billing[city]=
-         * &amp;billing[zip]=
-         * &amp;billing[phone]=
-         * &amp;billing[fax]=
-         * &amp;payment[method]=paypal
-         * &amp;payment_method=paypal
-         * &token=EC-84C52333NJ1255831
-         * &PayerID=P2DHD8PEPNRBQ
-         */
-
         /**
          * @var shopModel $shopModel
          */
@@ -979,6 +957,8 @@ class shopView extends shop {
         // Get payment class
         $payment_repository = $shopModel->getPaymentMethodRepository();
         $payment_method = $payment_repository->getPaymentMethod($payment_method_name);
+
+        $payment_method->onConfirmPaymentFormLoad();
 
         $payment_form = $payment_method->getPaymentFormHTML();
         Context::set('payment_form', $payment_form);

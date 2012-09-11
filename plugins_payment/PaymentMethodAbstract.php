@@ -98,6 +98,27 @@ abstract class PaymentMethodAbstract
         return $this->getFormHtml(self::$backend_form);
     }
 
+    public function onPaymentFormLoad()
+    {
+
+    }
+
+    public function onPaymentFormSubmit()
+    {
+
+    }
+
+    public function onConfirmPaymentFormLoad()
+    {
+
+    }
+
+    public function onConfirmPaymentFormSubmit()
+    {
+
+    }
+
+
     /**
      * Return redirect url
      *
@@ -139,7 +160,9 @@ abstract class PaymentAPIAbstract
         curl_setopt($request, CURLOPT_SSL_VERIFYPEER, FALSE);
         $response = curl_exec($request);
         curl_close ($request);
-        return $response;
+        $response_array = array();
+        parse_str($response, $response_array);
+        return $response_array;
     }
 
 }
