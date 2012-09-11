@@ -1,5 +1,25 @@
 <include target="_header.html"/>
 
+<script type="text/javascript">
+    jQuery(function () {
+        jQuery('#billing_address, #shipping_address').change(function () {
+            var $this = jQuery(this);
+            var $selected = $this.children(":selected");
+            var $newAddress = ($this.next('.show_address').hasClass('billing') ? jQuery('#new-address-billing') : jQuery('#new-address-shipping'));
+            var $addressText = $this.siblings('.show_address');
+            if ($selected.val() == 'new') {
+                $newAddress.slideDown('slow');
+                $addressText.html('');
+            }
+            else {
+                $addressText.html($selected.html());
+                $newAddress.slideUp();
+            }
+        });
+        jQuery('#billing_address').change();
+    });
+</script>
+
 <div id="checkout" class="mainContent" cond="isset($cart) && $cart->items">
     <h1>Checkout</h1>
 
@@ -25,64 +45,155 @@
             </ul>
         </fieldset>
 
+        <fieldset id="general">
+            <legend>Your info</legend>
+            <ul>
+                <li>
+                    <label for="general_firstname">First name</label>
+                    <input type="text" name="general[firstname]" id="general_firstname">
+                </li>
+                <li>
+                    <label for="general_lastname">Last name</label>
+                    <input type="text" name="general[lastname]" id="general_lastname">
+                </li>
+                <li>
+                    <label for="general_email">Email</label>
+                    <input type="text" name="general[email]" id="general_email">
+                </li>
+            </ul>
+        </fieldset>
         <fieldset id="billing">
             <legend>Billing</legend>
             <ul>
+                <!-- @if ($addresses) -->
                 <li>
-                    <label for="billing_firstname">First name</label>
-                    <input type="text" name="billing[firstname]" id="billing_firstname">
+                    <label for="billing_address">Billing address</label>
+                    <select style="width: 500px;" id="billing_address" name="billing[address]">
+                        <option value="new">new address</option>
+                        <!--@foreach ($addresses as $address)-->
+                        <option value="{$address->address_srl}" <!--@if($address->isDefaultBillingAddress())-->selected<!--@endif-->>{$address}</option>
+                        <!--@endforeach-->
+                    </select>
+                    <div class="show_address billing"></div>
                 </li>
-                <li>
-                    <label for="billing_lastname">Last name</label>
-                    <input type="text" name="billing[lastname]" id="billing_lastname">
+                <!-- @endif -->
+
+                <li id="new-address-billing" <!--@if ($addresses)--> style="display:none"<!--@endif-->>
+                    <ul>
+                        <li>
+                            <input type="hidden" value="{$logged_info->member_srl}" name="new_billing_address[member_srl]">
+                            <label for="new_billing_address_company">Company</label>
+                            <input type="text" name="new_billing_address[company]" id="new_billing_address_company">
+                        </li>
+                        <li>
+                            <label for="new_billing_address_telephone">Telephone</label>
+                            <input type="text" name="new_billing_address[telephone]" id="new_billing_address_telephone">
+                        </li>
+                        <li>
+                            <label for="new_billing_address_fax">Fax</label>
+                            <input type="text" name="new_billing_address[fax]" id="new_billing_address_fax">
+                        </li>
+                        <li>
+                            <label for="new_billing_address_address">Address</label>
+                            <textarea rows="5" id="new_billing_address_address" name="new_billing_address[address]"></textarea>
+                        </li>
+                        <li>
+                            <label for="new_billing_address_additionalinfo">Additional Info</label>
+                            <textarea rows="5" id="new_billing_address_additionalinfo" name="new_billing_address[additional_info]"></textarea>
+                        </li>
+                        <li>
+                            <label for="new_billing_address_city">City</label>
+                            <input type="text" name="new_billing_address[city]" id="new_billing_address_city">
+                        </li>
+                        <li>
+                            <label for="new_billing_address_region">Region</label>
+                            <input type="text" name="new_billing_address[region]" id="new_billing_address_region">
+                        </li>
+                        <li>
+                            <label for="new_billing_address_postalcode">Postal Code</label>
+                            <input type="text" name="new_billing_address[postal_code]" id="new_billing_address_postalcode">
+                        </li>
+                        <li>
+                            <label for="new_billing_address_country">Country</label>
+                            <input type="text" name="new_billing_address[country]" id="new_billing_address_country">
+                        </li>
+                    </ul>
                 </li>
-                <li>
-                    <label for="billing_email">Email</label>
-                    <input type="text" name="billing[email]" id="billing_email">
-                </li>
-                <li>
-                    <label for="billing_company">Company</label>
-                    <input type="text" name="billing[company]" id="billing_company">
-                </li>
-                <li>
-                    <label for="billing_address">Address</label>
-                    <input type="text" name="billing[address]" id="billing_address">
-                </li>
-                <li>
-                    <label for="billing_country">Country</label>
-                    <input type="text" name="billing[country]" id="billing_country">
-                </li>
-                <li>
-                    <label for="billing_region">Region</label>
-                    <input type="text" name="billing[region]" id="billing_region">
-                </li>
-                <li>
-                    <label for="billing_city">City</label>
-                    <input type="text" name="billing[city]" id="billing_city">
-                </li>
-                <li>
-                    <label for="billing_zip">Postal code</label>
-                    <input type="text" name="billing[zip]" id="billing_zip">
-                </li>
-                <li>
-                    <label for="billing_phone">Phone</label>
-                    <input type="text" name="billing[phone]" id="billing_phone">
-                </li>
-                <li>
-                    <label for="billing_fax">Fax</label>
-                    <input type="text" name="billing[fax]" id="billing_fax">
-                </li>
+
             </ul>
         </fieldset>
 
         <fieldset id="shipping">
             <legend>Shipping</legend>
-            <label for="shipping_method">method</label>
-            <select name="shipping[method]" id="shipping_method">
-                <!--@foreach($shipping_methods as $value=>$name)-->
-                <option value="{$value}">{$name}</option>
-                <!--@endforeach-->
-            </select>
+            <ul>
+                <li>
+                    <label for="shipping_method">method</label>
+                    <select name="shipping[method]" id="shipping_method">
+                        <!--@foreach($shipping_methods as $value=>$name)-->
+                        <option value="{$value}">{$name}</option>
+                        <!--@endforeach-->
+                    </select>
+                </li>
+
+                <!-- @if ($addresses) -->
+                <li>
+                    <label for="shipping_address">Shipping address</label>
+                    <select style="width: 500px;" id="shipping_address" name="shipping[address]">
+                        <option value="new">new address</option>
+                        <!--@foreach ($addresses as $address)-->
+                        <option value="{$address->address_srl}"
+                        <!--@if($address->isDefaultShippingAddress())-->selected<!--@endif-->>{$address}</option>
+                        <!--@endforeach-->
+                    </select>
+
+                    <div class="show_address shipping"></div>
+                </li>
+                <!-- @endif -->
+
+                <li id="new-address-shipping" <!--@if ($addresses)--> style="display:none"<!--@endif-->>
+                <ul>
+                    <li>
+                        <input type="hidden" value="{$logged_info->member_srl}" name="new_shipping_address[member_srl]">
+                        <label for="new_shipping_address_company">Company</label>
+                        <input type="text" name="new_shipping_address[company]" id="new_shipping_address_company">
+                    </li>
+                    <li>
+                        <label for="new_shipping_address_telephone">Telephone</label>
+                        <input type="text" name="new_shipping_address[telephone]" id="new_shipping_address_telephone">
+                    </li>
+                    <li>
+                        <label for="new_shipping_address_fax">Fax</label>
+                        <input type="text" name="new_shipping_address[fax]" id="new_shipping_address_fax">
+                    </li>
+                    <li>
+                        <label for="new_shipping_address_address">Address</label>
+                        <textarea rows="5" id="new_shipping_address_address" name="new_shipping_address[address]"></textarea>
+                    </li>
+                    <li>
+                        <label for="new_shipping_address_additionalinfo">Additional Info</label>
+                        <textarea rows="5" id="new_shipping_address_additionalinfo" name="new_shipping_address[additional_info]"></textarea>
+                    </li>
+                    <li>
+                        <label for="new_shipping_address_city">City</label>
+                        <input type="text" name="new_shipping_address[city]" id="new_shipping_address_city">
+                    </li>
+                    <li>
+                        <label for="new_shipping_address_region">Region</label>
+                        <input type="text" name="new_shipping_address[region]" id="new_shipping_address_region">
+                    </li>
+                    <li>
+                        <label for="new_shipping_address_postalcode">Postal Code</label>
+                        <input type="text" name="new_shipping_address[postal_code]"
+                               id="new_shipping_address_postalcode">
+                    </li>
+                    <li>
+                        <label for="new_shipping_address_country">Country</label>
+                        <input type="text" name="new_shipping_address[country]" id="new_shipping_address_country">
+                    </li>
+                </ul>
+                </li>
+
+            </ul>
         </fieldset>
 
         <fieldset id="payment">

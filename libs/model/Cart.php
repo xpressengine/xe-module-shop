@@ -11,7 +11,7 @@ class Cart extends BaseItem
         $member_srl,
         $session_id,
         $billing_address_srl,
-        $shopping_address_srl,
+        $shipping_address_srl,
         $items = 0,
         $extra,
         $regdate,
@@ -148,8 +148,7 @@ class Cart extends BaseItem
     {
         if (!$this->cart_srl) throw new Exception('Cart is not persisted');
 
-        /* save as order:
-         * TODO use this for saving orders
+        /* old save as order:
         $data = array_merge( $this->formTranslation($orderData), array(
             'cart_srl' => $this->cart_srl,
             'module_srl' => $this->module_srl,
@@ -166,8 +165,18 @@ class Cart extends BaseItem
          * * */
 
         //save as cart:
-        $this->setExtra($orderData);
+        $orderData = $this->formTranslation($orderData);
+        $this->setExtra($orderData['extra']);
+        $this->billing_address_srl = $orderData['billing_address_srl'];
+        $this->shipping_address_srl = $orderData['shipping_address_srl'];
         $this->save();
+    }
+
+    public function getAddresses()
+    {
+        if (!$this->member_srl) return false;
+        $aRepo = new AddressRepository();
+        return $aRepo->getAddresses($this->member_srl, true);
     }
 
     /**
@@ -182,26 +191,43 @@ class Cart extends BaseItem
 
     private function formTranslation(array $input)
     {
-        // $data should be in the format compatible with Order's constructor
-        $data = array();
+        $data = array('extra'=>array());
+        if (self::validateFormBlock($general = $input['general'])) {
+            //TODO: same for shipping_address_srl?
+            $data['extra'] = array(
+                'firstname' => $general['firstname'],
+                'lastname'  => $general['lastname'],
+                'email'     => $general['email']
+            );
+        }
+        else throw new Exception('forgot about general info?');
 
         if (self::validateFormBlock($billing = $input['billing'])) {
-            $data['billing_address'] = json_encode(array(
-                'address' => $billing['address'],
-                'country' => $billing['country'],
-                'region'  => $billing['region'],
-                'city'    => $billing['city'],
-                'zip'     => $billing['zip'],
-                'fax'     => $billing['fax'],
-                'phone'   => $billing['phone']
-            ));
-            $data['first_name'] = $billing['firstname'];
-            $data['last_name'] = $billing['lastname'];
-            $data['client_email'] = $billing['email'];
-            $data['client_company'] = $billing['company'];
+            if (is_numeric($billing['address'])) {
+                $data['billing_address_srl'] = $billing['address'];
+            }
+            elseif (self::validateFormBlock($newAddress = $input['new_billing_address'])) {
+                $newAddress = new Address($newAddress);
+                $newAddress->save();
+                $data['billing_address_srl'] = $newAddress->address_srl;
+            }
+            else {
+                throw new Exception('No billing address');
+            }
         }
+
         if (self::validateFormBlock($shipping = $input['shipping'])) {
-            $data['shipping_method'] = $shipping['method'];
+            $data['extra']['shipping_method'] = $shipping['method'];
+            if (is_numeric($shipping['address'])) {
+                $data['shipping_address_srl'] = $shipping['address'];
+            } elseif (self::validateFormBlock($newAddress = $input['new_shipping_address'])) {
+                $newAddress = new Address($newAddress);
+                $newAddress->save();
+                $data['shipping_address_srl'] = $newAddress->address_srl;
+            }
+            else {
+                throw new Exception('No shipping address');
+            }
         }
         if (self::validateFormBlock($payment = $input['payment'])) {
         }

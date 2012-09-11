@@ -450,8 +450,11 @@
                 }
 
                 $order = $cart->checkout(array(
+                    'general'  => Context::get('general'),
                     'billing'  => Context::get('billing'),
+                    'new_billing_address' => Context::get('new_billing_address'),
                     'shipping' => Context::get('shipping'),
+                    'new_shipping_address' => Context::get('new_shipping_address'),
                     'payment'  => Context::get('payment'),
                 ));
 

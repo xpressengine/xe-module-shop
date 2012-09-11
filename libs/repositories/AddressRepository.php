@@ -83,20 +83,26 @@ class AddressRepository extends BaseRepository
      *
      * @author Dan Dragan
      * @param $member_srl
+     * @param $returnBulk boolean Tells wether to return a simple array of addresses or mark them accordingly (default billing etc)
      * @return stdClass
      */
-    public function getAddresses($member_srl){
-        $args = new stdClass();
-        $args->member_srl = $member_srl;
-        $output = $this->query('getAddresses',$args,true);
+    public function getAddresses($member_srl, $returnBulk=false)
+    {
+        $output = $this->query('getAddresses', array('member_srl'=>$member_srl), true);
+        $bulk = array();
         if(count($output->data)){
             foreach($output->data as $data){
                 $address = new Address($data);
+                if ($returnBulk) {
+                    $bulk[] = $address;
+                    continue;
+                }
                 if($address->default_billing == 'Y') $default_billing = $address;
                 if($address->default_shipping == 'Y') $default_shipping = $address;
                 if($address->default_billing == 'N' && $address->default_shipping == 'N') $additional_addresses[] = $address;
             }
         }
+        if ($returnBulk) return empty($bulk) ? null : $bulk;
         $addresses = new stdClass();
         $addresses->default_billing = $default_billing;
         $addresses->default_shipping = $default_shipping;

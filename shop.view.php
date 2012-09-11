@@ -760,12 +760,17 @@ class shopView extends shop {
         if ((!$cart = Context::get('cart')) || !$cart->items) {
             throw new Exception("No cart, you shouldn't be here");
         }
+
+        //shipping methods
         $shipping = array();
         /** @var $shippingMethod ShippingMethodAbstract */
         foreach ($shippingRepo->getAvailableShippingMethods() as $shippingMethod) {
             $shipping[$shippingMethod->getCode()] = $shippingMethod->getDisplayName();
         }
         Context::set('shipping_methods', $shipping);
+
+        Context::set('addresses', $cart->getAddresses());
+
         $this->setTemplateFile('checkout.html');
     }
 

@@ -22,4 +22,31 @@ class Address extends BaseItem
     /** @var AddressRepository */
     public $repo;
 
+
+    public function save()
+    {
+        return $this->address_srl ? $this->repo->update($this) : $this->repo->insert($this);
+    }
+
+    public function __toString()
+    {
+        return <<<GATA
+$this->address,
+$this->country,
+$this->region,
+$this->city,
+$this->company
+GATA;
+;
+    }
+
+    public function isDefaultBillingAddress()
+    {
+        return $this->default_billing == 'Y' ? true : false;
+    }
+
+    public function isDefaultShippingAddress()
+    {
+        return $this->default_shipping == 'Y' ? true : false;
+    }
 }
