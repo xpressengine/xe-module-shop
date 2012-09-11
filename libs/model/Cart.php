@@ -149,6 +149,7 @@ class Cart extends BaseItem
         if (!$this->cart_srl) throw new Exception('Cart is not persisted');
 
         /* save as order:
+         * TODO use this for saving orders
         $data = array_merge( $this->formTranslation($orderData), array(
             'cart_srl' => $this->cart_srl,
             'module_srl' => $this->module_srl,
@@ -164,9 +165,9 @@ class Cart extends BaseItem
         return $order;
          * * */
 
+        //save as cart:
         $this->setExtra($orderData);
         $this->save();
-
     }
 
     /**
@@ -194,7 +195,8 @@ class Cart extends BaseItem
                 'fax'     => $billing['fax'],
                 'phone'   => $billing['phone']
             ));
-            $data['client_name'] = $billing['firstname'] . ' ' . $billing['lastname'];
+            $data['first_name'] = $billing['firstname'];
+            $data['last_name'] = $billing['lastname'];
             $data['client_email'] = $billing['email'];
             $data['client_company'] = $billing['company'];
         }
