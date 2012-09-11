@@ -2,17 +2,21 @@
 
 class Paypal extends PaymentMethodAbstract
 {
-
+    const PAYPAL_WEB_SANDBOX = 'https://www.sandbox.paypal.com/webscr';
 
     public function processCheckoutForm()
     {
         $vid = Context::get('vid');
-        $success_url = getFullSiteUrl('', 'vid', $vid
+        $success_url = getNotEncodedFullUrl('', 'vid', $vid
                                           , 'act', 'dispShopTestOrderConfirmation'
-                                          , 'payment_method', $this->getName());
+                                          , 'payment_method', $this->getName()
+                                          , 'error_return_url', ''
+        );
 
-        $cancel_url = getFullSiteUrl('', 'vid', $vid
-                                        , 'act', 'dispShopTestCheckout');
+        $cancel_url = getNotEncodedFullUrl('', 'vid', $vid
+                                        , 'act', 'dispShopTestCheckout'
+                                        , 'error_return_url', ''
+        );
 
 
         $paypalAPI = new PaypalAPI($this->api_username
@@ -28,6 +32,12 @@ class Paypal extends PaymentMethodAbstract
             $shopController->setMessage($paypalAPI->error_message);
             $vid = Context::get('vid');
             return getNotEncodedUrl('', 'vid', $vid, 'act', 'dispShopTestCheckout');
+        }
+        else
+        {
+            return self::PAYPAL_WEB_SANDBOX
+                            . '?cmd=_express-checkout'
+                            . '&token=' . $paypalAPI->token;
         }
     }
 
@@ -56,16 +66,18 @@ class PaypalAPI extends PaymentAPIAbstract
     public function setExpressCheckout($amount, $success_url, $cancel_url)
     {
         $this->data['METHOD'] = 'SetExpressCheckout';
-        $this->data['AMT'] = $amount;
-        $this->data['returnUrl'] = htmlentities(url_decode($success_url));
-        $this->data['cancelUrl'] = htmlentities(url_decode($cancel_url));
+        $this->data['PAYMENTREQUEST_0_AMT'] = $amount;
+        $this->data['RETURNURL'] = $success_url;
+        $this->data['CANCELURL'] = $cancel_url;
+        $this->data['PAYMENTREQUEST_0_PAYMENTACTION'] = 'Sale';
 
         $response = $this->request(self::SANDBOX_API_URL, $this->data);
 
         unset($this->data['METHOD']
-            , $this->data['AMT']
-            , $this->data['returnUrl']
-            , $this->data['cancelUrl']
+            , $this->data['PAYMENTREQUEST_0_AMT']
+            , $this->data['RETURNURL']
+            , $this->data['CANCELURL']
+            , $this->data['PAYMENTREQUEST_0_PAYMENTACTION']
             );
 
         $response_array = array();
@@ -75,11 +87,14 @@ class PaypalAPI extends PaymentAPIAbstract
         if($this->ack != 'Success')
         {
             $this->success = false;
-            $this->error_message = $response_array['L_SHORTMESSAGE0'] . ' ' . $response_array['L_LONGMESSAGE0'];
+            $this->error_message = $response_array['L_SHORTMESSAGE0'] . ' (' .  $response_array['L_ERRORCODE0'] . ' ' . $response_array['L_LONGMESSAGE0'] . ')';
         }
         else
         {
             $this->success = true;
+            $this->token = $response_array['TOKEN'];
+            $this->correlation_id = $response_array['CORRELATIONID'];
+
         }
 
         // return $response_array;
