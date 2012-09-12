@@ -4,17 +4,17 @@ class Paypal extends PaymentMethodAbstract
 {
     const PAYPAL_WEB_SANDBOX = 'https://www.sandbox.paypal.com/webscr';
 
-    public function onPaymentFormSubmit(&$error_message)
+    public function onCheckoutFormSubmit(&$error_message)
     {
         $vid = Context::get('vid');
         $success_url = getNotEncodedFullUrl('', 'vid', $vid
-                                          , 'act', 'dispShopTestOrderConfirmation'
+                                          , 'act', 'dispShopPlaceOrder'
                                           , 'payment_method', $this->getName()
                                           , 'error_return_url', ''
         );
 
         $cancel_url = getNotEncodedFullUrl('', 'vid', $vid
-                                        , 'act', 'dispShopTestCheckout'
+                                        , 'act', 'dispShopCheckout'
                                         , 'error_return_url', ''
         );
 
@@ -41,7 +41,7 @@ class Paypal extends PaymentMethodAbstract
     }
 
 
-    public function onConfirmPaymentFormLoad()
+    public function onPlaceOrderFormLoad()
     {
         $token = Context::get('token');
         $paypalAPI = new PaypalAPI($this->api_username

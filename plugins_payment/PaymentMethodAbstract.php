@@ -104,22 +104,12 @@ abstract class PaymentMethodAbstract
         exit();
     }
 
-    public function onPaymentFormLoad()
-    {
-
-    }
-
-    public function onPaymentFormSubmit(&$error_message)
+    public function onCheckoutFormSubmit(&$error_message)
     {
         return true;
     }
 
-    public function onConfirmPaymentFormLoad()
-    {
-
-    }
-
-    public function onConfirmPaymentFormSubmit()
+    public function onPlaceOrderFormLoad()
     {
 
     }

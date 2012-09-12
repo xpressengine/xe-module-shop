@@ -800,7 +800,7 @@ class shopView extends shop {
         $payment_repository = $shopModel->getPaymentMethodRepository();
         $payment_method = $payment_repository->getPaymentMethod($payment_method_name);
 
-        $payment_method->onConfirmPaymentFormLoad();
+        $payment_method->onPlaceOrderFormLoad();
 
         $payment_form = $payment_method->getPaymentFormHTML();
         Context::set('payment_form', $payment_form);
@@ -990,48 +990,6 @@ class shopView extends shop {
         // Retrieve backend form fields
         $payment_method_settings_HTML = $payment_method->getAdminSettingsFormHTML();
         Context::set('payment_method_settings_HTML', $payment_method_settings_HTML);
-    }
-
-    /**
-     * Order confirmation page
-     */
-    public function dispShopTestOrderConfirmation()
-    {
-        /**
-         * @var shopModel $shopModel
-         */
-        $shopModel = getModel('shop');
-
-        // Get selected payment method name
-        $payment_method_name = Context::get('payment_method');
-
-        // Get payment class
-        $payment_repository = $shopModel->getPaymentMethodRepository();
-        $payment_method = $payment_repository->getPaymentMethod($payment_method_name);
-
-        $payment_method->onConfirmPaymentFormLoad();
-
-        $payment_form = $payment_method->getPaymentFormHTML();
-        Context::set('payment_form', $payment_form);
-        Context::set('payment_method', $payment_method_name);
-
-        $this->setTemplateFile('test_order_confirmation.html');
-    }
-
-    /**
-     * Test page for payment - simulates the checkout page
-     */
-    public function dispShopTestCheckout()
-    {
-        /**
-         * @var shopModel $shopModel
-         */
-        $shopModel = getModel('shop');
-        $payment_repository = $shopModel->getPaymentMethodRepository();
-        $payment_methods = $payment_repository->getActivePaymentMethods();
-        Context::set('payment_methods', $payment_methods);
-
-        $this->setTemplateFile('test_checkout.html');
     }
 
     // endregion
