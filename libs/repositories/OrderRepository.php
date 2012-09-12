@@ -46,6 +46,19 @@ class OrderRepository extends BaseRepository
         return new Order(array(
             'order_srl' => $calculateNextSequence ? getNextSequence() : null,
             'cart_srl' => $cart->cart_srl,
+            'member_srl' => $cart->member_srl,
+            'client_name' => $cart->getExtra('firstname') . ' ' . $cart->getExtra('lastname'),
+            'client_email' => $cart->getExtra('email'),
+            'client_company' => $cart->getExtra('company'),
+            'billing_address' => (string) $cart->getBillingAddress(),
+            'shipping_address' => (string) $cart->getShippingAddress(),
+            'payment_method' => $cart->getExtra('payment_method'),
+            'shipping_method' => $cart->getExtra('shipping_method'),
+            'shipping_cost' => '?',
+            'total' => $cart->getTotal(),
+            'vat' => '?',
+            'order_status' => '?',
+            'ip' => $_SERVER['REMOTE_ADDRESS']
         ));
     }
 
