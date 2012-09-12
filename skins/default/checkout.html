@@ -16,7 +16,7 @@
                 $newAddress.slideUp();
             }
         });
-        jQuery('#billing_address').change();
+        jQuery('#billing_address, #shipping_address').change();
     });
 </script>
 
@@ -50,15 +50,15 @@
             <ul>
                 <li>
                     <label for="general_firstname">First name</label>
-                    <input type="text" name="general[firstname]" id="general_firstname">
+                    <input type="text" name="general[firstname]" id="general_firstname" value="{$extra['firstname']}">
                 </li>
                 <li>
                     <label for="general_lastname">Last name</label>
-                    <input type="text" name="general[lastname]" id="general_lastname">
+                    <input type="text" name="general[lastname]" id="general_lastname" value="{$extra['lastname']}">
                 </li>
                 <li>
                     <label for="general_email">Email</label>
-                    <input type="text" name="general[email]" id="general_email">
+                    <input type="text" name="general[email]" id="general_email" value="{$extra['email']}">
                 </li>
             </ul>
         </fieldset>
@@ -70,8 +70,8 @@
                     <label for="billing_address">Billing address</label>
                     <select style="width: 500px;" id="billing_address" name="billing[address]">
                         <option value="new">new address</option>
-                        <!--@foreach ($addresses as $address)-->
-                        <option value="{$address->address_srl}" <!--@if($address->isDefaultBillingAddress())-->selected<!--@endif-->>{$address}</option>
+                        <!--@foreach ($addresses as $key=>$address)-->
+                        <option value="{$address->address_srl}" <!--@if ($default_billing && $address->address_srl == $default_billing->address_srl)-->selected<!--@endif-->>{$address}</option>
                         <!--@endforeach-->
                     </select>
                     <div class="show_address billing"></div>
@@ -130,7 +130,7 @@
                     <label for="shipping_method">method</label>
                     <select name="shipping[method]" id="shipping_method">
                         <!--@foreach($shipping_methods as $value=>$name)-->
-                        <option value="{$value}">{$name}</option>
+                        <option value="{$value}" <!--@if ($extra['shipping_method'] == $value)-->selected<!--@endif-->>{$name}</option>
                         <!--@endforeach-->
                     </select>
                 </li>
@@ -140,9 +140,8 @@
                     <label for="shipping_address">Shipping address</label>
                     <select style="width: 500px;" id="shipping_address" name="shipping[address]">
                         <option value="new">new address</option>
-                        <!--@foreach ($addresses as $address)-->
-                        <option value="{$address->address_srl}"
-                        <!--@if($address->isDefaultShippingAddress())-->selected<!--@endif-->>{$address}</option>
+                        <!--@foreach ($addresses as $key=>$address)-->
+                        <option value="{$address->address_srl}" <!--@if ($default_shipping && $address->address_srl == $default_shipping->address_srl)-->selected<!--@endif-->>{$address}</option>
                         <!--@endforeach-->
                     </select>
 

@@ -17,6 +17,8 @@ class Cart extends BaseItem
         $regdate,
         $last_update;
 
+    protected $addresses;
+
     /** @var CartRepository */
     public $repo;
 
@@ -172,26 +174,9 @@ class Cart extends BaseItem
         $this->save();
     }
 
-    public function getAddresses()
-    {
-        if (!$this->member_srl) return false;
-        $aRepo = new AddressRepository();
-        return $aRepo->getAddresses($this->member_srl, true);
-    }
-
-    /**
-     * retrieves Order attached to cart or null
-     * @return null|Order
-     */
-    public function getOrder()
-    {
-        $output = $this->query('getCartOrder', array('cart_srl'=>$this->cart_srl));
-        return empty($output->data) ? null : new Order((array) $output->data);
-    }
-
     private function formTranslation(array $input)
     {
-        $data = array('extra'=>array());
+        $data = array('extra'=> array());
         if (self::validateFormBlock($general = $input['general'])) {
             //TODO: same for shipping_address_srl?
             $data['extra'] = array(
@@ -199,14 +184,12 @@ class Cart extends BaseItem
                 'lastname'  => $general['lastname'],
                 'email'     => $general['email']
             );
-        }
-        else throw new Exception('forgot about general info?');
+        } else throw new Exception('forgot about general info?');
 
         if (self::validateFormBlock($billing = $input['billing'])) {
             if (is_numeric($billing['address'])) {
                 $data['billing_address_srl'] = $billing['address'];
-            }
-            elseif (self::validateFormBlock($newAddress = $input['new_billing_address'])) {
+            } elseif (self::validateFormBlock($newAddress = $input['new_billing_address'])) {
                 $newAddress = new Address($newAddress);
                 $newAddress->save();
                 $data['billing_address_srl'] = $newAddress->address_srl;
@@ -234,6 +217,57 @@ class Cart extends BaseItem
         return empty($data) ? null : $data;
     }
 
+    public function getAddresses($refresh=false)
+    {
+        if (!is_array($this->addresses) || $refresh = true) {
+            if (!$this->member_srl) return false;
+            $aRepo = new AddressRepository();
+            $this->addresses = $aRepo->getAddresses($this->member_srl, true);
+        }
+        return $this->addresses;
+    }
+
+    /**
+     * @return Address|null
+     */
+    public function getDefaultBillingAddress()
+    {
+        $addresses = $this->getAddresses();
+        if (!$addresses || empty($addresses)) return null;
+        $defaultBillingAddress = null;
+        /** @var $address Address */
+        foreach ($addresses as $address) {
+            if ($this->billing_address_srl == $address->address_srl) return $address;
+            if ($address->isDefaultBillingAddress()) $defaultBillingAddress = $address;
+        }
+        return $defaultBillingAddress;
+    }
+
+    /**
+     * @return Address|null
+     */
+    public function getDefaultShippingAddress()
+    {
+        $addresses = $this->getAddresses();
+        if (!$addresses || empty($addresses)) return null;
+        $defaultShippingAddress = null;
+        /** @var $address Address */
+        foreach ($addresses as $address) {
+            if ($this->shipping_address_srl == $address->address_srl) return $address;
+            if ($address->isDefaultShippingAddress()) $defaultShippingAddress = $address;
+        }
+        return $defaultShippingAddress;
+    }
+
+    /**
+     * retrieves Order attached to cart or null
+     * @return null|Order
+     */
+    public function getOrder()
+    {
+        $output = $this->query('getCartOrder', array('cart_srl'=>$this->cart_srl));
+        return empty($output->data) ? null : new Order((array) $output->data);
+    }
 
     /**
      * @static Used to check if a form block has valid input (ex has any value)

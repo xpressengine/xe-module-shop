@@ -768,9 +768,10 @@ class shopView extends shop {
             $shipping[$shippingMethod->getCode()] = $shippingMethod->getDisplayName();
         }
         Context::set('shipping_methods', $shipping);
-
         Context::set('addresses', $cart->getAddresses());
-
+        Context::set('default_billing', $cart->getDefaultBillingAddress());
+        Context::set('default_shipping', $cart->getDefaultShippingAddress());
+        Context::set('extra', $cart->getExtraArray());
         $this->setTemplateFile('checkout.html');
     }
 
