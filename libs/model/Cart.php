@@ -111,7 +111,7 @@ class Cart extends BaseItem
         $output = $this->getCartProducts();
         $total = 0;
         /** @var $product Product */
-        foreach ($output->data as $product) {
+        foreach ($output as $product) {
             $total += $product->price * $product->quantity;
         }
         return $total;

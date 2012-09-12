@@ -46,6 +46,7 @@ class OrderRepository extends BaseRepository
         return new Order(array(
             'order_srl' => $calculateNextSequence ? getNextSequence() : null,
             'cart_srl' => $cart->cart_srl,
+            'module_srl' => $cart->module_srl,
             'member_srl' => $cart->member_srl,
             'client_name' => $cart->getExtra('firstname') . ' ' . $cart->getExtra('lastname'),
             'client_email' => $cart->getExtra('email'),
@@ -54,10 +55,10 @@ class OrderRepository extends BaseRepository
             'shipping_address' => (string) $cart->getShippingAddress(),
             'payment_method' => $cart->getExtra('payment_method'),
             'shipping_method' => $cart->getExtra('shipping_method'),
-            'shipping_cost' => '?',
+            'shipping_cost' => '0', // TODO Add shipping cost
             'total' => $cart->getTotal(),
-            'vat' => '?',
-            'order_status' => '?',
+            'vat' => '0', // TODO Add VAT
+            'order_status' => 'Pending', // TODO Add order status
             'ip' => $_SERVER['REMOTE_ADDRESS']
         ));
     }

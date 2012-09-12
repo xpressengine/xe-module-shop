@@ -470,7 +470,10 @@
             $cart = $cartRepo->getCart($this->module_srl, null, $logged_info->member_srl, session_id());
 
             $orderRepository = new OrderRepository();
-            $order = $orderRepository->createOrderFromCart($cart);
+            $order = $orderRepository->getOrderFromCart($cart);
+            $order->save(); //obtain srl
+            $order->saveCartProducts($cart);
+            $cart->delete();
 
             $this->setRedirectUrl(getNotEncodedUrl('', 'act', 'dispShopOrderConfirmation', 'order_srl', $order->order_srl));
         }

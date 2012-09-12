@@ -1,13 +1,14 @@
 <include target="_header.html"/>
 
-<div id="confirm_order" class="mainContent" cond="isset($cart) && $cart->items">
-    <h1>Confirm order</h1>
+<div id="confirm_order" class="mainContent">
+    <h1>Order confirmation</h1>
 
     <div cond="$XE_VALIDATOR_MESSAGE" class="message {$XE_VALIDATOR_MESSAGE_TYPE}">
         <p>{$XE_VALIDATOR_MESSAGE}</p>
     </div>
 
     You order has been successfully created!
+    Order id: {$order_srl}
 
 </div>
 
