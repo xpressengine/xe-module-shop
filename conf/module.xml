@@ -76,6 +76,8 @@
         <action name="dispShopLogin" type="view" />
         <action name="dispShopCart" type="view" />
         <action name="dispShopCheckout" type="view" />
+        <action name="dispShopPlaceOrder" type="view" />
+        <action name="dispShopOrderConfirmation" type="view" />
         <action name="dispShopMenu" type="view" />
 
         <action name="procShopLogin" type="controller" ruleset="shop_login" />
@@ -83,6 +85,7 @@
         <action name="procShopProfileUpdate" type="controller" />
         <action name="procShopProfileImageUpload" type="controller" />
         <action name="procShopInfoUpdate" type="controller" />
+        <action name="procShopPlaceOrder" type="controller" />
 
         <!-- Shop backend -->
         <action name="dispShopToolLogin" type="view" />

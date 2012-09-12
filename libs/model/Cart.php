@@ -231,7 +231,7 @@ class Cart extends BaseItem
     /**
      * @return Address|null
      */
-    public function getDefaultBillingAddress()
+    public function getBillingAddress()
     {
         $addresses = $this->getAddresses();
         if (!$addresses || empty($addresses)) return null;
@@ -247,7 +247,7 @@ class Cart extends BaseItem
     /**
      * @return Address|null
      */
-    public function getDefaultShippingAddress()
+    public function getShippingAddress()
     {
         $addresses = $this->getAddresses();
         if (!$addresses || empty($addresses)) return null;

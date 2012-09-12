@@ -774,11 +774,50 @@ class shopView extends shop {
         Context::set('payment_methods', $payment_methods);
 
         Context::set('addresses', $cart->getAddresses());
-        Context::set('default_billing', $cart->getDefaultBillingAddress());
-        Context::set('default_shipping', $cart->getDefaultShippingAddress());
+        Context::set('default_billing', $cart->getBillingAddress());
+        Context::set('default_shipping', $cart->getShippingAddress());
         Context::set('extra', $cart->getExtraArray());
         Context::set('cart_products', $cart->getProducts());
         $this->setTemplateFile('checkout.html');
+    }
+
+    public function dispShopPlaceOrder()
+    {
+        if ((!$cart = Context::get('cart')) || !$cart->items) {
+            throw new Exception("No cart, you shouldn't be here");
+        }
+
+        // 1. Setup payment info
+        /**
+         * @var shopModel $shopModel
+         */
+        $shopModel = getModel('shop');
+
+        // Get selected payment method name
+        $payment_method_name = $cart->getExtra('payment_method');
+
+        // Get payment class
+        $payment_repository = $shopModel->getPaymentMethodRepository();
+        $payment_method = $payment_repository->getPaymentMethod($payment_method_name);
+
+        $payment_method->onConfirmPaymentFormLoad();
+
+        $payment_form = $payment_method->getPaymentFormHTML();
+        Context::set('payment_form', $payment_form);
+        Context::set('payment_method', $payment_method_name);
+
+        // 2. Setup all other order info
+        Context::set('billing_address', $cart->getBillingAddress());
+        Context::set('shipping_address', $cart->getShippingAddress());
+        Context::set('extra', $cart->getExtraArray());
+        Context::set('cart_products', $cart->getProducts());
+
+        $this->setTemplateFile('place_order.html');
+    }
+
+    public function dispShopOrderConfirmation()
+    {
+        $this->setTemplateFile('order_confirmation.html');
     }
 
 	/**

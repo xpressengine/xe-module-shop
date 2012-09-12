@@ -449,7 +449,7 @@
                     return $result;
                 }
 
-                $order = $cart->checkout(array(
+                $cart->checkout(array(
                     'general'  => Context::get('general'),
                     'billing'  => Context::get('billing'),
                     'new_billing_address' => Context::get('new_billing_address'),
@@ -458,9 +458,21 @@
                     'payment'  => Context::get('payment'),
                 ));
 
-                $this->setRedirectUrl(getNotEncodedUrl('', 'justCheckedOut', $order->order_srl));
+                $this->setRedirectUrl(getNotEncodedUrl('', 'act', 'dispShopPlaceOrder'));
             }
             else throw new Exception('No cart');
+        }
+
+        public function procShopPlaceOrder()
+        {
+            $cartRepo = new CartRepository();
+            $logged_info = Context::get('logged_info');
+            $cart = $cartRepo->getCart($this->module_srl, null, $logged_info->member_srl, session_id());
+
+            $orderRepository = new OrderRepository();
+            $order = $orderRepository->createOrderFromCart($cart);
+
+            $this->setRedirectUrl(getNotEncodedUrl('', 'act', 'dispShopOrderConfirmation', 'order_srl', $order->order_srl));
         }
 
         /*
