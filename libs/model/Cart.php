@@ -213,6 +213,7 @@ class Cart extends BaseItem
             }
         }
         if (self::validateFormBlock($payment = $input['payment'])) {
+            $data['extra']['payment_method'] = $payment['method'];
         }
         return empty($data) ? null : $data;
     }

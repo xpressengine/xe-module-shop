@@ -28,9 +28,13 @@ class ShopAutoloader
                     $repoClass = 'BaseRepository';
                 }
                 else {
+                    if(in_array($class, array('SimpleProduct', 'ConfigurableProduct')))
+                        $class = 'Product';
+
                     $itemClass = $class;
                     $repoClass = $class . 'Repository';
                 }
+
                 if (!in_array($class, array('Shipping', 'PaymentMethod'))) {
                     $this->getFile(__DIR__ . "/../model/$itemClass.php", $itemClass);
                 }

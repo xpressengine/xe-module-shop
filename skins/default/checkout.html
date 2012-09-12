@@ -129,6 +129,7 @@
                 <li>
                     <label for="shipping_method">method</label>
                     <select name="shipping[method]" id="shipping_method">
+                        <option value=""></option>
                         <!--@foreach($shipping_methods as $value=>$name)-->
                         <option value="{$value}" <!--@if ($extra['shipping_method'] == $value)-->selected<!--@endif-->>{$name}</option>
                         <!--@endforeach-->
@@ -197,13 +198,49 @@
 
         <fieldset id="payment">
             <legend>Payment</legend>
+            <label for="payment_method">Payment method</label>
+
+            <select name="payment[method]" id="payment_method">
+                <option value=""></option>
+                <!--@foreach($payment_methods as $payment_method)-->
+                <option value="{$payment_method->name}"
+                <!--@if($payment_method->name == $extra['payment_method'])-->
+                selected
+                <!--@end-->
+                >
+                {$payment_method->display_name}
+                </option>
+                <!--@end-->
+            </select>
         </fieldset>
 
         <fieldset id="review">
             <legend>Order review</legend>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th></th>
+                        <th>Ttile</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                    </tr>
+                </thead>
+                {@ $i = 0 }
+                <!--@foreach($cart_products as $product)-->
+                    <tr>
+                        <td>{@ ++$i;}{$i}</td>
+                        <td><img src="{$product->getPrimaryImagePath()}" width="50px" height="50px" /></td>
+                        <td>{$product->title}</td>
+                        <td>{$product->quantity}</td>
+                        <td>{number_format($product->price, 2)}</td>
+                    </tr>
+                <!--@end-->
+            </table>
         </fieldset>
 
-        <input type="submit" value="Submit">
+        <p><input type="submit" value="Continue">(You can review this order before it's final)</p>
 
     </form>
 
