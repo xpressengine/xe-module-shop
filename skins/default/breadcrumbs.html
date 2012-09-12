@@ -13,8 +13,12 @@
 <!--@if($product)-->
     <a href="{$last_link["url"]}">{$last_link["text"]}</a> >>
     {$product->title}
-<!--@else-->
+<!--@elseif($category_srl)-->
 	{$last_link["text"]}
+<!--@else-->
+    <a href="{getUrl('vid', $mid, 'act', 'dispShop', 'category_srl', '')}">Home</a>
 <!--@end-->
+
+
 
 </div>

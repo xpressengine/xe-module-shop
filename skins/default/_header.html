@@ -50,11 +50,11 @@
 	<!-- /Menu -->
 
 	<!-- Cart -->
-	<a href="{getURL('act','dispShopCart')}">Cart<span cond="isset($cart) && $cart->items"> [{$cart->items}]</span></a>
+	<a href="{getURL('', 'act','dispShopCart')}">Cart<span cond="isset($cart) && $cart->items"> [{$cart->items}]</span></a>
 	<!-- /Cart -->
 
 	<!-- Checkout -->
-	<a href="{getURL('act','dispShopCheckout')}" cond="isset($cart) && $cart->items">Checkout</a>
+	<a href="{getURL('', 'act','dispShopCheckout')}" cond="isset($cart) && $cart->items">Checkout</a>
 	<!-- /Checkout -->
 
 	<!-- Search box -->
