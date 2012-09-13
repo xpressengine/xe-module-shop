@@ -174,7 +174,14 @@ class PaymentMethodRepository extends BaseRepository
         $active_payment_gateways = array();
         foreach($output->data as $data)
         {
-            $active_payment_gateways[] = $this->getPaymentMethodFromProperties($data);
+            try
+            {
+                $active_payment_gateways[] = $this->getPaymentMethodFromProperties($data);
+            }
+            catch(Exception $e)
+            {
+                continue;
+            }
         }
 
         return $active_payment_gateways;
