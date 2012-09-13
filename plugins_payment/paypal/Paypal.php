@@ -14,6 +14,22 @@ class Paypal extends PaymentMethodAbstract
                     </span>';
     }
 
+    private function getItemsFromCart(Cart $cart)
+    {
+        $items = array();
+        foreach($cart->getProducts() as $product)
+        {
+            $item = new stdClass();
+            $item->name = $product->title;
+            $item->number = $product->sku;
+            $item->description = substr($product->short_description, 0, 127);
+            $item->amount = number_format($product->price, 2);
+            $item->quantity = $product->quantity;
+            $items[] = $item;
+        }
+        return $items;
+    }
+
     public function onCheckoutFormSubmit(Cart $cart, &$error_message)
     {
         $vid = Context::get('vid');
@@ -35,18 +51,15 @@ class Paypal extends PaymentMethodAbstract
         );
 
         // Prepare cart info
-        $order_total = number_format($cart->getTotal(), 2);
-
-        $items = array();
-        foreach($cart->getProducts() as $product)
-        {
-            $item = new stdClass();
-
-        }
-
+        $items = $this->getItemsFromCart($cart);
 
         $paypalAPI->setExpressCheckout(
-            $order_total
+            $items
+            , number_format($cart->getItemTotal(),2)
+            , 0
+            , number_format($cart->getShippingCost(),2)
+            , number_format($cart->getTotal(), 2)
+            , 'USD'
             , $success_url
             , $cancel_url);
 
@@ -85,7 +98,18 @@ class Paypal extends PaymentMethodAbstract
             , $this->api_password
             , $this->signature
         );
-        $paypalAPI->doExpressCheckoutPayment($token, $payer_id, 10);
+        // Prepare cart info
+        $items = $this->getItemsFromCart($cart);
+
+        $paypalAPI->doExpressCheckoutPayment($token
+            , $payer_id
+            , $items
+            , number_format($cart->getItemTotal(),2)
+            , 0
+            , number_format($cart->getShippingCost(),2)
+            , number_format($cart->getTotal(), 2)
+            , 'USD'
+        );
 
         if(!$paypalAPI->success)
         {
@@ -104,33 +128,90 @@ class PaypalAPI extends PaymentAPIAbstract
 {
     const SANDBOX_API_URL = 'https://api-3t.sandbox.paypal.com/nvp';
 
-    private $data = array(
+    private $setup = array(
         'VERSION' => '94'
     );
+    private $data = array();
 
     public function __construct($api_username, $api_password, $signature)
     {
-        $this->data['USER'] = $api_username;
-        $this->data['PWD'] = $api_password;
-        $this->data['SIGNATURE'] = $signature;
+        $this->setup['USER'] = $api_username;
+        $this->setup['PWD'] = $api_password;
+        $this->setup['SIGNATURE'] = $signature;
     }
 
-    public function setExpressCheckout($amount, $success_url, $cancel_url)
+    private function addItemsInfo($items)
     {
+        $i = 0;
+        foreach($items as $item)
+        {
+            $this->data["L_PAYMENTREQUEST_0_NAME" . $i] = $item->name;
+            $this->data["L_PAYMENTREQUEST_0_NUMBER" . $i]  = $item->number;
+            $this->data["L_PAYMENTREQUEST_0_DESC" . $i]  = $item->description;
+            $this->data["L_PAYMENTREQUEST_0_AMT" . $i]  = $item->amount;
+            $this->data["L_PAYMENTREQUEST_0_QTY" . $i]  = $item->quantity;
+            $i++;
+        }
+    }
+
+    private function addItemsTotal($items_total)
+    {
+        $this->data["PAYMENTREQUEST_0_ITEMAMT"] = $items_total;
+    }
+
+    private function addTaxTotal($tax_total)
+    {
+        $this->data["PAYMENTREQUEST_0_TAXAMT"] = $tax_total;
+    }
+
+    private function addShippingTotal($shipping_total)
+    {
+        $this->data["PAYMENTREQUEST_0_SHIPPINGAMT"] = $shipping_total;
+    }
+
+    private function addOrderTotal($order_total)
+    {
+        $this->data["PAYMENTREQUEST_0_AMT"] = $order_total;
+    }
+
+    private function addCurrency($currency = 'USD')
+    {
+        $this->data['PAYMENTREQUEST_0_CURRENCYCODE'] = $currency;
+    }
+
+    private function addPaymentAction($action = 'Sale')
+    {
+        $this->data['PAYMENTREQUEST_0_PAYMENTACTION'] = $action;
+    }
+
+    public function setExpressCheckout(
+        $items
+        , $item_total
+        , $tax_total
+        , $shipping_total
+        , $order_total
+        , $currency = 'USD'
+        , $success_url
+        , $cancel_url
+    ){
+
         $this->data['METHOD'] = 'SetExpressCheckout';
-        $this->data['PAYMENTREQUEST_0_AMT'] = $amount;
+
+        if($items) $this->addItemsInfo($items);
+        if($item_total) $this->addItemsTotal($item_total);
+        if($tax_total) $this->addTaxTotal($tax_total);
+        if($shipping_total) $this->addShippingTotal($shipping_total);
+        $this->addOrderTotal($order_total);
+        $this->addCurrency($currency);
+        $this->addPaymentAction();
+
         $this->data['RETURNURL'] = $success_url;
         $this->data['CANCELURL'] = $cancel_url;
-        $this->data['PAYMENTREQUEST_0_PAYMENTACTION'] = 'Sale';
 
-        $response = $this->request(self::SANDBOX_API_URL, $this->data);
+        $response = $this->request(self::SANDBOX_API_URL, array_merge($this->setup, $this->data));
 
-        unset($this->data['METHOD']
-            , $this->data['PAYMENTREQUEST_0_AMT']
-            , $this->data['RETURNURL']
-            , $this->data['CANCELURL']
-            , $this->data['PAYMENTREQUEST_0_PAYMENTACTION']
-            );
+        unset($this->data);
+        $this->data = array();
 
         $this->ack = $response['ACK'];
         if($this->ack != 'Success')
@@ -151,9 +232,10 @@ class PaypalAPI extends PaymentAPIAbstract
         $this->data['METHOD'] = 'GetExpressCheckoutDetails';
         $this->data['TOKEN'] = $token;
 
-        $response = $this->request(self::SANDBOX_API_URL, $this->data);
+        $response = $this->request(self::SANDBOX_API_URL, array_merge($this->setup, $this->data));
 
-        unset($this->data['METHOD'], $this->data['TOKEN']);
+        unset($this->data);
+        $this->data = array();
         return $response;
     }
 
@@ -166,25 +248,30 @@ class PaypalAPI extends PaymentAPIAbstract
      * @param string $currency
      * @return bool
      */
-    public function doExpressCheckoutPayment($token, $payer_id, $amount, $currency = 'USD')
+    public function doExpressCheckoutPayment($token, $payer_id
+        , $items
+        , $item_total
+        , $tax_total
+        , $shipping_total
+        , $order_total
+        , $currency = 'USD')
     {
         $this->data['METHOD'] = 'DoExpressCheckoutPayment';
         $this->data['TOKEN'] = $token;
         $this->data['PAYERID'] = $payer_id;
 
-        $this->data['PAYMENTREQUEST_0_AMT'] = $amount;
-        $this->data['PAYMENTREQUEST_0_CURRENCYCODE'] = $currency;
-        $this->data['PAYMENTREQUEST_0_PAYMENTACTION'] = 'Sale';
+        if($items) $this->addItemsInfo($items);
+        if($item_total) $this->addItemsTotal($item_total);
+        if($tax_total) $this->addTaxTotal($tax_total);
+        if($shipping_total) $this->addShippingTotal($shipping_total);
+        $this->addOrderTotal($order_total);
+        $this->addCurrency($currency);
+        $this->addPaymentAction();
 
-        $response = $this->request(self::SANDBOX_API_URL, $this->data);
+        $response = $this->request(self::SANDBOX_API_URL, array_merge($this->setup, $this->data));
 
-        unset($this->data['METHOD']
-        , $this->data['TOKEN']
-        , $this->data['PAYERID']
-        , $this->data['PAYMENTREQUEST_0_AMT']
-        , $this->data['PAYMENTREQUEST_0_CURRENCYCODE']
-        , $this->data['PAYMENTREQUEST_0_PAYMENTACTION']
-        );
+        unset($this->data);
+        $this->data = array();
 
         $this->ack = $response['ACK'];
         if($this->ack != 'Success')

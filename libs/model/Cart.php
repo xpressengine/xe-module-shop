@@ -92,7 +92,7 @@ class Cart extends BaseItem
         return $output->data;
     }
 
-    public function getTotal()
+    public function getItemTotal()
     {
         $output = $this->getProducts();
         $total = 0;
@@ -101,6 +101,27 @@ class Cart extends BaseItem
             $total += $product->price * $product->quantity;
         }
         return $total;
+    }
+
+    public function getShippingCost()
+    {
+        $shipping_method = $this->getExtra('shipping_method');
+        if($shipping_method){
+            $shipping_repository = new ShippingRepository();
+            $shipping = $shipping_repository->getShippingMethod($shipping_method);
+            return $shipping->calculateShipping($this, $this->getShippingAddress());
+        }
+        else
+        {
+            return 0;
+        }
+    }
+
+    public function getTotal()
+    {
+        $itemTotal = $this->getItemTotal();
+        $shippingCost = $this->getShippingCost();
+        return $itemTotal + $shippingCost;
     }
 
     public function getProductsList(array $args=array())

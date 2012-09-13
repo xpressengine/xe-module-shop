@@ -23,7 +23,7 @@ class FlatRateShipping extends ShippingMethodAbstract implements ShippingMethodI
 
     public function getPrice()
     {
-        return $this->shipping_info->price;
+        return floatval($this->shipping_info->price);
     }
 
     private function setPrice($price)

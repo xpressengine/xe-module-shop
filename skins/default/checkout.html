@@ -234,6 +234,16 @@
                         <td>{number_format($product->price, 2)}</td>
                     </tr>
                 <!--@end-->
+                <!--@if($cart->getShippingCost() !== 0)-->
+                <tr>
+                    <td colspan="3">
+                    </td>
+                    <td>Shipping</td>
+                    <td>
+                        {$cart->getShippingCost()}
+                    </td>
+                </tr>
+                <!--@end-->
                 <tr style="font-weight: bold;">
                     <td colspan="3">
                     </td>
