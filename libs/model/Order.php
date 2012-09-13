@@ -49,7 +49,7 @@ class Order extends BaseItem
         $this->repo->deleteOrderProducts($this->order_srl);
         //set the new links
         $total = 0;
-        foreach ($cart->getCartProducts() as $cp) {
+        foreach ($cart->getProducts() as $cp) {
             $this->repo->insertOrderProduct($this->order_srl, $cp->product_srl, $cp->quantity);
             $total += $cp->quantity * $cp->price;
         }
