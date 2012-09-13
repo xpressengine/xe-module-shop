@@ -4,7 +4,17 @@ class Paypal extends PaymentMethodAbstract
 {
     const PAYPAL_WEB_SANDBOX = 'https://www.sandbox.paypal.com/webscr';
 
-    public function onCheckoutFormSubmit(&$error_message)
+    public function getSelectPaymentHtml()
+    {
+        return '<img src="https://www.paypal.com/en_US/i/logo/PayPal_mark_37x23.gif"
+                    align="left"
+                    style="margin-right:7px;">
+                    <span style="font-size:11px; font-family: Arial, Verdana;">
+                    The safer, easier way to pay.
+                    </span>';
+    }
+
+    public function onCheckoutFormSubmit(Cart $cart, &$error_message)
     {
         $vid = Context::get('vid');
         $success_url = getNotEncodedFullUrl('', 'vid', $vid
@@ -24,7 +34,21 @@ class Paypal extends PaymentMethodAbstract
             , $this->signature
         );
 
-        $paypalAPI->setExpressCheckout(10, $success_url, $cancel_url);
+        // Prepare cart info
+        $order_total = number_format($cart->getTotal(), 2);
+
+        $items = array();
+        foreach($cart->getProducts() as $product)
+        {
+            $item = new stdClass();
+
+        }
+
+
+        $paypalAPI->setExpressCheckout(
+            $order_total
+            , $success_url
+            , $cancel_url);
 
         if(!$paypalAPI->success)
         {
@@ -78,7 +102,7 @@ class Paypal extends PaymentMethodAbstract
 
 class PaypalAPI extends PaymentAPIAbstract
 {
-    const SANDBOX_API_URL = 'https://api.sandbox.paypal.com/nvp';
+    const SANDBOX_API_URL = 'https://api-3t.sandbox.paypal.com/nvp';
 
     private $data = array(
         'VERSION' => '94'
@@ -133,6 +157,15 @@ class PaypalAPI extends PaymentAPIAbstract
         return $response;
     }
 
+    /**
+     * @param $token
+     * @param $payer_id
+     * @param $amount the format must have a decimal point with exactly
+     *                  two digits to the right and an optional thousands
+     *                  separator to the left, which must be a comma.
+     * @param string $currency
+     * @return bool
+     */
     public function doExpressCheckoutPayment($token, $payer_id, $amount, $currency = 'USD')
     {
         $this->data['METHOD'] = 'DoExpressCheckoutPayment';

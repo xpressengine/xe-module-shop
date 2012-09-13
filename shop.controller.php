@@ -497,15 +497,17 @@
                 $payment_method = $payment_repository->getPaymentMethod($payment_method_name);
 
                 $error_message = '';
-                if(!$payment_method->onCheckoutFormSubmit($error_message))
+                if(!$payment_method->onCheckoutFormSubmit($cart, $error_message))
                 {
                     $this->setMessage($error_message, 'error');
                     $vid = Context::get('vid');
-                    $return_url = getNotEncodedUrl('', 'vid', $vid, 'act', 'dispShopTestCheckout');
+                    $return_url = getNotEncodedUrl('', 'vid', $vid, 'act', 'dispShopCheckout');
                     $this->setRedirectUrl($return_url);
-                };
-
-                $this->setRedirectUrl(getNotEncodedUrl('', 'act', 'dispShopPlaceOrder'));
+                }
+                else
+                {
+                    $this->setRedirectUrl(getNotEncodedUrl('', 'act', 'dispShopPlaceOrder'));
+                }
             }
             else throw new Exception('No cart');
         }

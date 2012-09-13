@@ -197,21 +197,17 @@
         </fieldset>
 
         <fieldset id="payment">
-            <legend>Payment</legend>
-            <label for="payment_method">Payment method</label>
-
-            <select name="payment[method]" id="payment_method">
-                <option value=""></option>
-                <!--@foreach($payment_methods as $payment_method)-->
-                <option value="{$payment_method->name}"
+            <legend>Payment method</legend>
+            <!--@foreach($payment_methods as $payment_method)-->
+            <p>
+                <input type="radio" name="payment[method]" value="{$payment_method->name}"
                 <!--@if($payment_method->name == $extra['payment_method'])-->
-                selected
+                checked
                 <!--@end-->
                 >
-                {$payment_method->display_name}
-                </option>
-                <!--@end-->
-            </select>
+                <span style="display:inline-block;">{$payment_method->getSelectPaymentHtml()}</span>
+            <!--@end-->
+            </p>
         </fieldset>
 
         <fieldset id="review">
@@ -227,6 +223,7 @@
                         <th>Price</th>
                     </tr>
                 </thead>
+                <tbody>
                 {@ $i = 0 }
                 <!--@foreach($cart_products as $product)-->
                     <tr>
@@ -237,6 +234,15 @@
                         <td>{number_format($product->price, 2)}</td>
                     </tr>
                 <!--@end-->
+                <tr style="font-weight: bold;">
+                    <td colspan="3">
+                    </td>
+                    <td>Total</td>
+                    <td>
+                        {number_format($cart->getTotal(), 2)}
+                    </td>
+                </tr>
+                </tbody>
             </table>
         </fieldset>
 

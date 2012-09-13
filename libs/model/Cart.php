@@ -80,7 +80,7 @@ class Cart extends BaseItem
     public function getProducts()
     {
         if (!$this->cart_srl) throw new Exception('Cart is not persisted');
-        $output = $this->query('getCartAllProducts', array('cart_srl'=> $this->cart_srl));
+        $output = $this->query('getCartAllProducts', array('cart_srl'=> $this->cart_srl), true);
         foreach ($output->data as $i=>&$data) {
             if ($data->product_srl) {
                 $product = new SimpleProduct($data);

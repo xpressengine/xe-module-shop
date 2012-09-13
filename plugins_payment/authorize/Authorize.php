@@ -15,6 +15,16 @@ class Authorize extends PaymentMethodAbstract
         return 'Authorize.net AIM';
     }
 
+    public function getSelectPaymentHtml()
+    {
+        return '<img src="modules/shop/plugins_payment/authorize/visa_mastercard.gif"
+                    align="left"
+                    style="margin-right:7px;">
+                    <span style="font-size:11px; font-family: Arial, Verdana;">
+                    Credit card
+                    </span>';
+    }
+
     /**
      * Retrieve custom properties input by user and validate them
      */

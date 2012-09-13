@@ -98,13 +98,18 @@ abstract class PaymentMethodAbstract
         return $this->getFormHtml(self::$backend_form);
     }
 
+    public function getSelectPaymentHtml()
+    {
+        return $this->display_name;
+    }
+
     protected function redirect($url)
     {
         header('location:' . $url);
         exit();
     }
 
-    public function onCheckoutFormSubmit(&$error_message)
+    public function onCheckoutFormSubmit(Cart $cart, &$error_message)
     {
         return true;
     }

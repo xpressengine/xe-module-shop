@@ -41,10 +41,9 @@ class OrderRepository extends BaseRepository
      *
      * @return Order
      */
-    public function getOrderFromCart(Cart $cart, $calculateNextSequence=true)
+    public function getOrderFromCart(Cart $cart)
     {
         return new Order(array(
-            'order_srl' => $calculateNextSequence ? getNextSequence() : null,
             'cart_srl' => $cart->cart_srl,
             'module_srl' => $cart->module_srl,
             'member_srl' => $cart->member_srl,
