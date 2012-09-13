@@ -10,7 +10,7 @@ class AddressRepository extends BaseRepository
     /**
      * insert Address
      *
-     * @author Dan Dragan
+     * @author Dan Dragan   (dev@xpressengine.org)
      * @param Address $address
      * @return mixed
      * @throws Exception
@@ -25,7 +25,7 @@ class AddressRepository extends BaseRepository
     /**
      * update Address
      *
-     * @author Dan Dragan
+     * @author Dan Dragan     (dev@xpressengine.org)
      * @param Address $address
      * @return mixed
      * @throws Exception
@@ -39,7 +39,7 @@ class AddressRepository extends BaseRepository
     /**
      * Make all existing address not to be default for billing
      *
-     * @author Dan Dragan
+     * @author Dan Dragan   (dev@xpressengine.org)
      * @param $member_srl
      * @return mixed
      */
@@ -53,7 +53,7 @@ class AddressRepository extends BaseRepository
     /**
      * Make all existing address not to be default  for shipping
      *
-     * @author Dan Dragan
+     * @author Dan Dragan  (dev@xpressengine.org)
      * @param $member_srl
      * @return mixed
      */
@@ -67,7 +67,7 @@ class AddressRepository extends BaseRepository
     /**
      * get address by address_srl
      *
-     * @author Dan Dragan
+     * @author Dan Dragan   (dev@xpressengine.org)
      * @param $address_srl
      * @return Address
      */
@@ -81,7 +81,7 @@ class AddressRepository extends BaseRepository
     /**
      * return all addresses separated into default and additional addresses
      *
-     * @author Dan Dragan
+     * @author Dan Dragan   (dev@xpressengine.org)
      * @param $member_srl
      * @param $returnBulk boolean Tells wether to return a simple array of addresses or mark them accordingly (default billing etc)
      * @return stdClass
@@ -112,9 +112,38 @@ class AddressRepository extends BaseRepository
     }
 
     /**
+     * Get address list method with pagination
+     *
+     * @author Dan Dragan (dev@xpressengine.org)
+     * @param $member_srl
+     * @return object that contains array of addresses and pagination
+     * @throws Exception
+     */
+    public function getAddressesList($member_srl)
+    {
+        if (!is_numeric($member_srl)) throw new Exception('member_srl must be a valid int');
+        $args = new stdClass();
+        $args->page = Context::get('page');
+        if (!$args->page) $args->page = 1;
+        Context::set('page', $args->page);
+
+        $args->member_srl = $member_srl;
+        if (!isset($args->member_srl)) throw new Exception("Missing arguments for attributes list : please provide member_srl");
+
+        $output = executeQueryArray('shop.getAddressesList', $args);
+        $addresses = array();
+        foreach ($output->data as $properties) {
+            $address = new Address($properties);
+            $addresses[] = $address;
+        }
+        $output->addresses = $addresses;
+        return $output;
+    }
+
+    /**
      * delete address by address_srl
      *
-     * @author Dan Dragan
+     * @author Dan Dragan   (dev@xpressengine.org)
      * @param $address_srl
      * @return mixed
      */

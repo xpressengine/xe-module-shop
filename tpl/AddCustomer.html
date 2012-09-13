@@ -84,8 +84,10 @@
                             <div class="fItem">
                                 <!--@if($password_exists != 'Y')-->
                                 <label class="iLabel" for="password">{$lang->about_password}</label>
-                                <!--@end-->
                                 <input type="text" id="password" name="password" style="width:200px" class="iText iText" title="{$lang->about_password}" />
+                                <!--@else-->
+                                <input type="text" id="reset_password" name="reset_password" style="width:200px" class="iText iText" title="{$lang->about_password}" />
+                                <!--@end-->
                             </div>
                         </td>
                     </tr>

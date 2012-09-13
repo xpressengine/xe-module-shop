@@ -51,13 +51,15 @@
     $lang->customer_about_email_address = 'Email address';
     $lang->product_type = 'Product Type';
     $lang->no_product = 'There is no product added, <a href="%s">Add a simple product</a> or <a href="%s">Add a configurable product</a>. ';
-    $lang->msg_confirm_delete_product = "Are you sure you want to delete this product?";
-    $lang->msg_confirm_delete_attribute = "Are you sure you want to delete this attribute?";
-    $lang->msg_confirm_delete_customer = "Are you sure you want to delete this customer?";
-    $lang->msg_confirm_delete_customers = "Are you sure you want to delete these customers?";
-    $lang->msg_confirm_delete_products = "Are you sure you want to delete these products?";
-    $lang->msg_confirm_delete_attributes = "Are you sure you want to delete these attributes?";
-    $lang->category_scope = "Category Scope";
+    $lang->msg_confirm_delete_product = 'Are you sure you want to delete this product?';
+    $lang->msg_confirm_delete_attribute = 'Are you sure you want to delete this attribute?';
+    $lang->msg_confirm_delete_customer = 'Are you sure you want to delete this customer?';
+    $lang->msg_confirm_delete_customers = 'Are you sure you want to delete these customers?';
+    $lang->msg_confirm_delete_products = 'Are you sure you want to delete these products?';
+    $lang->msg_confirm_delete_attributes = 'Are you sure you want to delete these attributes?';
+    $lang->msg_confirm_delete_address = 'Are you sure you want to delete this address?';
+    $lang->msg_confirm_delete_addresses = 'Are you sure you want to delete these addresses?';
+    $lang->category_scope = 'Category Scope';
     $lang->about_category_scope = 'By not selecting any category the scope of the attribute will be global';
     $lang->no_categories = 'There are no categories added';
     $lang->about_category = 'Select the categories of the product';
@@ -76,6 +78,7 @@
 	$lang->export_products = 'Export products';
     $lang->select_import_file = 'Select import file';
     $lang->about_select_import_file = 'The file must be a zip file';
+    $lang->shop_manage_addresses = 'Manage addresses for %s';
 
 	$lang->cmd_open_id = 'Open ID Login';
 	$lang->cmd_common_id = 'Default Login';
@@ -157,6 +160,7 @@
     );
     $lang->no_attribute = 'No attributes, <a href="%s">add one!</a>';
     $lang->no_customers = 'No customers, <a href="%s">add one!</a>';
+    $lang->no_addresses = 'No addresses, <a href="%s">add one!</a>';
     $lang->new_attribute = 'New attribute';
     $lang->edit_attribute = 'Edit attribute';
     $lang->attribute_about_title = 'Attribute name/title';
@@ -200,6 +204,8 @@
 
     $lang->edit_customer = 'Edit Customer';
     $lang->new_customer = 'New Customer';
+    $lang->edit_address = 'Edit Address';
+    $lang->new_address = 'New Address';
 
     $lang->daily = 'Daily';
     $lang->weekly = 'Weekly';
@@ -232,6 +238,20 @@
     $lang->summary = 'Summary';
     $lang->read = 'View';
     $lang->resize_vertical = 'Resize input form';
+
+    $lang->company = 'Company';
+    $lang->fax = 'Fax';
+    $lang->address = 'Address';
+    $lang->additional_info = 'Additional Info';
+    $lang->about_company = 'Enter company name';
+    $lang->about_telephone = 'Enter telephone no.';
+    $lang->about_fax = 'Enter fax no.';
+    $lang->about_address = 'Enter complete address';
+    $lang->about_additional_info = 'Enter additional information';
+    $lang->about_city = 'Enter city';
+    $lang->about_region = 'Enter country/region';
+    $lang->about_postal_code = 'Enter postal code';
+    $lang->about_country = 'Enter country';
 
     $lang->shop_first_menus = array(
         array('dispShopToolDashboard','Dashboard'),
@@ -303,6 +323,7 @@
     $lang->cmd_edit_htmlcss = 'HTML&middot;CSS Edit';
     $lang->cmd_edit_html = 'HTML Edit';
     $lang->cmd_edit_css = 'CSS Edit';
+    $lang->cmd_edit_addresses = 'Edit addresses';
     $lang->cmd_use_ing = 'Using';
     $lang->cmd_new_window = 'New Window';
     $lang->cmd_select_skin = 'Apply This';

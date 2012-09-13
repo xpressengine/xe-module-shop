@@ -421,6 +421,36 @@
             $this->setRedirectUrl($returnUrl);
         }
 
+        /*
+        * @brief function for address insert
+        * @author Dan Dragan (dev@xpressengine.org)
+        */
+        public function procShopToolInsertAddress() {
+            $shopModel = $this->model;
+            $addressRepository = $shopModel->getAddressRepository();
+
+            $args = Context::getRequestVars();
+
+            $address = new Address($args);
+            try
+            {
+                if ($address->address_srl) {
+                    $output = $addressRepository->update($address);
+                    $this->setMessage("success_updated");
+                }
+                else {
+                    $output = $addressRepository->insert($address);
+                    $this->setMessage("success_registed");
+                }
+            }
+            catch(Exception $e) {
+                return new Object(-1, $e->getMessage());
+            }
+
+            $returnUrl = getNotEncodedUrl('', 'act', 'dispShopToolManageAddresses','member_srl',$args->member_srl);
+            $this->setRedirectUrl($returnUrl);
+        }
+
 
         /*
          * @author Florin Ercus (dev@xpressengine.org)
@@ -625,7 +655,6 @@
         */
         public function procShopToolDeleteCustomers(){
             $shopModel = $this->model;
-            $repository = $shopModel->getAttributeRepository();
             $target_member_srls = Context::get('target_member_srls');
             if(!$target_member_srls) return new Object(-1, 'msg_invalid_request');
             $member_srls = explode(',', $target_member_srls);
@@ -634,6 +663,28 @@
 
             foreach($member_srls as $member) {
                 $output = $oMemberController->deleteMember($member);
+                if(!$output->toBool()) {
+                    $this->setMessage('failed_deleted');
+                    return $output;
+                }
+            }
+
+            $this->setMessage('success_deleted');
+        }
+
+        /*
+        * @brief function for multiple customers delete
+        * @author Dan Dragan (dev@xpressengine.org)
+        */
+        public function procShopToolDeleteAddresses(){
+            $shopModel = $this->model;
+            $addressRepository = $shopModel->getAddressRepository();
+            $address_srls = Context::get('address_srls');
+            if(!$address_srls) return new Object(-1, 'msg_invalid_request');
+            $address_srls = explode(',', $address_srls);
+
+            foreach($address_srls as $address_srl) {
+                $output = $addressRepository->deleteAddress($address_srl);
                 if(!$output->toBool()) {
                     $this->setMessage('failed_deleted');
                     return $output;

@@ -67,6 +67,13 @@
         <permission action="dispShopToolManageOrders" target="manager"/>
         <permission action="dispShopToolViewOrder" target="manager"/>
 
+        <!-- Addresses -->
+        <permission action="dispShopToolManageAddresses" target="manager"/>
+        <permission action="procShopToolDeleteAddresses" target="manager" />
+        <permission action="dispShopToolAddAddress" target="manager" />
+        <permission action="dispShopToolEditAddress" target="manager" />
+        <permission action="procShopToolInsertAddress" target="manager" />
+
     </permissions>
     <actions>
         <!-- Shop frontend -->
@@ -183,11 +190,18 @@
 
         <!-- My account -->
         <action name="dispShopMyAccount" type="view" />
+
+        <!-- Addresses -->
         <action name="dispShopAddressBook" type="view" />
         <action name="dispShopAddAddress" type="view" />
         <action name="dispShopEditAddress" type="view" />
         <action name="procShopAddAddress" type="controller" ruleset="add_address" />
         <action name="procShopDeleteAddress" type="controller"/>
+        <action name="dispShopToolManageAddresses" type="view" />
+        <action name="procShopToolDeleteAddresses" type="controller"/>
+        <action name="dispShopToolAddAddress" type="view" />
+        <action name="dispShopToolEditAddress" type="view" />
+        <action name="procShopToolInsertAddress" type="controller" ruleset="add_address"/>
 
         <!-- Cart and Checkout -->
         <action name="procShopToolCartAddProduct" type="controller" />

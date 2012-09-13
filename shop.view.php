@@ -894,7 +894,24 @@ class shopView extends shop {
     }
 
     /**
-     * Customer management view (Admin)
+     * Customer manage addresses view (Admin)
+     */
+    public function dispShopToolManageAddresses(){
+        $shopModel = getModel('shop');
+        $member_srl = Context::get('member_srl');
+        $memberModel = getModel('member');
+        $member_info = $memberModel->getMemberInfoByMemberSrl($member_srl);
+        $addressRepository = $shopModel->getAddressRepository();
+        $output = $addressRepository->getAddressesList($member_srl);
+
+        Context::set('member_info',$member_info);
+        Context::set('addresses_list',$output->addresses);
+        Context::set('page_navigation',$output->page_navigation);
+        Context::set('member_srl',$member_srl);
+    }
+
+    /**
+     * Customer add view (Admin)
      */
     public function dispShopToolAddCustomer(){
         $shopModel = getModel('shop');
@@ -916,11 +933,33 @@ class shopView extends shop {
     }
 
     /**
+     * Address add view (Admin)
+     */
+    public function dispShopToolAddAddress(){
+        $shopModel = getModel('shop');
+        $addressRepository = $shopModel->getAddressRepository();
+        $address_srl = Context::get('address_srl');
+        if($address_srl){
+            $address = $addressRepository->getAddress($address_srl);
+        }
+
+        Context::set('address',$address);
+    }
+
+    /**
      * Edit customer view (Admin)
      */
     public function dispShopToolEditCustomer(){
         $this->dispShopToolAddCustomer();
         $this->setTemplateFile('AddCustomer');
+    }
+
+    /**
+     * Edit address view (Admin)
+     */
+    public function dispShopToolEditAddress(){
+        $this->dispShopToolAddAddress();
+        $this->setTemplateFile('AddAddress');
     }
 
 

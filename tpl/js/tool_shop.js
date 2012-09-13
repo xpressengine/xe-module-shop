@@ -495,6 +495,28 @@ function deleteCustomerItems(page){
     exec_xml('shop', 'procShopToolDeleteCustomers', params, completeReload, response_tags);
 }
 
+function deleteAddressItem(srl){
+    if (!confirm(xe.lang.msg_confirm_delete_address)) return false;
+    var response_tags = new Array('error','message','page','mid');
+    exec_xml('shop', 'procShopToolDeleteAddresses', { address_srls: srl }, completeReload, response_tags);
+}
+
+function deleteAddressItems(page){
+    if (!confirm(xe.lang.msg_confirm_delete_addresses)) return false;
+    var val, srls = [];
+    jQuery("input[name=address_srl]:checked").each(function(){
+        val = jQuery(this).val();
+        if(val) srls.push(val);
+    });
+    if (srls.length < 1) return;
+    var response_tags = new Array('error','message','page','mid');
+    var params = {
+        address_srls: srls.join(','),
+        page: page
+    }
+    exec_xml('shop', 'procShopToolDeleteAddresses', params, completeReload, response_tags);
+}
+
 function deleteAttributeItem(srl){
     if (!confirm(xe.lang.msg_confirm_delete_attribute)) return false;
     var response_tags = new Array('error','message','page','mid');
