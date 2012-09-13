@@ -226,7 +226,12 @@ class Cart extends BaseItem
     public function getAddresses($refresh=false)
     {
         if (!is_array($this->addresses) || $refresh = true) {
-            if (!$this->member_srl) return false;
+            if (!$this->member_srl) {
+                $addresses = array();
+                if ($this->billing_address_srl) $addresses[] = $this->getBillingAddress();
+                if ($this->shipping_address_srl) $addresses[] = $this->getShippingAddress();
+                return $addresses;
+            }
             $aRepo = new AddressRepository();
             $this->addresses = $aRepo->getAddresses($this->member_srl, true);
         }
@@ -238,15 +243,21 @@ class Cart extends BaseItem
      */
     public function getBillingAddress()
     {
-        $addresses = $this->getAddresses();
-        if (!$addresses || empty($addresses)) return null;
-        $defaultBillingAddress = null;
-        /** @var $address Address */
-        foreach ($addresses as $address) {
-            if ($this->billing_address_srl == $address->address_srl) return $address;
-            if ($address->isDefaultBillingAddress()) $defaultBillingAddress = $address;
+        if (is_numeric($this->billing_address_srl)) {
+            $aRepo = new AddressRepository();
+            return $aRepo->getAddress($this->billing_address_srl);
         }
-        return $defaultBillingAddress;
+        else {
+            $addresses = $this->getAddresses();
+            if (!$addresses || empty($addresses)) return null;
+            $defaultBillingAddress = null;
+            /** @var $address Address */
+            foreach ($addresses as $address) {
+                if ($this->billing_address_srl == $address->address_srl) return $address;
+                if ($address->isDefaultBillingAddress()) $defaultBillingAddress = $address;
+            }
+            return $defaultBillingAddress;
+        }
     }
 
     /**
@@ -254,15 +265,21 @@ class Cart extends BaseItem
      */
     public function getShippingAddress()
     {
-        $addresses = $this->getAddresses();
-        if (!$addresses || empty($addresses)) return null;
-        $defaultShippingAddress = null;
-        /** @var $address Address */
-        foreach ($addresses as $address) {
-            if ($this->shipping_address_srl == $address->address_srl) return $address;
-            if ($address->isDefaultShippingAddress()) $defaultShippingAddress = $address;
+        if (is_numeric($this->shipping_address_srl)) {
+            $aRepo = new AddressRepository();
+            return $aRepo->getAddress($this->shipping_address_srl);
         }
-        return $defaultShippingAddress;
+        else {
+            $addresses = $this->getAddresses();
+            if (!$addresses || empty($addresses)) return null;
+            $defaultShippingAddress = null;
+            /** @var $address Address */
+            foreach ($addresses as $address) {
+                if ($this->shipping_address_srl == $address->address_srl) return $address;
+                if ($address->isDefaultShippingAddress()) $defaultShippingAddress = $address;
+            }
+            return $defaultShippingAddress;
+        }
     }
 
     /**
