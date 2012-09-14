@@ -98,6 +98,16 @@ abstract class PaymentMethodAbstract
         return $this->getFormHtml(self::$backend_form);
     }
 
+    public function getPaymentFormAction()
+    {
+        return './';
+    }
+
+    public function getPaymentSubmitButtonText()
+    {
+        return "Place your order";
+    }
+
     public function getSelectPaymentHtml()
     {
         return $this->display_name;

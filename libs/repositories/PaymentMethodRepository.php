@@ -80,6 +80,12 @@ class PaymentMethodRepository extends BaseRepository
         return $this->getPaymentMethod($name);
     }
 
+    private function getPaymentMethodsByFolder()
+    {
+        return FileHandler::readDir(self::$PAYMENT_METHODS_DIR);
+    }
+
+
     /**
      * Returns all available payment methods
      *
@@ -89,7 +95,7 @@ class PaymentMethodRepository extends BaseRepository
     public function getAvailablePaymentMethods()
     {
         // Scan through the plugins_shipping extension directory to retrieve available methods
-        $payment_extensions = FileHandler::readDir(self::$PAYMENT_METHODS_DIR);
+        $payment_extensions = $this->getPaymentMethodsByFolder();
 
         $payment_methods = array();
         foreach($payment_extensions as $payment_extension_name)
@@ -151,6 +157,18 @@ class PaymentMethodRepository extends BaseRepository
             throw new Exception($output->getMessage(), $output->getError());
         }
         return TRUE;
+    }
+
+    private function getPaymentMethodsInDatabase()
+    {
+        $output = executeQueryArray('shop.getGateways');
+
+        if (!$output->toBool())
+        {
+            throw new Exception($output->getMessage(), $output->getError());
+        }
+
+        return $output->data;
     }
 
     /**
@@ -216,8 +234,8 @@ class PaymentMethodRepository extends BaseRepository
      * @param  none
      */
     public function sanitizePaymentMethods() {
-        $pgByDatabase = $this->getAllGateways();
-        $pgByFolders = $this->getPaymentGatewaysByFolders();
+        $pgByDatabase = $this->getPaymentMethodsInDatabase();
+        $pgByFolders = $this->getPaymentMethodsByFolder();
 
         foreach ($pgByDatabase as $obj) {
             if (!in_array($obj->name,$pgByFolders)) {

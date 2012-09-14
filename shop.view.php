@@ -837,9 +837,8 @@ class shopView extends shop {
 
         $payment_method->onPlaceOrderFormLoad();
 
-        $payment_form = $payment_method->getPaymentFormHTML();
-        Context::set('payment_form', $payment_form);
-        Context::set('payment_method', $payment_method_name);
+        Context::set('payment_method', $payment_method);
+        Context::set('payment_method_name', $payment_method_name);
 
         // 2. Setup all other order info
         Context::set('billing_address', $cart->getBillingAddress());

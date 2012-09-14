@@ -1,6 +1,6 @@
 <?php
 
-class Paypal extends PaymentMethodAbstract
+class PaypalExpressCheckout extends PaymentMethodAbstract
 {
     const PAYPAL_WEB_SANDBOX = 'https://www.sandbox.paypal.com/webscr';
 
