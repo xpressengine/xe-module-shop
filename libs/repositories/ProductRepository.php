@@ -791,6 +791,7 @@ class ProductRepository extends BaseRepository
 		} else {
             $this->updateProductCategories($product);
 			$this->updateProductAttributes($product);
+            if($product->product_type == 'configurable') $this->insertProductConfigurableAttributes($product);
 			$this->updateProductImages($product);
         }
 		return TRUE;

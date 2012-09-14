@@ -57,9 +57,17 @@
 
             <!--@if($product->isConfigurable())-->
             <input type="hidden" name="product_type" value="configurable" />
-            <!--@foreach($configurable_attributes as $conf_attribute)-->
-            <input type="hidden" name="configurable_attributes[]" value="{$conf_attribute}" />
-            <!--@end-->
+                <!--@if(isset($configurable_attributes))-->
+                    <!--@foreach($configurable_attributes as $conf_attribute)-->
+                    <input type="hidden" name="configurable_attributes[]" value="{$conf_attribute}" />
+                    <!--@end-->
+                <!--@else-->
+                    <!--@if(isset($product->configurable_attributes))-->
+                        <!--@foreach($product->configurable_attributes as $conf_srl => $conf_attribute)-->
+                        <input type="hidden" name="configurable_attributes[]" value="{$conf_srl}" />
+                        <!--@end-->
+                    <!--@end-->
+                <!--@end-->
             <!--@else-->
             <input type="hidden" name="product_type" value="simple" />
             <!--@endif-->
