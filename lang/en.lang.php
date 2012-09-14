@@ -70,7 +70,8 @@
     $lang->no_config_attributes = 'There are no dropdown (seclect) attributes. <a href="%s">Add an attribute</a> ';
 	$lang->select_associated_products = 'Select associated products';
 	$lang->about_select_associated_products = 'This combinations will be generated into simple products and will be associated with this parent product';
-	$lang->images = 'Images';
+	$lang->add_associated_products = 'Add associated products';
+    $lang->images = 'Images';
 	$lang->delete = 'Delete';
 	$lang->upload_files = 'Upload Files';
 	$lang->notice_update_configurable = 'When updating a configurable product the values of associated products will not be affected. You will have to edit them sepparatly.';

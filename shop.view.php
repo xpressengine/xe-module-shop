@@ -573,17 +573,52 @@ class shopView extends shop {
 		$product_srl = Context::get('product_srl');
 		$productRepository = $shopModel->getProductRepository();
 		$product = $productRepository->getProduct($product_srl);
+
 		Context::set('product',$product);
 		$attributeRepository = $shopModel->getAttributeRepository();
 		$configurable_attributes = $attributeRepository->getAttributes(array_keys($product->configurable_attributes));
 		if(count($product->configurable_attributes) == 1){
 			$values_combinations = explode('|',$configurable_attributes->values);
+            $config_atts[$configurable_attributes->attribute_srl] = $configurable_attributes;
+            unset($configurable_attributes);
+            $configurable_attributes = $config_atts;
 		}else{
 			foreach($configurable_attributes as $conf_att){
 				$configurable_values[] = $conf_att->values;
 			}
 			$values_combinations = $attributeRepository->getValuesCombinations($configurable_values);
 		}
+        if(isset($product->associated_products)){
+            foreach($product->associated_products as $associated_product){
+                foreach($configurable_attributes as $key => $value){
+                    $existing_combination[] = $associated_product->attributes[$key];
+                }
+                $existing_combinations[] = $existing_combination;
+                unset($existing_combination);
+            }
+        }
+        if(isset($existing_combinations)){
+            foreach($values_combinations as $key => $value_comb){
+                foreach($existing_combinations as $existing_comb){
+                    if(count($value_comb) != 1) {
+                        $val = trim(implode('',$value_comb));
+                        $exist = trim(implode('',$existing_comb));
+                        if($val == $exist){
+                            $keys[] = $key;
+                        }
+                    } else {
+                        if(trim($value_comb) == trim($existing_comb[0])){
+                            $keys[] = $key;
+                        }
+                    }
+                }
+            }
+        }
+        if(isset($keys)){
+            foreach($keys as $key){
+                unset($values_combinations[$key]);
+            }
+        }
 		Context::set('values_combinations',$values_combinations);
 
 	}

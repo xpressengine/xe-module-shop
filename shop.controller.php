@@ -382,7 +382,7 @@
 				}
 			}
 			$this->setMessage("Saved associated products successfull");
-			$returnUrl = getNotEncodedUrl('', 'act', 'dispShopToolManageProducts');
+			$returnUrl = getNotEncodedUrl('', 'act', 'dispShopToolEditProduct', 'product_srl', $parent_product->product_srl);
 			$this->setRedirectUrl($returnUrl);
 		}
 
