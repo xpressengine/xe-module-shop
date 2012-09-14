@@ -29,8 +29,40 @@ class Cart extends BaseItem
 
     public function delete()
     {
+        if (!$this->cart_srl) throw new Exception('Cart is not persisted, can\'t delete.');
         $this->query('deleteCarts', array('cart_srls' => array($this->cart_srl)));
         $this->query('deleteCartProducts', array('cart_srl'=> $this->cart_srl));
+    }
+
+    public function merge(Cart $cart)
+    {
+        if (!$cart->cart_srl || !$this->cart_srl) throw new Exception('Missing srl(s) for carts merge');
+        if ($cart->cart_srl == $this->cart_srl) throw new Exception('Cannot merge with same cart');
+        $this->copyProductLinksFrom($cart);
+        $cart->delete();
+    }
+
+    public function copyProductLinksFrom(Cart $cart)
+    {
+        if (!$cart->cart_srl || !$this->cart_srl) throw new Exception('Missing srl(s) for cart products copy');
+        if ($cart->cart_srl == $this->cart_srl) throw new Exception('Cannot copy from same cart');
+        $myCps = $this->repo->getCartProducts($this->cart_srl)->data;
+        $cps = $this->repo->getCartProducts($cart->cart_srl)->data;
+        foreach ($cps as $cp) {
+            $have = false;
+            foreach ($myCps as $cp2) {
+                if ($cp->product_srl == $cp2->product_srl) {
+                    $have = true;
+                    break;
+                }
+            }
+            if ($have) {
+                $this->repo->updateCartProduct($this->cart_srl, $cp->product_srl, $cp->quantity + $cp2->quantity);
+            }
+            else {
+                $this->repo->insertCartProduct($this->cart_srl, $cp->product_srl, $cp->quantity);
+            }
+        }
     }
 
     #region cart & stuff
@@ -52,7 +84,10 @@ class Cart extends BaseItem
         if (empty($output->data)) {
             $return = $this->repo->insertCartProduct($this->cart_srl, $product_srl, $quantity);
         }
-        else $return = $this->setProductQuantity($product_srl, $relativeQuantity ? $output->data->quantity + $quantity : $quantity);
+        else {
+            $cp = $output->data[0];
+            $return = $this->setProductQuantity($product_srl, $relativeQuantity ? $cp->quantity + $quantity : $quantity);
+        }
 
         //count with quantities
         $this->items = $this->count(true);

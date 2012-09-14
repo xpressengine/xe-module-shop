@@ -4,7 +4,7 @@
     </tables>
     <columns></columns>
     <conditions>
-        <condition operation="in" column="product_srl" var="product_srls" notnull="notnull" />
+        <condition operation="in" column="product_srl" var="product_srls" />
         <condition operation="equal" column="cart_srl" var="cart_srl" notnull="notnull" pipe="and" />
     </conditions>
 </query>

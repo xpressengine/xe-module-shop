@@ -161,7 +161,7 @@ class shopView extends shop {
         // Load cart for display on all pages (in header)
         $cartRepo = new CartRepository();
         $logged_info = Context::get('logged_info');
-        $cart = $cartRepo->getCart($this->module_srl, null, $logged_info->member_srl, session_id(), true);
+        $cart = $cartRepo->getCart($this->module_srl, null, $logged_info->member_srl, session_id());
         Context::set('cart', $cart);
 
         // Load menu for display on all pages (in header)
@@ -789,12 +789,13 @@ class shopView extends shop {
     public function dispShopCheckout()
     {
         /** @var $cart Cart */
-        $shippingRepo = $this->model->getShippingRepository();
-        $paymentRepo = $this->model->getPaymentMethodRepository();
-
-        if ((!$cart = Context::get('cart')) || !$cart->items    ) {
-            throw new Exception("No cart, you shouldn't be here");
+        if (!(($cart = Context::get('cart')) instanceof Cart)) throw new Exception("No cart, you shouldn't be here");
+        if (!$cart->items) {
+            throw new Exception('Cart is empty, you have nothing to checkout');
         }
+
+        $shippingRepo = new ShippingRepository();
+        $paymentRepo = new PaymentMethodRepository();
 
         //shipping methods
         $shipping = array();

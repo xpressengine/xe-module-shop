@@ -459,6 +459,7 @@
         {
             $cartRepo = new CartRepository();
             $logged_info = Context::get('logged_info');
+
             //get or create cart:
             if ($cart = $cartRepo->getCart($this->module_info->module_srl, null, $logged_info->member_srl, session_id(), true)) {
 
@@ -469,11 +470,19 @@
                     /** @var $oMemberController memberController */
                     $oMemberController = getController('member');
                     $result = $oMemberController->procMemberLogin($user, $pass);
+                    $logged_info = Context::get('logged_info');
                     //@TODO: check password expiration?
+                    //TODO: test asa: admin are cart, da logout, anon face cart, da login ca admin, AICI.
                     if (!$result->error) { //login successful
-                        $logged_info = Context::get('logged_info');
-                        $cart->member_srl = $logged_info->member_srl;
-                        $cart->save();
+                        if ($memberCart = $cartRepo->getCart($this->module_info->module_srl, null, $logged_info->member_srl, session_id()))
+                        {
+                            $memberCart->merge($cart);
+                            Context::set('cart', $cart = $memberCart);
+                        }
+                        else {
+                            $cart->member_srl = $logged_info->member_srl;
+                            $cart->save();
+                        }
                     }
                     $this->setRedirectUrl(getNotEncodedUrl('', 'act', 'dispShopCheckout'));
                     return $result;

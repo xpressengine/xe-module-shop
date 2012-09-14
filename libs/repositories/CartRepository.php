@@ -40,9 +40,11 @@ class CartRepository extends BaseRepository
         return $this->query('insertCartProduct', array('cart_srl' => $cart_srl, 'product_srl' => $product_srl, 'quantity' => $quantity));
     }
 
-    public function getCartProducts($cart_srl, array $product_srls)
+    public function getCartProducts($cart_srl, array $product_srls=null)
     {
-        return $this->query('getCartProducts', array('cart_srl' => $cart_srl, 'product_srls' => $product_srls));
+        $params = array('cart_srl' => $cart_srl);
+        if ($product_srls) $params['product_srls'] = $product_srls;
+        return $this->query('getCartProducts', $params, true);
     }
 
     public function deleteCartProducts($cart_srl, array $product_srls=null)
@@ -98,10 +100,14 @@ class CartRepository extends BaseRepository
             'cart_srl' => $cart_srl
         );
         if (is_numeric($member_srl)) {
-            if (is_numeric($module_srl)) return array(
-                'member_srl' => $member_srl,
-                'module_srl' => $module_srl
-            );
+            if (is_numeric($module_srl)) {
+                $a = array(
+                    'member_srl' => $member_srl,
+                    'module_srl' => $module_srl
+                );
+                //if ($session_id) $a['session_id'] = $session_id;
+                return $a;
+            }
             throw new Exception('Count not identify cart by member_srl (module_srl needed)');
         }
         if ($session_id) {
