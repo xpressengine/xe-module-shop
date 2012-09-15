@@ -11,6 +11,7 @@
 		<permission action="dispShopToolDashboard" target="manager" />
 		<permission action="dispShopToolLayoutConfigSkin" target="manager" />
 		<permission action="dispShopToolLayoutConfigEdit" target="manager" />
+        <permission action="dispShopToolManageAccount" target="manager" />
 
 		<permission action="procShopInfoUpdate" target="manager" />
 		<permission action="procShopToolLayoutConfigSkin" target="manager" />
@@ -20,6 +21,7 @@
 		<permission action="procShopToolUserSkinExport" target="manager" />
 		<permission action="procShopToolUserSkinImport" target="manager" />
 		<permission action="procShopToolLive" target="manager" />
+        <permission action="procShopToolAccountUpdate" target="manager" />
 
         <!-- Products -->
         <permission action="dispShopToolManageProducts" target="manager" />
@@ -102,6 +104,7 @@
         <action name="dispShopAdminList" type="view" standalone="true" admin_index="true" />
         <action name="dispShopAdminInsert" type="view" standalone="true" />
         <action name="dispShopAdminDelete" type="view" standalone="true" />
+        <action name="dispShopToolManageAccount" type="view"/>
 
 		<action name="procShopToolLayoutConfigSkin" type="controller" />
 		<action name="procShopToolLayoutConfigMobileSkin" type="controller" />
@@ -112,6 +115,7 @@
 		<action name="procShopToolUserSkinExport" type="controller" />
 		<action name="procShopToolUserSkinImport" type="controller" />
 		<action name="procShopToolLive" type="controller" />
+        <action name="procShopToolAccountUpdate" type="controller" ruleset="account_update" />
 
 		<action name="procShopAdminCreate" type="controller" standalone="true" ruleset="insert_shop"  />
 		<action name="procShopAdminUpdate" type="controller" standalone="true" ruleset="update_shop" />

@@ -451,6 +451,25 @@
             $this->setRedirectUrl($returnUrl);
         }
 
+        public function procShopToolAccountUpdate(){
+            $oMemberController = &getController('member');
+
+            // nickname, email
+            $args = new stdClass();
+            $args->member_srl = $this->shop->member_srl;
+            $args->nick_name = Context::get('nick_name');
+            $args->email_address = Context::get('email_address');
+            try{
+                $output = $oMemberController->updateMember($args);
+            }
+            catch(Exception $e) {
+                return new Object(-1, $e->getMessage());
+            }
+
+            $this->setMessage("success_updated");
+            $returnUrl = getNotEncodedUrl('', 'act', 'dispShopToolManageAccount');
+            $this->setRedirectUrl($returnUrl);
+        }
 
         /*
          * @author Florin Ercus (dev@xpressengine.org)

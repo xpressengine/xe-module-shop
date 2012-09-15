@@ -1090,12 +1090,20 @@ class shopView extends shop {
 
 	}
 
+    /**
+     * Edit admin account from backend
+     */
+    public function dispShopToolManageAccount(){
+        $oMemberModel = &getModel('member');
+        $member_config = $oMemberModel->getMemberConfig();
+    }
+
 	/**
 	 * Edit menu item
 	 *
 	 * @return Object
 	 */
-	function dispShopToolExtraMenuEdit(){
+	public function dispShopToolExtraMenuEdit(){
 		$menu_item_srl = Context::get('menu_item_srl');
 		if(!$menu_item_srl)
 			return new Object(-1, 'msg_invalid_request');
@@ -1113,7 +1121,7 @@ class shopView extends shop {
 	 *
 	 * @return Object
 	 */
-	function dispShopToolExtraMenuModuleInsert(){
+	public function dispShopToolExtraMenuModuleInsert(){
 		$oModuleModel = getModel('module');
 
 		// Retrieve just modules of type 'service' out of all installed modules

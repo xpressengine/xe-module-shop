@@ -294,7 +294,7 @@
             'dispShopToolLayoutConfigEdit'=>'HTML&middot;CSS Edit',
         ),
         array(
-            'dispShopToolManageAdminAccount'=>'Admin account',
+            'dispShopToolManageAccount'=>'Admin account',
             'dispShopToolConfigInfo'=>'Shop Configuration',
             'dispShopToolShippingList'=>'Shipping methods',
             'dispShopToolManagePaymentMethods'=>'Payment methods'
