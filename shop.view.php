@@ -1098,6 +1098,13 @@ class shopView extends shop {
         $member_config = $oMemberModel->getMemberConfig();
     }
 
+    /**
+     * Change admin password from backend
+     */
+    public function dispShopToolChangePassword(){
+
+    }
+
 	/**
 	 * Edit menu item
 	 *
