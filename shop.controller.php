@@ -451,6 +451,10 @@
             $this->setRedirectUrl($returnUrl);
         }
 
+        /*
+        * @brief function for admin account update
+        * @author Dan Dragan (dev@xpressengine.org)
+        */
         public function procShopToolAccountUpdate(){
             $oMemberController = &getController('member');
 
@@ -469,6 +473,66 @@
             $this->setMessage("success_updated");
             $returnUrl = getNotEncodedUrl('', 'act', 'dispShopToolManageAccount');
             $this->setRedirectUrl($returnUrl);
+        }
+
+        /*
+        * @brief function for shop info update
+        * @author Dan Dragan (dev@xpressengine.org)
+        */
+        public function procShopToolInfoUpdate(){
+            $oModuleController = &getController('module');
+            $oModuleModel = &getModel('module');
+            $oShopModel = &getModel('shop');
+
+            $args = Context::gets('shop_title','shop_content','timezone','telephone','address','currency','VAT');
+            $args->module_srl = $this->module_srl;
+            try{
+                $output = executeQuery('shop.updateShopInfo',$args);
+            }
+            catch(Exception $e) {
+                return new Object(-1, $e->getMessage());
+            }
+
+            $module_info = $oModuleModel->getModuleInfoByModuleSrl($this->module_srl);
+            $module_info->browser_title = $args->shop_title;
+            $output = $oModuleController->updateModule($module_info);
+            if(!$output->toBool()) return $output;
+
+            unset($args);
+            $args = new stdClass();
+            $args->index_module_srl = $this->module_srl;
+            $args->default_language = Context::get('language');
+            $args->site_srl = $this->site_srl;
+            try{
+                $output = $oModuleController->updateSite($args);
+            }
+            catch(Exception $e) {
+                return new Object(-1, $e->getMessage());
+            }
+
+            if(Context::get('delete_icon')=='Y') $this->deleteShopFavicon($this->module_srl);
+
+            $favicon = Context::get('favicon');
+            if(Context::isUploaded()&&is_uploaded_file($favicon['tmp_name'])) $this->insertShopFavicon($this->module_srl,$favicon['tmp_name']);
+
+            $this->setMessage("success_updated");
+            $returnUrl = getNotEncodedUrl('', 'act', 'dispShopToolConfigInfo');
+            $this->setRedirectUrl($returnUrl);
+        }
+
+        public function insertShopFavicon($module_srl, $source) {
+            $oShopModel = &getModel('shop');
+            $path = $oShopModel->getShopFaviconPath($module_srl);
+            if(!is_dir($path)) FileHandler::makeDir($path);
+            $filename = sprintf('%sfavicon.ico', $path);
+            move_uploaded_file($source, $filename);
+        }
+
+        public function deleteShopFavicon($module_srl){
+            $oShopModel = &getModel('shop');
+            $path = $oShopModel->getShopFaviconPath($module_srl);
+            $filename = sprintf('%s/favicon.ico', $path);
+            FileHandler::removeFile($filename);
         }
 
         /*

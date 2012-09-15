@@ -75,6 +75,14 @@ a.skipToContent{text-align:center;color:#fff;position:absolute;width:100%;font-s
 .fileUploader .fileUploadControl .button{margin-bottom:5px}
 .fileUploader .file_attach_info{clear:right;margin:5px 0;font-size:11px;color:#333}
 
+/* favicon */
+.setUp .favicon{position:relative;width:180px;height:140px;float:left;margin-right:20px;background:url(../img/bgFavicon.gif) no-repeat}
+.setUp .favicon .iconFavicon{position:absolute;left:89px}
+.setUp .favicon .iconFavicon.url{top:31px}
+.setUp .favicon .iconFavicon.tab{top:63px}
+.setUp .favicon .deleteFavicon{position:absolute;top:105px;right:0;width:17px;height:17px;padding:0;border:0;background:transparent url(../img/buttonTableDataX.gif) no-repeat center center;cursor:pointer}
+.setUp .favicon .deleteFavicon span{position:absolute;width:0;height:0;overflow:hidden;font-size:0;line-height:0;visibility:hidden;z-index:-1}
+
 /* Header */
 #shopAdmin #header{width:100%;height:100px;zoom:1;z-index:1;clear:both;background:url(../img/bgHeader.gif) repeat-x}
 #shopAdmin #header:after{content:"";display:block;clear:both}

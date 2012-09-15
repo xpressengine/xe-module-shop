@@ -167,6 +167,42 @@ class shopModel extends shop
 		return $skin_file_list;
 	}
 
+    /**
+     * Get Favicon source
+     *
+     * @author Arnia (dev@xpressengine.org)
+     * @param $module_srl
+     * @return string
+     */
+    public function getShopFaviconSrc($module_srl) {
+        $path = $this->getShopFaviconPath($module_srl);
+        $filename = sprintf('%sfavicon.ico', $path);
+        if(!is_dir($path) || !file_exists($filename)) return $this->getShopDefaultFaviconSrc();
+
+        return Context::getRequestUri().$filename."?rnd=".filemtime($filename);
+    }
+
+    /**
+     * Get Favicon path
+     *
+     * @author Arnia (dev@xpressengine.org)
+     * @param $module_srl
+     * @return string
+     */
+    public function getShopFaviconPath($module_srl) {
+        return sprintf('files/attach/shop/favicon/%s', getNumberingPath($module_srl,3));
+    }
+
+    /**
+     * Get default path
+     *
+     * @author Arnia (dev@xpressengine.org)
+     * @return string
+     */
+    function getShopDefaultFaviconSrc(){
+        return sprintf("%s%s", Context::getRequestUri(), 'modules/shop/tpl/img/favicon.ico');
+    }
+
 	/**
 	 * Get module part config
 	 *

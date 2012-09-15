@@ -11,15 +11,14 @@
     class shop extends ModuleObject {
 
         /**
-         * @berif default mid
+         * @brief default mid
          **/
         public $shop_mid = 'shop';
 
         /**
-         * @berif default skin
+         * @brief default skin
          **/
         public $skin = 'default';
-
 
         public $add_triggers = array(
             array('display', 'shop', 'controller', 'triggerMemberMenu', 'before'),

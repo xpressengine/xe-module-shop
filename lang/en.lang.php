@@ -81,6 +81,15 @@
     $lang->about_select_import_file = 'The file must be a zip file';
     $lang->shop_manage_addresses = 'Manage addresses for %s';
 
+    $lang->cmd_delete_favicon = 'Remove favicon';
+    $lang->favicon = 'Favicon';
+    $lang->registed_favicon = 'Registered Favicon';
+    $lang->about_favicon = '<strong>16x16px</strong> sized <strong>ico</strong> file can be uploaded.';
+    $lang->currency = 'Currency';
+    $lang->about_currency = 'Enter shop default currency';
+    $lang->VAT = 'VAT';
+    $lang->about_VAT = 'Enter VAT amount in %';
+
 	$lang->cmd_open_id = 'Open ID Login';
 	$lang->cmd_common_id = 'Default Login';
 	$lang->msg_create_shop = 'Shop is created';

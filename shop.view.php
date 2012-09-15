@@ -70,6 +70,8 @@ class shopView extends shop {
 		$this->site_srl = $this->shop->site_srl;
 		Context::set('shop',$this->shop);
 
+        Context::addHtmlHeader('<link rel="shortcut icon" href="'.$this->shop->getFaviconSrc().'" />');
+
 		if($this->shop->timezone) $GLOBALS['_time_zone'] = $this->shop->timezone;
 
 
@@ -1103,6 +1105,20 @@ class shopView extends shop {
      */
     public function dispShopToolChangePassword(){
 
+    }
+
+    /**
+     * Change shop configuration from backend
+     */
+    public function dispShopToolConfigInfo(){
+
+        $currencies = require_once(_XE_PATH_.'modules/shop/shop.currencies.php');
+        Context::set('currencies',$currencies);
+
+        Context::set('langs', Context::loadLangSelected());
+
+        Context::set('time_zone_list', $GLOBALS['time_zone']);
+        Context::set('time_zone', $GLOBALS['_time_zone']);
     }
 
 	/**

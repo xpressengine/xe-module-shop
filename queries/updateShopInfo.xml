@@ -6,6 +6,10 @@
 		<column name="shop_content" var="shop_content" default="" />
         <column name="shop_title" var="shop_title" default="" />
 		<column name="timezone" var="timezone" />
+        <column name="telephone" var="telephone" />
+        <column name="address" var="address" />
+        <column name="currency" var="currency" />
+        <column name="VAT" var="VAT" />
     </columns>
     <conditions>
         <condition operation="equal" column="module_srl" var="module_srl" filter="number" notnull="notnull" />

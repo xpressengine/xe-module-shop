@@ -75,6 +75,18 @@
             return $this->get('shop_title');
         }
 
+        function getFaviconSrc(){
+            if(!$this->isExists()) return;
+            $oShopModel = &getModel('shop');
+            return $oShopModel->getShopFaviconSrc($this->module_srl);
+        }
+
+        function getDefaultFaviconSrc(){
+            $oShopModel = &getModel('shop');
+            $src = $oShopModel->getShopDefaultFaviconSrc();
+            return $src;
+        }
+
         public function getMid() {
             if(!$this->isExists()) return;
             return $this->get('mid');
@@ -120,6 +132,26 @@
         public function getShopContent() {
             if(!$this->isExists()) return;
             return $this->get('shop_content');
+        }
+
+        public function getTelephone() {
+            if(!$this->isExists()) return;
+            return $this->get('telephone');
+        }
+
+        public function getAddress() {
+            if(!$this->isExists()) return;
+            return $this->get('address');
+        }
+
+        public function getCurrency() {
+            if(!$this->isExists()) return;
+            return $this->get('currency');
+        }
+
+        public function getVAT() {
+            if(!$this->isExists()) return;
+            return $this->get('VAT');
         }
 
         public function getEmail() {
