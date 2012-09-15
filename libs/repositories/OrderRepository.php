@@ -79,5 +79,19 @@ class OrderRepository extends BaseRepository
         return empty($output->data) ? null : new Order((array) $output->data);
     }
 
+    public function getOrderItems($order)
+    {   $shopModel = getModel('shop');
+        $productRepository = $shopModel->getProductRepository();
+        $args = new stdClass();
+        $args->order_srl = $order->order_srl;
+        $output = $this->query('getOrderItems',$args,true);
+        foreach($output->data as $item){
+            $product = $productRepository->getProduct($item->product_srl);
+            $product->ordered_qty = $item->quantity;
+            $ordered_items[] = $product;
+        }
+        return $ordered_items;
+    }
+
 
 }

@@ -371,6 +371,8 @@ class shopView extends shop {
     {
         $repo = new OrderRepository();
         if ($order = $repo->getOrderBySrl(Context::get('order_srl'))) {
+            $order_items = $repo->getOrderItems($order);
+            Context::set('ordered_items',$order_items);
             Context::set('order', $order);
         }
         else throw new Exception('No such order');

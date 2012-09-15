@@ -90,6 +90,22 @@
     $lang->VAT = 'VAT';
     $lang->about_VAT = 'Enter VAT amount in %';
 
+    $lang->order_status = 'Order status';
+    $lang->current_order_status = 'The current order status is:';
+    $lang->account_info = 'Account Information';
+    $lang->billing_address = 'Billing Address';
+    $lang->shipping_address = 'Shipping Address';
+    $lang->payment_info = 'Payment Information';
+    $lang->shipping_info = 'Shipping Information';
+    $lang->items_ordered = 'Items Ordered';
+    $lang->payment_method_used = 'The payment method used:';
+    $lang->shipping_method_used = 'The shipping method used:';
+    $lang->customer_name = 'Customer name:';
+    $lang->customer_email = 'Customer email:';
+    $lang->customer_ip = 'Customer IP:';
+    $lang->subtotal = 'Subtotal';
+    $lang->grand_total = 'Grand Total';
+
 	$lang->cmd_open_id = 'Open ID Login';
 	$lang->cmd_common_id = 'Default Login';
 	$lang->msg_create_shop = 'Shop is created';
