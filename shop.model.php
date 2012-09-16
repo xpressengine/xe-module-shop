@@ -336,6 +336,28 @@ class shopModel extends shop
     }
 
     /**
+     * Returns an instance of the Invoice repository
+     *
+     * @author Dan Dragan (dev@xpressengine.org)
+     * @return InvoiceRepository
+     */
+    public function getInvoiceRepository()
+    {
+        return new InvoiceRepository();
+    }
+
+    /**
+     * Returns an instance of the Shipment repository
+     *
+     * @author Dan Dragan (dev@xpressengine.org)
+     * @return ShipmentRepository
+     */
+    public function getShipmentRepository()
+    {
+        return new ShipmentRepository();
+    }
+
+    /**
      * Returns an instance of the Address repository
      *
      * @author Florin Ercus (dev@xpressengine.org)

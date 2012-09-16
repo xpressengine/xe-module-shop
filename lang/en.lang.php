@@ -195,6 +195,15 @@
     $lang->attribute_default_value = 'Selected value';
     $lang->about_attribute_default_value = 'Must be one of *values*';
 
+    $lang->edit = 'Edit';
+    $lang->cancel = 'Cancel';
+    $lang->send_email = 'Send Email';
+    $lang->hold = 'Hold';
+    $lang->unhold = 'Unhold';
+    $lang->invoice = 'Invoice';
+    $lang->ship = 'Ship';
+    $lang->reorder = 'Reorder';
+
     $lang->total_result_count = 'Total <strong>%d</strong> Items';
     $lang->search_result_count = '<strong>%d</strong> results are found.';
     $lang->no_result_count = 'There is no result';
@@ -300,6 +309,7 @@
         array(
         	'dispShopToolManageOrders'=>'Orders',
         	'dispShopToolManageInvoices'=>'Invoices',
+            'dispShopToolManageShipments'=>'Shipments',
         ),
         array(
             'dispShopToolManageCustomers'=>'Manage Accounts',

@@ -73,6 +73,11 @@
         <!-- Orders -->
         <permission action="dispShopToolManageOrders" target="manager"/>
         <permission action="dispShopToolViewOrder" target="manager"/>
+        <permission action="dispShopToolManageInvoices" target="manager"/>
+        <permission action="dispShopToolManageShipments" target="manager"/>
+        <permission action="procShopToolHoldOrder" target="manager"/>
+        <permission action="procShopToolUnholdOrder" target="manager"/>
+        <permission action="procShopToolCancelOrder" target="manager"/>
 
         <!-- Addresses -->
         <permission action="dispShopToolManageAddresses" target="manager"/>
@@ -226,6 +231,11 @@
         <!-- Orders -->
         <action name="dispShopToolManageOrders" type="view"/>
         <action name="dispShopToolViewOrder" type="view"/>
+        <action name="dispShopToolManageInvoices" type="view"/>
+        <action name="dispShopToolManageShipments" type="view"/>
+        <action name="procShopToolHoldOrder" type="controller"/>
+        <action name="procShopToolUnholdOrder" type="controller"/>
+        <action name="procShopToolCancelOrder" type="controller"/>
 
     </actions>
 </module>

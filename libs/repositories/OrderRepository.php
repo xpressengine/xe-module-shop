@@ -76,7 +76,26 @@ class OrderRepository extends BaseRepository
     public function getOrderBySrl($srl)
     {
         $output = $this->query('getOrderBySrl', array('order_srl'=> $srl));
-        return empty($output->data) ? null : new Order((array) $output->data);
+        if(empty($output->data)){
+            return null;
+        }else{
+            $order = new Order((array) $output->data);
+            $this->getOrderShipment($order);
+            $this->getOrderInvoice($order);
+            return $order;
+        }
+    }
+
+    public function getOrderShipment($order){
+        $shopModel = getModel('shop');
+        $shipmentRepository = $shopModel->getShipmentRepository();
+        $order->shipment = $shipmentRepository->getShipmentByOrderSrl($order->order_srl);
+    }
+
+    public function getOrderInvoice($order){
+        $shopModel = getModel('shop');
+        $invoiceRepository = $shopModel->getInvoiceRepository();
+        $order->invoice = $invoiceRepository->getInvoiceByOrderSrl($order->order_srl);
     }
 
     public function getOrderItems($order)

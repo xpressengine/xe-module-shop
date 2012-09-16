@@ -604,6 +604,67 @@
             else throw new Exception('No cart');
         }
 
+        /*
+        * @brief function for holding order
+        * @author Dan Dragan (dev@xpressengine.org)
+        */
+        public function procShopToolHoldOrder(){
+            $order_srl = Context::get('order_srl');
+            $orderRepository = $this->model->getOrderRepository();
+            $order = $orderRepository->getOrderBySrl($order_srl);
+            $order->order_status = 'Hold';
+            try{
+                $order->save();
+            }
+            catch(Exception $e) {
+                return new Object(-1, $e->getMessage());
+            }
+            $this->setMessage("Ordered has been successfully put on Hold");
+            $return_url = getNotEncodedUrl('', 'act','dispShopToolViewOrder','order_srl',$order_srl);
+            $this->setRedirectUrl($return_url);
+        }
+
+        /*
+        * @brief function for unholding order
+        * @author Dan Dragan (dev@xpressengine.org)
+        */
+        public function procShopToolUnholdOrder(){
+            $order_srl = Context::get('order_srl');
+            $orderRepository = $this->model->getOrderRepository();
+            $order = $orderRepository->getOrderBySrl($order_srl);
+            if(isset($order->invoice) || isset($order->shipment)) $order_status = 'Processing';
+            else $order->order_status = 'Pending';
+            try{
+                $order->save();
+            }
+            catch(Exception $e) {
+                return new Object(-1, $e->getMessage());
+            }
+            $this->setMessage("Ordered has been successfully Unhold");
+            $return_url = getNotEncodedUrl('', 'act','dispShopToolViewOrder','order_srl',$order_srl);
+            $this->setRedirectUrl($return_url);
+        }
+
+        /*
+        * @brief function for cancelling order
+        * @author Dan Dragan (dev@xpressengine.org)
+        */
+        public function procShopToolCancelOrder(){
+            $order_srl = Context::get('order_srl');
+            $orderRepository = $this->model->getOrderRepository();
+            $order = $orderRepository->getOrderBySrl($order_srl);
+            $order->order_status = 'Canceled';
+            try{
+                $order->save();
+            }
+            catch(Exception $e) {
+                return new Object(-1, $e->getMessage());
+            }
+            $this->setMessage("Ordered has been Canceled");
+            $return_url = getNotEncodedUrl('', 'act','dispShopToolViewOrder','order_srl',$order_srl);
+            $this->setRedirectUrl($return_url);
+        }
+
         public function procShopPlaceOrder()
         {
             $cartRepo = new CartRepository();

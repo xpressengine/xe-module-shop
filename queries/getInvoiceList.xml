@@ -1,0 +1,17 @@
+<query id="getInvoiceList" action="select">
+    <tables>
+        <table name="shop_invoices" />
+    </tables>
+    <columns>
+        <column name="*" />
+    </columns>
+    <conditions>
+        <condition operation="equal" column="module_srl" var="module_srl" notnull="notnull"/>
+    </conditions>
+    <navigation>
+        <index var="invoice_srl" default="invoice_srl" order="invoice_type" />
+        <list_count var="list_count" default="10" />
+        <page_count var="page_count" default="10" />
+        <page var="page" default="1" />
+    </navigation>
+</query>

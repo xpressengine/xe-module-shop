@@ -19,7 +19,9 @@ class Order extends BaseItem
         $vat,
         $order_status,
         $ip,
-        $regdate;
+        $regdate,
+        $invoice,
+        $shipment;
 
     /** @var OrderRepository */
     public $repo;

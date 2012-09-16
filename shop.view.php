@@ -367,6 +367,22 @@ class shopView extends shop {
         Context::set('page_navigation', $orders->page_navigation);
     }
 
+    public function dispShopToolManageInvoices()
+    {
+        $repo = new InvoiceRepository();
+        $invoices = $repo->getList($this->module_info->module_srl);
+        Context::set('invoices', $invoices->data);
+        Context::set('page_navigation', $invoices->page_navigation);
+    }
+
+    public function dispShopToolManageShipments()
+    {
+        $repo = new ShipmentRepository();
+        $shipments = $repo->getList($this->module_info->module_srl);
+        Context::set('shipments', $shipments->data);
+        Context::set('page_navigation', $shipments->page_navigation);
+    }
+
     public function dispShopToolViewOrder()
     {
         $repo = new OrderRepository();
