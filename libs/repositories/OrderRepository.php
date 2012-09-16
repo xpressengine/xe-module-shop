@@ -58,7 +58,7 @@ class OrderRepository extends BaseRepository
             'total' => $cart->getTotal(),
             'vat' => '0', // TODO Add VAT
             'order_status' => 'Pending', // TODO Add order status
-            'ip' => $_SERVER['REMOTE_ADDRESS']
+            'ip' => $_SERVER['REMOTE_ADDR']
         ));
     }
 

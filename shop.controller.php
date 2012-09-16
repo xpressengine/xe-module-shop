@@ -632,7 +632,7 @@
             $order_srl = Context::get('order_srl');
             $orderRepository = $this->model->getOrderRepository();
             $order = $orderRepository->getOrderBySrl($order_srl);
-            if(isset($order->invoice) || isset($order->shipment)) $order_status = 'Processing';
+            if(isset($order->invoice) || isset($order->shipment)) $order->order_status = 'Processing';
             else $order->order_status = 'Pending';
             try{
                 $order->save();
@@ -663,6 +663,84 @@
             $this->setMessage("Ordered has been Canceled");
             $return_url = getNotEncodedUrl('', 'act','dispShopToolViewOrder','order_srl',$order_srl);
             $this->setRedirectUrl($return_url);
+        }
+
+        /*
+        * @brief function for adding order invoice
+        * @author Dan Dragan (dev@xpressengine.org)
+        */
+        public function procShopToolInsertInvoice(){
+            $order_srl = Context::get('order_srl');
+            $orderRepository = $this->model->getOrderRepository();
+            $invoiceRepository = $this->model->getInvoiceRepository();
+            $order = $orderRepository->getOrderBySrl($order_srl);
+            $args = Context::getRequestVars();
+            $args->order_srl = $order_srl;
+            $args->module_srl = $order->module_srl;
+            $invoice = new Invoice($args);
+            if(!isset($invoice->invoice_srl)) $insert=true;
+            $invoice->save();
+            if($invoice->invoice_srl){
+                if(isset($order->shipment)) $order->order_status = 'Completed';
+                else $order->order_status = 'Processing';
+                try{
+                    $order->save();
+                }
+                catch(Exception $e) {
+                    return new Object(-1, $e->getMessage());
+                }
+                if($insert){
+                    $this->setMessage("Invoice has been created");
+                    $return_url = getNotEncodedUrl('', 'act','dispShopToolViewOrder','order_srl',$order_srl);
+                    $this->setRedirectUrl($return_url);
+                } else {
+                    $this->setMessage("Invoice has been updated");
+                    $return_url = getNotEncodedUrl('', 'act','dispShopToolManageInvoices','order_srl',$order_srl);
+                    $this->setRedirectUrl($return_url);
+                }
+
+            } else {
+                throw new Exception('Something whent wrong when adding invoice');
+            }
+        }
+
+        /*
+        * @brief function for adding order shipment
+        * @author Dan Dragan (dev@xpressengine.org)
+        */
+        public function procShopToolInsertShipment(){
+            $order_srl = Context::get('order_srl');
+            $orderRepository = $this->model->getOrderRepository();
+            $shipmentRepository = $this->model->getShipmentRepository();
+            $order = $orderRepository->getOrderBySrl($order_srl);
+            $args = Context::getRequestVars();
+            $args->order_srl = $order_srl;
+            $args->module_srl = $order->module_srl;
+            $shipment = new Shipment($args);
+            if(!isset($shipment->shipment_srl)) $insert=true;
+            $shipment->save();
+            if($shipment->shipment_srl){
+                if(isset($order->invoice)) $order->order_status = 'Completed';
+                else $order->order_status = 'Processing';
+                try{
+                    $order->save();
+                }
+                catch(Exception $e) {
+                    return new Object(-1, $e->getMessage());
+                }
+                if($insert){
+                    $this->setMessage("Shipment has been created");
+                    $return_url = getNotEncodedUrl('', 'act','dispShopToolViewOrder','order_srl',$order_srl);
+                    $this->setRedirectUrl($return_url);
+                } else {
+                    $this->setMessage("Shipment has been updated");
+                    $return_url = getNotEncodedUrl('', 'act','dispShopToolManageShipments','order_srl',$order_srl);
+                    $this->setRedirectUrl($return_url);
+                }
+
+            } else {
+                throw new Exception('Something whent wrong when adding shipment');
+            }
         }
 
         public function procShopPlaceOrder()

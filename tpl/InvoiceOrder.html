@@ -1,0 +1,95 @@
+<!--#include("_tool_header.html")-->
+<!--%import("css/pagination.css",optimized=false)-->
+
+<!-- Content -->
+<div id="content">
+    <!-- contentHeader -->
+    <div class="contentHeader postListHeader">
+        <h3 class="h3">New invoice for Order {$order->order_srl}</h3>
+    </div>
+    <div cond="$XE_VALIDATOR_MESSAGE" class="message {$XE_VALIDATOR_MESSAGE_TYPE}">
+        <p>{$XE_VALIDATOR_MESSAGE}</p>
+    </div>
+    <!-- /contentHeader -->
+    <form action="./" method="post" class="">
+        <input type="hidden" name="act" value="procShopToolInsertInvoice" />
+        <input type="hidden" name="order_srl" value="{$order->order_srl}" />
+        <!--@if(isset($order->invoice->invoice_srl))-->
+        <input type="hidden" name="invoice_srl" value="{$order->invoice->invoice_srl}" />
+        <!--@end-->
+        <div class="wOption">
+            <fieldset class="visualFieldset">
+                <h4 class="h4">{$lang->items_ordered}</h4>
+                <table border="1" cellspacing="0" summary="{$lang->items_ordered}" class="tableData">
+                    <thead>
+                    <tr cond="!empty($ordered_items)">
+                        <th scope="col" class="title">{$lang->title}</th>
+                        <th scope="col">{$lang->sku}</th>
+                        <th scope="col">{$lang->price}</th>
+                        <th scope="col">{$lang->qty}</th>
+                        <th scope="col">{$lang->subtotal}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    <!--@foreach($ordered_items as $no => $item)-->
+                    <tr>
+                        <td class="title">{$item->title}</td>
+                        <td class="small">{$item->sku}</td>
+                        <td class="small">{$item->price}</td>
+                        <td class="small">{$item->ordered_qty}</td>
+                        <td class="small">{$item->price * $item->ordered_qty}</td>
+                    </tr>
+                    <!--@end-->
+                    <tfoot>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td><b>{$lang->grand_total}</b></td>
+                        <td>{$order->total}</td>
+                    </tr>
+                    </tfoot>
+
+                    </tbody>
+                </table>
+                <table border="1" cellspacing="0" class="tableData">
+
+                    <tr class="first">
+                        <th scope="row">
+                            <label for="comments">{$lang->comments}</label>
+                        </th>
+                        <td class="title">
+                            <div class="fItem">
+                                <label class="iLabel" for="comments">{$lang->about_comments}</label>
+                                <textarea name="comments" rows="8" cols="100" class="iTextarea" id="comments" title="{$lang->about_comments}">{$order->invoice->comments}</textarea>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <tr class="last">
+                        <th scope="row">
+                        </th>
+                        <td class="title">
+                            <span class="btn"><input type="submit" value="{$lang->cmd_save}"/></span>
+                        </td>
+                    </tr>
+
+                </table>
+
+            </fieldset>
+            <div id="regdate" cond="$attribute->regdate">Created at: {date('D, d M Y H:i:s', $attribute->regdate)}</div>
+            <div id="last_update" cond="$attribute->last_update">Last update: {date('D, d M Y H:i:s', $attribute->last_update)}</div>
+        </div>
+    </form>
+
+</div>
+<!-- /Content -->
+
+
+<!-- Extension -->
+<!--#include("_tool_menu.html")-->
+<!-- Extension -->
+
+<!--#include("_tool_footer.html")-->
+

@@ -186,7 +186,7 @@ class Cart extends BaseItem
 
     public function updateProducts(array $quantities)
     {
-        if (empty($product_srls)) throw new Exception('Empty array $quantities');
+        if (empty($quantities)) throw new Exception('Empty array $quantities');
         foreach ($quantities as $product_srl=>$quantity) {
             if (!is_numeric($product_srl) || !is_numeric($quantity)) throw new Exception('Problem with input $quantities array');
             if ($quantity == 0) $this->removeProducts(array($product_srl));

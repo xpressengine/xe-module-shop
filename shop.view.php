@@ -394,7 +394,17 @@ class shopView extends shop {
         else throw new Exception('No such order');
     }
 
+    public function dispShopToolInvoiceOrder()
+    {
+        $this->dispShopToolViewOrder();
+        $this->setTemplateFile('InvoiceOrder');
+    }
 
+    public function dispShopToolShipOrder()
+    {
+        $this->dispShopToolViewOrder();
+        $this->setTemplateFile('ShipOrder');
+    }
 
 	public function dispShopToolManageAttributes()
 	{

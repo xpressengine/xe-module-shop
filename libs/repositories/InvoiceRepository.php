@@ -15,6 +15,12 @@ class InvoiceRepository extends BaseRepository
         return $this->query('insertInvoice', get_object_vars($invoice));
     }
 
+    public function update(Invoice $invoice)
+    {
+        if (!is_numeric($invoice->order_srl)) throw new Exception('You must specify a srl for the updated invoice');
+        return $this->query('updateInvoice', get_object_vars($invoice));
+    }
+
     public function getList($module_srl)
     {
         $params = array('module_srl'=> $module_srl);

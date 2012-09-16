@@ -13,4 +13,9 @@ class Invoice extends BaseItem
     /** @var InvoiceRepository */
     public $repo;
 
+    public function save()
+    {
+        return $this->invoice_srl ? $this->repo->update($this) : $this->repo->insert($this);
+    }
+
 }

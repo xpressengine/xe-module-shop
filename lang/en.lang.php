@@ -89,6 +89,8 @@
     $lang->about_currency = 'Enter shop default currency';
     $lang->VAT = 'VAT';
     $lang->about_VAT = 'Enter VAT amount in %';
+    $lang->comments = 'Comments';
+    $lang->about_comments = 'Enter comments for this action';
 
     $lang->order_status = 'Order status';
     $lang->current_order_status = 'The current order status is:';
@@ -194,6 +196,8 @@
     $lang->about_attribute_values = 'Possible values, separated by *|*. I.e. one*|*two*|*three';
     $lang->attribute_default_value = 'Selected value';
     $lang->about_attribute_default_value = 'Must be one of *values*';
+    $lang->package_number = 'Package Number';
+    $lang->about_package_number = 'Enter package number (optional)';
 
     $lang->edit = 'Edit';
     $lang->cancel = 'Cancel';

@@ -14,4 +14,9 @@ class Shipment extends BaseItem
     /** @var ShipmentRepository */
     public $repo;
 
+    public function save()
+    {
+        return $this->shipment_srl ? $this->repo->update($this) : $this->repo->insert($this);
+    }
+
 }

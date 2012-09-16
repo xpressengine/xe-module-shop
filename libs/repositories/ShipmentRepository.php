@@ -15,6 +15,12 @@ class ShipmentRepository extends BaseRepository
         return $this->query('insertShipment', get_object_vars($shipment));
     }
 
+    public function update(Shipment $shipment)
+    {
+        if (!is_numeric($shipment->order_srl)) throw new Exception('You must specify a srl for the updated shipment');
+        return $this->query('updateShipment', get_object_vars($shipment));
+    }
+
     public function getList($module_srl)
     {
         $params = array('module_srl'=> $module_srl);

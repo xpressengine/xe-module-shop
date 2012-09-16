@@ -78,6 +78,10 @@
         <permission action="procShopToolHoldOrder" target="manager"/>
         <permission action="procShopToolUnholdOrder" target="manager"/>
         <permission action="procShopToolCancelOrder" target="manager"/>
+        <permission action="procShopToolInsertInvoice" target="manager"/>
+        <permission action="procShopToolInsertShipment" target="manager"/>
+        <permission action="dispShopToolInvoiceOrder" target="manager"/>
+        <permission action="dispShopToolShipOrder" target="manager"/>
 
         <!-- Addresses -->
         <permission action="dispShopToolManageAddresses" target="manager"/>
@@ -233,9 +237,13 @@
         <action name="dispShopToolViewOrder" type="view"/>
         <action name="dispShopToolManageInvoices" type="view"/>
         <action name="dispShopToolManageShipments" type="view"/>
+        <action name="dispShopToolInvoiceOrder" type="view"/>
         <action name="procShopToolHoldOrder" type="controller"/>
         <action name="procShopToolUnholdOrder" type="controller"/>
         <action name="procShopToolCancelOrder" type="controller"/>
+        <action name="procShopToolInsertInvoice" type="controller"/>
+        <action name="procShopToolInsertShipment" type="controller"/>
+        <action name="dispShopToolShipOrder" type="view"/>
 
     </actions>
 </module>

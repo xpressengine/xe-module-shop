@@ -12,20 +12,30 @@
         <ul class="sortDefault">
             <a href="{getUrl('act', 'dispShopToolManageOrders')}">Back to orders</a>
             <!--@if($order->order_status != 'Canceled')-->
-                <li><a href="{getUrl('act','dispShopToolEditOrder','order_srl',$order->order_srl)}">{$lang->edit}</a></li>
-                <li><a href="{getUrl('act','procShopToolCancelOrder','order_srl',$order->order_srl)}">{$lang->cancel}</a></li>
+                <!--@if($order->order_status != 'Hold' && $order->order_status != 'Completed')-->
+                    <li><a href="{getUrl('act','dispShopToolEditOrder','order_srl',$order->order_srl)}">{$lang->edit}</a></li>
+                    <li><a href="{getUrl('act','procShopToolCancelOrder','order_srl',$order->order_srl)}">{$lang->cancel}</a></li>
+                <!--@end-->
                 <li><a href="{getUrl('act','procShopToolSendOrderEmail','order_srl',$order->order_srl)}">{$lang->send_email}</a></li>
-                <!--@if(!(isset($order->invoice) || isset($order->shipment)))-->
+                <!--@if($order->order_status != 'Completed')-->
                     <!--@if($order->order_status == 'Hold')-->
                         <li><a href="{getUrl('act','procShopToolUnholdOrder','order_srl',$order->order_srl)}">{$lang->unhold}</a></li>
                     <!--@else-->
                         <li><a href="{getUrl('act','procShopToolHoldOrder','order_srl',$order->order_srl)}">{$lang->hold}</a></li>
                     <!--@end-->
                 <!--@end-->
-                <li><a href="{getUrl('act','dispShopToolInvoiceOrder','order_srl',$order->order_srl)}">{$lang->invoice}</a></li>
-                <li><a href="{getUrl('act','dispShopToolShipOrder','order_srl',$order->order_srl)}">{$lang->ship}</a></li>
+                <!--@if($order->order_status != 'Hold')-->
+                    <!--@if(!isset($order->invoice))-->
+                        <li><a href="{getUrl('act','dispShopToolInvoiceOrder','order_srl',$order->order_srl)}">{$lang->invoice}</a></li>
+                    <!--@end-->
+                    <!--@if(!isset($order->shipment))-->
+                        <li><a href="{getUrl('act','dispShopToolShipOrder','order_srl',$order->order_srl)}">{$lang->ship}</a></li>
+                    <!--@end-->
+                <!--@end-->
             <!--@end-->
-            <li><a href="{getUrl('act','dispShopToolReorder','order_srl',$order->order_srl)}">{$lang->reorder}</a></li>
+            <!--@if($order->order_status != 'Hold')-->
+                <li><a href="{getUrl('act','dispShopToolReorder','order_srl',$order->order_srl)}">{$lang->reorder}</a></li>
+            <!--@end-->
         </ul>
     </div>
     <!-- /contentNavigation -->
