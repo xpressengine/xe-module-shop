@@ -765,7 +765,25 @@ class shopView extends shop {
 	}
 
     public function dispShopMyAccount(){
+        $logged_user = Context::get('logged_info');
+
+        $orderRepository = $this->model->getOrderRepository();
+        $logged_user->recent_orders = $orderRepository->getRecentOrders($this->module_info->module_srl,$logged_user->member_srl);
+
+        $addressRepository = $this->model->getAddressRepository();
+        $logged_user->addresses = $addressRepository->getAddresses($logged_user->member_srl);
+
+        Context::set('logged_user',$logged_user);
         $this->setTemplateFile('my_account.html');
+    }
+
+    public function dispShopMyOrders(){
+        $logged_user = Context::get('logged_info');
+        $orderRepository = $this->model->getOrderRepository();
+        $output = $orderRepository->getList($this->module_info->module_srl,$logged_user->member_srl);
+        Context::set('orders',$output->data);
+        Context::set('page_navigation',$output->page_navigation);
+        $this->setTemplateFile('my_orders.html');
     }
 
     public function dispShopAddressBook(){

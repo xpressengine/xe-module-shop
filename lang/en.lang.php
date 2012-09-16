@@ -241,6 +241,16 @@
     $lang->telephone = 'Telephone';
     $lang->postal_code = 'Postal Code';
 
+    $lang->my_account_info_text = 'Here you can see your recent activity and edit your account information';
+    $lang->hello = 'Hello';
+    $lang->recent_orders = 'Recent Orders';
+    $lang->newsletter = 'Newsletter';
+    $lang->address_book = 'Address Book';
+    $lang->default_billing_address = 'Default billing address';
+    $lang->default_shipping_address = 'Default shipping address';
+    $lang->default_shipping_billing_address = 'Default billing and shipping address';
+    $lang->my_orders = 'My Orders';
+
     $lang->edit_customer = 'Edit Customer';
     $lang->new_customer = 'New Customer';
     $lang->edit_address = 'Edit Address';

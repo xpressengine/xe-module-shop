@@ -213,6 +213,7 @@
 
         <!-- My account -->
         <action name="dispShopMyAccount" type="view" />
+        <action name="dispShopMyOrders" type="view" />
 
         <!-- Addresses -->
         <action name="dispShopAddressBook" type="view" />

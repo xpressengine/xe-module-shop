@@ -1,0 +1,66 @@
+<!--
+    My account page
+-->
+<include target="_header.html" />
+<include target="_my_account_sidebar.html" />
+
+<div id="my_account" class="mainContent">
+    <div id="MyAccountInfo">
+        <h1>{$lang->my_orders}</h1>
+    </div>
+
+    <div id="myOrders">
+        <table border="1" cellspacing="0" summary="{$lang->content_list}" class="tableData">
+            <thead>
+            <tr cond="!empty($orders)">
+                <th scope="col">Order #</th>
+                <th scope="col">Purchased on</th>
+                <th scope="col" class="title">Bill to name</th>
+                <th scope="col">Total</th>
+                <th scope="col">Status</th>
+                <th scope="col">&nbsp;</th>
+            </tr>
+            </thead>
+            <tbody>
+
+            <tr cond="empty($orders)">
+                <td class="noData" colspan="9"><p>No orders</p></td>
+            </tr>
+            <!--@foreach($orders as $order)-->
+            <tr>
+                <td class="small">{$order->order_srl}</td>
+                <td class="small">{zdate($order->regdate)}</td>
+                <td class="title">{$order->client_name}</td>
+                <td class="small">{$order->total}</td>
+                <td class="small">{$order->order_status}</td>
+                <td>
+                    <a href="#">Edit </a> | <a href="#">Renew </a>
+                </td>
+            </tr>
+            <!--@end-->
+
+            </tbody>
+        </table>
+
+        <div class="listFooter" cond="!empty($orders)">
+
+            <!-- Pagination -->
+            <div class="pagination">
+                <a href="{getUrl('page','','mid',$mid)}" class="prev"><span>{$lang->first_page}</span></a>
+
+                <!--@while ($page_no = $page_navigation->getNextPage())-->
+                <!--@if($page == $page_no)-->
+                <strong>{$page_no}</strong>
+                <!--@else-->
+                <a href="{getUrl('page',$page_no,'mid',$mid)}">{$page_no}</a>
+                <!--@end-->
+                <!--@end-->
+
+                <a href="{getUrl('page',$page_navigation->last_page,'module_srl','')}" class="next"><span>{$lang->last_page}</span></a>
+            </div>
+            <!-- /Pagination -->
+        </div>
+    </div>
+</div>
+
+<include target="_footer.html"/>

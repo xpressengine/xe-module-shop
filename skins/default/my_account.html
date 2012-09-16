@@ -5,9 +5,93 @@
 <include target="_my_account_sidebar.html" />
 
 <div id="my_account" class="mainContent">
-    <h3>My Dashboard</h3>
-    {var_dump(Context::get('logged_info'))}
+    <div id="MyAccountInfo">
+        <h1>My Dashboard</h1>
 
+        <p>{$lang->hello} <b>{$logged_user->user_name}</b></p>
+        <p>{$lang->my_account_info_text}</p>
+    </div>
+
+    <div id="recentOrders">
+        <h3>{$lang->recent_orders}</h3>
+        <table border="1" cellspacing="0" summary="{$lang->content_list}" class="dataTable">
+            <thead>
+            <tr cond="!empty($logged_user->recent_orders)">
+                <th scope="col">Order #</th>
+                <th scope="col">Purchased on</th>
+                <th scope="col" class="title">Bill to name</th>
+                <th scope="col">Total</th>
+                <th scope="col">Status</th>
+                <th scope="col">&nbsp;</th>
+            </tr>
+            </thead>
+            <tbody>
+
+            <tr cond="empty($logged_user->recent_orders)">
+                <td class="noData" colspan="9"><p>No orders</p></td>
+            </tr>
+            <!--@foreach($logged_user->recent_orders as $order)-->
+            <tr>
+                <td class="small">{$order->order_srl}</td>
+                <td class="small">{zdate($order->regdate)}</td>
+                <td class="title">{$order->client_name}</td>
+
+                <td class="small">{$order->total}</td>
+                <td class="small">{$order->order_status}</td>
+                <td>
+                  <a href="#">Edit </a> | <a href="#">Renew </a>
+                </td>
+            </tr>
+            <!--@end-->
+
+            </tbody>
+        </table>
+    </div>
+
+    <div id="accountInfo">
+        <h3>{$lang->account_info}</h3>
+        <a href="#">{$lang->edit}</a>
+        <p>{$lang->name}: <b>{$logged_user->user_name}</b></p>
+        <p>{$lang->nick_name}: <b>{$logged_user->nick_name}</b></p>
+        <p>{$lang->email}: <b>{$logged_user->email_address}</b></p>
+        <a href="#">{$lang->change_password}</a>
+    </div>
+
+    <div id="newsletter">
+        <h3>{$lang->newsletter}</h3>
+        <a href="#">{$lang->edit}</a>
+        <p>Newsletter Information TO DO</p>
+    </div>
+
+    <div id="addressBook">
+        <h3>{$lang->address_book}</h3>
+        <p>
+            {$lang->default_billing_address}:
+            <b>Company:</b>{$logged_user->addresses->default_shipping->company}
+            <b>Telephone:</b>{$logged_user->addresses->default_shipping->telephone}
+            <b>Fax:</b>{$logged_user->addresses->default_shipping->fax}
+            <b>Address:</b>{$logged_user->addresses->default_shipping->address}
+            <b>Additional Info:</b>{$logged_user->addresses->default_shipping->additional_info}
+            <b>City:</b>{$logged_user->addresses->default_shipping->city}
+            <b>Region:</b>{$logged_user->addresses->default_shipping->region}
+            <b>Postal Code:</b>{$logged_user->addresses->default_shipping->postal_code}
+            <b>Country:</b>{$logged_user->addresses->default_shipping->country}
+            <a href="{getURL('','act','dispShopEditAddress','address_srl',$logged_user->addresses->default_shipping->address_srl)}">Edit</a>
+        </p>
+        <p>
+            {$lang->default_shipping_address}: <b>{$logged_user->addresses->default_shipping_address}</b>
+            <b>Company:</b>{$logged_user->addresses->default_shipping->company}
+            <b>Telephone:</b>{$logged_user->addresses->default_shipping->telephone}
+            <b>Fax:</b>{$logged_user->addresses->default_shipping->fax}
+            <b>Address:</b>{$logged_user->addresses->default_shipping->address}
+            <b>Additional Info:</b>{$logged_user->addresses->default_shipping->additional_info}
+            <b>City:</b>{$logged_user->addresses->default_shipping->city}
+            <b>Region:</b>{$logged_user->addresses->default_shipping->region}
+            <b>Postal Code:</b>{$logged_user->addresses->default_shipping->postal_code}
+            <b>Country:</b>{$logged_user->addresses->default_shipping->country}
+            <a href="{getURL('','act','dispShopEditAddress','address_srl',$logged_user->addresses->default_shipping->address_srl)}">Edit</a>
+        </p>
+    </div>
 </div>
 
 <include target="_footer.html"/>

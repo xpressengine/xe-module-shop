@@ -17,6 +17,17 @@ class OrderRepository extends BaseRepository
         return $output;
     }
 
+    public function getRecentOrders($module_srl, $member_srl=null)
+    {
+        $params = array('module_srl'=> $module_srl);
+        if ($member_srl) $params = array_merge($params, array('member_srl'=> $member_srl));
+        $output = $this->query('getRecentOrders', $params);
+        foreach ($output->data as $i=>$data) {
+            $orders[] = new Order((array) $data);
+        }
+        return $orders;
+    }
+
     public function insert(Order &$order)
     {
         if ($order->order_srl) throw new Exception('A srl must NOT be specified for the insert operation!');

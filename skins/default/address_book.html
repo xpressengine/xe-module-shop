@@ -15,10 +15,10 @@
         <!--@end-->
         <include target="address_form.html" />
     <!--@else-->
-        <h1>Address book</h1>
+        <h1>{$lang->address_bok}</h1>
         <a href="{getURL('','act','dispShopAddAddress')}">Add a new address</a>
         <!--@if($addresses->default_shipping->address_srl == $addresses->default_billing->address_srl && isset($addresses->default_shipping))-->
-            <h3>Default shipping and billing address</h3>
+            <h3>{$lang->default_shipping_billing_address}</h3>
             <!--@if(isset($addresses->default_shipping))-->
             <div id="default_shipping_billing">
                 <b>Company:</b>{$addresses->default_shipping->company}
@@ -34,7 +34,7 @@
             </div>
             <!--@end-->
         <!--@else-->
-            <h3>Default shipping address</h3>
+            <h3>{$lang->default_shipping_address}</h3>
             <!--@if(isset($addresses->default_shipping))-->
             <div id="default_shipping">
                 <b>Company:</b>{$addresses->default_shipping->company}
@@ -53,7 +53,7 @@
             <!--@end-->
 
 
-            <h3>Default billing address</h3>
+            <h3>{$lang->default_billing_address}</h3>
             <!--@if(isset($addresses->default_billing))-->
             <div id="default_billing">
                 <b>Company:</b>{$addresses->default_billing->company}
