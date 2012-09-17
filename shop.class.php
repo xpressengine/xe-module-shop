@@ -22,7 +22,9 @@
 
         public $add_triggers = array(
             array('display', 'shop', 'controller', 'triggerMemberMenu', 'before'),
-            array('moduleHandler.proc', 'shop', 'controller', 'triggerApplyLayout', 'after')
+            array('moduleHandler.proc', 'shop', 'controller', 'triggerApplyLayout', 'after'),
+            array('member.doLogin', 'shop', 'controller', 'triggerLoginBefore', 'before'),
+            array('member.doLogin', 'shop', 'controller', 'triggerLoginAfter', 'after')
         );
 
         /**

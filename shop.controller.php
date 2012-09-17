@@ -11,6 +11,8 @@
         protected $model;
         /** @var shopInfo */
         protected $shop;
+        /** @var Cart */
+        protected $cartBeforeLogin;
 
         /**
          * @brief Initialization
@@ -553,20 +555,6 @@
                     /** @var $oMemberController memberController */
                     $oMemberController = getController('member');
                     $result = $oMemberController->procMemberLogin($user, $pass);
-                    $logged_info = Context::get('logged_info');
-                    //@TODO: check password expiration?
-                    //TODO: test asa: admin are cart, da logout, anon face cart, da login ca admin, AICI.
-                    if (!$result->error) { //login successful
-                        if ($memberCart = $cartRepo->getCart($this->module_info->module_srl, null, $logged_info->member_srl, session_id()))
-                        {
-                            $memberCart->merge($cart);
-                            Context::set('cart', $cart = $memberCart);
-                        }
-                        else {
-                            $cart->member_srl = $logged_info->member_srl;
-                            $cart->save();
-                        }
-                    }
                     $this->setRedirectUrl(getNotEncodedUrl('', 'act', 'dispShopCheckout'));
                     return $result;
                 }
@@ -1153,6 +1141,28 @@
             return new Object();
         }
 
+        public function triggerLoginBefore($obj)
+        {
+            $this->module_info = Context::get('site_module_info');
+            $this->module_srl = $this->module_info->index_module_srl;
+            $cartRepo = new CartRepository();
+            $this->cartBeforeLogin = $cartRepo->getCart($this->module_srl, null, null, session_id(), true);
+        }
+
+        function triggerLoginAfter($logged_info)
+        {
+            $cartRepo = new CartRepository();
+            if ($this->cartBeforeLogin instanceof Cart) {
+                if ($memberCart = $cartRepo->getCart($this->module_info->module_srl, null, $logged_info->member_srl, session_id()))
+                {
+                    $memberCart->merge($this->cartBeforeLogin);
+                    Context::set('cart', $memberCart);
+                } else {
+                    $this->cartBeforeLogin->member_srl = $logged_info->member_srl;
+                    $this->cartBeforeLogin->save();
+                }
+            }
+        }
 
         public function procShopToolInit(){
             if(!$this->site_srl) return new Object(-1,'msg_invalid_request');
