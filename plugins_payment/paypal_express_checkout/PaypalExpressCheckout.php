@@ -32,18 +32,8 @@ class PaypalExpressCheckout extends PaymentMethodAbstract
 
     public function onCheckoutFormSubmit(Cart $cart, &$error_message)
     {
-        $vid = Context::get('vid');
-        $success_url = getNotEncodedFullUrl('', 'vid', $vid
-                                          , 'act', 'dispShopPlaceOrder'
-                                          , 'payment_method_name', $this->getName()
-                                          , 'error_return_url', ''
-        );
-
-        $cancel_url = getNotEncodedFullUrl('', 'vid', $vid
-                                        , 'act', 'dispShopCheckout'
-                                        , 'error_return_url', ''
-        );
-
+        $success_url = $this->getPlaceOrderPageUrl();
+        $cancel_url = $this->getCheckoutPageUrl();
 
         $paypalAPI = new PaypalAPI($this->api_username
             , $this->api_password

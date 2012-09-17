@@ -113,6 +113,43 @@ abstract class PaymentMethodAbstract
         return $this->display_name;
     }
 
+    protected function getCheckoutPageUrl()
+    {
+        $vid = Context::get('vid');
+        return getNotEncodedFullUrl('', 'vid', $vid
+            , 'act', 'dispShopCheckout'
+            , 'error_return_url', ''
+        );
+    }
+
+    protected function getPlaceOrderPageUrl()
+    {
+        $vid = Context::get('vid');
+        return getNotEncodedFullUrl('', 'vid', $vid
+            , 'act', 'dispShopPlaceOrder'
+            , 'payment_method_name', $this->getName()
+            , 'error_return_url', ''
+        );
+    }
+
+    protected function getOrderConfirmationPageUrl()
+    {
+
+    }
+
+    /**
+     * Get URL for IPN notifications
+     */
+    public function getNotifyUrl()
+    {
+        $vid = Context::get('vid');
+        return getNotEncodedFullUrl('', 'vid', $vid
+            , 'act', 'procShopPaymentNotify'
+            , 'payment_method_name', $this->getName()
+            , 'error_return_url', ''
+        );
+    }
+
     protected function redirect($url)
     {
         header('location:' . $url);
@@ -130,6 +167,11 @@ abstract class PaymentMethodAbstract
     }
 
     abstract public function processPayment(Cart $cart, &$error_message);
+
+    public function notify()
+    {
+
+    }
 
 }
 
