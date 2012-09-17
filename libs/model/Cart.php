@@ -213,48 +213,25 @@ class Cart extends BaseItem
     public function checkout(array $orderData)
     {
         if (!$this->cart_srl) throw new Exception('Cart is not persisted');
-
-        /* old save as order:
-        $data = array_merge( $this->formTranslation($orderData), array(
-            'cart_srl' => $this->cart_srl,
-            'module_srl' => $this->module_srl,
-            'member_srl'=> $this->member_srl)
-        );
-        $order = new Order($data);
-        if ($this->getOrder()) {
-            throw new Exception('Order already placed for current cart');
-        }
-        $order->save(); //obtain srl
-        $order->saveCartProducts($this);
-        $this->delete();
-        return $order;
-         * * */
-
-        //save as cart:
         $orderData = $this->formTranslation($orderData);
         $this->setExtra($orderData['extra']);
         $this->billing_address_srl = $orderData['billing_address_srl'];
-        $this->shipping_address_srl = $orderData['shipping_address_srl'];
+        $this->shipping_address_srl = (isset($orderData['shipping_address_srl']) ? $orderData['shipping_address_srl'] : $orderData['billing_address_srl']);
         $this->save();
     }
 
     private function formTranslation(array $input)
     {
         $data = array('extra'=> array());
-        if (self::validateFormBlock($general = $input['general'])) {
-            //TODO: same for shipping_address_srl?
-            $data['extra'] = array(
-                'firstname' => $general['firstname'],
-                'lastname'  => $general['lastname'],
-                'email'     => $general['email']
-            );
-        } else throw new Exception('forgot about general info?');
-
+        $addressRepo = new AddressRepository();
         if (self::validateFormBlock($billing = $input['billing'])) {
             if (is_numeric($billing['address'])) {
                 $data['billing_address_srl'] = $billing['address'];
             } elseif (self::validateFormBlock($newAddress = $input['new_billing_address'])) {
                 $newAddress = new Address($newAddress);
+                if ($this->member_srl && !$addressRepo->hasDefaultAddress($this->member_srl, AddressRepository::TYPE_BILLING)) {
+                    $newAddress->default_billing = 'Y';
+                }
                 $newAddress->save();
                 $data['billing_address_srl'] = $newAddress->address_srl;
             }
@@ -262,13 +239,15 @@ class Cart extends BaseItem
                 throw new Exception('No billing address');
             }
         }
-
         if (self::validateFormBlock($shipping = $input['shipping'])) {
             $data['extra']['shipping_method'] = $shipping['method'];
             if (is_numeric($shipping['address'])) {
                 $data['shipping_address_srl'] = $shipping['address'];
             } elseif (self::validateFormBlock($newAddress = $input['new_shipping_address'])) {
                 $newAddress = new Address($newAddress);
+                if ($this->member_srl && !$addressRepo->hasDefaultAddress($this->member_srl, AddressRepository::TYPE_SHIPPING)) {
+                    $newAddress->default_shipping = 'Y';
+                }
                 $newAddress->save();
                 $data['shipping_address_srl'] = $newAddress->address_srl;
             }
@@ -287,8 +266,12 @@ class Cart extends BaseItem
         if (!is_array($this->addresses) || $refresh = true) {
             if (!$this->member_srl) {
                 $addresses = array();
-                if ($this->billing_address_srl) $addresses[] = $this->getBillingAddress();
-                if ($this->shipping_address_srl) $addresses[] = $this->getShippingAddress();
+                if ($this->billing_address_srl) {
+                    $addresses[] = $this->getBillingAddress();
+                }
+                if ($this->shipping_address_srl && ($this->billing_address_srl != $this->shipping_address_srl)) {
+                    $addresses[] = $this->getShippingAddress();
+                }
                 return $addresses;
             }
             $aRepo = new AddressRepository();

@@ -7,6 +7,12 @@
  */
 class AddressRepository extends BaseRepository
 {
+    const
+            TYPE_BILLING = 1,
+            TYPE_SHIPPING = 2;
+
+    protected $addresses, $bulkAddresses;
+
     /**
      * insert Address
      *
@@ -86,29 +92,35 @@ class AddressRepository extends BaseRepository
      * @param $returnBulk boolean Tells wether to return a simple array of addresses or mark them accordingly (default billing etc)
      * @return stdClass
      */
-    public function getAddresses($member_srl, $returnBulk=false)
+    public function getAddresses($member_srl, $returnBulk=false, $refresh=false)
     {
-        $output = $this->query('getAddresses', array('member_srl'=>$member_srl), true);
-        $bulk = array();
-        if(count($output->data)){
-            foreach($output->data as $data){
-                $address = new Address($data);
-                if ($returnBulk) {
-                    $bulk[] = $address;
-                    continue;
+        if ((!$this->addresses || (!$this->bulkAddresses && $returnBulk)) || $refresh)
+        {
+            $output = $this->query('getAddresses', array('member_srl'=>$member_srl), true);
+            $bulk = array();
+            if(count($output->data)){
+                foreach($output->data as $data){
+                    $address = new Address($data);
+                    if ($returnBulk) {
+                        $bulk[] = $address;
+                        continue;
+                    }
+                    if($address->default_billing == 'Y') $default_billing = $address;
+                    if($address->default_shipping == 'Y') $default_shipping = $address;
+                    if($address->default_billing == 'N' && $address->default_shipping == 'N') $additional_addresses[] = $address;
                 }
-                if($address->default_billing == 'Y') $default_billing = $address;
-                if($address->default_shipping == 'Y') $default_shipping = $address;
-                if($address->default_billing == 'N' && $address->default_shipping == 'N') $additional_addresses[] = $address;
             }
+            if ($returnBulk) {
+                return $this->bulkAddresses = (empty($bulk) ? null : $bulk);
+            }
+            $addresses = new stdClass();
+            $addresses->default_billing = $default_billing;
+            $addresses->default_shipping = $default_shipping;
+            $addresses->additional_addresses = $additional_addresses;
+            $addresses->count = count($output->data);
+            return $this->addresses = $addresses;
         }
-        if ($returnBulk) return empty($bulk) ? null : $bulk;
-        $addresses = new stdClass();
-        $addresses->default_billing = $default_billing;
-        $addresses->default_shipping = $default_shipping;
-        $addresses->additional_addresses = $additional_addresses;
-        $addresses->count = count($output->data);
-        return $addresses;
+        return $returnBulk ? $this->bulkAddresses : $this->addresses;
     }
 
     /**
@@ -148,8 +160,20 @@ class AddressRepository extends BaseRepository
      * @return mixed
      */
     public function deleteAddress($address_srl){
-        $args = new stdClass();
-        $args->address_srl = $address_srl;
-        return $this->query('deleteAddress',$args);
+        return $this->query('deleteAddress',array('address_srl' => $address_srl));
+    }
+
+    public function hasDefaultAddress($member_srl, $type=self::TYPE_BILLING)
+    {
+        if (!in_array($type, array(self::TYPE_BILLING, self::TYPE_SHIPPING))) throw new Exception('Type should be "billing" or "shipping"');
+        $addresses = $this->getAddresses($member_srl, true);
+        /** @var $a Address */
+        foreach ($addresses as $a) {
+            if (
+                ($a->default_billing == 'Y' && $type == self::TYPE_BILLING) ||
+                ($a->default_shipping == 'Y' && $type == self::TYPE_SHIPPING)
+            ) return true;
+        }
+        return false;
     }
 }

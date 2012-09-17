@@ -17,6 +17,11 @@
             }
         });
         jQuery('#billing_address, #shipping_address').change();
+
+        jQuery('#different_shipping').change(function(){
+            if (jQuery(this).is(':checked')) jQuery('#new-address-shipping, #shipping-address-select').slideDown();
+            else jQuery('#new-address-shipping, #shipping-address-select').slideUp();
+        });
     });
 </script>
 
@@ -45,23 +50,6 @@
             </ul>
         </fieldset>
 
-        <fieldset id="general">
-            <legend>Your info</legend>
-            <ul>
-                <li>
-                    <label for="general_firstname">First name</label>
-                    <input type="text" name="general[firstname]" id="general_firstname" value="{$extra['firstname']}">
-                </li>
-                <li>
-                    <label for="general_lastname">Last name</label>
-                    <input type="text" name="general[lastname]" id="general_lastname" value="{$extra['lastname']}">
-                </li>
-                <li>
-                    <label for="general_email">Email</label>
-                    <input type="text" name="general[email]" id="general_email" value="{$extra['email']}">
-                </li>
-            </ul>
-        </fieldset>
         <fieldset id="billing">
             <legend>Billing</legend>
             <ul>
@@ -79,9 +67,21 @@
                 <!-- @endif -->
 
                 <li id="new-address-billing" <!--@if ($addresses)--> style="display:none"<!--@endif-->>
-                    <ul>
+                <ul>
                         <li>
                             <input type="hidden" value="{$logged_info->member_srl}" name="new_billing_address[member_srl]">
+                            <label for="new_billing_address_firstname">First name</label>
+                            <input type="text" name="new_billing_address[firstname]" id="new_billing_address_firstname" value="{$extra['firstname']}">
+                        </li>
+                        <li>
+                            <label for="new_billing_address_lastname">Last name</label>
+                            <input type="text" name="new_billing_address[lastname]" id="new_billing_address_lastname" value="{$extra['lastname']}">
+                        </li>
+                        <li>
+                            <label for="new_billing_address_email">Email</label>
+                            <input type="text" name="new_billing_address[email]" id="new_billing_address_email" value="{$extra['email']}">
+                        </li>
+                        <li>
                             <label for="new_billing_address_company">Company</label>
                             <input type="text" name="new_billing_address[company]" id="new_billing_address_company">
                         </li>
@@ -121,6 +121,10 @@
                 </li>
 
             </ul>
+
+            <label for="different_shipping">Use different shipping address?</label>
+            <input type="checkbox" name="different_shipping" id="different_shipping" value="yes">
+
         </fieldset>
 
         <fieldset id="shipping">
@@ -137,7 +141,7 @@
                 </li>
 
                 <!-- @if ($addresses) -->
-                <li>
+                <li id="shipping-address-select" style="display: none">
                     <label for="shipping_address">Shipping address</label>
                     <select style="width: 500px;" id="shipping_address" name="shipping[address]">
                         <option value="new">new address</option>
@@ -150,10 +154,22 @@
                 </li>
                 <!-- @endif -->
 
-                <li id="new-address-shipping" <!--@if ($addresses)--> style="display:none"<!--@endif-->>
+                <li id="new-address-shipping" style="display:none" <!--@if ($addresses)--> style="display:none"<!--@endif-->>
                 <ul>
                     <li>
                         <input type="hidden" value="{$logged_info->member_srl}" name="new_shipping_address[member_srl]">
+                        <label for="new_shipping_address_firstname">First name</label>
+                        <input type="text" name="new_shipping_address[firstname]" id="new_shipping_address_firstname" value="{$extra['firstname']}">
+                    </li>
+                    <li>
+                        <label for="new_shipping_address_lastname">Last name</label>
+                        <input type="text" name="new_shipping_address[lastname]" id="new_shipping_address_lastname" value="{$extra['lastname']}">
+                    </li>
+                    <li>
+                        <label for="new_shipping_address_email">Email</label>
+                        <input type="text" name="new_shipping_address[email]" id="new_shipping_address_email" value="{$extra['email']}">
+                    </li>
+                    <li>
                         <label for="new_shipping_address_company">Company</label>
                         <input type="text" name="new_shipping_address[company]" id="new_shipping_address_company">
                     </li>
