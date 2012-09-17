@@ -289,10 +289,14 @@
     $lang->resize_vertical = 'Resize input form';
 
     $lang->company = 'Company';
+    $lang->firstname = 'First Name';
+    $lang->lastname = 'Last Name';
     $lang->fax = 'Fax';
     $lang->address = 'Address';
     $lang->additional_info = 'Additional Info';
     $lang->about_company = 'Enter company name';
+    $lang->about_firstname = 'Enter first name';
+    $lang->about_lastname = 'Enter last name';
     $lang->about_telephone = 'Enter telephone no.';
     $lang->about_fax = 'Enter fax no.';
     $lang->about_address = 'Enter complete address';

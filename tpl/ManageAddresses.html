@@ -49,6 +49,9 @@
                     </th>
                     <th scope="col">{$lang->id}</th>
                     <th scope="col" class="title">{$lang->company}</th>
+                    <th scope="col">{$lang->firstname}</th>
+                    <th scope="col">{$lang->lastname}</th>
+                    <th scope="col">{$lang->email}</th>
                     <th scope="col">{$lang->telephone}</th>
                     <th scope="col">{$lang->fax}</th>
                     <th scope="col">{$lang->address}</th>
@@ -74,6 +77,9 @@
                     </td>
                     <td class="small"><a href="{getUrl('act','dispShopToolEditAddress','address_srl',$address->address_srl)}" class="addressName">{$address->address_srl}</a></td>
                     <td class="title">{$address->company}</td>
+                    <td class="title">{$address->firstname}</td>
+                    <td class="title">{$address->lastname}</td>
+                    <td class="title">{$address->email}</td>
                     <td class="small">{$address->telephone}</td>
                     <td class="small">{$address->fax}</td>
                     <td class="small">{$address->address}</td>

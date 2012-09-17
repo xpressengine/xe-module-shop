@@ -1,8 +1,8 @@
-<form action="./" method="post" id="">
+<form action="./" method="post" id="" ruleset="add_adress">
     <!--@if($address->address_srl)-->
     <input type="hidden" id="address_srl" name="address_srl" value="{$address->address_srl}">
     <!--@end-->
-    <input type="hidden" id="act" name="act" value="procShopAddAddress" ruleset="add_adress"/>
+    <input type="hidden" id="act" name="act" value="procShopAddAddress"/>
 
 
 
@@ -13,6 +13,18 @@
             <legend>Add a new address</legend>
         <!--@end-->
         <ul>
+            <li>
+                <label for="firstname">First Name</label>
+                <input type="text" name="firstname" id="firstname" value="{$address->firstname}">
+            </li>
+            <li>
+                <label for="lastname">Last Name</label>
+                <input type="text" name="lastname" id="lastname" value="{$address->lastname}">
+            </li>
+            <li>
+                <label for="email">Email</label>
+                <input type="text" name="email" id="email" value="{$address->email}">
+            </li>
             <li>
                 <label for="company">Company</label>
                 <input type="text" name="company" id="company" value="{$address->company}">

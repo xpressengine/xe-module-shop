@@ -5,6 +5,9 @@ class Address extends BaseItem
     public
         $address_srl,
         $member_srl,
+        $firstname,
+        $lastname,
+        $email,
         $address,
         $country,
         $region,

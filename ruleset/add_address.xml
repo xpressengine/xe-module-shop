@@ -3,6 +3,9 @@
     <customrules>
     </customrules>
     <fields>
+        <field name="firstname" required="true" />
+        <field name="lastname" required="true" />
+        <field name="email" required="true" rule="email" />
         <field name="address" required="true" />
         <field name="city" required="true"  />
         <field name="region" required="true"  />
