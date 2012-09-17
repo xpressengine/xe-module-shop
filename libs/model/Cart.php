@@ -49,20 +49,23 @@ class Cart extends BaseItem
         $myCps = $this->repo->getCartProducts($this->cart_srl)->data;
         $cps = $this->repo->getCartProducts($cart->cart_srl)->data;
         foreach ($cps as $cp) {
-            $have = false;
+            $have = false; //presume I don't have it
             foreach ($myCps as $cp2) {
-                if ($cp->product_srl == $cp2->product_srl) {
+                if ($cp->product_srl == $cp2->product_srl) { //if I have it
                     $have = true;
                     break;
                 }
             }
-            if ($have) {
+            if ($have) { //if I have it update my quantity
                 $this->repo->updateCartProduct($this->cart_srl, $cp->product_srl, $cp->quantity + $cp2->quantity);
             }
-            else {
+            else { //else add it
                 $this->repo->insertCartProduct($this->cart_srl, $cp->product_srl, $cp->quantity);
             }
         }
+        //count again
+        $this->items = $this->count(true);
+        $this->save();
     }
 
     #region cart & stuff
