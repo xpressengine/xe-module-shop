@@ -35,7 +35,7 @@ class PaypalExpressCheckout extends PaymentMethodAbstract
         $vid = Context::get('vid');
         $success_url = getNotEncodedFullUrl('', 'vid', $vid
                                           , 'act', 'dispShopPlaceOrder'
-                                          , 'payment_method', $this->getName()
+                                          , 'payment_method_name', $this->getName()
                                           , 'error_return_url', ''
         );
 
