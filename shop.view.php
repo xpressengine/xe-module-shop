@@ -900,6 +900,11 @@ class shopView extends shop {
 
     public function dispShopOrderConfirmation()
     {
+        $payment_method_name = Context::get('payment_method_name');
+        $payment_repository = new PaymentMethodRepository();
+        $payment_method = $payment_repository->getPaymentMethod($payment_method_name);
+        $payment_method->onOrderConfirmationPageLoad($this->module_srl);
+
         $this->setTemplateFile('order_confirmation.html');
     }
 

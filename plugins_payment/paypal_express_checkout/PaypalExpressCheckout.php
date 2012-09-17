@@ -35,7 +35,7 @@ class PaypalExpressCheckout extends PaymentMethodAbstract
         $success_url = $this->getPlaceOrderPageUrl();
         $cancel_url = $this->getCheckoutPageUrl();
 
-        $paypalAPI = new PaypalAPI($this->api_username
+        $paypalAPI = new PaypalExpressCheckoutAPI($this->api_username
             , $this->api_password
             , $this->signature
         );
@@ -71,7 +71,7 @@ class PaypalExpressCheckout extends PaymentMethodAbstract
     public function onPlaceOrderFormLoad()
     {
         $token = Context::get('token');
-        $paypalAPI = new PaypalAPI($this->api_username
+        $paypalAPI = new PaypalExpressCheckoutAPI($this->api_username
             , $this->api_password
             , $this->signature
         );
@@ -84,7 +84,7 @@ class PaypalExpressCheckout extends PaymentMethodAbstract
         $payer_id = Context::get('payer_id');
         $token = Context::get('token');
 
-        $paypalAPI = new PaypalAPI($this->api_username
+        $paypalAPI = new PaypalExpressCheckoutAPI($this->api_username
             , $this->api_password
             , $this->signature
         );
@@ -114,7 +114,7 @@ class PaypalExpressCheckout extends PaymentMethodAbstract
     }
 }
 
-class PaypalAPI extends PaymentAPIAbstract
+class PaypalExpressCheckoutAPI extends PaymentAPIAbstract
 {
     const SANDBOX_API_URL = 'https://api-3t.sandbox.paypal.com/nvp';
 
@@ -279,6 +279,15 @@ class PaypalAPI extends PaymentAPIAbstract
         }
 
         return true;
+    }
+
+    public function request($url, $data)
+    {
+        $response = parent::request($url, $data);
+
+        $response_array = array();
+        parse_str($response, $response_array);
+        return $response_array;
     }
 
 

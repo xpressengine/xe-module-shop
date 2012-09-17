@@ -132,9 +132,14 @@ abstract class PaymentMethodAbstract
         );
     }
 
-    protected function getOrderConfirmationPageUrl()
+    public function getOrderConfirmationPageUrl()
     {
-
+        $vid = Context::get('vid');
+        return getNotEncodedFullUrl('', 'vid', $vid
+            , 'act', 'dispShopOrderConfirmation'
+            , 'payment_method_name', $this->getName()
+            , 'error_return_url', ''
+        );
     }
 
     /**
@@ -168,6 +173,10 @@ abstract class PaymentMethodAbstract
 
     abstract public function processPayment(Cart $cart, &$error_message);
 
+    public function onOrderConfirmationPageLoad($module_srl)
+    {
+    }
+
     public function notify()
     {
 
@@ -199,9 +208,7 @@ abstract class PaymentAPIAbstract
         curl_setopt($request, CURLOPT_SSL_VERIFYPEER, FALSE);
         $response = curl_exec($request);
         curl_close ($request);
-        $response_array = array();
-        parse_str($response, $response_array);
-        return $response_array;
+        return $response;
     }
 
 }
