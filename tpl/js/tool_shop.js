@@ -539,6 +539,28 @@ function deleteAddressItems(page){
     exec_xml('shop', 'procShopToolDeleteAddresses', params, completeReload, response_tags);
 }
 
+function deleteNewsletterItem(srl){
+    if (!confirm(xe.lang.msg_confirm_delete_newsletter)) return false;
+    var response_tags = new Array('error','message','page','mid');
+    exec_xml('shop', 'procShopToolDeleteNewsletters', { newsletter_srls: srl }, completeReload, response_tags);
+}
+
+function deleteNewslettersItems(page){
+    if (!confirm(xe.lang.msg_confirm_delete_newsletters)) return false;
+    var val, srls = [];
+    jQuery("input[name=newsletter_srl]:checked").each(function(){
+        val = jQuery(this).val();
+        if(val) srls.push(val);
+    });
+    if (srls.length < 1) return;
+    var response_tags = new Array('error','message','page','mid');
+    var params = {
+        newsletter_srls: srls.join(','),
+        page: page
+    }
+    exec_xml('shop', 'procShopToolDeleteNewsletters', params, completeReload, response_tags);
+}
+
 function deleteAttributeItem(srl){
     if (!confirm(xe.lang.msg_confirm_delete_attribute)) return false;
     var response_tags = new Array('error','message','page','mid');

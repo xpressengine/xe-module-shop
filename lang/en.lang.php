@@ -54,10 +54,12 @@
     $lang->msg_confirm_delete_product = 'Are you sure you want to delete this product?';
     $lang->msg_confirm_delete_attribute = 'Are you sure you want to delete this attribute?';
     $lang->msg_confirm_delete_customer = 'Are you sure you want to delete this customer?';
+    $lang->msg_confirm_delete_newsletter = 'Are you sure you want to delete this newsletter?';
     $lang->msg_confirm_unsubscribe_customer = 'Are you sure you want to unsubscribe this customer?';
     $lang->msg_confirm_delete_customers = 'Are you sure you want to delete these customers?';
     $lang->msg_confirm_unsubscribe_customers = 'Are you sure you want to unsubscribe these customers?';
     $lang->msg_confirm_delete_products = 'Are you sure you want to delete these products?';
+    $lang->msg_confirm_delete_newsletters = 'Are you sure you want to delete these pnewsletters?';
     $lang->msg_confirm_delete_attributes = 'Are you sure you want to delete these attributes?';
     $lang->msg_confirm_delete_address = 'Are you sure you want to delete this address?';
     $lang->msg_confirm_delete_addresses = 'Are you sure you want to delete these addresses?';
@@ -83,6 +85,9 @@
     $lang->about_select_import_file = 'The file must be a zip file';
     $lang->shop_manage_addresses = 'Manage addresses for %s';
     $lang->no_subscribers = 'No one is subscribed to your newsletter';
+    $lang->send_newsletter = 'Send newsletter';
+    $lang->view_newsletter = 'View newsletter';
+    $lang->resend = 'Resend';
 
     $lang->cmd_delete_favicon = 'Remove favicon';
     $lang->favicon = 'Favicon';
@@ -308,6 +313,14 @@
     $lang->about_region = 'Enter country/region';
     $lang->about_postal_code = 'Enter postal code';
     $lang->about_country = 'Enter country';
+    $lang->subject = 'Subject';
+    $lang->about_subject = 'Enter subject';
+    $lang->sender_name = 'Sender name';
+    $lang->about_sender_name = 'Enter sender name';
+    $lang->sender_email = 'Sender email';
+    $lang->about_sender_email = 'Enter sender email';
+    $lang->content = 'Content';
+    $lang->about_content = 'Enter content';
 
     $lang->shop_first_menus = array(
         array('dispShopToolDashboard','Dashboard'),
@@ -334,7 +347,8 @@
         ),
         array(
             'dispShopToolManageCustomers'=>'Manage Accounts',
-            'dispShopToolManageNewsletter'=>'Newsletter',
+            'dispShopToolManageNewsletterSubscribers'=>'Subscribers',
+            'dispShopToolManageNewsletters'=>'Newsletters',
         ),
 		array(
 			'dispShopToolExtraMenuList'=>'All items',
@@ -358,6 +372,7 @@
         )
     );
 
+    $lang->cmd_save_send = 'Save and Send';
     $lang->cmd_go_help = 'Help Desk';
     $lang->cmd_shop_setup = 'Default Settings';
     $lang->cmd_shop_list = 'Shop List';

@@ -928,6 +928,52 @@
             $this->setMessage('success_updated');
         }
 
+        /*
+        * @brief function for multiple newsletter delete
+        * @author Dan Dragan (dev@xpressengine.org)
+        */
+        public function procShopToolDeleteNewsletters(){
+            $shopModel = $this->model;
+            $repository = $shopModel->getNewsletterRepository();
+            $args = new stdClass();
+            $args->newsletter_srls = explode(',', Context::get('newsletter_srls'));
+            $repository->deleteNewsletters($args);
+            $this->setMessage("success_deleted");
+            $this->setRedirectUrl(getNotEncodedUrl('', 'act', 'dispShopToolManageNewsletters'));
+        }
+
+        /*
+        * @brief function to send and add newsletter
+        * @author Dan Dragan (dev@xpressengine.org)
+        */
+        public function procShopToolSendNewsletter(){
+            $shopModel = $this->model;
+            $newsletterRepository = $shopModel->getNewsletterRepository();
+
+            $args = Context::getRequestVars();
+            $args->module_srl = $this->module_info->module_srl;
+
+            $newsletter = new Newsletter($args);
+            $newsletterRepository->sendEmailsToSubscribers($newsletter,$this->site_srl);
+            try
+            {
+                if ($newsletter->newsletter_srl) {
+                    $newsletter->save();
+                    $this->setMessage("success_updated");
+                }
+                else {
+                    $newsletter->save();
+                    $this->setMessage("success_registed");
+                }
+            }
+            catch(Exception $e) {
+                return new Object(-1, $e->getMessage());
+            }
+
+            $returnUrl = getNotEncodedUrl('', 'act', 'dispShopToolManageNewsletters');
+            $this->setRedirectUrl($returnUrl);
+        }
+
 
         /*
         * @brief function for multiple customers delete

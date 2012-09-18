@@ -369,6 +369,17 @@ class shopModel extends shop
     }
 
     /**
+     * Returns an instance of the Newsletter repository
+     *
+     * @author Dan Dragan (dev@xpressengine.org)
+     * @return NewsletterRepository
+     */
+    public function getNewsletterRepository()
+    {
+        return new NewsletterRepository();
+    }
+
+    /**
      * Returns an instance of the Guest repository
      *
      * @author Florin Ercus (dev@xpressengine.org)

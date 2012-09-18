@@ -66,11 +66,17 @@
 
         <!-- Customers -->
         <permission action="dispShopToolManageCustomers" target="manager" />
-        <permission action="dispShopToolManageNewsletter" target="manager" />
+        <permission action="dispShopToolManageNewsletters" target="manager" />
+        <permission action="dispShopToolManageNewsletterSubscribers" target="manager" />
         <permission action="dispShopToolAddCustomer" target="manager" />
         <permission action="dispShopToolEditCustomer" target="manager" />
+        <permission action="dispShopToolSendNewsletter" target="manager" />
+        <permission action="dispShopToolResendNewsletter" target="manager" />
+        <permission action="dispShopToolViewNewsletter" target="manager" />
         <permission action="procShopToolDeleteCustomers" target="manager" />
+        <permission action="procShopToolSendNewsletter" target="manager" />
         <permission action="procShopToolUnsubscribeCustomers" target="manager" />
+        <permission action="procShopToolDeleteNewsletters" target="manager" />
 
         <!-- Orders -->
         <permission action="dispShopToolManageOrders" target="manager"/>
@@ -212,11 +218,17 @@
 
         <!-- Customers -->
         <action name="dispShopToolManageCustomers" type="view" />
-        <action name="dispShopToolManageNewsletter" type="view" />
+        <action name="dispShopToolManageNewsletters" type="view" />
+        <action name="dispShopToolManageNewsletterSubscribers" type="view" />
         <action name="dispShopToolAddCustomer" type="view" />
         <action name="dispShopToolEditCustomer" type="view" />
+        <action name="dispShopToolSendNewsletter" type="view" />
+        <action name="dispShopToolResendNewsletter" type="view" />
+        <action name="dispShopToolViewNewsletter" type="view" />
         <action name="procShopToolDeleteCustomers" type="controller" ruleset="delete_customers"/>
+        <action name="procShopToolSendNewsletter" type="controller" ruleset="send_newsletter"/>
         <action name="procShopToolUnsubscribeCustomers" type="controller"/>
+        <action name="procShopToolDeleteNewsletters" type="controller"/>
 
         <!-- My account -->
         <action name="dispShopMyAccount" type="view" />
