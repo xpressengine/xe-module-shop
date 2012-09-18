@@ -54,7 +54,9 @@
     $lang->msg_confirm_delete_product = 'Are you sure you want to delete this product?';
     $lang->msg_confirm_delete_attribute = 'Are you sure you want to delete this attribute?';
     $lang->msg_confirm_delete_customer = 'Are you sure you want to delete this customer?';
+    $lang->msg_confirm_unsubscribe_customer = 'Are you sure you want to unsubscribe this customer?';
     $lang->msg_confirm_delete_customers = 'Are you sure you want to delete these customers?';
+    $lang->msg_confirm_unsubscribe_customers = 'Are you sure you want to unsubscribe these customers?';
     $lang->msg_confirm_delete_products = 'Are you sure you want to delete these products?';
     $lang->msg_confirm_delete_attributes = 'Are you sure you want to delete these attributes?';
     $lang->msg_confirm_delete_address = 'Are you sure you want to delete this address?';
@@ -80,6 +82,7 @@
     $lang->select_import_file = 'Select import file';
     $lang->about_select_import_file = 'The file must be a zip file';
     $lang->shop_manage_addresses = 'Manage addresses for %s';
+    $lang->no_subscribers = 'No one is subscribed to your newsletter';
 
     $lang->cmd_delete_favicon = 'Remove favicon';
     $lang->favicon = 'Favicon';
@@ -331,6 +334,7 @@
         ),
         array(
             'dispShopToolManageCustomers'=>'Manage Accounts',
+            'dispShopToolManageNewsletter'=>'Newsletter',
         ),
 		array(
 			'dispShopToolExtraMenuList'=>'All items',

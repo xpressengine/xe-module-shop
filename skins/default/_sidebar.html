@@ -1,4 +1,21 @@
-<div id="categories" class="sidebar">
+<div class = "sidebar">
+<div id="categories">
 <h4>Categories</h4>
 {$HTML_tree}
 </div>
+
+<div id="newsletter">
+    <h4>Newsletter</h4>
+    <!--@if(Context::get('logged_info'))-->
+    <!--@ $logged_info = Context::get('logged_info');--> <!--@end-->
+        <!--@if($logged_info->newsletter == 'Y')-->
+            You are already subscribed to our newsletter. <a href="{getUrl('','act','procShopSignToNewsletter','member_srl',$logged_info->member_srl,'email_address',$logged_info->email_address,'newsletter','N')}">Unsubscribe</a>
+        <!--@else-->
+            <a href="{getUrl('','act','procShopSignToNewsletter','member_srl',$logged_info->member_srl,'email_address',$logged_info->email_address,'newsletter','Y')}">Subscribe</a>
+        <!--@end-->
+    <!--@else-->
+    In order to sign up to our newsletter you have to <a href="{getUrl('','act','dispMemberLoginForm')}">login</a>
+    <!--@end-->
+</div>
+</div>
+

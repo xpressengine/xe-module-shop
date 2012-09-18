@@ -127,7 +127,6 @@ img{border:0}
 {
     width: 20%;
     float: left;
-    background-color: #fafad2;
 }
 
 #my_account_sidebar{
@@ -145,7 +144,12 @@ img{border:0}
     padding: 5px 0;
     padding-left: 10px;
 }
-
+#newsletter{
+    background-color: #dddd00;
+}
+#categories{
+    background-color: #fafad2;
+}
 #categories ul
 {
     list-style-type: none;

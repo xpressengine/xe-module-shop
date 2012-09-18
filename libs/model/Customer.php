@@ -27,6 +27,7 @@ class Customer extends BaseItem
         $postal_code,
         $country,
         $region,
+        $newsletter,
         $addresses,
         $groups = array();
 

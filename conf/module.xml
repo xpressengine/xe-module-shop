@@ -66,9 +66,11 @@
 
         <!-- Customers -->
         <permission action="dispShopToolManageCustomers" target="manager" />
+        <permission action="dispShopToolManageNewsletter" target="manager" />
         <permission action="dispShopToolAddCustomer" target="manager" />
         <permission action="dispShopToolEditCustomer" target="manager" />
         <permission action="procShopToolDeleteCustomers" target="manager" />
+        <permission action="procShopToolUnsubscribeCustomers" target="manager" />
 
         <!-- Orders -->
         <permission action="dispShopToolManageOrders" target="manager"/>
@@ -103,12 +105,14 @@
         <action name="dispShopOrderConfirmation" type="view" />
         <action name="dispShopMenu" type="view" />
 
+
         <action name="procShopLogin" type="controller" ruleset="shop_login" />
         <action name="procShopDenyDelete" type="controller" />
         <action name="procShopProfileUpdate" type="controller" />
         <action name="procShopProfileImageUpload" type="controller" />
         <action name="procShopInfoUpdate" type="controller" />
         <action name="procShopPlaceOrder" type="controller" />
+        <action name="procShopSignToNewsletter" type="controller" />
 
         <!-- Shop backend -->
         <action name="dispShopToolLogin" type="view" />
@@ -208,9 +212,11 @@
 
         <!-- Customers -->
         <action name="dispShopToolManageCustomers" type="view" />
+        <action name="dispShopToolManageNewsletter" type="view" />
         <action name="dispShopToolAddCustomer" type="view" />
         <action name="dispShopToolEditCustomer" type="view" />
         <action name="procShopToolDeleteCustomers" type="controller" ruleset="delete_customers"/>
+        <action name="procShopToolUnsubscribeCustomers" type="controller"/>
 
         <!-- My account -->
         <action name="dispShopMyAccount" type="view" />

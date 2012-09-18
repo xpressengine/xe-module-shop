@@ -982,6 +982,18 @@ class shopView extends shop {
     }
 
     /**
+     * Subscribed customers management view
+     */
+    public function dispShopToolManageNewsletter(){
+        $shopModel = getModel('shop');
+        $customerRepository = $shopModel->getCustomerRepository();
+        $output = $customerRepository->getNewsletterCustomers($this->site_srl,'Y');
+
+        Context::set('customers_list',$output->customers);
+        Context::set('page_navigation',$output->page_navigation);
+    }
+
+    /**
      * Customer manage addresses view (Admin)
      */
     public function dispShopToolManageAddresses(){

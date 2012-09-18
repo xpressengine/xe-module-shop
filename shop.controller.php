@@ -74,6 +74,14 @@
 			$this->setRedirectUrl($returnUrl);
         }
 
+        public function procShopSignToNewsletter(){
+            $memberAdminController = getAdminController('member');
+
+            $memberAdminController->procMemberAdminInsert();
+            $returnUrl = getNotEncodedUrl('', 'act', 'dispShop');
+            $this->setRedirectUrl($returnUrl);
+        }
+
         public function procShopAddAddress() {
             $shopModel = getModel('shop');
             $addressRepository = $shopModel->getAddressRepository();
@@ -892,6 +900,29 @@
 
             $this->setMessage('success_deleted');
         }
+
+        /*
+        * @brief function for multiple customers unsubscription
+        * @author Dan Dragan (dev@xpressengine.org)
+        */
+        public function procShopToolUnsubscribeCustomers(){
+            $shopModel = $this->model;
+            $target_member_srls = Context::get('target_member_srls');
+            if(!$target_member_srls) return new Object(-1, 'msg_invalid_request');
+            $member_srls = explode(',', $target_member_srls);
+            $customerRepository = $shopModel->getCustomerRepository();
+
+            foreach($member_srls as $member) {
+                $extra_vars = $customerRepository->getMemberExtraVars($member);
+                $extra_vars = unserialize($extra_vars);
+                $extra_vars->newsletter = 'N';
+                $extra_vars = serialize($extra_vars);
+                $customerRepository->updateMemberExtraVars($member,$extra_vars);
+            }
+
+            $this->setMessage('success_updated');
+        }
+
 
         /*
         * @brief function for multiple customers delete

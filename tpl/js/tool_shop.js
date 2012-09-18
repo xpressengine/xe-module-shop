@@ -479,10 +479,16 @@ function deleteCustomerItem(srl){
     exec_xml('shop', 'procShopToolDeleteCustomers', { target_member_srls: srl }, completeReload, response_tags);
 }
 
+function deleteSubscribedCustomerItem(srl){
+    if (!confirm(xe.lang.msg_confirm_unsubscribe_customer)) return false;
+    var response_tags = new Array('error','message','page','mid');
+    exec_xml('shop', 'procShopToolUnsubscribeCustomers', { target_member_srls: srl }, completeReload, response_tags);
+}
+
 function deleteCustomerItems(page){
     if (!confirm(xe.lang.msg_confirm_delete_customers)) return false;
     var val, srls = [];
-    jQuery("input[name=customer_srl]:checked").each(function(){
+    jQuery("input[name=member_srl]:checked").each(function(){
         val = jQuery(this).val();
         if(val) srls.push(val);
     });
@@ -493,6 +499,22 @@ function deleteCustomerItems(page){
         page: page
     }
     exec_xml('shop', 'procShopToolDeleteCustomers', params, completeReload, response_tags);
+}
+
+function deleteSubscribedCustomerItems(page){
+    if (!confirm(xe.lang.msg_confirm_unsubscribe_customers)) return false;
+    var val, srls = [];
+    jQuery("input[name=member_srl]:checked").each(function(){
+        val = jQuery(this).val();
+        if(val) srls.push(val);
+    });
+    if (srls.length < 1) return;
+    var response_tags = new Array('error','message','page','mid');
+    var params = {
+        target_member_srls: srls.join(','),
+        page: page
+    }
+    exec_xml('shop', 'procShopToolUnsubscribeCustomers', params, completeReload, response_tags);
 }
 
 function deleteAddressItem(srl){

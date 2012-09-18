@@ -50,11 +50,11 @@
 
     <div id="accountInfo">
         <h3>{$lang->account_info}</h3>
-        <a href="#">{$lang->edit}</a>
+        <a href="{getUrl('','act','dispMemberModifyInfo')}">{$lang->edit}</a>
         <p>{$lang->name}: <b>{$logged_user->user_name}</b></p>
         <p>{$lang->nick_name}: <b>{$logged_user->nick_name}</b></p>
         <p>{$lang->email}: <b>{$logged_user->email_address}</b></p>
-        <a href="#">{$lang->change_password}</a>
+        <a href="{getUrl('','act','dispMemberModifyPassword')}">{$lang->change_password}</a>
     </div>
 
     <div id="newsletter">
