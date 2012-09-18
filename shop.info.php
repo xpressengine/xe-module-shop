@@ -149,6 +149,11 @@
             return $this->get('currency');
         }
 
+        public function getCurrencySymbol() {
+            if(!$this->isExists()) return;
+            return $this->get('currency_symbol');
+        }
+
         public function getVAT() {
             if(!$this->isExists()) return;
             return $this->get('VAT');

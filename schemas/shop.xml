@@ -8,6 +8,7 @@
   <column name="input_website" type="char" size="1" default="R" />
   <column name="timezone" type="varchar" size="10" default="+0900" />
   <column name="currency" type="varchar" size="5" />
+  <column name="currency_symbol" type="varchar" size="5" />
   <column name="VAT" type="float" size="7" />
   <column name="telephone" type="number" size="20" />
   <column name="address" type="text" />

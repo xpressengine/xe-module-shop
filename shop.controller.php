@@ -496,6 +496,9 @@
 
             $args = Context::gets('shop_title','shop_content','timezone','telephone','address','currency','VAT');
             $args->module_srl = $this->module_srl;
+            $currencies = require_once(_XE_PATH_.'modules/shop/shop.currencies.php');
+            $args->currency_symbol = $currencies[$args->currency]['symbol'];
+
             try{
                 $output = executeQuery('shop.updateShopInfo',$args);
             }

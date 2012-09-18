@@ -9,6 +9,7 @@
         <column name="telephone" var="telephone" />
         <column name="address" var="address" />
         <column name="currency" var="currency" />
+        <column name="currency_symbol" var="currency_symbol" />
         <column name="VAT" var="VAT" />
     </columns>
     <conditions>

@@ -51,6 +51,7 @@
             }
 
             if(!$oDB->isColumnExists("shop_orders","transaction_id")) return true;
+            if(!$oDB->isColumnExists("shop","currency_symbol")) return true;
 
             return false;
         }
@@ -71,6 +72,10 @@
 
             if(!$oDB->isColumnExists("shop_orders","transaction_id")) {
                 $oDB->addColumn('shop_orders',"transaction_id","varchar",128);
+            }
+
+            if(!$oDB->isColumnExists("shop","currency_symbol")) {
+                $oDB->addColumn('shop',"currency_symbol","varchar",5);
             }
 
            return new Object(0, 'success_updated');
