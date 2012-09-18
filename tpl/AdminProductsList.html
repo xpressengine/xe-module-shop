@@ -43,7 +43,7 @@
 <td class="title"><a href="{getUrl('act','dispShopToolEditProduct','product_srl',$product_item->product_srl)}" class="productTitle">{$product_item->title}</a></td>
 <td class="small">{$product_item->product_type}</td>
 <td class="small">{$product_item->sku}</td>
-<td class="small">{number_format($product_item->price,2)}</td>
+<td class="small">{ShopDisplay::priceFormat($product_item->price,$shop->getCurrencySymbol())}</td>
 <td class="small">{number_format($product_item->qty,2)}</td>
 <td class="small">{$product_item->status}</td>
 <td>

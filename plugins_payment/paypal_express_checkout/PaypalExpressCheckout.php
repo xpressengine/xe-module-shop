@@ -23,7 +23,7 @@ class PaypalExpressCheckout extends PaymentMethodAbstract
             $item->name = $product->title;
             $item->number = $product->sku;
             $item->description = substr($product->short_description, 0, 127);
-            $item->amount = number_format($product->price, 2);
+            $item->amount = ShopDisplay::numberFormat($product->price);
             $item->quantity = $product->quantity;
             $items[] = $item;
         }
@@ -45,10 +45,10 @@ class PaypalExpressCheckout extends PaymentMethodAbstract
 
         $paypalAPI->setExpressCheckout(
             $items
-            , number_format($cart->getItemTotal(),2)
+            , ShopDisplay::numberFormat($cart->getItemTotal())
             , 0
-            , number_format($cart->getShippingCost(),2)
-            , number_format($cart->getTotal(), 2)
+            , ShopDisplay::numberFormat($cart->getShippingCost())
+            , ShopDisplay::numberFormat($cart->getTotal())
             , 'USD'
             , $success_url
             , $cancel_url);
@@ -94,10 +94,10 @@ class PaypalExpressCheckout extends PaymentMethodAbstract
         $paypalAPI->doExpressCheckoutPayment($token
             , $payer_id
             , $items
-            , number_format($cart->getItemTotal(),2)
+            , ShopDisplay::numberFormat($cart->getItemTotal())
             , 0
-            , number_format($cart->getShippingCost(),2)
-            , number_format($cart->getTotal(), 2)
+            , ShopDisplay::numberFormat($cart->getShippingCost())
+            , ShopDisplay::numberFormat($cart->getTotal())
             , 'USD'
         );
 

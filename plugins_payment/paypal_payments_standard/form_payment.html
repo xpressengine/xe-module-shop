@@ -23,7 +23,7 @@
 {@ $i = 1; }
 <!--@foreach($cart->getProducts() as $product)-->
     <input type="hidden" name="item_name_{$i}" value="{$product->title}">
-    <input type="hidden" name="amount_{$i}" value="{number_format($product->price, 2)}">
+    <input type="hidden" name="amount_{$i}" value="{ShopDisplay::priceFormat($product->price, $shop->getCurrencySymbol())}">
     <input type="hidden" name="quantity_{$i}" value="{$product->quantity}">
 
     {@ $i += 1; }

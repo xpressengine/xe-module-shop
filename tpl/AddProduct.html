@@ -189,7 +189,7 @@
                     <td class="title">
                         <div class="fItem">
                             <label class="iLabel" for="price">{$lang->about_price}</label>
-                            <input type="text" id="price" name="price" style="width:200px" class="iText iText" title="{$lang->about_price}" <!--@if($product->title)-->value="{number_format($product->price,2)}"<!--@end--> />
+                            <input type="text" id="price" name="price" style="width:200px" class="iText iText" title="{$lang->about_price}" <!--@if($product->title)-->value="{ShopDisplay::priceFormat($product->price,$shop->getCurrencyShop())}"<!--@end--> />
                         </div>
                     </td>
                 </tr>

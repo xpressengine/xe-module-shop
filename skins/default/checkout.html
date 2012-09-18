@@ -257,7 +257,7 @@
                     </td>
                     <td>Shipping</td>
                     <td>
-                        {$cart->getShippingCost()}
+                        {ShopDisplay::priceFormat($cart->getShippingCost(), $shop->getCurrencySymbol())}
                     </td>
                 </tr>
                 <!--@end-->
@@ -266,7 +266,7 @@
                     </td>
                     <td>Total</td>
                     <td>
-                        {number_format($cart->getTotal(), 2)}
+                        {ShopDisplay::priceFormat($cart->getTotal(), $shop->getCurrencySymbol())}
                     </td>
                 </tr>
                 </tbody>
