@@ -49,6 +49,9 @@
             foreach($this->add_triggers as $trigger) {
                 if (!$oModuleModel->getTrigger($trigger[0], $trigger[1], $trigger[2], $trigger[3], $trigger[4])) return true;
             }
+
+            if(!$oDB->isColumnExists("shop_orders","transaction_id")) return true;
+
             return false;
         }
 
@@ -65,6 +68,11 @@
                     $oModuleController->insertTrigger($trigger[0], $trigger[1], $trigger[2], $trigger[3], $trigger[4]);
                 }
             }
+
+            if(!$oDB->isColumnExists("shop_orders","transaction_id")) {
+                $oDB->addColumn('shop_orders',"transaction_id","varchar",128);
+            }
+
            return new Object(0, 'success_updated');
         }
 

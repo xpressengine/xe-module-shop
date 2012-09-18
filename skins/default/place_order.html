@@ -23,7 +23,7 @@
 
     <fieldset>
         <legend>Shipping method</legend>
-        <p>{$extra['shipping_method']}</p>
+        <p>{$shipping_method}</p>
     </fieldset>
 
     <fieldset>
@@ -44,6 +44,7 @@
                 <th>Price</th>
             </tr>
             </thead>
+            <tbody>
             {@ $i = 0 }
             <!--@foreach($cart_products as $product)-->
             <tr>
@@ -54,6 +55,25 @@
                 <td>{number_format($product->price, 2)}</td>
             </tr>
             <!--@end-->
+            <!--@if($cart->getShippingCost() !== 0)-->
+            <tr style="font-weight: bold; background-color: #fafad2;">
+                <td colspan="3">
+                </td>
+                <td>Shipping</td>
+                <td>
+                    {number_format($cart->getShippingCost(), 2)}
+                </td>
+            </tr>
+            <!--@end-->
+            <tr style="font-weight: bold; background-color: #9acd32;">
+                <td colspan="3">
+                </td>
+                <td>Total</td>
+                <td>
+                    {number_format($cart->getTotal(), 2)}
+                </td>
+            </tr>
+            </tbody>
         </table>
     </fieldset>
 

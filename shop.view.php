@@ -892,6 +892,12 @@ class shopView extends shop {
         // 2. Setup all other order info
         Context::set('billing_address', $cart->getBillingAddress());
         Context::set('shipping_address', $cart->getShippingAddress());
+
+        $shipping_method_name = $cart->getExtra('shipping_method');
+        $shipping_repository = new ShippingRepository();
+        $shipping_method = $shipping_repository->getShippingMethod($shipping_method_name);
+        Context::set('shipping_method', $shipping_method->getDisplayName());
+
         Context::set('extra', $cart->getExtraArray());
         Context::set('cart_products', $cart->getProducts());
 

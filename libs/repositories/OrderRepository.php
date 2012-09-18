@@ -109,6 +109,20 @@ class OrderRepository extends BaseRepository
         }
     }
 
+
+    public function getOrderByTransactionId($transaction_id)
+    {
+        $output = $this->query('getOrderByTransactionId', array('transaction_id'=> $transaction_id));
+        if(empty($output->data)){
+            return null;
+        }else{
+            $order = new Order((array) $output->data);
+            $this->getOrderShipment($order);
+            $this->getOrderInvoice($order);
+            return $order;
+        }
+    }
+
     public function getOrderShipment($order){
         $shopModel = getModel('shop');
         $shipmentRepository = $shopModel->getShipmentRepository();

@@ -15,6 +15,7 @@
         <column name="shipping_cost" var="shipping_cost" filter="number"/>
         <column name="total" var="total"/>
         <column name="vat" var="vat" filter="number"/>
+        <column name="transaction_id" var="transaction_id" />
         <column name="order_status" var="order_status"/>
         <column name="ip" var="ip"/>
     </columns>

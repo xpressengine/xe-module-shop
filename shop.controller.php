@@ -567,11 +567,13 @@
                     return $result;
                 }
                 $haveShipping = (Context::get('different_shipping') == 'yes');
+                $shipping = Context::get('shipping');
+                if(!$haveShipping) unset($shipping['address_srl']);
 
                 $cart->checkout(array(
                     'billing'  => Context::get('billing'),
                     'new_billing_address' => Context::get('new_billing_address'),
-                    'shipping' => $haveShipping ? Context::get('shipping') : null,
+                    'shipping' => $shipping,
                     'new_shipping_address' => $haveShipping ? Context::get('new_shipping_address') : null,
                     'payment'  => Context::get('payment'),
                 ));

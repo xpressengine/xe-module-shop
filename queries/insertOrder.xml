@@ -18,6 +18,7 @@
         <column name="total" var="total"/>
         <column name="vat" var="vat" filter="number"/>
         <column name="order_status" var="order_status"/>
+        <column name="transaction_id" var="transaction_id" />
         <column name="ip" var="ip"/>
         <column name="regdate" var="regdate" default="curdate()"/>
     </columns>
