@@ -80,6 +80,11 @@ class PaymentMethodRepository extends BaseRepository
         return $this->getPaymentMethod($name);
     }
 
+    public function installPaymentMethod($name)
+    {
+        return $this->getPaymentMethod($name);
+    }
+
     private function getPaymentMethodsByFolder()
     {
         return FileHandler::readDir(self::$PAYMENT_METHODS_DIR);

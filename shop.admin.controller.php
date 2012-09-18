@@ -148,6 +148,14 @@
             $oMemberModel = getModel('member');
             $member_info = $oMemberModel->getMemberInfoByEmailAddress($user_id_list[0]);
 
+            /**
+             * Insert default payment method and activate it
+             */
+            $payment_repository = new PaymentMethodRepository();
+            $payment_method = $payment_repository->installPaymentMethod('cash_on_delivery');
+            $payment_method->status = 1;
+            $payment_repository->updatePaymentMethod($payment_method);
+
 
             $output = new Object();
             $output->add('module_srl',$module_srl);
