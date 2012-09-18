@@ -15,11 +15,12 @@
                 $addressText.html($selected.html());
                 $newAddress.slideUp();
             }
-        });
-        jQuery('#billing_address, #shipping_address').change();
+        }).change();
 
         jQuery('#different_shipping').change(function(){
-            if (jQuery(this).is(':checked')) jQuery('#new-address-shipping, #shipping-address-select').slideDown();
+            if (jQuery(this).is(':checked')) {
+                jQuery('#new-address-shipping, #shipping-address-select').slideDown();
+            }
             else jQuery('#new-address-shipping, #shipping-address-select').slideUp();
         });
     });

@@ -1,7 +1,9 @@
 <?php
 abstract class BaseItem
 {
+    /** @var BaseRepository */
     public $repo;
+
     protected $meta = array();
 
 	public function __construct($data = NULL)
@@ -24,18 +26,21 @@ abstract class BaseItem
         /**
          * Look for srl field if it's not already set in class $meta
          */
-        if ($srlField = $this->getMeta('srl')) {
+        if ($srlField = $this->getMeta('srl')) { //if srl is given
             $reflection = new ReflectionClass($this);
             if (!$reflection->hasProperty($srlField)) {
                 throw new Exception("Srl field '$srlField' doesn't exist");
             }
         }
-        else {
+        else { //else return the first _srl field
             foreach ($this as $field=> $value) {
                 if (substr($field, strlen($field) - 4, strlen($field)) === '_srl') {
                     $this->setMeta('srl', $field);
                     break;
                 }
+            }
+            if (!$this->getMeta('srl')) {
+                throw new Exception('Couldn\'t identify the _srl column');
             }
         }
 
@@ -78,6 +83,41 @@ abstract class BaseItem
     public function setMeta($key, $val)
     {
         $this->meta[$key] = $val;
+    }
+
+
+    /**
+     * CRUD
+     * You still have to create the queries. %E gets replaced by entity name.
+     */
+
+    public function save()
+    {
+        return $this->isPersisted() ? $this->update() : $this->insert();
+    }
+
+    public function update($query='update%E')
+    {
+        $entity = get_called_class();
+        if (!$this->isPersisted()) throw new Exception("No $entity srl for update");
+        return $this->query($query, get_object_vars($this));
+    }
+
+    public function insert($query='insert%E')
+    {
+        $entity = get_called_class();
+        if ($this->isPersisted()) throw new Exception("$entity already persisted, can't insert.");
+        $srl = $this->getMeta('srl');
+        $this->$srl = getNextSequence();
+        return $this->query($query, get_object_vars($this));
+    }
+
+    public function delete($query='delete%Es')
+    {
+        $entity = get_called_class();
+        $srl = $this->getMeta('srl');
+        if (!$this->isPersisted()) throw new Exception("$entity not persisted, can't delete.");
+        $this->query($query, array('srls' => array($this->$srl)));
     }
 
 }

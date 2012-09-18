@@ -34,6 +34,8 @@ class Address extends BaseItem
     public function __toString()
     {
         return <<<GATA
+$this->firstname $this->lastname,
+$this->email,
 $this->address,
 $this->country,
 $this->region,
