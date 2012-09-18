@@ -581,6 +581,15 @@
         /*
          * @author Florin Ercus (dev@xpressengine.org)
          */
+        public function procShopSearch()
+        {
+            $searchQuery = Context::get('search');
+            $this->setRedirectUrl(getNotEncodedUrl('', 'act', 'dispShopSearch', 'q', $searchQuery));
+        }
+
+        /*
+         * @author Florin Ercus (dev@xpressengine.org)
+         */
         public function procShopToolCheckout()
         {
             $cartRepo = new CartRepository();

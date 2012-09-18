@@ -119,6 +119,7 @@
         <action name="procShopInfoUpdate" type="controller" />
         <action name="procShopPlaceOrder" type="controller" />
         <action name="procShopSignToNewsletter" type="controller" />
+        <action name="procShopSearch" type="controller"/>
 
         <!-- Shop backend -->
         <action name="dispShopToolLogin" type="view" />

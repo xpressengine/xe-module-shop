@@ -6,6 +6,7 @@
 <include target="product_variants_datasource.html" />
 
 <div id="products" class="mainContent">
+    <h2 cond="$q && $act == 'dispShopSearch'">Searching for "{$q}"</h2>
     <!--@foreach($products as $product)-->
     <div id="product_{$product->product_srl}" class="product {$product->product_type}">
         <img src="{$product->getPrimaryImagePath()}" width="150px" height="150px" />

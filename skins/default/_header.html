@@ -58,8 +58,9 @@
 	<!-- /Checkout -->
 
 	<!-- Search box -->
-		<form>
-			<input type="text" name="search" value=""/>
+		<form action="./">
+            <input type="hidden" id="act" name="act" value="procShopSearch" />
+            <input type="text" name="search" value="{$search_value}"/>
 			<input type="submit" value="Search"/>
 		</form>
 	<!-- /Search box -->
