@@ -35,7 +35,9 @@
     $lang->friendly_url = 'Friendly URL';
     $lang->about_friendly_url = 'Enter unique friendly url';
     $lang->price = 'Price';
+    $lang->discount_price = 'Discount Price';
     $lang->about_price = 'Product price';
+    $lang->about_discount_price = 'Product discount price';
     $lang->qty = 'Quantity';
     $lang->about_qty = 'Product qty';
     $lang->in_stock = 'In stock';

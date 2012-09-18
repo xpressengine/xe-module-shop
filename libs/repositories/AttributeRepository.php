@@ -293,39 +293,42 @@ class AttributeRepository extends BaseRepository
      */
     public function insertAttributesFromImportFolder($params)
     {
-        $csvString = file_get_contents('./files/attach/shop/export-import/attributes.csv');
-        $csvData = str_getcsv($csvString, "\n");
-        $keys = explode(',',$csvData[0]);
+        if(file_exists('./files/attach/shop/export-import/attributes.csv')) {
+            $csvString = file_get_contents('./files/attach/shop/export-import/attributes.csv');
+            $csvData = str_getcsv($csvString, "\n");
+            $keys = explode(',',$csvData[0]);
 
-        foreach ($csvData as $idx=>$csvLine){
-            if($idx != 0){
-                $cat = explode(',',$csvLine);
-                foreach($cat as $key=>$value){
-                    if($keys[$key] != ''){
-                        $args[$keys[$key]] = $value;
+            foreach ($csvData as $idx=>$csvLine){
+                if($idx != 0){
+                    $cat = explode(',',$csvLine);
+                    foreach($cat as $key=>$value){
+                        if($keys[$key] != ''){
+                            $args[$keys[$key]] = $value;
+                        }
                     }
+                    $args = (object) $args;
+                    $attributes[] = $args;
+                    unset($args);
                 }
-                $args = (object) $args;
-                $attributes[] = $args;
-                unset($args);
-            }
-        }
-
-        foreach($attributes as $attribute){
-            $category_scope = explode('|',$attribute->category_scope);
-            unset($attribute->category_scope);
-            foreach($category_scope as $scope){
-                if(isset($params->category_ids[$scope]))$attribute->category_scope[] = $params->category_ids[$scope];
             }
 
-            $att = new Attribute($attribute);
-            $att->module_srl = $params->module_srl;
-            $att->member_srl = $params->member_srl;
-            $att->attribute_srl_srl = $this->insertAttribute($att);
-            $attribute_ids[$attribute->id] = $att->attribute_srl;
-            $oAttributes[] = $att;
-        }
-        return $attribute_ids;
+            foreach($attributes as $attribute){
+                $category_scope = explode('|',$attribute->category_scope);
+                unset($attribute->category_scope);
+                foreach($category_scope as $scope){
+                    if(isset($params->category_ids[$scope]))$attribute->category_scope[] = $params->category_ids[$scope];
+                }
+
+                $att = new Attribute($attribute);
+                $att->module_srl = $params->module_srl;
+                $att->member_srl = $params->member_srl;
+                $att->attribute_srl_srl = $this->insertAttribute($att);
+                $attribute_ids[$attribute->id] = $att->attribute_srl;
+                $oAttributes[] = $att;
+            }
+            return $attribute_ids;
+        }   else return NULL;
+
     }
 
     /**

@@ -356,8 +356,10 @@
             }
 
             $category_ids = $categoryRepository->insertCategoriesFromImportFolder($args);
-            foreach($category_ids as $key => $id){
-                $args->category_ids[$key]=$id;
+            if(isset($category_ids)){
+                foreach($category_ids as $key => $id){
+                    $args->category_ids[$key]=$id;
+                }
             }
             $args->attribute_ids = $attributeRepository->insertAttributesFromImportFolder($args);
             $productRepository->insertProductsFromImportFolder($args);

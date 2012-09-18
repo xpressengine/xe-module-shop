@@ -217,36 +217,39 @@ class CategoryRepository extends BaseRepository
      */
     public function insertCategoriesFromImportFolder($params)
     {
-        $csvString = file_get_contents('./files/attach/shop/export-import/categories.csv');
-        $csvData = str_getcsv($csvString, "\n");
-        $keys = explode(',',$csvData[0]);
+        if(file_exists('./files/attach/shop/export-import/categories.csv')){
+            $csvString = file_get_contents('./files/attach/shop/export-import/categories.csv');
+            $csvData = str_getcsv($csvString, "\n");
+            $keys = explode(',',$csvData[0]);
 
-        foreach ($csvData as $idx=>$csvLine){
-            if($idx != 0){
-                $cat = explode(',',$csvLine);
-                foreach($cat as $key=>$value){
-                    if($keys[$key] != ''){
-                        $args[$keys[$key]] = $value;
+            foreach ($csvData as $idx=>$csvLine){
+                if($idx != 0){
+                    $cat = explode(',',$csvLine);
+                    foreach($cat as $key=>$value){
+                        if($keys[$key] != ''){
+                            $args[$keys[$key]] = $value;
+                        }
                     }
+                    $args = (object) $args;
+                    $categories[] = $args;
+                    unset($args);
                 }
-                $args = (object) $args;
-                $categories[] = $args;
-                unset($args);
             }
-        }
-        $category_ids = new ArrayObject();
-        foreach($categories as $category){
-            $cat = new Category($category);
-            $cat->filename = $this->saveCategoryImage($params->module_srl, $cat->filename,'./files/attach/shop/export-import/images/'.$cat->filename);
-            $cat->module_srl = $params->module_srl;
-            if($cat->parent_srl){
-               $cat->parent_srl = $category_ids[$cat->parent_srl];
+            $category_ids = new ArrayObject();
+            foreach($categories as $category){
+                $cat = new Category($category);
+                $cat->filename = $this->saveCategoryImage($params->module_srl, $cat->filename,'./files/attach/shop/export-import/images/'.$cat->filename);
+                $cat->module_srl = $params->module_srl;
+                if($cat->parent_srl){
+                    $cat->parent_srl = $category_ids[$cat->parent_srl];
+                }
+                $cat->category_srl = $this->insertCategory($cat);
+                $category_ids[$category->id] = $cat->category_srl;
+                $oCategories[] = $cat;
             }
-            $cat->category_srl = $this->insertCategory($cat);
-            $category_ids[$category->id] = $cat->category_srl;
-            $oCategories[] = $cat;
-        }
-        return $category_ids;
+            return $category_ids;
+        }  else return NULL;
+
     }
 
 	/**

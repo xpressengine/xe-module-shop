@@ -15,6 +15,7 @@
         <column name="status" var="status" />
         <column name="friendly_url" var="friendly_url" />
         <column name="price" var="price" />
+        <column name="discount_price" var="discount_price" />
         <column name="qty" var="qty" />
         <column name="in_stock" var="in_stock" />
         <column name="related_products" var="related_products"/>

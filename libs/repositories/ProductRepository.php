@@ -47,7 +47,11 @@ class ProductRepository extends BaseRepository
 		$args->product_srl = $product->product_srl;
 		foreach($product->attributes as $attribute_srl => $attribute_value)
 		{
-			if(!in_array($attribute_srl, $valid_attributes)) continue;
+			if(!isset($valid_attributes)){
+               continue;
+            } else {
+                if(!in_array($attribute_srl, $valid_attributes)) continue;
+            }
 			$args->attribute_srl = $attribute_srl;
 			$args->attribute_value = $attribute_value;
 			$output = executeQuery('shop.insertProductAttribute', $args);
@@ -112,7 +116,8 @@ class ProductRepository extends BaseRepository
 		$args = new stdClass();
 		$args->category_srls = $product->categories;
 
-		$output = executeQueryArray('shop.getCategoryAttributes', $args);
+		if(isset($args->category_srls)) $output = executeQueryArray('shop.getCategoryAttributes', $args);
+            else return;
 		if(!$output->toBool())
 		{
 			throw new Exception($output->getMessage(), $output->getError());
@@ -149,34 +154,36 @@ class ProductRepository extends BaseRepository
 	{
 		$args = new stdClass();
 		$args->product_srl = $product->product_srl;
-		foreach($product->categories as $category)
-		{
-			$args->category_srl = $category;
+        if(isset($product->categories)){
+            foreach($product->categories as $category)
+            {
+                $args->category_srl = $category;
 
-			// Insert product category
-			$output = executeQuery('shop.insertProductCategories', $args);
-			if(!$output->toBool())
-			{
-				throw new Exception($output->getMessage(), $output->getError());
-			}
+                // Insert product category
+                $output = executeQuery('shop.insertProductCategories', $args);
+                if(!$output->toBool())
+                {
+                    throw new Exception($output->getMessage(), $output->getError());
+                }
 
-			// Get number of products in category
-			$count_output = executeQuery('shop.getProductsInCategoryCount', $args);
-			if(!$count_output->toBool())
-			{
-				throw new Exception($count_output->getMessage(), $count_output->getError());
-			}
+                // Get number of products in category
+                $count_output = executeQuery('shop.getProductsInCategoryCount', $args);
+                if(!$count_output->toBool())
+                {
+                    throw new Exception($count_output->getMessage(), $count_output->getError());
+                }
 
-			// Update product count
-			$update_args = new stdClass();
-			$update_args->category_srl = $args->category_srl;
-			$update_args->product_count = $count_output->data->product_count;
-			$output = executeQuery('shop.updateCategory', $update_args);
-			if(!$output->toBool())
-			{
-				throw new Exception($output->getMessage(), $output->getError());
-			}
-		}
+                // Update product count
+                $update_args = new stdClass();
+                $update_args->category_srl = $args->category_srl;
+                $update_args->product_count = $count_output->data->product_count;
+                $output = executeQuery('shop.updateCategory', $update_args);
+                if(!$output->toBool())
+                {
+                    throw new Exception($output->getMessage(), $output->getError());
+                }
+            }
+        }
 		return TRUE;
 	}
 
@@ -724,6 +731,7 @@ class ProductRepository extends BaseRepository
             $product->categories = $new_categories;
 
             if($product->qty == "") unset($product->qty);
+            if($product->discount_price == "") unset($product->discount_price);
             if($product->weight == "") unset($product->weight);
             if($product->parent_product_srl == "") unset($product->parent_product_srl);
 
@@ -740,15 +748,18 @@ class ProductRepository extends BaseRepository
             $images = explode('|',$product->images);
             unset($product->images);
             $args = new stdClass();
-            foreach($images as $image){
-                $args->source_filename = sprintf('./files/attach/shop/export-import/images/%s',$image);
-                $args->file_size = filesize($args->source_filename);
-                if($image == $product->primary_image_filename) $args->is_primary = 'Y';
-                else $args->is_primary = 'N';
-                $args->filename = $image;
-                $new_image = new Image($args);
-                $product->images[] = $new_image;
+            if(isset($product->images)){
+                foreach($images as $image){
+                    $args->source_filename = sprintf('./files/attach/shop/export-import/images/%s',$image);
+                    $args->file_size = filesize($args->source_filename);
+                    if($image == $product->primary_image_filename) $args->is_primary = 'Y';
+                    else $args->is_primary = 'N';
+                    $args->filename = $image;
+                    $new_image = new Image($args);
+                    $product->images[] = $new_image;
+                }
             }
+
 
             if($product->product_type == 'simple') {
                 $prod = new SimpleProduct($product);
