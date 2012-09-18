@@ -369,10 +369,25 @@
         array(
             'dispShopToolManageAccount'=>'Admin account',
             'dispShopToolConfigInfo'=>'Shop Configuration',
+            'dispShopToolDiscountInfo'=>'Shop Discount',
             'dispShopToolShippingList'=>'Shipping methods',
             'dispShopToolManagePaymentMethods'=>'Payment methods'
         )
     );
+
+    $lang->discount_config = 'Discount configuration';
+    $lang->discount_min_amount = 'Minimum order amount to apply discount';
+    $lang->about_discount_min_amount = 'Enter minimum amount';
+    $lang->discount_type = 'Discount type';
+    $lang->about_discount_type = 'Fixed amount or percentage from order total';
+    $lang->discount_amount = 'Discount amount';
+    $lang->about_discount_amount = 'Enter discount amount';
+    $lang->discount_tax_phase = 'When to apply the discount by tax';
+    $lang->about_discount_tax_phase = 'Pre or post taxes';
+    $lang->fixed_amount = 'fixed amount';
+    $lang->percentage = 'percentage';
+    $lang->pre_taxes = 'pre taxes';
+    $lang->post_taxes = 'post taxes';
 
     $lang->cmd_save_send = 'Save and Send';
     $lang->cmd_go_help = 'Help Desk';

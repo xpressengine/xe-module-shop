@@ -53,6 +53,10 @@
             if(!$oDB->isColumnExists("shop_orders","transaction_id")) return true;
             if(!$oDB->isColumnExists("shop","currency_symbol")) return true;
             if(!$oDB->isColumnExists("shop_products","discount_price")) return true;
+            if(!$oDB->isColumnExists("shop","discount_min_amount")) return true;
+            if(!$oDB->isColumnExists("shop","discount_type")) return true;
+            if(!$oDB->isColumnExists("shop","discount_amount")) return true;
+            if(!$oDB->isColumnExists("shop","discount_tax_phase")) return true;
 
             return false;
         }
@@ -81,6 +85,22 @@
 
             if(!$oDB->isColumnExists("shop_products","discount_price")) {
                 $oDB->addColumn('shop_products',"discount_price","float",20);
+            }
+
+            if(!$oDB->isColumnExists("shop","discount_min_amount")) {
+                $oDB->addColumn('shop',"discount_min_amount","number",20);
+            }
+
+            if(!$oDB->isColumnExists("shop","discount_type")) {
+                $oDB->addColumn('shop',"discount_type","varchar",40);
+            }
+
+            if(!$oDB->isColumnExists("shop","discount_amount")) {
+                $oDB->addColumn('shop',"discount_amount","number",20);
+            }
+
+            if(!$oDB->isColumnExists("shop","discount_tax_phase")) {
+                $oDB->addColumn('shop',"discount_tax_phase","varchar",40);
             }
 
            return new Object(0, 'success_updated');

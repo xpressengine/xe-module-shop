@@ -1238,6 +1238,13 @@ class shopView extends shop {
         Context::set('time_zone', $GLOBALS['_time_zone']);
     }
 
+    /**
+     * Change shop discount configuration from backend
+     */
+    public function dispShopToolDiscountInfo(){
+
+    }
+
 	/**
 	 * Edit menu item
 	 *

@@ -518,11 +518,10 @@
             $args->index_module_srl = $this->module_srl;
             $args->default_language = Context::get('language');
             $args->site_srl = $this->site_srl;
-            try{
-                $output = $oModuleController->updateSite($args);
-            }
-            catch(Exception $e) {
-                return new Object(-1, $e->getMessage());
+            $output = $oModuleController->updateSite($args);
+            if(!$output->toBool()) {
+                $this->setMessage('failed_updated');
+                return $output;
             }
 
             if(Context::get('delete_icon')=='Y') $this->deleteShopFavicon($this->module_srl);
@@ -532,6 +531,35 @@
 
             $this->setMessage("success_updated");
             $returnUrl = getNotEncodedUrl('', 'act', 'dispShopToolConfigInfo');
+            $this->setRedirectUrl($returnUrl);
+        }
+
+        /*
+        * @brief function for discount info update
+        * @author Dan Dragan (dev@xpressengine.org)
+        */
+        public function procShopToolDiscountUpdate(){
+            $args = Context::gets('discount_min_amount','discount_type','discount_amount','discount_tax_phase');
+            $args->module_srl = $this->module_srl;
+            if($args->discount_amount >= $args->discount_min_amount){
+                $this->setMessage('Discount amount is biger than discount min amount');
+                $returnUrl = getNotEncodedUrl('', 'act', 'dispShopToolDiscountInfo');
+                $this->setRedirectUrl($returnUrl);
+                return;
+            }
+            if($args->discount_type == 'percentage' && $args->discount_amount > 99) {
+                $this->setMessage('Discount percentage is bigger than 99');
+                $returnUrl = getNotEncodedUrl('', 'act', 'dispShopToolDiscountInfo');
+                $this->setRedirectUrl($returnUrl);
+                return;
+            }
+            $output = executeQuery('shop.updateDiscountInfo',$args);
+            if(!$output->toBool()) {
+                $this->setMessage('failed_updated');
+                return $output;
+            }
+            $this->setMessage("success_updated");
+            $returnUrl = getNotEncodedUrl('', 'act', 'dispShopToolDiscountInfo');
             $this->setRedirectUrl($returnUrl);
         }
 

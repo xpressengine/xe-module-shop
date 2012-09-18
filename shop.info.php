@@ -159,6 +159,26 @@
             return $this->get('VAT');
         }
 
+        public function getShopDiscountMinAmount() {
+            if(!$this->isExists()) return;
+            return $this->get('discount_min_amount');
+        }
+
+        public function getShopDiscountType() {
+            if(!$this->isExists()) return;
+            return $this->get('discount_type');
+        }
+
+        public function getShopDiscountAmount() {
+            if(!$this->isExists()) return;
+            return $this->get('discount_amount');
+        }
+
+        public function getShopDiscountTaxPhase() {
+            if(!$this->isExists()) return;
+            return $this->get('discount_tax_phase');
+        }
+
         public function getEmail() {
             if(!$this->isExists()) return;
             return $this->get('email_address');

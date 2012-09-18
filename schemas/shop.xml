@@ -12,5 +12,9 @@
   <column name="VAT" type="float" size="7" />
   <column name="telephone" type="number" size="20" />
   <column name="address" type="text" />
+  <column name="discount_min_amount" type="number" size="20"/>
+  <column name="discount_type" type="varchar" size="45"/>
+  <column name="discount_amount" type="number" size="20" />
+  <column name="discount_tax_phase" type="varchar" size="45" />
   <column name="regdate" type="date" notnull="notnull" />
 </table>
