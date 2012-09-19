@@ -70,10 +70,11 @@ class PaypalPaymentsStandard extends PaymentMethodAbstract
         ShopLogger::log("Received IPN message: " . print_r($args, true));
 
         $paypalAPI = new PaypalPaymentsStandardAPI();
-        $args = array_merge(array('cmd' => '_notify_validate'), $args);
+        $args = array_merge(array('cmd' => '_notify-validate'), $args);
+	ShopLogger::log("Requesting to paypal ... " . print_r($args, true));
         $response = $paypalAPI->request(self::SANDBOX_URL, $args);
 
-        if($response == 'VALID')
+        if($response == 'VERIFIED')
         {
             ShopLogger::log("Successfully validated IPN data");
         }

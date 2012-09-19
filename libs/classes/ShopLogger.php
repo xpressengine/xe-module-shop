@@ -8,6 +8,6 @@ class ShopLogger
     {
         $timestamp = date("y.m.d H:i:s");
         $log_message = $timestamp . "\t" . $message . PHP_EOL;
-        FileHandler::writeFile(self::LOG_FILE_PATH, $log_message);
+        FileHandler::writeFile(self::LOG_FILE_PATH, $log_message, "a");
     }
 }
