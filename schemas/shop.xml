@@ -13,6 +13,7 @@
   <column name="telephone" type="number" size="20" />
   <column name="address" type="text" />
   <column name="out_of_stock_products" type="char" size="1" default="N" />
+  <column name="minimum_order" type="number" size="20"/>
   <column name="discount_min_amount" type="number" size="20"/>
   <column name="discount_type" type="varchar" size="45"/>
   <column name="discount_amount" type="number" size="20" />

@@ -58,6 +58,7 @@
             if(!$oDB->isColumnExists("shop","discount_amount")) return true;
             if(!$oDB->isColumnExists("shop","discount_tax_phase")) return true;
             if(!$oDB->isColumnExists("shop","out_of_stock_products")) return true;
+            if(!$oDB->isColumnExists("shop","minimum_order")) return true;
 
             return false;
         }
@@ -106,6 +107,10 @@
 
             if(!$oDB->isColumnExists("shop","out_of_stock_products")) {
                 $oDB->addColumn('shop',"out_of_stock_products","char",1);
+            }
+
+            if(!$oDB->isColumnExists("shop","minimum_order")) {
+                $oDB->addColumn('shop',"minimum_order","number",20);
             }
 
            return new Object(0, 'success_updated');

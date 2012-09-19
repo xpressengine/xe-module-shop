@@ -391,6 +391,8 @@
 
     $lang->lang_other_settings = 'Other Settings';
     $lang->out_of_stock_products = 'Display out of stock products on frontend';
+    $lang->minimum_order = 'Minimum order amount';
+    $lang->about_minimum_order = 'Only orders bigger than this amount can be sent';
 
     $lang->cmd_save_send = 'Save and Send';
     $lang->cmd_go_help = 'Help Desk';

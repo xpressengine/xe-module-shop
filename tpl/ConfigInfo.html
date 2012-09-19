@@ -14,7 +14,7 @@
     </div>
 
     <div class="setUp">
-        <form action="{Context::getRequestUri()}" method="post" enctype="multipart/form-data">
+        <form action="{Context::getRequestUri()}" method="post" enctype="multipart/form-data" ruleset="update_shop_info">
             <input type="hidden" name="act" value="procShopToolInfoUpdate" />
             <input type="hidden" name="module" value="shop" />
             <input type="hidden" name="mid" value="{$mid}" />
@@ -123,6 +123,13 @@
                                 <option value="Y" <!--@if($shop->getOutOfStockProducts()=='Y')-->selected<!--@end-->>{$lang->yes}</option>
                                 <option value="N" <!--@if($shop->getOutOfStockProducts()=='N')-->selected<!--@end-->>{$lang->no}</option>
                             </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><label for="minimum_order">{$lang->minimum_order}</label></th>
+                        <td>
+                            <input name="minimum_order" type="text" class="iText" style="width:300px" id="minimum_order" value="{htmlspecialchars($shop->getMinimumOrder())}" />
+                            <p>{$lang->about_minimum_order}</p>
                         </td>
                     </tr>
                 </table>

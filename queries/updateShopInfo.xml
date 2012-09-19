@@ -11,6 +11,7 @@
         <column name="currency" var="currency" />
         <column name="currency_symbol" var="currency_symbol" />
         <column name="out_of_stock_products" var="out_of_stock_products" />
+        <column name="minimum_order" var="minimum_order" />
         <column name="VAT" var="VAT" />
     </columns>
     <conditions>

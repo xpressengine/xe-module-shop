@@ -184,6 +184,11 @@
             return $this->get('out_of_stock_products');
         }
 
+        public function getMinimumOrder() {
+            if(!$this->isExists()) return;
+            return $this->get('minimum_order');
+        }
+
         public function getEmail() {
             if(!$this->isExists()) return;
             return $this->get('email_address');
