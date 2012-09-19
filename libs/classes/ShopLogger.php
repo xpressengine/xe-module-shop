@@ -2,7 +2,7 @@
 
 class ShopLogger
 {
-    const LOG_FILE_PATH = '/files/shop_log.txt';
+    const LOG_FILE_PATH = './files/shop_log.txt';
 
     public static function log($message)
     {
