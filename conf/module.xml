@@ -110,6 +110,7 @@
         <action name="dispShopPlaceOrder" type="view" />
         <action name="dispShopOrderConfirmation" type="view" />
         <action name="dispShopMenu" type="view" />
+        <action name="dispShopSearch" type="view" />
 
 
         <action name="procShopLogin" type="controller" ruleset="shop_login" />

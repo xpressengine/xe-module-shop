@@ -850,7 +850,7 @@ class shopView extends shop {
         Context::set('products', $output->data);
         Context::set('page_navigation', $output->page_navigation);
         Context::set('search_results', $output);
-        if (Context::get('act') == 'dispShopSearch') Context::set('search_value', $search);
+        Context::set('search_value', $search);
         $this->setTemplateFile("product_list.html");
     }
 
