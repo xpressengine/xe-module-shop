@@ -191,7 +191,7 @@ abstract class PaymentAPIAbstract
         $post_string = http_build_query($data);
         if(__DEBUG__)
         {
-            ShopLogger::log('REQUEST ' . $post_string);
+            ShopLogger::log('REQUEST ' . $url . ' ' . $post_string);
         }
 
         // Request
@@ -203,7 +203,7 @@ abstract class PaymentAPIAbstract
         $response = curl_exec($request);
         if(__DEBUG__)
         {
-            ShopLogger::log('RESPONSE ' . $post_string);
+            ShopLogger::log('RESPONSE ' . $response);
         }
 
         curl_close ($request);
