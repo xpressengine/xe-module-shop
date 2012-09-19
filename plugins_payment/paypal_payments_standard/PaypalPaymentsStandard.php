@@ -66,8 +66,13 @@ class PaypalPaymentsStandard extends PaymentMethodAbstract
 
     public function notify()
     {
-        $args = (array)Context::getRequestVars();
-        ShopLogger::log("Received IPN message: " . print_r($args, true));
+        // Do not retrieve data with Context::getRequestVars() because it skips empty values
+        // causing the Paypal validation to fail
+        $args = $_POST;
+        if(__DEBUG__)
+        {
+            ShopLogger::log("Received IPN Notification: " . $args);
+        }
 
         $paypalAPI = new PaypalPaymentsStandardAPI();
         $decoded_args = $paypalAPI->decodeArray($args);
