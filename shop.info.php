@@ -179,6 +179,11 @@
             return $this->get('discount_tax_phase');
         }
 
+        public function getOutOfStockProducts() {
+            if(!$this->isExists()) return;
+            return $this->get('out_of_stock_products');
+        }
+
         public function getEmail() {
             if(!$this->isExists()) return;
             return $this->get('email_address');

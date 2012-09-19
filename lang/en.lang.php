@@ -389,6 +389,9 @@
     $lang->pre_taxes = 'pre taxes';
     $lang->post_taxes = 'post taxes';
 
+    $lang->lang_other_settings = 'Other Settings';
+    $lang->out_of_stock_products = 'Display out of stock products on frontend';
+
     $lang->cmd_save_send = 'Save and Send';
     $lang->cmd_go_help = 'Help Desk';
     $lang->cmd_shop_setup = 'Default Settings';

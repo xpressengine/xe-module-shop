@@ -113,6 +113,21 @@
                 </table>
             </fieldset>
 
+            <fieldset>
+                <h4 class="h4">{$lang->lang_other_settings}</h4>
+                <table border="1" cellspacing="0" class="setupData">
+                    <tr>
+                        <th scope="row"><label for="out_of_stock_products">{$lang->out_of_stock_products}</label></th>
+                        <td>
+                            <select name="out_of_stock_products" id="out_of_stock_products">
+                                <option value="Y" <!--@if($shop->getOutOfStockProducts()=='Y')-->selected<!--@end-->>{$lang->yes}</option>
+                                <option value="N" <!--@if($shop->getOutOfStockProducts()=='N')-->selected<!--@end-->>{$lang->no}</option>
+                            </select>
+                        </td>
+                    </tr>
+                </table>
+            </fieldset>
+
             <div class="btnArea">
                 <span class="btn"><input type="submit" value="{$lang->cmd_apply}" /></span>
             </div>

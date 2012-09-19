@@ -10,6 +10,7 @@
         <column name="address" var="address" />
         <column name="currency" var="currency" />
         <column name="currency_symbol" var="currency_symbol" />
+        <column name="out_of_stock_products" var="out_of_stock_products" />
         <column name="VAT" var="VAT" />
     </columns>
     <conditions>
