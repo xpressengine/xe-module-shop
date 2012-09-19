@@ -30,11 +30,11 @@
             <tr>
                 <td class="small">{$order->order_srl}</td>
                 <td class="small">{zdate($order->regdate)}</td>
-                <td class="title">{$order->client_name}</td>
+                <td class="title">{reset(explode(',',$order->billing_address))}</td>
                 <td class="small">{$order->total}</td>
                 <td class="small">{$order->order_status}</td>
                 <td>
-                    <a href="#">Edit </a> | <a href="#">Renew </a>
+                    <a href="{getUrl('','act','dispShopViewOrder','order_srl',$order->order_srl)}">View </a> | <a href="{getUrl('','act','dispShopRenewOrder','order_srl',$order->order_srl)}">Renew </a>
                 </td>
             </tr>
             <!--@end-->

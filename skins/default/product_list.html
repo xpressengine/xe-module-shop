@@ -6,6 +6,9 @@
 <include target="product_variants_datasource.html" />
 
 <div class="body-left-panel" id="products">
+    <div cond="$XE_VALIDATOR_MESSAGE" class="message {$XE_VALIDATOR_MESSAGE_TYPE}">
+        <p>{$XE_VALIDATOR_MESSAGE}</p>
+    </div>
     <h2 cond="$q && $act == 'dispShopSearch'">Searching for "{$q}"</h2>
     <h2 cond="!$products || empty($products)">No products</h2>
     <!--@foreach($products as $product)-->

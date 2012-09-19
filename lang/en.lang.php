@@ -90,6 +90,7 @@
     $lang->send_newsletter = 'Send newsletter';
     $lang->view_newsletter = 'View newsletter';
     $lang->resend = 'Resend';
+    $lang->unsubscribe_message = 'To unsubscribe from this newsletter click <a href="%s">here</a>';
 
     $lang->cmd_delete_favicon = 'Remove favicon';
     $lang->favicon = 'Favicon';

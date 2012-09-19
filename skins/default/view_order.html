@@ -1,0 +1,76 @@
+<!--
+    My account page
+-->
+<include target="_header.html" />
+<include target="_my_account_sidebar.html" />
+
+<div id="my_account" class="mainContent">
+    <div id="MyAccountInfo">
+        <h1>Order # : {$order->order_srl}</h1>
+    </div>
+
+    <div class="viewOrder">
+        <fieldset>
+            <h4 class="h4">{$lang->order_status}</h4>
+            <p>{$lang->current_order_status} <b>{$order->order_status}</b></p>
+        </fieldset>
+        <fieldset>
+            <h4 class="h4">{$lang->account_info}</h4>
+            <p>{$lang->customer_ip} <b>{$order->ip}</b></p>
+        </fieldset>
+        <fieldset>
+            <h4 class="h4">{$lang->billing_address}</h4>
+            <p>{$order->billing_address}</p>
+        </fieldset>
+        <fieldset>
+            <h4 class="h4">{$lang->shipping_address}</h4>
+            <p>{$order->shipping_address}</p>
+        </fieldset>
+        <fieldset>
+            <h4 class="h4">{$lang->payment_info}</h4>
+            <p>{$lang->payment_method_used} <b>{$order->payment_method}</b></p>
+        </fieldset>
+        <fieldset>
+            <h4 class="h4">{$lang->shipping_info}</h4>
+            <p>{$lang->shipping_method_used} <b>{$order->shipping_method}</b></p>
+        </fieldset>
+        <fieldset>
+            <h4 class="h4">{$lang->items_ordered}</h4>
+            <table border="1" cellspacing="0" summary="{$lang->items_ordered}" class="tableData">
+                <thead>
+                <tr cond="!empty($ordered_items)">
+                    <th scope="col" class="title">{$lang->title}</th>
+                    <th scope="col">{$lang->sku}</th>
+                    <th scope="col">{$lang->price}</th>
+                    <th scope="col">{$lang->qty}</th>
+                    <th scope="col">{$lang->subtotal}</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                <!--@foreach($ordered_items as $no => $item)-->
+                <tr>
+                    <td class="title">{$item->title}</td>
+                    <td class="small">{$item->sku}</td>
+                    <td class="small">{$item->price}</td>
+                    <td class="small">{$item->ordered_qty}</td>
+                    <td class="small">{$item->price * $item->ordered_qty}</td>
+                </tr>
+                <!--@end-->
+                <tfoot>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td><b>{$lang->grand_total}</b></td>
+                    <td>{$order->total}</td>
+                </tr>
+                </tfoot>
+
+                </tbody>
+            </table>
+        </fieldset>
+    </div>
+</div>
+
+<include target="_footer.html"/>

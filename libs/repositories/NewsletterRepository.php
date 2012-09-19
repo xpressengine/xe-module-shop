@@ -49,15 +49,17 @@ class NewsletterRepository extends BaseRepository
         $output = $customerRepository->getNewsletterCustomers($site_srl,'Y');
         $emails_list = "";
         foreach($output->customers as $customer){
-            if($emails_list == '') $emails_list = $customer->email_address;
-            else $emails_list = $emails_list.','.$customer->email_address;
+            //add unsubscribe link to $newsletter->content;
+            $newsletter_content = $newsletter->content."</br></br>".sprintf(Context::getLang('unsubscribe_message'),getUrl('','act','procShopUnsignToNewsletter','member_srl',$customer->member_srl,'email_address',$customer->email_address));
+
+            $oMail = new Mail();
+            $oMail->setTitle( $newsletter->subject );
+            $oMail->setContent($newsletter_content);
+            $oMail->setSender($newsletter->sender_name,$newsletter->sender_email);
+            $oMail->setReceiptor( false, $customer->email_address );
+            $oMail->send();
         }
-        $oMail = new Mail();
-        $oMail->setTitle( $newsletter->subject );
-        $oMail->setContent( $newsletter->content );
-        $oMail->setSender($newsletter->sender_name,$newsletter->sender_email);
-        $oMail->setReceiptor( false, $emails_list );
-        $oMail->send();
+
     }
 
 }

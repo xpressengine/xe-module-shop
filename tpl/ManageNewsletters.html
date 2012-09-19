@@ -74,7 +74,7 @@
                         <input type="checkbox" name="newsletter_srl" value="{$newsletter->newsletter_srl}" class="inputCheck boxlist"/>
                     </td>
                     <td class="small">{$newsletter->newsletter_srl}</td>
-                    <td class="small">{$newsletter->subject}</td>
+                    <td class="small"><a href="{getUrl('act','dispShopToolViewNewsletter','newsletter_srl',$newsletter->newsletter_srl)}">{$newsletter->subject}</a></td>
                     <td class="title">{$newsletter->sender_name}</td>
                     <td class="title">{$newsletter->sender_email}</td>
                     <td class="small">{zdate($newsletter->regdate)}</td>

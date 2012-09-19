@@ -75,9 +75,20 @@
         }
 
         public function procShopSignToNewsletter(){
+            $this->updateNewsletterExtraVar();
+            $this->setMessage("Successfully signed to newsletter");
+        }
+
+        public function procShopUnsignToNewsletter(){
+            $this->updateNewsletterExtraVar();
+            $this->setMessage("Successfully unsubscribed from newsletter");
+        }
+
+        public function updateNewsletterExtraVar(){
             $memberAdminController = getAdminController('member');
 
             $memberAdminController->procMemberAdminInsert();
+            $this->setMessage("Successfully signed to newsletter");
             $returnUrl = getNotEncodedUrl('', 'act', 'dispShop');
             $this->setRedirectUrl($returnUrl);
         }

@@ -111,6 +111,7 @@
         <action name="dispShopOrderConfirmation" type="view" />
         <action name="dispShopMenu" type="view" />
         <action name="dispShopSearch" type="view" />
+        <action name="dispShopViewOrder" type="view" />
 
 
         <action name="procShopLogin" type="controller" ruleset="shop_login" />
@@ -120,6 +121,7 @@
         <action name="procShopInfoUpdate" type="controller" />
         <action name="procShopPlaceOrder" type="controller" />
         <action name="procShopSignToNewsletter" type="controller" />
+        <action name="procShopUnsignToNewsletter" type="controller" />
         <action name="procShopSearch" type="controller"/>
 
         <!-- Shop backend -->

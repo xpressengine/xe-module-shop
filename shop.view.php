@@ -853,6 +853,11 @@ class shopView extends shop {
         $this->setTemplateFile("product_list.html");
     }
 
+    public function dispShopViewOrder(){
+        $this->dispShopToolViewOrder();
+        $this->setTemplateFile('view_order');
+    }
+
     public function dispShopCheckout()
     {
         /** @var $cart Cart */
@@ -1010,15 +1015,63 @@ class shopView extends shop {
     }
 
     /**
+     * Send newsletter to subscribers view (Admin)
+     */
+    public function dispShopToolSendNewsletter(){
+        $shopModel = $this->model;
+        $newsletterRepository = $shopModel->getNewsletterRepository();
+        $newsletter_srl = Context::get('newsletter_srl');
+        if($newsletter_srl){
+            $newsletter = $newsletterRepository->getNewsletter($newsletter_srl);
+        }
+
+        Context::set('newsletter',$newsletter);
+    }
+
+    /**
      * Subscribed customers management view
      */
-    public function dispShopToolManageNewsletter(){
+    public function dispShopToolManageNewsletterSubscribers(){
         $shopModel = getModel('shop');
         $customerRepository = $shopModel->getCustomerRepository();
         $output = $customerRepository->getNewsletterCustomers($this->site_srl,'Y');
 
         Context::set('customers_list',$output->customers);
         Context::set('page_navigation',$output->page_navigation);
+    }
+
+    /**
+     * Newsletters management view
+     */
+    public function dispShopToolManageNewsletters(){
+        $shopModel = $this->model;
+        $newsletterRepository = $shopModel->getNewsletterRepository();
+        $output = $newsletterRepository->getList($this->module_info->module_srl);
+
+        Context::set('newsletters',$output->data);
+        Context::set('page_navigation',$output->page_navigation);
+    }
+
+    /**
+     * Newsletters edit view
+     */
+    public function dispShopToolViewNewsletter(){
+        $shopModel = $this->model;
+        $newsletterRepository = $shopModel->getNewsletterRepository();
+        $newsletter_srl = Context::get('newsletter_srl');
+        if($newsletter_srl){
+            $newsletter = $newsletterRepository->getNewsletter($newsletter_srl);
+        }
+
+        Context::set('newsletter',$newsletter);
+    }
+
+    /**
+     * Newsletters resend view
+     */
+    public function dispShopToolResendNewsletter(){
+        $this->dispShopToolSendNewsletter();
+        $this->setTemplateFile('SendNewsletter');
     }
 
     /**
