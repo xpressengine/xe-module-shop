@@ -186,15 +186,13 @@ abstract class PaymentMethodAbstract
 
 abstract class PaymentAPIAbstract
 {
-    // Convert data to name-value pairs string
-    public function getNameValuePairsAsString($data)
-    {
-        return http_build_query($data);
-    }
-
     public function request($url, $data)
     {
-        $post_string = $this->getNameValuePairsAsString($data);
+        $post_string = http_build_query($data);
+        if(__DEBUG__)
+        {
+            ShopLogger::log('REQUEST ' . $post_string);
+        }
 
         // Request
         $request = curl_init($url);
@@ -203,6 +201,11 @@ abstract class PaymentAPIAbstract
         curl_setopt($request, CURLOPT_POSTFIELDS, $post_string);
         curl_setopt($request, CURLOPT_SSL_VERIFYPEER, FALSE);
         $response = curl_exec($request);
+        if(__DEBUG__)
+        {
+            ShopLogger::log('RESPONSE ' . $post_string);
+        }
+
         curl_close ($request);
         return $response;
     }
