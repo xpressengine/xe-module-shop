@@ -189,11 +189,7 @@ abstract class PaymentAPIAbstract
     // Convert data to name-value pairs string
     public function getNameValuePairsAsString($data)
     {
-        $post_string = '';
-        foreach( $data as $k => $v ) {
-            $post_string .= "$k=" . urlencode($v) . "&";
-        }
-        return rtrim($post_string, '& ');
+        return http_build_query($data);
     }
 
     public function request($url, $data)

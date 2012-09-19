@@ -73,10 +73,8 @@ class PaypalPaymentsStandard extends PaymentMethodAbstract
         $decoded_args = $paypalAPI->decodeArray($args);
         $decoded_args = array_merge(array('cmd' => '_notify-validate'), $decoded_args);
 
-        $verify_args = $paypalAPI->encodeArray($decoded_args);
-
-        ShopLogger::log("Requesting to paPypal " . self::SANDBOX_URL . " ... " . print_r($verify_args, true));
-        $response = $paypalAPI->request(self::SANDBOX_URL, $verify_args);
+        ShopLogger::log("Requesting to paPypal " . self::SANDBOX_URL . " ... (not yet encoded):" . print_r($decoded_args, true));
+        $response = $paypalAPI->request(self::SANDBOX_URL, $decoded_args);
 
         if($response == 'VERIFIED')
         {
