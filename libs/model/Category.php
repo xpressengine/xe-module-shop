@@ -132,6 +132,10 @@ class HtmlCategoryTreeConfig
 	 * @var array When $linkCategoryName is true, this is used to create the URL to link to; Represents parameters for getUrl function
 	 */
 	public $linkGetUrlParams = array();
+    /**
+     * @var bool display +/- signs in front of categories if they have children
+     */
+    public $openCloseSign = FALSE;
 }
 
 /**
@@ -260,7 +264,23 @@ class CategoryTreeNode
 			}
 			$html .= '<li id="tree_' . $node->category->category_srl . '" ' . $class . '>';
 
-			$nodeContent = '<span>';
+			$nodeContent = '<p>';
+
+            if ( $config->openCloseSign && count($node->children) ) {
+
+                if ( in_array($node->category->category_srl, $config->selected) ) {
+
+                    $nodeContent .= '<span class="open-sign display-none">+</span>';
+                    $nodeContent .= '<span class="close-sign">-</span>';
+
+                } else {
+
+                    $nodeContent .= '<span class="open-sign">+</span>';
+                    $nodeContent .= '<span class="close-sign display-none">-</span>';
+
+                }
+
+            }
 
 			if($config->showCheckbox)
 			{
@@ -285,9 +305,9 @@ class CategoryTreeNode
 
 			if($config->showProductCount)
 			{
-				$nodeContent .= ' (' . $node->category->product_count . ')';
+				$nodeContent .= '<span class="product-count">' . $node->category->product_count . '</span>';
 			}
-			$nodeContent .= '</span>';
+			$nodeContent .= '</p>';
 
 			if($config->showManagingLinks)
 			{

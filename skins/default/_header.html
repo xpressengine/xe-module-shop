@@ -1,4 +1,50 @@
-<div id="container">
+<div id="upper-header">
+    <div class="layout-centered clearfix">
+        <p id="header-socials" class="f-left">
+            Follow us on <a href="">Twitter</a>, <a href="">Facebook</a> and <a href="">Google Plus</a>
+        </p>
+        <p class="f-right">
+            <!-- Cart -->
+            <a href="{getURL('', 'act','dispShopCart')}">Cart<span cond="isset($cart) && $cart->items"> [{$cart->items}]</span></a>
+            <!-- /Cart -->
+        </p>
+        <p class="f-right header-separator">
+            <select>
+                <option>English</option>
+                <option>Ingrish</option>
+            </select>
+        </p>
+    </div>
+</div>
+<div id="header">
+    <div class="layout-centered clearfix">
+        <a id="header-logo" class="f-left"><img src="img/logo.gif" title="My Store" alt="My Store"/></a>
+        <!-- Search box -->
+        <form action="./">
+            <p id="header-search" class="f-left">
+                <input type="hidden" id="act" name="act" value="procShopSearch" />
+                <input type="text" name="search" value="{$search_value}"/>
+                <select>
+                    <option>All</option>
+                    <option>Categories</option>
+                    <option>Products</option>
+                    <option>Comments</option>
+                </select><input type="text" name="search" value=""/>
+                <input type="image" src="img/search_button.gif" alt="Search" />
+            </p>
+        </form>
+        <!-- /Search box -->
+        <p id="header-links" class="f-right">
+            <a href="">My account</a>
+            <span>|</span>
+            <!-- Checkout -->
+                <a href="{getURL('', 'act','dispShopCheckout')}" cond="isset($cart) && $cart->items">Checkout</a>
+                <span cond="isset($cart) && $cart->items">|</span>
+            <!-- /Checkout -->
+            <a href="">Login</a>
+        </p>
+    </div>
+</div>
 
 <div id="top_menu">
     <!--@if($logged_info)-->
@@ -49,23 +95,9 @@
 		</div>
 	<!-- /Menu -->
 
-	<!-- Cart -->
-	<a href="{getURL('', 'act','dispShopCart')}">Cart<span cond="isset($cart) && $cart->items"> [{$cart->items}]</span></a>
-	<!-- /Cart -->
-
-	<!-- Checkout -->
-	<a href="{getURL('', 'act','dispShopCheckout')}" cond="isset($cart) && $cart->items">Checkout</a>
-	<!-- /Checkout -->
-
-	<!-- Search box -->
-		<form action="./">
-            <input type="hidden" id="act" name="act" value="procShopSearch" />
-            <input type="text" name="search" value="{$search_value}"/>
-			<input type="submit" value="Search"/>
-		</form>
-	<!-- /Search box -->
 </div>
 
-<div class="clear"></div>
+<div class="clearfix"></div>
 
-<div id="content">
+<div id="body" class="clearfix">
+    <div class="layout-centered clearfix">

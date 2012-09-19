@@ -669,6 +669,7 @@ class shopView extends shop {
 		// Prepare tree for display
 		$tree_config = new HtmlCategoryTreeConfig();
 		$tree_config->linkCategoryName = TRUE;
+        $tree_config->openCloseSign = TRUE;
 		$tree_config->linkGetUrlParams = array('vid', $this->mid, 'act', 'dispShop');
 		if($category_srl) $tree_config->selected = array($category_srl);
 		$HTML_tree = $tree->toHTML($tree_config);
@@ -1349,3 +1350,4 @@ class shopView extends shop {
 
 }
 ?>
+

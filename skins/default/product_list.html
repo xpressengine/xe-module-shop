@@ -5,7 +5,7 @@
 <include target="_sidebar.html" />
 <include target="product_variants_datasource.html" />
 
-<div id="products" class="mainContent">
+<div class="body-left-panel">
     <h2 cond="$q && $act == 'dispShopSearch'">Searching for "{$q}"</h2>
     <h2 cond="!$products || empty($products)">No products</h2>
     <!--@foreach($products as $product)-->
@@ -25,6 +25,10 @@
 
     </div>
     <!--@end-->
+</div>
+
+<div id="products" class="mainContent">
+
     <div class="clear"></div>
 
     <!-- Pagination -->
