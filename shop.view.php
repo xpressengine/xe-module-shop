@@ -476,9 +476,7 @@ class shopView extends shop {
 	 * @brief Shop display product tool page
 	 */
 	public function dispShopToolManageProducts(){
-		$shopModel = getModel('shop');
-
-		$product_repository = $shopModel->getProductRepository();
+		$product_repository = new ProductRepository();
 		$module_srl = $this->module_info->module_srl;
 
 		$args = new stdClass();
@@ -491,7 +489,7 @@ class shopView extends shop {
 		Context::set('product_list',$output->products);
 		Context::set('page_navigation',$output->page_navigation);
 
-		$category_repository = $shopModel->getCategoryRepository();
+		$category_repository = new CategoryRepository();
 		$tree = $category_repository->getCategoriesTree($module_srl);
 		$flat_tree = $tree->toFlatStructure();
 		Context::set('category_list', $flat_tree);

@@ -203,7 +203,7 @@
     $lang->edit_attribute = 'Edit attribute';
     $lang->attribute_about_title = 'Attribute name/title';
     $lang->attribute_values = 'Values';
-    $lang->about_attribute_values = 'Possible values, separated by *|*. I.e. one*|*two*|*three';
+    $lang->about_attribute_values = 'Possible values, separated by the | character. I.e. one|two|three';
     $lang->attribute_default_value = 'Selected value';
     $lang->about_attribute_default_value = 'Must be one of *values*';
     $lang->package_number = 'Package Number';

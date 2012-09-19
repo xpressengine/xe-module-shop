@@ -22,9 +22,8 @@ class OrderRepository extends BaseRepository
         $params = array('module_srl'=> $module_srl);
         if ($member_srl) $params = array_merge($params, array('member_srl'=> $member_srl));
         $output = $this->query('getRecentOrders', $params);
-        foreach ($output->data as $i=>$data) {
-            $orders[] = new Order((array) $data);
-        }
+        $orders = array();
+        foreach ($output->data as $data) $orders[] = new Order((array) $data);
         return $orders;
     }
 
@@ -86,9 +85,31 @@ class OrderRepository extends BaseRepository
     }
 
 
-    public function insertOrderProduct($order_srl, $product_srl, $quantity = 1)
+    public function insertOrderProduct($order_srl, SimpleProduct $product, $quantity = 1)
     {
-        return $this->query('insertOrderProduct', array('order_srl' => $order_srl, 'product_srl' => $product_srl, 'quantity' => $quantity));
+        $params = array(
+            'order_srl' => $order_srl,
+            'product_srl' => $product->product_srl,
+            'quantity' => $quantity,
+            'member_srl' => $product->member_srl,
+            'parent_product_srl' => $product->parent_product_srl,
+            'product_type' => $product->product_srl,
+            'title' => $product->title,
+            'description' => $product->description,
+            'short_description' => $product->short_description,
+            'sku' => $product->sku,
+            'weight' => $product->weight,
+            'status' => $product->status,
+            'friendly_url' => $product->friendly_url,
+            'price' => $product->price,
+            'discount_price' => $product->discount_price,
+            'qty' => $product->qty,
+            'in_stock' => $product->in_stock,
+            'primary_image_filename' => $product->primary_image_filename,
+            'regdate' => $product->regdate,
+            'last_update' => $product->last_updated
+        );
+        return $this->query('insertOrderProduct', $params);
     }
 
     public function deleteOrderProducts($order_srl, array $product_srls=null)
