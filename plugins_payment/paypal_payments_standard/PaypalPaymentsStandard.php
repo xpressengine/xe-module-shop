@@ -71,7 +71,7 @@ class PaypalPaymentsStandard extends PaymentMethodAbstract
         $args = $_POST;
         if(__DEBUG__)
         {
-            ShopLogger::log("Received IPN Notification: " . $args);
+            ShopLogger::log("Received IPN Notification: " . http_build_query($args));
         }
 
         $paypalAPI = new PaypalPaymentsStandardAPI();
