@@ -109,7 +109,7 @@ abstract class Product extends BaseItem
         }
         else
         {
-            return "./files/attach/shop/$this->module_srl/img/missingProduct.png";
+            return "./files/attach/shop/".getNumberingPath($this->module_srl,3)."/img/missingProduct.png";
         }
     }
 }
