@@ -63,6 +63,26 @@ class PaypalPaymentsStandard extends PaymentMethodAbstract
         Context::set('order_srl', $order->order_srl);
         return;
     }
+
+    public function notify()
+    {
+        $args = Context::getRequestArgs();
+        ShopLogger::log("Received IPN message: " . print_r($args));
+
+        $paypalAPI = new PaypalPaymentsStandardAPI();
+        $args = array_merge(array('cmd', '_notify_validate'), $args);
+        $response = $paypalAPI->request(self::SANDBOX_URL, $args);
+
+        if($response == 'VALID')
+        {
+            ShopLogger::log("Successfully validated IPN data");
+        }
+        else
+        {
+            ShopLogger::log("Invalid IPN data received: " . $response);
+        }
+
+    }
 }
 
 class PaypalPaymentsStandardAPI extends PaymentAPIAbstract
