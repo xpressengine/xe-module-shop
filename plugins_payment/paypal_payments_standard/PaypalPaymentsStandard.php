@@ -70,9 +70,13 @@ class PaypalPaymentsStandard extends PaymentMethodAbstract
         ShopLogger::log("Received IPN message: " . print_r($args, true));
 
         $paypalAPI = new PaypalPaymentsStandardAPI();
-        $args = array_merge(array('cmd' => '_notify-validate'), $args);
-	ShopLogger::log("Requesting to paypal ... " . print_r($args, true));
-        $response = $paypalAPI->request(self::SANDBOX_URL, $args);
+        $decoded_args = $paypalAPI->decodeArray($args);
+        $decoded_args = array_merge(array('cmd' => '_notify-validate'), $decoded_args);
+
+        $verify_args = $paypalAPI->encodeArray($decoded_args);
+
+        ShopLogger::log("Requesting to paPypal " . self::SANDBOX_URL . " ... " . print_r($verify_args, true));
+        $response = $paypalAPI->request(self::SANDBOX_URL, $verify_args);
 
         if($response == 'VERIFIED')
         {
@@ -88,5 +92,25 @@ class PaypalPaymentsStandard extends PaymentMethodAbstract
 
 class PaypalPaymentsStandardAPI extends PaymentAPIAbstract
 {
+    private function processArray($data, $function_name)
+    {
+        $new_data = array();
+        $keys = array_keys($data);
+        foreach($keys as $key)
+        {
+            $new_data[$key] = $function_name($data[$key]);
+        }
+        return $new_data;
+    }
 
+    public function decodeArray($data)
+    {
+        return $this->processArray($data, 'urldecode');
+    }
+
+    public function encodeArray($data)
+    {
+        return $this->processArray($data, 'urlencode');
+    }
 }
+
