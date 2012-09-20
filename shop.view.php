@@ -362,6 +362,14 @@ class shopView extends shop {
 		Context::set('user_image_list',$user_image_list);
 	}
 
+    public function dispShopToolLayoutConfigEditSettings()
+    {
+        // get the grant information from admin module
+        $oModuleAdminModel = &getAdminModel('module');
+        $skin_content = $oModuleAdminModel->getModuleSkinHTML($this->module_info->module_srl);
+        Context::set('skin_content', $skin_content);
+    }
+
     public function dispShopToolManageOrders()
     {
         $repo = new OrderRepository();

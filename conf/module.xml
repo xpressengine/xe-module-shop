@@ -11,6 +11,7 @@
 		<permission action="dispShopToolDashboard" target="manager" />
 		<permission action="dispShopToolLayoutConfigSkin" target="manager" />
 		<permission action="dispShopToolLayoutConfigEdit" target="manager" />
+        <permission action="dispShopToolLayoutConfigEditSettings" target="manager" />
         <permission action="dispShopToolManageAccount" target="manager" />
         <permission action="dispShopToolChangePassword" target="manager" />
         <permission action="dispShopToolConfigInfo" target="manager" />
@@ -128,6 +129,7 @@
         <action name="dispShopToolLogin" type="view" />
 		<action name="dispShopToolLayoutConfigSkin" type="view" />
 		<action name="dispShopToolLayoutConfigEdit" type="view" />
+        <action name="dispShopToolLayoutConfigEditSettings" type="view" />
     	<action name="dispShopToolDashboard" type="view" />
         <action name="dispShopAdminList" type="view" standalone="true" admin_index="true" />
         <action name="dispShopAdminInsert" type="view" standalone="true" />

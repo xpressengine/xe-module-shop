@@ -11,4 +11,11 @@
 		<name xml:lang="en">Arnia</name>
     </author>
 
+    <extra_vars>
+        <var name="title" type="text">
+            <title xml:lang="en">Test</title>
+            <description xml:lang="en">This is a test extra_var; write anything, nothing will happen!</description>
+        </var>
+    </extra_vars>
+
 </skin>

@@ -1039,3 +1039,14 @@ a.skipToContent{text-align:center;color:#fff;position:absolute;width:100%;font-s
     background-color: #ffff00;
     cursor: pointer;
 }
+
+#skin_settings p{line-height:1.5}
+#skin_settings form ul{position:relative;margin:1em 0;padding:0;list-style:none;border-top:2px solid #ccc;border-bottom:1px solid #ccc;zoom:1}
+#skin_settings form li{list-style:none;border:1px solid #ddd;border-left:0;border-right:0;margin:-1px 0;padding:8px 0;vertical-align:top;zoom:1}
+#skin_settings form li:hover{background:#ffd}
+#skin_settings form li:first-child{border-top:0}
+#skin_settings form li>label:first-child{display:block;font-weight:bold}
+#skin_settings form li label em{font-weight:normal}
+#skin_settings form p{border:0}
+#skin_settings form .q{font-weight:bold;margin:0 0 5px 0}
+#skin_settings form .a{margin:0 0 5px 0}

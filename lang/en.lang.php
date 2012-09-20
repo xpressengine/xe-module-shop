@@ -418,6 +418,7 @@
     $lang->cmd_save_publish = 'Publish';
     $lang->cmd_save_temp = 'Temporarily save';
     $lang->cmd_edit_htmlcss = 'HTML&middot;CSS Edit';
+    $lang->cmd_edit_skin_settings = 'Settings';
     $lang->cmd_edit_html = 'HTML Edit';
     $lang->cmd_edit_css = 'CSS Edit';
     $lang->cmd_edit_addresses = 'Edit addresses';

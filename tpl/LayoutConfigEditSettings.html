@@ -1,0 +1,25 @@
+<include target="_tool_header.html" />
+<load target="css/categories.css" />
+<load target="css/form.css" />
+<load target="js/categories.js" />
+
+<!-- Content -->
+<div id="content">
+    <!-- contentHeader -->
+    <div class="contentHeader categoryHeader">
+        <h3 class="h3">Edit skin</h3>
+    </div>
+
+    <div cond="$XE_VALIDATOR_MESSAGE" class="message {$XE_VALIDATOR_MESSAGE_TYPE}">
+        <p>{$XE_VALIDATOR_MESSAGE}</p>
+    </div>
+    <!-- /contentHeader -->
+
+    <div id="skin_settings">
+    {$skin_content}
+    </div>
+</div>
+<!-- /Content -->
+
+<include target="_tool_menu.html" />
+<include target="_tool_footer.html" />
