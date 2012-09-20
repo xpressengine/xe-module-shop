@@ -962,17 +962,17 @@ a.skipToContent{text-align:center;color:#fff;position:absolute;width:100%;font-s
 #menu .simpleTree{margin:0;padding:0;list-style:none}
 #menu .simpleTree li{margin:0;padding:0;position:relative}
 #menu .simpleTree li.root{background:none;_zoom:1}
-#menu .simpleTree li span{position:relative;display:block;background-color:#fafafa;padding:15px 10px 20px 19px;margin:0 0 -5px 0;color:#555;font-size:14px;font-weight:bold;z-index:1}
-#menu .simpleTree li span.active{background-color:#f5f5f5;border:0}
+#menu .simpleTree li p{position:relative;display:block;background-color:#fafafa;padding:15px 10px 20px 19px;margin:0 0 -5px 0;color:#555;font-size:14px;font-weight:bold;z-index:1}
+#menu .simpleTree li p.active{background-color:#f5f5f5;border:0}
 #menu .simpleTree li ul{position:relative;z-index:2;zoom:1}
 #menu .simpleTree li li{border-top:1px solid #e3e5e7;background:none;z-index:1;zoom:1;overflow:hidden}
-#menu .simpleTree li li span{padding:10px;padding-left:45px;margin:0;background-color:#fff;background-image:url(../img/iconFolderCategory.gif);background-repeat:no-repeat;background-position:19px 10px;font-size:12px;font-weight:normal;}
-#menu .simpleTree li li li span{background-image:url(../img/bgHierarchy.gif);background-repeat:no-repeat;background-position:35px 11px}
-#menu .simpleTree li li li span{padding-left:60px;background-position:50px 11px}
-#menu .simpleTree li li li li span{padding-left:75px;background-position:65px 11px}
-#menu .simpleTree li li li li li span{padding-left:90px;background-position:80px 11px}
-#menu .simpleTree li li li li li li span{padding-left:105px;background-position:95px 11px}
-#menu .simpleTree li li li li li li li span{padding-left:120px;background-position:110px 11px}
+#menu .simpleTree li li p{padding:10px;padding-left:45px;margin:0;background-color:#fff;background-image:url(../img/iconFolderCategory.gif);background-repeat:no-repeat;background-position:19px 10px;font-size:12px;font-weight:normal;}
+#menu .simpleTree li li li p{background-image:url(../img/bgHierarchy.gif);background-repeat:no-repeat;background-position:35px 11px}
+#menu .simpleTree li li li p{padding-left:60px;background-position:50px 11px}
+#menu .simpleTree li li li li p{padding-left:75px;background-position:65px 11px}
+#menu .simpleTree li li li li li p{padding-left:90px;background-position:80px 11px}
+#menu .simpleTree li li li li li li p{padding-left:105px;background-position:95px 11px}
+#menu .simpleTree li li li li li li li p{padding-left:120px;background-position:110px 11px}
 #menu .simpleTree li li.line,
 #menu .simpleTree li li.line-last{border:0;margin:0 0 -5px 0;height:5px !important;background:none;z-index:2}
 #menu .simpleTree li li.line-over,
