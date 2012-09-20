@@ -136,9 +136,6 @@ img{border:0}
     padding: 5px 0;
     padding-left: 10px;
 }
-#newsletter{
-    background-color: #dddd00;
-}
 #categories{
     background-color: #fafad2;
 }
@@ -389,6 +386,7 @@ a {
 
 .body-left-panel {
     font-size: 1.063em;
+    margin: 0 0 10px 0;
 }
 
 .body-left-panel h3 {
@@ -519,3 +517,6 @@ li span.close-sign, li span.open-sign {
     padding: 10px 10px 10px 30px;
 }
 
+#newsletter {
+
+}

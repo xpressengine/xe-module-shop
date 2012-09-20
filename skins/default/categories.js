@@ -7,23 +7,32 @@ jQuery(document).ready(function($) {
     // Display selected category parent list
     function showPath(item) {
 
-        // Cycle through all parents and display all lists
-        if (!item.parent().hasClass('body-left-panel')) {
 
-            if (item.parent().prop("tagName").toLowerCase()=='ul') {
+        if (item) {
 
-                item.parent().show();
-                item.parent().prev('p').children('span.open-sign').hide();
-                item.parent().prev('p').children('span.close-sign').show();
+            // Cycle through all parents and display all lists
+            if (!item.hasClass('body-left-panel')) {
+
+                if (item.get(0).tagName.toLowerCase()=='ul') {
+
+                    item.show();
+                    item.prev('p').children('span.open-sign').hide();
+                    item.prev('p').children('span.close-sign').show();
+
+                }
+
+                if (item.parent().html() != null) {
+                    showPath(item.parent());
+                }
 
             }
 
-            showPath(item.parent());
+            // If item has children also display those
+            item.children('ul').show();
+
+            return false;
 
         }
-
-        // If item has children also display those
-        item.children('ul').show();
 
         return false;
 
