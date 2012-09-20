@@ -9,9 +9,11 @@
             <!-- /Cart -->
         </p>
         <p class="f-right header-separator">
-            <select>
-                <option>English</option>
-                <option>Ingrish</option>
+            <select onchange="langSelect()" id="languages">
+                <option value="{$lang_type}">{$lang_supported[$lang_type]}</option>
+                <!--@foreach($lang_supported as $key => $val)--><!--@if($key!= $lang_type)-->
+                <option value="{$key}">{$val}</option>
+                <!--@end--><!--@end-->
             </select>
         </p>
     </div>

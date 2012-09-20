@@ -4,3 +4,8 @@ function completeReload(ret_obj) {
 
     location.reload();
 }
+
+function langSelect(){
+    var lang = document.getElementById("languages").value;
+    doChangeLangType(lang);
+}
