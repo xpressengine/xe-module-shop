@@ -1236,12 +1236,6 @@ class shopView extends shop {
 		$menu_items = $menuModel->getMenuItems($shop_menu_srl);
 
 		Context::set('menu_list',$menu_items->data);
-
-        Context::set('site_srl', $this->site_srl);
-
-        $menuView = getAdminView('menu');
-        $menuView->dispMenuAdminSiteMap();
-
 	}
 
     /**
