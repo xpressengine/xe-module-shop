@@ -13,6 +13,8 @@ jQuery(document).ready(function($) {
             if (item.parent().prop("tagName").toLowerCase()=='ul') {
 
                 item.parent().show();
+                item.parent().prev('p').children('span.open-sign').hide();
+                item.parent().prev('p').children('span.close-sign').show();
 
             }
 
