@@ -816,6 +816,11 @@
             $order->saveCartProducts($cart);
             $cart->delete();
 
+            $order = new Order($cart);
+            $order->save();
+
+            $cart->delete();
+
             $this->setRedirectUrl(getNotEncodedUrl('', 'act', 'dispShopOrderConfirmation', 'order_srl', $order->order_srl));
         }
 
@@ -1260,7 +1265,7 @@
             // Load the appropriate layout:
             //  - tool: backend
             //  - service: frontend
-            if(strpos($oModule->act, "ShopTool") !== false) {
+            if(strpos($oModule->act, "ShopTool") !== false || in_array($oModule->act, array('dispMenuAdminSiteMap'))) {
                 $oShopView->initTool($oModule, true);
             } else {
                 if(Mobile::isFromMobilePhone())

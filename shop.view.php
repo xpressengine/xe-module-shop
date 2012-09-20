@@ -74,6 +74,7 @@ class shopView extends shop {
 
 		if($this->shop->timezone) $GLOBALS['_time_zone'] = $this->shop->timezone;
 
+        Context::set('module', 'shop');
 
 
 	}
@@ -90,6 +91,8 @@ class shopView extends shop {
 
 		$site_module_info = Context::get('site_module_info');
 		$shop = $oShopModel->getShop($site_module_info->index_module_srl);
+
+        Context::set('site_keyword', $site_module_info->domain);
 
 		$info = Context::getDBInfo();
 
@@ -1233,6 +1236,11 @@ class shopView extends shop {
 		$menu_items = $menuModel->getMenuItems($shop_menu_srl);
 
 		Context::set('menu_list',$menu_items->data);
+
+        Context::set('site_srl', $this->site_srl);
+
+        $menuView = getAdminView('menu');
+        $menuView->dispMenuAdminSiteMap();
 
 	}
 

@@ -330,7 +330,7 @@
         array('','Catalog'),
         array('','Sales'),
         array('','Customers'),
-		array('','Menu'),
+		array('','Navigation'),
         array('','Statistics'),
         array('','Design'),
         array('','Configuration')
@@ -354,6 +354,7 @@
             'dispShopToolManageNewsletters'=>'Newsletters',
         ),
 		array(
+            'dispMenuAdminSiteMap'=>'Menus',
 			'dispShopToolExtraMenuList'=>'All items',
 			'dispShopToolExtraMenuInsert'=>'Add page item',
 			'dispShopToolExtraMenuModuleInsert'=>'Add menu item'
