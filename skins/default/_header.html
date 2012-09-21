@@ -16,6 +16,10 @@
                 <!--@end--><!--@end-->
             </select>
         </p>
+        <p class="f-right">
+            <a href="{$admin_url}" accesskey="A">Admin Page</a>
+            <a href="{getUrl('act', 'procShopToolResetSkin')}" style="color:#bc8f8f; text-decoration: none;" id="reset_skin" title="Ctrl+Shift+S">refresh skin</a>
+        </p>
     </div>
 </div>
 <div id="header">
@@ -36,28 +40,19 @@
         </form>
         <!-- /Search box -->
         <p id="header-links" class="f-right">
-            <a href="">My account</a>
+            <!--@if($logged_info)-->
+                <span>Welcome {$logged_info->user_id}!</span><span>|</span>
+                <a href="{getURL('','act','dispMemberLogout')}">Logout</a><br />
+                <a href="{getURL('','act','dispShopMyAccount')}">My Account</a>
+            <!--@else-->
+                <a href="{getURL('','act','dispMemberLoginForm')}">Login</a>
+            <!--@end-->
             <span>|</span>
             <!-- Checkout -->
                 <a href="{getURL('', 'act','dispShopCheckout')}" cond="isset($cart) && $cart->items">Checkout</a>
-                <span cond="isset($cart) && $cart->items">|</span>
             <!-- /Checkout -->
-            <a href="">Login</a>
         </p>
     </div>
-</div>
-
-<div id="top_menu">
-    <!--@if($logged_info)-->
-    <span>Welcome {$logged_info->user_id}!</span>
-    <a href="{getURL('','act','dispMemberLogout')}">Logout</a>
-    <a href="{getURL('','act','dispShopMyAccount')}">My Account</a>
-    <!--@else-->
-    <a href="{getURL('','act','dispMemberLoginForm')}">Login</a>
-    <!--@end-->
-    <a href="{$admin_url}" accesskey="A">Admin Page</a>
-
-    <a href="{getUrl('act', 'procShopToolResetSkin')}" style="color:#bc8f8f; text-decoration: none;" id="reset_skin" title="Ctrl+Shift+S">refresh skin</a>
 </div>
 
 <script type="text/javascript">
@@ -80,8 +75,6 @@
 
 </script>
 
-<include target="breadcrumbs.html" />
-
 <div id="top_links">
 	<!-- Menu -->
 		<div id="main_menu">
@@ -95,6 +88,8 @@
 		</div>
 	<!-- /Menu -->
 </div>
+
+<!--include target="breadcrumbs.html" /-->
 
 <div class="clearfix"></div>
 

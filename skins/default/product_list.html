@@ -5,31 +5,49 @@
 <include target="_sidebar.html" />
 <include target="product_variants_datasource.html" />
 
-<div class="body-left-panel" id="products">
+<div id="body-content" class="body-two-columns">
     <div cond="$XE_VALIDATOR_MESSAGE" class="message {$XE_VALIDATOR_MESSAGE_TYPE}">
         <p>{$XE_VALIDATOR_MESSAGE}</p>
     </div>
+    <div class="breadcrumbs">
+        <span class="breadcrumbs-title">Featured products</span>
+        <span class="breadcrumbs-options">
+            sort by:
+            <select>
+                <option>price</option>
+                <option>rating</option>
+            </select><a href="#" class="breadcrumbs-button"><img src="img/grid-icon.png" alt="Grid view" title="Grid view" /></a><a href="#" class="breadcrumbs-button"><img src="img/list-icon.png" alt="List view" title="List view" /></a>
+        </span>
+    </div>
     <h2 cond="$q && $act == 'dispShopSearch'">Searching for "{$q}"</h2>
     <h2 cond="!$products || empty($products)">No products</h2>
+    <div class="product-list clearfix">
     <!--@foreach($products as $product)-->
-    <div id="product_{$product->product_srl}" class="product {$product->product_type}">
-        <img src="{$product->getPrimaryImagePath()}" width="150px" height="150px" />
-        <span><a href="{getUrl('vid', $mid, 'act', 'dispShopProduct', 'product_srl', $product->product_srl, 'category_srl', $category_srl)}">{$product->product_srl} - {$product->title}</a></span>
-        <span>Price: {ShopDisplay::priceFormat($product->price, $shop->getCurrencySymbol())}</span>
-
-        <form action="./">
-            <include target="product_variants" />
-
-            <!--@if($product->isSimple())-->
-            <input type="text" disabled="disabled" id="product_srl" name="product_srl" value="{$product->product_srl}" />
-            <!--@end-->
-            <a href="{getUrl('', 'act','procShopToolCartAddProduct', 'entry',   $product->product_type=='simple' ? $product->product_srl : 'REPLACE'  , 'quantity', 1)}" class="add_to_cart">Add to cart</a>
-        </form>
-
-    </div>
+        <div id="product_{$product->product_srl}" class="product {$product->product_type}">
+            <a href="{getUrl('vid', $mid, 'act', 'dispShopProduct', 'product_srl', $product->product_srl, 'category_srl', $category_srl)}" class="product-link">
+                <img src="{$product->getPrimaryImagePath()}" width="170px" height="170px" />
+                <h4>
+                    <!--@if(strlen($product->title)>22)-->
+                        {substr($product->title, 0, 22)}...
+                    <!--@else-->
+                        {$product->title}
+                    <!--@end-->
+                </h4>
+            </a>
+            <form action="./">
+                <include target="product_variants" />
+                <!--@if($product->isSimple())-->
+                    <input type="hidden" id="product_srl" name="product_srl" value="{$product->product_srl}" />
+                <!--@end-->
+            </form>
+            <p class="buy">
+                <a class="add-to-cart" href="{getUrl('', 'act','procShopToolCartAddProduct', 'entry',   $product->product_type=='simple' ? $product->product_srl : 'REPLACE'  , 'quantity', 1)}">Add to cart</a>
+                <span class="price">{ShopDisplay::priceFormat($product->price, $shop->getCurrencySymbol())}</span>
+            </p>
+        </div>
     <!--@end-->
+    </div>
 
-    <div class="clear"></div>
     <!-- Pagination -->
     <!--@if($page_navigation)-->
     <div class="pagination" cond="$products && !empty($products)">
@@ -47,7 +65,7 @@
     </div>
     <!--@end-->
     <!-- /Pagination -->
-
+    <div class="clearfix"></div>
 </div>
 
 <include target="_footer.html"/>

@@ -18,7 +18,6 @@ img{border:0}
 */
 
 /* Pagination Reset */
-.pagination{padding:15px 0;margin:0;text-align:center}
 .pagination.aLeft{text-align:left}
 .pagination.aRight{text-align:right}
 .pagination *{margin:0;padding:0}
@@ -59,10 +58,6 @@ img{border:0}
 {
     background-color: white;
 }
-.clear
-{
-    clear: both;
-}
 #top_menu
 {
     border: 1px solid gray;
@@ -77,43 +72,13 @@ img{border:0}
     width:40%;
     float: left;
 }
-#main_menu
-{
-    display: inline;
-}
-#main_menu ul
-{
-    list-style-type: none;
-    display: inline;
-}
-#main_menu ul li
-{
-    display: inline;
-}
-#top_links
-{
-    border: 1px solid gray;
-    padding: 5px;
-    width: 55%;
-    float: right;
-    text-align: right;
-}
-
-#top_links form {
-    display: inline;
-    padding-left: 20px;
-}
-
-#top_links a {
-    padding: 0 5px;
-}
-
-#top_links a:hover {
-    background-color: #ffff00;
-}
 
 #content {
     padding: 10px;
+}
+
+#top_links {
+    display: none;
 }
 
 .sidebar {
@@ -181,18 +146,6 @@ img{border:0}
     clear: both;
 }
 
-.add_to_cart {
-    display: inline-block;
-    clear: both;
-    padding: 5px;
-    margin: 5px;
-    background-color: #87cefa;
-    text-decoration: none;
-}
-.add_to_cart:hover {
-    background-color: #e0ffff;
-}
-
 #cart th {
     text-align: left;
 }
@@ -252,6 +205,14 @@ body {
 
 .f-right {
     float: right;
+}
+
+input[type="text"] {
+    border: 1px solid #bcc1ca;
+    border-radius: 2px;
+    -moz-border-radius: 2px;
+    -webkit-border-radius: 2px;
+    padding: 3px;
 }
 
 select {
@@ -370,6 +331,30 @@ a {
     height: 34px;
 }
 
+/**
+ * PAGINATION STYLES
+ * @author: Daniel Ionescu
+*/
+.pagination {
+    text-align: center;
+    background: #f6f6f7;
+    box-shadow: inset 0px 1px 0px 0px #fff;
+    -moz-box-shadow: inset 0px 1px 0px 0px #fff;
+    -webkit-box-shadow: inset 0px 1px 0px 0px #fff;
+    margin: 0 0 10px;
+    border-radius: 3px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    box-shadow: 0 1px 0 0 #BDC6D0;
+    -moz-box-shadow: 0 1px 0 0 #BDC6D0;
+    -webkit-box-shadow: 0 1px 0 0 #BDC6D0;
+    line-height: 40px;
+    border: 1px solid #bec9d4;
+}
+
+.body-two-columns .pagination {
+    margin-left: 10px;
+}
 
 /**
  * BODY STYLES
@@ -381,7 +366,16 @@ a {
 }
 
 #body-left-sidebar {
-    width: 220px;
+    width: 234px;
+    float: left;
+}
+
+#body-content {
+    border-top: 1px solid #dbe6f1;
+}
+
+.body-two-columns {
+    margin-left: 234px;
 }
 
 .body-left-panel {
@@ -517,6 +511,180 @@ li span.close-sign, li span.open-sign {
     padding: 10px 10px 10px 30px;
 }
 
-#newsletter {
+.body-left-panel-content {
+    background: #fff;
+    border-left: 1px solid #bec9d4;
+    border-right: 1px solid #bec9d4;
+    border-bottom: 1px solid #bec9d4;
+    box-shadow:  0px 1px 0px 0px #bdc6d0;
+    -moz-box-shadow:  0px 1px 0px 0px #bdc6d0;
+    -webkit-box-shadow:  0px 1px 0px 0px #bdc6d0;
+    border-radius: 0 0 3px 3px;
+    -moz-border-radius: 0 0 3px 3px;
+    -webkit-border-radius: 0 0 3px 3px;
+}
 
+#newsletter .body-left-panel-content p {
+    margin: 0;
+    padding: 10px;
+}
+
+.product-list .product {
+    width: 210px;
+    overflow: hidden;
+    margin: 0 0 10px 10px;
+    float: left;
+    border: 1px solid #bec9d4;
+    box-shadow:  0px 1px 0px 0px #bdc6d0;
+    -moz-box-shadow:  0px 1px 0px 0px #bdc6d0;
+    -webkit-box-shadow:  0px 1px 0px 0px #bdc6d0;
+    padding: 10px 10px 0 10px;
+    background: #fff;
+    border-radius: 3px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+}
+
+.product .produc-variants {
+    color: #595959;
+}
+
+.product .product-variants p {
+    line-height: 2.200em;
+}
+
+.product-list .product-link {
+    display: block;
+    width: 210px;
+    text-align: center;
+    text-decoration: none;
+}
+
+.product-list .product-link img {
+    padding: 19px;
+    border: 1px solid #cacaca;
+    border-bottom: 0;
+}
+
+.product-list .product-link h4 {
+    margin: 0;
+    padding: 10px;
+    background: #f3f4f6;
+    color: #129cdd;
+    border: 1px solid #bec9d4;
+    font-size: 1.167em;
+    font-weight: normal;
+}
+
+.product-list .buy {
+    border-top: 1px solid #e3e3e3;
+    padding: 10px 0;
+    margin: 0;
+    color: #2d5375;
+    font-size: 1.167em;
+    line-height: 18px;
+}
+
+.product-list .quantity input {
+    text-align: center;
+    width: 30px;
+    margin: 0 0 0 5px;
+    color: #000;
+}
+
+.product-list .add-to-cart {
+    padding: 0 0 0 20px;
+    background: url('img/bag-icon-w12.png') 0 center no-repeat;
+    text-decoration: none;
+}
+
+.product-list .price {
+    float: right;
+}
+
+.breadcrumbs {
+    border: 1px solid #bec9d4;
+    background: #f6f6f7;
+    box-shadow: inset 0px 1px 0px 0px #fff;
+    -moz-box-shadow: inset 0px 1px 0px 0px #fff;
+    -webkit-box-shadow: inset 0px 1px 0px 0px #fff;
+    margin: 0 0 10px;
+    border-radius: 3px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    position: relative;
+    box-shadow: 0 1px 0 0 #BDC6D0;
+    -moz-box-shadow: 0 1px 0 0 #BDC6D0;
+    -webkit-box-shadow: 0 1px 0 0 #BDC6D0;
+}
+
+.body-two-columns .breadcrumbs {
+    margin-left: 10px;
+}
+
+.breadcrumbs-title {
+    line-height: 40px;
+    padding: 0 10px;
+    color: #2d5375;
+    font-size: 1.167em;
+    line-height: 40px;
+}
+
+.breadcrumbs-options {
+    position: absolute;
+    right: 0;
+    right: 0;
+}
+
+.breadcrumbs-options select {
+    margin-right: 13px;
+}
+
+.breadcrumbs-options a {
+    padding: 13px;
+    border-left: 1px solid #bec9d4;
+    line-height: 40px;
+}
+
+.breadcrumbs-options a img {
+    vertical-align: middle;
+}
+
+/**
+ * Footer Styles
+ * @author: Daniel Ionescu
+*/
+.footer {
+    border-top: 7px solid #254a6b;
+    background: url('img/footer-bg.gif') 0 0 repeat;
+    color: #fff;
+    padding: 5px 0;
+}
+
+.footer a {
+    color: #fff;
+}
+
+.footer-box {
+    float: left;
+    margin-right: 20px;
+}
+
+.footer-box ul {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
+
+.footer-box ul li, .footer-box ul li p {
+    margin: 5px 0;
+}
+
+.footer-box h3 {
+    font-weight: normal;
+    font-size: 1.250em;
+}
+
+.footer-box p {
+    font-size: 1.083em;
 }

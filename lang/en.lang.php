@@ -507,5 +507,5 @@
 
     //cart
     $lang->quantity = 'Quantity';
-
+    $lang->subscribe = 'Subscribe'
 ?>
