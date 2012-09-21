@@ -121,9 +121,15 @@ img{border:0}
 }
 
 .mainContent {
+    background: #fff;
+    border-top: 1px solid #bec9d4 !important;
+    border: 1px solid #bec9d4;
+    border-radius: 3px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    padding: 10px;
+    width:75%;
     float: right;
-    position: relative;
-    width: 79%;
 }
 
 .mainContent#cart, .mainContent#checkout {
@@ -378,6 +384,10 @@ a {
     margin-left: 234px;
 }
 
+.body-two-columns.main-content {
+    margin-left: 244px;
+}
+
 .main-content {
     background: #fff;
     border-top: 1px solid #bec9d4 !important;
@@ -386,7 +396,6 @@ a {
     -moz-border-radius: 3px;
     -webkit-border-radius: 3px;
     padding: 10px;
-    margin-left: 244px;
 }
 
 .body-left-panel {
