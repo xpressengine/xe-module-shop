@@ -59,6 +59,24 @@
             if(!$oDB->isColumnExists("shop","discount_tax_phase")) return true;
             if(!$oDB->isColumnExists("shop","out_of_stock_products")) return true;
             if(!$oDB->isColumnExists("shop","minimum_order")) return true;
+            if(!$oDB->isColumnExists("shop_order_products","member_srl")) return true;
+            if(!$oDB->isColumnExists("shop_order_products","parent_product_srl")) return true;
+            if(!$oDB->isColumnExists("shop_order_products","product_type")) return true;
+            if(!$oDB->isColumnExists("shop_order_products","title")) return true;
+            if(!$oDB->isColumnExists("shop_order_products","description")) return true;
+            if(!$oDB->isColumnExists("shop_order_products","short_description")) return true;
+            if(!$oDB->isColumnExists("shop_order_products","sku")) return true;
+            if(!$oDB->isColumnExists("shop_order_products","weight")) return true;
+            if(!$oDB->isColumnExists("shop_order_products","status")) return true;
+            if(!$oDB->isColumnExists("shop_order_products","friendly_url")) return true;
+            if(!$oDB->isColumnExists("shop_order_products","price")) return true;
+            if(!$oDB->isColumnExists("shop_order_products","discount_price")) return true;
+            if(!$oDB->isColumnExists("shop_order_products","qty")) return true;
+            if(!$oDB->isColumnExists("shop_order_products","in_stock")) return true;
+            if(!$oDB->isColumnExists("shop_order_products","primary_image_filename")) return true;
+            if(!$oDB->isColumnExists("shop_order_products","related_products")) return true;
+            if(!$oDB->isColumnExists("shop_order_products","regdate")) return true;
+            if(!$oDB->isColumnExists("shop_order_products","last_update")) return true;
 
             return false;
         }
@@ -111,6 +129,78 @@
 
             if(!$oDB->isColumnExists("shop","minimum_order")) {
                 $oDB->addColumn('shop',"minimum_order","number",20);
+            }
+
+            if(!$oDB->isColumnExists("shop_order_products","member_srl")) {
+                $oDB->addColumn('shop_order_products',"member_srl","number",11, null, true);
+            }
+
+            if(!$oDB->isColumnExists("shop_order_products","parent_product_srl")) {
+                $oDB->addColumn('shop_order_products',"parent_product_srl","number", 11);
+            }
+
+            if(!$oDB->isColumnExists("shop_order_products","product_type")) {
+                $oDB->addColumn('shop_order_products',"product_type","varchar", 250, null, true);
+            }
+
+            if(!$oDB->isColumnExists("shop_order_products","title")) {
+                $oDB->addColumn('shop_order_products',"title","varchar", 250, null, true);
+            }
+
+            if(!$oDB->isColumnExists("shop_order_products","description")) {
+                $oDB->addColumn('shop_order_products',"description","bigtext");
+            }
+
+            if(!$oDB->isColumnExists("shop_order_products","short_description")) {
+                $oDB->addColumn('shop_order_products',"short_description","varchar", 500);
+            }
+
+            if(!$oDB->isColumnExists("shop_order_products","sku")) {
+                $oDB->addColumn('shop_order_products',"sku","varchar", 250, null, true);
+            }
+
+            if(!$oDB->isColumnExists("shop_order_products","weight")) {
+                $oDB->addColumn('shop_order_products',"weight","float", 10);
+            }
+
+            if(!$oDB->isColumnExists("shop_order_products","status")) {
+                $oDB->addColumn('shop_order_products',"status","varchar", 50);
+            }
+
+            if(!$oDB->isColumnExists("shop_order_products","friendly_url")) {
+                $oDB->addColumn('shop_order_products',"friendly_url","varchar", 50);
+            }
+
+            if(!$oDB->isColumnExists("shop_order_products","price")) {
+                $oDB->addColumn('shop_order_products',"price","float", 20, null, true);
+            }
+
+            if(!$oDB->isColumnExists("shop_order_products","discount_price")) {
+                $oDB->addColumn('shop_order_products',"discount_price","float", 20, null, true);
+            }
+
+            if(!$oDB->isColumnExists("shop_order_products","qty")) {
+                $oDB->addColumn('shop_order_products',"qty","float", 10);
+            }
+
+            if(!$oDB->isColumnExists("shop_order_products","in_stock")) {
+                $oDB->addColumn('shop_order_products',"in_stock","char", 1, 'N');
+            }
+
+            if(!$oDB->isColumnExists("shop_order_products","primary_image_filename")) {
+                $oDB->addColumn('shop_order_products',"primary_image_filename","varchar", 250);
+            }
+
+            if(!$oDB->isColumnExists("shop_order_products","related_products")) {
+                $oDB->addColumn('shop_order_products',"related_products","varchar", 500);
+            }
+
+            if(!$oDB->isColumnExists("shop_order_products","regdate")) {
+                $oDB->addColumn('shop_order_products',"regdate","date");
+            }
+
+            if(!$oDB->isColumnExists("shop_order_products","last_update")) {
+                $oDB->addColumn('shop_order_products',"last_update","date");
             }
 
            return new Object(0, 'success_updated');
