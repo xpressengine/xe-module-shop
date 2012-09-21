@@ -14,14 +14,14 @@
         <div class="body-left-panel-content">
             <p>
             <!--@if(Context::get('logged_info'))-->
-            <!--@ $logged_info = Context::get('logged_info');--> <!--@end-->
-            <!--@if($logged_info->newsletter == 'Y')-->
-            You are already subscribed to our newsletter. <a href="{getUrl('','act','procShopSignToNewsletter','member_srl',$logged_info->member_srl,'email_address',$logged_info->email_address,'newsletter','N')}">Unsubscribe</a>
+                <!--@ $logged_info = Context::get('logged_info');--> <!--@end-->
+                <!--@if($logged_info->newsletter == 'Y')-->
+                    You are already subscribed to our newsletter. <a href="{getUrl('','act','procShopSignToNewsletter','member_srl',$logged_info->member_srl,'email_address',$logged_info->email_address,'newsletter','N')}">Unsubscribe</a>
+                <!--@else-->
+                    <a href="{getUrl('','act','procShopSignToNewsletter','member_srl',$logged_info->member_srl,'email_address',$logged_info->email_address,'newsletter','Y')}">Subscribe</a>
+                <!--@end-->
             <!--@else-->
-            <a href="{getUrl('','act','procShopSignToNewsletter','member_srl',$logged_info->member_srl,'email_address',$logged_info->email_address,'newsletter','Y')}">Subscribe</a>
-            <!--@end-->
-            <!--@else-->
-            In order to sign up to our newsletter you have to <a href="{getUrl('','act','dispMemberLoginForm')}">login</a>
+                In order to sign up to our newsletter you have to <a href="{getUrl('','act','dispMemberLoginForm')}">login</a>
             <!--@end-->
             </p>
         </div>
