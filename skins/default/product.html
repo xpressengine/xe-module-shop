@@ -2,37 +2,27 @@
 <include target="_sidebar.html" />
 <include target="product_variants_datasource.html" />
 
-<div id="product" class="mainContent">
-	<h2>{$product->title}</h2>
-
+<div id="body-content" class="body-two-columns main-content">
+    <h2>{$product->title}</h2>
     <img src="{$product->getPrimaryImagePath()}" width="150px" height="150px" />
-
-	<p>{$product->short_description}</p>
-
-	<p>{$product->description}</p>
-
-	<p>
-		<b>SKU </b> {$product->sku}
-	</p>
-
-	<p>
-		<b> Weight </b> {$product->weight}
-	</p>
-
-	<p>
-		<b> Price </b> {ShopDisplay::priceFormat($product->price, $shop->getCurrencySymbol())}
-	</p>
-
-	<!--@foreach($product->attributes as $attribute_srl => $attribute_value)-->
-	    <p>
-	    	<b>{$attributes[$attribute_srl]->title}</b> {$attribute_value}
-		</p>
-	<!--@end-->
-
-	<include target="product_variants" />
-
-	<a href="{getUrl('vid', $mid, 'act', 'dispShop', 'product_srl', '')}">Go back</a>
-
+    <p>{$product->short_description}</p>
+    <p>{$product->description}</p>
+    <p>
+        <b>SKU </b> {$product->sku}
+    </p>
+    <p>
+        <b> Weight </b> {$product->weight}
+    </p>
+    <p>
+        <b> Price </b> {ShopDisplay::priceFormat($product->price, $shop->getCurrencySymbol())}
+    </p>
+    <!--@foreach($product->attributes as $attribute_srl => $attribute_value)-->
+        <p>
+            <b>{$attributes[$attribute_srl]->title}</b> {$attribute_value}
+        </p>
+    <!--@end-->
+    <include target="product_variants" />
+    <a href="{getUrl('vid', $mid, 'act', 'dispShop', 'product_srl', '')}">Go back</a>
 </div>
 
 <include target="_footer.html" />
