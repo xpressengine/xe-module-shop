@@ -663,7 +663,7 @@
             $order_srl = Context::get('order_srl');
             $orderRepository = $this->model->getOrderRepository();
             $order = $orderRepository->getOrderBySrl($order_srl);
-            $order->order_status = 'Hold';
+            $order->order_status = Order::ORDER_STATUS_HOLD;
             try{
                 $order->save();
             }
@@ -683,8 +683,8 @@
             $order_srl = Context::get('order_srl');
             $orderRepository = $this->model->getOrderRepository();
             $order = $orderRepository->getOrderBySrl($order_srl);
-            if(isset($order->invoice) || isset($order->shipment)) $order->order_status = 'Processing';
-            else $order->order_status = 'Pending';
+            if(isset($order->invoice) || isset($order->shipment)) $order->order_status = Order::ORDER_STATUS_PROCESSING;
+            else $order->order_status = Order::ORDER_STATUS_PENDING;
             try{
                 $order->save();
             }
@@ -704,7 +704,7 @@
             $order_srl = Context::get('order_srl');
             $orderRepository = $this->model->getOrderRepository();
             $order = $orderRepository->getOrderBySrl($order_srl);
-            $order->order_status = 'Canceled';
+            $order->order_status = Order::ORDER_STATUS_CANCELED;
             try{
                 $order->save();
             }
@@ -732,8 +732,8 @@
             if(!isset($invoice->invoice_srl)) $insert=true;
             $invoice->save();
             if($invoice->invoice_srl){
-                if(isset($order->shipment)) $order->order_status = 'Completed';
-                else $order->order_status = 'Processing';
+                if(isset($order->shipment)) $order->order_status = Order::ORDER_STATUS_COMPLETED;
+                else $order->order_status = Order::ORDER_STATUS_PROCESSING;
                 try{
                     $order->save();
                 }
@@ -771,8 +771,8 @@
             if(!isset($shipment->shipment_srl)) $insert=true;
             $shipment->save();
             if($shipment->shipment_srl){
-                if(isset($order->invoice)) $order->order_status = 'Completed';
-                else $order->order_status = 'Processing';
+                if(isset($order->invoice)) $order->order_status = Order::ORDER_STATUS_COMPLETED;
+                else $order->order_status = Order::ORDER_STATUS_PROCESSING;
                 try{
                     $order->save();
                 }

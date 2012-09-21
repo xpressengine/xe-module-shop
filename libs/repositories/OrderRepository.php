@@ -79,7 +79,7 @@ class OrderRepository extends BaseRepository
             'shipping_cost' => '0', // TODO Add shipping cost
             'total' => $cart->getTotal(),
             'vat' => '0', // TODO Add VAT
-            'order_status' => 'Pending', // TODO Add order status
+            'order_status' => Order::ORDER_STATUS_PENDING, // TODO Add order status
             'ip' => $_SERVER['REMOTE_ADDR']
         ));
     }

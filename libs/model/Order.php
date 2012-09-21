@@ -1,6 +1,11 @@
 <?php
 class Order extends BaseItem
 {
+    const ORDER_STATUS_HOLD = "Hold"
+    , ORDER_STATUS_PENDING = "Pending"
+    , ORDER_STATUS_PROCESSING = "Processing"
+    , ORDER_STATUS_COMPLETED = "Completed"
+    , ORDER_STATUS_CANCELED = "Canceled";
 
     public
         $order_srl,
@@ -50,7 +55,7 @@ class Order extends BaseItem
                 $this->shipping_cost = 0; // TODO Add shipping cost
                 $this->total = $cart->getTotal();
                 $this->vat = 0; // TODO Add VAT
-                $this->order_status = 'Pending'; // TODO Add order status
+                $this->order_status = Order::ORDER_STATUS_PENDING; // TODO Add order status
                 $this->ip = $_SERVER['REMOTE_ADDR'];
 
                 parent::__construct();
