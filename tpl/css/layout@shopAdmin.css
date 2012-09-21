@@ -983,7 +983,7 @@ a.skipToContent{text-align:center;color:#fff;position:absolute;width:100%;font-s
 #menu .simpleTree li li .add,
 #menu .simpleTree li li .modify,
 #menu .simpleTree li li .delete{top:11px}
-#menu .simpleTree li .add{left:300px;background-image:url(../img/iconAddCategory.gif)}
+#menu .simpleTree li .add{left:300px;background-image:url(../img/iconAddCategory.gif);z-index:100}
 #menu .simpleTree li .modify{left:315px;background-image:url(../img/iconSetupCategory.gif)}
 #menu .simpleTree li .delete{left:330px;background-image:url(../img/iconDelCategory.gif)}
 #menu .simpleTree li li .trigger{display:none}
