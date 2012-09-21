@@ -372,8 +372,9 @@ class shopView extends shop {
 
     public function dispShopToolManageOrders()
     {
+        $page = Context::get('page');
         $repo = new OrderRepository();
-        $orders = $repo->getList($this->module_info->module_srl);
+        $orders = $repo->getList($this->module_info->module_srl, null, $page);
         Context::set('orders', $orders->data);
         Context::set('page_navigation', $orders->page_navigation);
     }

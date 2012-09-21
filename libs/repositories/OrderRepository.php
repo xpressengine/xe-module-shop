@@ -8,10 +8,11 @@
 class OrderRepository extends BaseRepository
 {
 
-    public function getList($module_srl, $member_srl=null)
+    public function getList($module_srl, $member_srl=null, $page = null)
     {
         $params = array('module_srl'=> $module_srl);
         if ($member_srl) $params = array_merge($params, array('member_srl'=> $member_srl));
+        if ($page) $params = array_merge($params, array('page'=> $page));
         $output = $this->query('getOrdersList', $params);
         foreach ($output->data as $i=>$data) $output->data[$i] = new Order((array) $data);
         return $output;
