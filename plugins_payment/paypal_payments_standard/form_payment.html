@@ -20,6 +20,7 @@
 <input type="hidden" name="country" value="US">
 <input type="hidden" name="zip" value="{$billing_address->postal_code}">
 <input type="hidden" name="email" value="{$cart->getExtra('email')}">
+<input type="hidden" name="custom" value="{$cart->cart_srl}">
 
 {@ $i = 1; }
 <!--@foreach($cart->getProducts() as $product)-->

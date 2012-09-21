@@ -280,6 +280,12 @@ class Cart extends BaseItem
         return $this->addresses;
     }
 
+    public function getCurrency()
+    {
+        $shop = new ShopInfo($this->module_srl);
+        return $shop->getCurrency();
+    }
+
     /**
      * @return Address|null
      */

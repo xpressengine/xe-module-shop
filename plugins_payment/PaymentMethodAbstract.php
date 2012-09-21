@@ -173,7 +173,7 @@ abstract class PaymentMethodAbstract
 
     abstract public function processPayment(Cart $cart, &$error_message);
 
-    public function onOrderConfirmationPageLoad($module_srl)
+    public function onOrderConfirmationPageLoad($cart, $module_srl)
     {
     }
 

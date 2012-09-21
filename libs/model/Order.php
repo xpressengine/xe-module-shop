@@ -26,7 +26,8 @@ class Order extends BaseItem
         $ip,
         $regdate,
         $invoice,
-        $shipment;
+        $shipment,
+        $transaction_id;
 
     /** @var OrderRepository */
     public $repo;

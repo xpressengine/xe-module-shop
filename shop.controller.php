@@ -1696,8 +1696,7 @@
             $payment_method_name = Context::get('payment_method_name');
             $payment_repository = new PaymentMethodRepository();
             $payment_method = $payment_repository->getPaymentMethod($payment_method_name);
-            $args = Context::getRequestVars();
-            $payment_method->notify($args);
+            $payment_method->notify();
         }
 
         // endregion
