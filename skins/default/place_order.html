@@ -12,12 +12,7 @@
     Payment will be made when you click Submit.
 
     <fieldset>
-        <legend>Billing and shipping name</legend>
-        <p>{$extra['firstname']} {$extra['lastname']}</p>
-    </fieldset>
-
-    <fieldset>
-        <legend>Billing address</legend>
+        <legend>Billing info</legend>
         <p>{$billing_address}</p>
     </fieldset>
 
@@ -27,8 +22,13 @@
     </fieldset>
 
     <fieldset>
-        <legend>Shipping address</legend>
+        <legend>Shipping info</legend>
         <p>{$shipping_address}</p>
+    </fieldset>
+
+    <fieldset>
+        <legend>Payment method</legend>
+        <p>{$payment_method->getDisplayName()}</p>
     </fieldset>
 
     <fieldset>
