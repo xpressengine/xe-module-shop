@@ -15,7 +15,7 @@
     <div id="product_{$product->product_srl}" class="product {$product->product_type}">
         <img src="{$product->getPrimaryImagePath()}" width="150px" height="150px" />
         <span><a href="{getUrl('vid', $mid, 'act', 'dispShopProduct', 'product_srl', $product->product_srl, 'category_srl', $category_srl)}">{$product->product_srl} - {$product->title}</a></span>
-        <span>Price: {$product->price}</span>
+        <span>Price: {ShopDisplay::priceFormat($product->price, $shop->getCurrencySymbol())}</span>
 
         <form action="./">
             <include target="product_variants" />

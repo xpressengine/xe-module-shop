@@ -20,7 +20,7 @@
 	</p>
 
 	<p>
-		<b> Price </b> {$product->price}
+		<b> Price </b> {ShopDisplay::priceFormat($product->price, $shop->getCurrencySymbol())}
 	</p>
 
 	<!--@foreach($product->attributes as $attribute_srl => $attribute_value)-->
