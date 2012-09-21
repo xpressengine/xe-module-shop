@@ -810,15 +810,9 @@
                 return new Object(-1, $error_message);
             }
 
-            $orderRepository = new OrderRepository();
-            $order = $orderRepository->getOrderFromCart($cart);
+            $order = new Order($cart);
             $order->save(); //obtain srl
             $order->saveCartProducts($cart);
-            $cart->delete();
-
-            $order = new Order($cart);
-            $order->save();
-
             $cart->delete();
 
             $this->setRedirectUrl(getNotEncodedUrl('', 'act', 'dispShopOrderConfirmation', 'order_srl', $order->order_srl));

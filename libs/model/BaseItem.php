@@ -69,6 +69,11 @@ abstract class BaseItem
         return $this->repo->query($name, $params, $array);
     }
 
+    /**
+     * Checks if object is new or exists already in the database
+     *
+     * @return bool
+     */
     public function isPersisted()
     {
         $srl = $this->getMeta('srl');

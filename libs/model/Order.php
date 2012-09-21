@@ -31,9 +31,32 @@ class Order extends BaseItem
         return $this->order_srl ? $this->repo->update($this) : $this->repo->insert($this);
     }
 
-    public function __construct(array $data=null)
+    public function __construct($data=null)
     {
         if ($data) {
+            if($data instanceof Cart)
+            {
+                $cart = $data;
+                $this->cart_srl = $cart->cart_srl;
+                $this->module_srl = $cart->module_srl;
+                $this->member_srl = $cart->member_srl;
+                $this->client_name = $cart->getExtra('firstname') . ' ' . $cart->getExtra('lastname');
+                $this->client_email = $cart->getExtra('email');
+                $this->client_company = $cart->getExtra('company');
+                $this->billing_address = (string) $cart->getBillingAddress();
+                $this->shipping_address = (string) $cart->getShippingAddress();
+                $this->payment_method = $cart->getExtra('payment_method');
+                $this->shipping_method = $cart->getExtra('shipping_method');
+                $this->shipping_cost = 0; // TODO Add shipping cost
+                $this->total = $cart->getTotal();
+                $this->vat = 0; // TODO Add VAT
+                $this->order_status = 'Pending'; // TODO Add order status
+                $this->ip = $_SERVER['REMOTE_ADDR'];
+
+                parent::__construct();
+                return;
+            }
+
             foreach (array('billing_address', 'shipping_address', 'shipping_method', 'payment_method') as $val) {
                 if (!isset($orderData[$val])) {
                     //throw new Exception("Missing $val, can't continue.");
