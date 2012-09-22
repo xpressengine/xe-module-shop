@@ -944,14 +944,33 @@
                 $args->password = $args->reset_password;
             else unset($args->password);
 
+            // remove whitespace
+            $checkInfos = array('user_id', 'nick_name', 'email_address');
+            $replaceStr = array("\r\n", "\r", "\n", " ", "\t", "\xC2\xAD");
+            foreach($checkInfos as $val){
+                if(isset($args->{$val})){
+                    $args->{$val} = str_replace($replaceStr, '', $args->{$val});
+                }
+            }
+
             if(!$args->member_srl) {
                 $args->password = Context::get('password');
                 $output = $oMemberController->insertMember($args);
+                if(!$output->toBool()) {
+                    $this->setMessage($output->message);
+                    return $output;
+                }
                 $msg_code = 'success_registed';
             } else {
                 $output = $oMemberController->updateMember($args);
+                if(!$output->toBool()) {
+                    $this->setMessage($output->message);
+                    return $output;
+                }
                 $msg_code = 'success_updated';
             }
+
+
             $this->setRedirectUrl(getNotEncodedUrl('', 'act', 'dispShopToolManageCustomers'));
         }
 
