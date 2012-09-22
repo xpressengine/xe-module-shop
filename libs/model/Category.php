@@ -136,6 +136,11 @@ class HtmlCategoryTreeConfig
      * @var bool display +/- signs in front of categories if they have children
      */
     public $openCloseSign = FALSE;
+    /**
+     * @var bool Display list elements (li) with HTML
+     * or without:  with product count and +/- signs in span elements or simple text nodes
+     */
+    public $HTMLmode = TRUE;
 }
 
 /**
@@ -266,7 +271,7 @@ class CategoryTreeNode
 
 			$nodeContent = '<p>';
 
-            if ( $config->openCloseSign && count($node->children) ) {
+            if ($config->openCloseSign && count($node->children) && $config->HTMLmode) {
 
                 if ( in_array($node->category->category_srl, $config->selected) ) {
 
@@ -305,7 +310,15 @@ class CategoryTreeNode
 
 			if($config->showProductCount)
 			{
-				$nodeContent .= '<span class="product-count">' . $node->category->product_count . '</span>';
+                if($config->HTMLmode)
+                {
+                    $nodeContent .= '<span class="product-count">' . $node->category->product_count . '</span>';
+                }
+                else
+                {
+                    $nodeContent .= ' (' . $node->category->product_count . ')';
+                }
+
 			}
 			$nodeContent .= '</p>';
 

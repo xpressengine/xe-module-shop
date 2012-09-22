@@ -46,3 +46,9 @@ ul {
 #image_container {
     margin-left: 240px;
 }
+
+#menu .product-count
+{
+    float:right;
+    margin-right: 60px;
+}

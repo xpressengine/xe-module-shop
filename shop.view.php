@@ -451,6 +451,7 @@ class shopView extends shop {
 		$tree_config->showCheckbox = TRUE;
 		$tree_config->selected = array();
 		$tree_config->checkboxesName = 'category_scope';
+        $tree_config->HTMLmode = FALSE;
 		$HTML_tree = $tree->toHTML($tree_config);
 
 		Context::set('HTML_tree', $HTML_tree);
@@ -477,6 +478,7 @@ class shopView extends shop {
 		$tree_config->showCheckbox = TRUE;
 		$tree_config->selected = $attribute->category_scope;
 		$tree_config->checkboxesName = 'category_scope';
+        $tree_config->HTMLmode = FALSE;
 		$HTML_tree = $tree->toHTML($tree_config);
 
 		Context::set('HTML_tree', $HTML_tree);
@@ -589,6 +591,7 @@ class shopView extends shop {
 		$tree_config->showCheckbox = TRUE;
 		$tree_config->selected = $product->categories;
 		$tree_config->checkboxesName = 'categories';
+        $tree_config->HTMLmode = FALSE;
 		$HTML_tree = $tree->toHTML($tree_config);
 
 		Context::set('HTML_tree', $HTML_tree);
@@ -1199,6 +1202,7 @@ class shopView extends shop {
 		// Prepare tree for display
 		$tree_config = new HtmlCategoryTreeConfig();
 		$tree_config->showManagingLinks = TRUE;
+        $tree_config->HTMLmode = FALSE;
 		$HTML_tree = $tree->toHTML($tree_config);
 
 		Context::set('HTML_tree', $HTML_tree);
