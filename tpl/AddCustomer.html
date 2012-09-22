@@ -14,7 +14,7 @@
     <form action="./" method="post" ruleset="insert_customer" class="">
         <input type="hidden" name="module" value="member" />
         <input type="hidden" name="group_srl_list" value="{$default_group}" />
-        <input type="hidden" name="act" value="procMemberAdminInsert" />
+        <input type="hidden" name="act" value="procShopToolCustomerInsert" />
         <input type="hidden" name="success_return_url" value="{getUrl('act', 'dispShopToolManageCustomers')}" />
         <!--@if($customer)-->
         <input type="hidden" name="member_srl" value="{$customer->member_srl}" />

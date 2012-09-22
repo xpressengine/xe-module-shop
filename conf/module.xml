@@ -28,6 +28,7 @@
         <permission action="procShopToolAccountUpdate" target="manager" />
         <permission action="procShopToolInfoUpdate" target="manager" />
         <permission action="procShopToolDiscountUpdate" target="manager" />
+        <permission action="procShopToolCustomerInsert" target="manager" />
 
         <!-- Products -->
         <permission action="dispShopToolManageProducts" target="manager" />
@@ -151,6 +152,7 @@
         <action name="procShopToolAccountUpdate" type="controller" ruleset="account_update" />
         <action name="procShopToolInfoUpdate" type="controller" ruleset="update_shop_info" />
         <action name="procShopToolDiscountUpdate" type="controller" ruleset="discount_update"/>
+        <action name="procShopToolCustomerInsert" type="controller" ruleset="insert_customer"/>
 
 
 		<action name="procShopAdminCreate" type="controller" standalone="true" ruleset="insert_shop"  />

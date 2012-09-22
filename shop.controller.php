@@ -933,6 +933,29 @@
         }
 
         /*
+        * @brief function for customer insertion
+        * @author Dan Dragan (dev@xpressengine.org)
+        */
+        public function procShopToolCustomerInsert(){
+            $oMemberController = getController('member');
+            $args = Context::getRequestVars();
+
+            if ($args->reset_password)
+                $args->password = $args->reset_password;
+            else unset($args->password);
+
+            if(!$args->member_srl) {
+                $args->password = Context::get('password');
+                $output = $oMemberController->insertMember($args);
+                $msg_code = 'success_registed';
+            } else {
+                $output = $oMemberController->updateMember($args);
+                $msg_code = 'success_updated';
+            }
+            $this->setRedirectUrl(getNotEncodedUrl('', 'act', 'dispShopToolManageCustomers'));
+        }
+
+        /*
         * @brief function for multiple customers delete
         * @author Dan Dragan (dev@xpressengine.org)
         */
