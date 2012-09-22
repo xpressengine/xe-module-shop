@@ -1,9 +1,21 @@
-<div id="my_account_sidebar" class align="sidebar">
-    <h4>My Account</h4>
-    <ul>
-        <li><a href="{getUrl('','act','dispShopMyAccount')}">Dashboard</a></li>
-        <li><a href="{getUrl('','act','dispMemberInfo')}">Account Info</a></li>
-        <li><a href="{getUrl('','act','dispShopAddressBook')}">Address book</a></li>
-        <li><a href="{getUrl('','act','dispShopMyOrders')}">My Orders</a></li>
-    </ul>
+<div id="body-left-sidebar">
+    <div class="body-left-panel">
+        <h3>My Account</h3>
+        <div class="body-left-panel-content">
+            <ul>
+                <li <!--@if($act=='dispShopMyAccount')-->class="active"<!--@end-->>
+                    <p><a href="{getUrl('','act','dispShopMyAccount')}">Dashboard</a></p>
+                </li>
+                <li <!--@if($act=='dispMemberInfo')-->class="active"<!--@end-->>
+                    <p><a href="{getUrl('','act','dispMemberInfo')}">Account Info</a></p>
+                </li>
+                <li <!--@if($act=='dispShopAddressBook')-->class="active"<!--@end-->>
+                    <p><a href="{getUrl('','act','dispShopAddressBook')}">Address book</a></p>
+                </li>
+                <li <!--@if($act=='dispShopMyOrders')-->class="active"<!--@end-->>
+                    <p><a href="{getUrl('','act','dispShopMyOrders')}">My Orders</a></p>
+                </li>
+            </ul>
+        </div>
+    </div>
 </div>

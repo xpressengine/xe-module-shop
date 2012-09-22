@@ -254,7 +254,7 @@
     $lang->postal_code = 'Postal Code';
 
     $lang->my_account_info_text = 'Here you can see your recent activity and edit your account information';
-    $lang->hello = 'Hello';
+    $lang->hello = 'Welcome back,';
     $lang->recent_orders = 'Recent Orders';
     $lang->newsletter = 'Newsletter';
     $lang->address_book = 'Address Book';
