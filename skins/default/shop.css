@@ -17,47 +17,7 @@ fieldset{border:0;padding:0;margin:0}
 img{border:0}
 */
 
-/* Pagination Reset */
-.pagination.aLeft{text-align:left}
-.pagination.aRight{text-align:right}
-.pagination *{margin:0;padding:0}
-.pagination img{border:0}
-.pagination a,
-.pagination strong{position:relative;display:inline-block;text-decoration:none;line-height:normal;color:#333;font-family:Tahoma, Sans-serif;vertical-align:middle}
-.pagination a:hover,
-.pagination a:active,
-.pagination a:focus{background-color:#f4f4f4 !important}
-.pagination strong{color:#ff6600 !important}
-.pagination a.prev,
-.pagination a.prevEnd,
-.pagination a.next,
-.pagination a.nextEnd{font-weight:normal !important;border:none !important;margin:0 !important;white-space:nowrap}
-
-/* Pagination Shop */
-.pagination a,
-.pagination strong{margin:0 2px;padding:1px 2px;font-size:12px}
-.pagination a.prev,
-.pagination a.prevEnd,
-.pagination a.next,
-.pagination a.nextEnd{display:inline-block;width:18px;height:19px;padding:0;margin:0;background-image:url(img/buttonPagination.gif);background-repeat:no-repeat}
-.pagination a.prev,
-.pagination a.prevEnd{background-position:left top;margin-right:5px !important}
-.pagination a.next,
-.pagination a.nextEnd{background-position:right top;margin-left:5px !important}
-.pagination a.prev span,
-.pagination a.prevEnd span,
-.pagination a.next span,
-.pagination a.nextEnd span{position:absolute;width:0;height:0;overflow:hidden;visibility:hidden;font-size:0;line-height:0}
-.pagination a:hover,
-.pagination a:active,
-.pagination a:focus{background-color:#f4f4f4 !important;border:1px solid #ececec;margin:-1px 1px;-moz-border-radius:2px;-webkit-border-radius:2px}
-
-
 /* Product catalog */
-.pagination
-{
-    background-color: white;
-}
 #top_menu
 {
     border: 1px solid gray;
@@ -356,6 +316,49 @@ a {
     -webkit-box-shadow: 0 1px 0 0 #BDC6D0;
     line-height: 40px;
     border: 1px solid #bec9d4;
+    font-size: 1.167em;
+}
+
+.pagination a.number {
+    border: 1px solid #bec9d4;
+    background: #fff;
+    color: #4d4d4d;
+}
+
+.pagination a.number:hover,.pagination span:hover {
+    box-shadow: inset 0 0 1px 0 #3ab9e6, 0 0 3px 1px #0d86d2 !important;
+    -moz-box-shadow: inset 0 0 1px 0 #3ab9e6, 0 0 3px 1px #0d86d2 !important;
+    -webkit-box-shadow: inset 0 0 1px 0 #3ab9e6, 0 0 3px 1px #0d86d2 !important;
+}
+
+.pagination a, .pagination span {
+    text-decoration: none;
+    color: #2a5072;
+    margin: 0 1px;
+    padding: 5px 9px;
+}
+
+.pagination span, .pagination a.number:hover {
+    background: -moz-linear-gradient(top,  #14ace2 0%, #1096dc 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#14ace2), color-stop(100%,#1096dc));
+    background: -webkit-linear-gradient(top,  #14ace2 0%,#1096dc 100%);
+    background: -o-linear-gradient(top,  #14ace2 0%,#1096dc 100%);
+    background: -ms-linear-gradient(top,  #14ace2 0%,#1096dc 100%);
+    background: linear-gradient(to bottom,  #14ace2 0%,#1096dc 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#14ace2', endColorstr='#1096dc',GradientType=0 );
+    box-shadow: inset 0 0 1px 0 #3ab9e6;
+    -moz-box-shadow: inset 0 0 1px 0 #3ab9e6;
+    -webkit-box-shadow: inset 0 0 1px 0 #3ab9e6;
+    text-shadow: 1px 1px 0 #0d86d2;
+    -moz-text-shadow: 1px 1px 0 #0d86d2;
+    -webkit-text-shadow: 1px 1px 0 #0d86d2;
+    border: 1px solid #0d86d2;
+    background: #14ace2;
+    color: #fff;
+}
+
+.pagination a.next:hover, .pagination a.prev:hover {
+    text-decoration: underline;
 }
 
 .body-two-columns .pagination {
