@@ -49,36 +49,40 @@ class CategoryRepository extends BaseRepository
 			$category = $this->getCategory($args->category_srl);
 		}
 
+        $db = DB::getInstance();
+        $db->begin();
+
 		$output = executeQuery('shop.deleteCategory', $args);
 		if(!$output->toBool())
 		{
+            $db->rollback();
 			throw new Exception($output->getMessage(), $output->getError());
 		}
 
 		$output = executeQuery('shop.deleteAttributesScope', $args);
 		if(!$output->toBool())
 		{
+            $db->rollback();
 			throw new Exception($output->getMessage(), $output->getError());
 		}
 
 		$output = executeQuery('shop.deleteProductCategories', $args);
 		if(!$output->toBool())
 		{
+            $db->rollback();
 			throw new Exception($output->getMessage(), $output->getError());
 		}
 
 		if($args->category_srl)
 		{
-			$output = $this->deleteCategoryImage($category->filename);
-			if(!$output)
-			{
-				throw new Exception("Could not delete category image");
-			}
+			$this->deleteCategoryImage($category->filename);
 		}
 		else
 		{
 			$this->deleteCategoriesImages($args->module_srl);
 		}
+
+        $db->commit();
 
 		return TRUE;
 	}
