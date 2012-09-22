@@ -2,6 +2,19 @@ jQuery(document).ready(function($){
     $( ".attribute.date" ).datepicker();
 
     $("#categories input[type='checkbox']").change(function(){
+        // Select parent categories
+        var parent = $(this).parent();
+        var this_is_checked = $(this).is(':checked');
+        while(parent.attr("id") != "categories") // Iterate to all elements above current one
+        {
+            if(parent.is("ul"))
+            {
+                parent_checkbox = parent.parent().children("p").children("input[type='checkbox']");
+                parent_checkbox.attr("checked", this_is_checked);
+            }
+            parent = parent.parent();
+        }
+
         // Get list of visible categories
         var visible_categories = new Array();
         $("#categories input[type='checkbox']:checked").each(function(){
