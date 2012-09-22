@@ -53,6 +53,7 @@
             if(!$oDB->isColumnExists("shop_orders","transaction_id")) return true;
             if(!$oDB->isColumnExists("shop","currency_symbol")) return true;
             if(!$oDB->isColumnExists("shop_products","discount_price")) return true;
+            if(!$oDB->isColumnExists("shop_products","is_featured")) return true;
             if(!$oDB->isColumnExists("shop","discount_min_amount")) return true;
             if(!$oDB->isColumnExists("shop","discount_type")) return true;
             if(!$oDB->isColumnExists("shop","discount_amount")) return true;
@@ -105,6 +106,10 @@
 
             if(!$oDB->isColumnExists("shop_products","discount_price")) {
                 $oDB->addColumn('shop_products',"discount_price","float",20);
+            }
+
+            if(!$oDB->isColumnExists("shop_products","is_featured")) {
+                $oDB->addColumn('shop_products',"is_featured","char",1);
             }
 
             if(!$oDB->isColumnExists("shop","discount_min_amount")) {

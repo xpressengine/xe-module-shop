@@ -296,6 +296,7 @@
 			unset($product_srl);
 			$productRepository->insertProduct($product);
 
+            $this->setMessage("A product has been successfully duplicated");
 			$returnUrl = getNotEncodedUrl('', 'act', 'dispShopToolManageProducts');
 			$this->setRedirectUrl($returnUrl);
 		}

@@ -41,6 +41,7 @@
     $lang->qty = 'Quantity';
     $lang->about_qty = 'Product qty';
     $lang->in_stock = 'In stock';
+    $lang->is_featured = 'Is featured';
     $lang->yes = 'Yes';
     $lang->no = 'No';
     $lang->id = 'Id';

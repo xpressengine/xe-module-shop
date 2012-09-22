@@ -22,6 +22,7 @@ abstract class Product extends BaseItem
     public $discount_price;
     public $qty;
     public $in_stock;
+    public $is_featured;
     public $regdate;
     public $last_updated;
     public $related_products;

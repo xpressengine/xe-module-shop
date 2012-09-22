@@ -702,6 +702,7 @@ class shopView extends shop {
 		try{
 			$args = new stdClass();
 			$args->module_srl = $this->module_srl;
+            $args->list_count = 9;
 			$page = Context::get('page');
 			if($page) $args->page = $page;
 			$category_srl = Context::get('category_srl');

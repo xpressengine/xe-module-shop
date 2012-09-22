@@ -712,7 +712,7 @@ class ProductRepository extends BaseRepository
             $images = explode('|',$product->images);
             unset($product->images);
             $args = new stdClass();
-            if(isset($product->images)){
+            if(isset($images)){
                 foreach($images as $image){
                     $args->source_filename = sprintf('./files/attach/shop/export-import/images/%s',$image);
                     $args->file_size = filesize($args->source_filename);

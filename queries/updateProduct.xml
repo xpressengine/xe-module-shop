@@ -18,6 +18,7 @@
         <column name="discount_price" var="discount_price" />
         <column name="qty" var="qty" />
         <column name="in_stock" var="in_stock" />
+        <column name="is_featured" var="is_featured" />
         <column name="related_products" var="related_products"/>
         <column name="last_update" var="last_update" default="curdate()" />
     </columns>

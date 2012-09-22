@@ -231,6 +231,19 @@
                         </div>
                     </td>
                 </tr>
+                <tr>
+                    <th scope="row">
+                        <label for="is_featured">{$lang->is_featured}</label>
+                    </th>
+                    <td class="title">
+                        <div class="fItem">
+                            <select name="is_featured" id="is_featured">
+                                <option value="Y" <!--@if($product->is_featured=='Y')-->selected<!--@end-->>{$lang->yes}</option>
+                                <option value="N" <!--@if($product->is_featured=='N')-->selected<!--@end-->>{$lang->no}</option>
+                            </select>
+                        </div>
+                    </td>
+                </tr>
                 <!--@if(!$product->parent_product_srl)-->
                 <tr>
                     <th scope="row">
