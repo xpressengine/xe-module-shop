@@ -173,12 +173,17 @@ body {
     float: right;
 }
 
-input[type="text"] {
+input[type="text"], textarea {
     border: 1px solid #bcc1ca;
     border-radius: 2px;
     -moz-border-radius: 2px;
     -webkit-border-radius: 2px;
     padding: 3px;
+}
+
+label {
+    min-width: 100px;
+    display: inline-block;
 }
 
 select {
@@ -481,7 +486,7 @@ table tbody tr td:last-child {
     border-radius: 3px;
     -moz-border-radius: 3px;
     -webkit-border-radius: 3px;
-    padding: 0 10px;
+    padding: 0 10px 10px;
 }
 
 .body-left-panel {

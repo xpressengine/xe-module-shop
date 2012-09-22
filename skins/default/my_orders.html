@@ -4,15 +4,12 @@
 <include target="_header.html" />
 <include target="_my_account_sidebar.html" />
 
-<div id="my_account" class="mainContent">
-    <div id="MyAccountInfo">
-        <h1>{$lang->my_orders}</h1>
-    </div>
+<div id="body-content" class="body-two-columns main-content">
+    <h1>{$lang->my_orders}</h1>
 
-    <div id="myOrders">
-        <table border="1" cellspacing="0" summary="{$lang->content_list}" class="tableData">
-            <thead>
-            <tr cond="!empty($orders)">
+    <table border="0" cellspacing="0" cellpadding="0" summary="{$lang->content_list}">
+        <thead>
+            <tr>
                 <th scope="col">Order #</th>
                 <th scope="col">Purchased on</th>
                 <th scope="col" class="title">Bill to name</th>
@@ -20,11 +17,10 @@
                 <th scope="col">Status</th>
                 <th scope="col">&nbsp;</th>
             </tr>
-            </thead>
-            <tbody>
-
+        </thead>
+        <tbody>
             <tr cond="empty($orders)">
-                <td class="noData" colspan="9"><p>No orders</p></td>
+                <td class="no-data" colspan="6"><p>No orders</p></td>
             </tr>
             <!--@foreach($orders as $order)-->
             <tr>
@@ -38,29 +34,28 @@
                 </td>
             </tr>
             <!--@end-->
+        </tbody>
+    </table>
 
-            </tbody>
-        </table>
+    <div class="listFooter" cond="!empty($orders)">
 
-        <div class="listFooter" cond="!empty($orders)">
+        <!-- Pagination -->
+        <div class="pagination">
+            <a href="{getUrl('page','','mid',$mid)}" class="prev"><span>{$lang->first_page}</span></a>
 
-            <!-- Pagination -->
-            <div class="pagination">
-                <a href="{getUrl('page','','mid',$mid)}" class="prev"><span>{$lang->first_page}</span></a>
+            <!--@while ($page_no = $page_navigation->getNextPage())-->
+            <!--@if($page == $page_no)-->
+            <strong>{$page_no}</strong>
+            <!--@else-->
+            <a href="{getUrl('page',$page_no,'mid',$mid)}">{$page_no}</a>
+            <!--@end-->
+            <!--@end-->
 
-                <!--@while ($page_no = $page_navigation->getNextPage())-->
-                <!--@if($page == $page_no)-->
-                <strong>{$page_no}</strong>
-                <!--@else-->
-                <a href="{getUrl('page',$page_no,'mid',$mid)}">{$page_no}</a>
-                <!--@end-->
-                <!--@end-->
-
-                <a href="{getUrl('page',$page_navigation->last_page,'module_srl','')}" class="next"><span>{$lang->last_page}</span></a>
-            </div>
-            <!-- /Pagination -->
+            <a href="{getUrl('page',$page_navigation->last_page,'module_srl','')}" class="next"><span>{$lang->last_page}</span></a>
         </div>
+        <!-- /Pagination -->
     </div>
+
 </div>
 
 <include target="_footer.html"/>
