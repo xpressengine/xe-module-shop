@@ -7,6 +7,8 @@
     </columns>
     <conditions>
         <condition operation="equal" column="p.module_srl" var="module_srl" notnull="notnull" />
+        <condition operation="equal" column="p.status" var="status" pipe="and"/>
+        <condition operation="equal" column="p.in_stock" var="in_stock" pipe="and"/>
         <query alias="productsInCategories" operation="in" column="p.product_srl" pipe="and">
             <tables>
                 <table name="shop_product_categories" alias="pc" />

@@ -676,7 +676,8 @@ class shopView extends shop {
         try{
             $args = new stdClass();
             $args->module_srl = $this->module_srl;
-
+            $args->status = 'enabled';
+            if($this->shop->getOutOfStockProducts() == 'N') $args->in_stock = Y ;
             $output = $product_repository->getFeaturedProducts($args, TRUE);
             Context::set('products', $output->products);
 
@@ -704,6 +705,8 @@ class shopView extends shop {
 			$args = new stdClass();
 			$args->module_srl = $this->module_srl;
             $args->list_count = 9;
+            $args->status = 'enabled';
+            if($this->shop->getOutOfStockProducts() == 'N') $args->in_stock = Y ;
 			$page = Context::get('page');
 			if($page) $args->page = $page;
 			$category_srl = Context::get('category_srl');

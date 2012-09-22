@@ -154,6 +154,7 @@ class ProductRepository extends BaseRepository
 	{
 		$args = new stdClass();
 		$args->product_srl = $product->product_srl;
+        $args->module_srl = $product->module_srl;
         if(isset($product->categories)){
             foreach($product->categories as $category)
             {
@@ -165,27 +166,42 @@ class ProductRepository extends BaseRepository
                 {
                     throw new Exception($output->getMessage(), $output->getError());
                 }
-
-                // Get number of products in category
-                $count_output = executeQuery('shop.getProductsInCategoryCount', $args);
-                if(!$count_output->toBool())
-                {
-                    throw new Exception($count_output->getMessage(), $count_output->getError());
-                }
-
-                // Update product count
-                $update_args = new stdClass();
-                $update_args->category_srl = $args->category_srl;
-                $update_args->product_count = $count_output->data->product_count;
-                $output = executeQuery('shop.updateCategory', $update_args);
-                if(!$output->toBool())
-                {
-                    throw new Exception($output->getMessage(), $output->getError());
-                }
+                $this->updateProductCategoryCount($args);
             }
         }
 		return TRUE;
 	}
+
+    /**
+     * Updates product category count
+     *
+     * @author Dan Dragan (dev@xpressengine.org)
+     * @param $args
+     * @throws Exception
+     */
+    public function updateProductCategoryCount($args){
+        $shopInfo = new ShopInfo($args->module_srl);
+        // Get number of products in category
+        $args->status = "enabled";
+        if($shopInfo->getOutOfStockProducts() == 'N') $args->in_stock = "Y";
+        $count_output = executeQuery('shop.getProductsInCategoryCount', $args);
+        if(!$count_output->toBool())
+        {
+            throw new Exception($count_output->getMessage(), $count_output->getError());
+        }
+
+
+
+        // Update product count
+        $update_args = new stdClass();
+        $update_args->category_srl = $args->category_srl;
+        $update_args->product_count = $count_output->data->product_count;
+        $output = executeQuery('shop.updateCategory', $update_args);
+        if(!$output->toBool())
+        {
+            throw new Exception($output->getMessage(), $output->getError());
+        }
+    }
 
 	/**
 	 * Deletes a product by $product_srl or $module_srl
@@ -251,6 +267,7 @@ class ProductRepository extends BaseRepository
         $args->product_srls[] = $product->product_srl;
         $output = executeQuery('shop.deleteProductCategories',$args);
         if (!$output->toBool()) throw new Exception($output->getMessage(), $output->getError());
+
         return TRUE;
     }
 
