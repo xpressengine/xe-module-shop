@@ -540,6 +540,51 @@ class ProductRepository extends BaseRepository
         return $output;
     }
 
+    /**
+     * Retrieve only featured products
+     * @author Dan Dragan (dev@xpressengine.org)
+     *
+     * @param stdClass $args Must have: module_srl; Can have: page, category_srl
+     *
+     * @throws Exception
+     * @return stdClass $output
+     */
+    public function getFeaturedProducts($args, $loadAttributes = FALSE){
+        if (!isset($args->module_srl)) throw new Exception("Missing arguments for get product list : please provide [module_srl]");
+        $args->is_featured = 'Y';
+        $output = $this->query('getFeaturedProducts', $args, true);
+        // Get top level products
+        $configurable_products = array();
+        $products = array();
+        foreach ($output->data as $product) {
+            if ($product->product_type == 'simple') {
+                $product_object = new SimpleProduct($product);
+                if($loadAttributes) $this->getProductAttributes($product_object);
+            }
+            else {
+                $product_object = new ConfigurableProduct($product);
+                if($loadAttributes) $this->getProductAttributes($product_object);
+                $configurable_products[] = $product->product_srl;
+            }
+            $products[$product->product_srl] = $product_object;
+        }
+        if (!empty($configurable_products)) {
+            // Get associated products and link to their parents
+            $associated_products_args = new stdClass();
+            $associated_products_args->module_srl = $args->module_srl;
+            $associated_products_args->configurable_product_srls = $configurable_products;
+            $associated_products_output = $this->query('getAssociatedProducts', $associated_products_args, true);
+            $associated_products = $associated_products_output->data;
+            foreach ($associated_products as $associated_product) {
+                $product_object = new SimpleProduct($associated_product);
+                if ($loadAttributes) $this->getProductAttributes($product_object);
+                $products[$associated_product->parent_product_srl]->associated_products[] = $product_object;
+            }
+        }
+        $output->products = $products;
+        return $output;
+    }
+
 	/**
 	 * Retrieve a all products and all product information by module_srl
 	 * @author Dan Dragan (dev@xpressengine.org)

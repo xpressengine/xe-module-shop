@@ -663,42 +663,40 @@ class shopView extends shop {
 
 	}
 
+    /**
+     * @brief Shop home page
+     **/
+    public function dispShopHome(){
+        // Products list
+        $this->dispShopCategoryTree();
+        $product_repository = $this->model->getProductRepository();
+        try{
+            $args = new stdClass();
+            $args->module_srl = $this->module_srl;
+
+            $output = $product_repository->getFeaturedProducts($args, TRUE);
+            Context::set('products', $output->products);
+
+            $datasourceJS = $this->getAssociatedProductsAttributesAsJavascriptArray($output->products);
+            Context::set('datasourceJS', $datasourceJS);
+
+            $this->setTemplateFile('index.html');
+        }
+        catch(Exception $e)
+        {
+            return new Object(-1, $e->getMessage());
+        }
+    }
+
 	/**
-	 * @brief Shop home
+	 * @brief Shop view products list
 	 **/
 	public function dispShop() {
-		/**
-		 * @var shopModel $shopModel
-		 */
-		$shopModel = getModel('shop');
 
-		// Categories left tree
-		// Retrieve existing categories
-		$category_srl = Context::get('category_srl');
-		$category_repository = $shopModel->getCategoryRepository();
-		$tree = $category_repository->getCategoriesTree($this->module_srl);
-
-		// Prepare tree for display
-		$tree_config = new HtmlCategoryTreeConfig();
-		$tree_config->linkCategoryName = TRUE;
-        $tree_config->openCloseSign = TRUE;
-		$tree_config->linkGetUrlParams = array('vid', $this->mid, 'act', 'dispShop');
-		if($category_srl) $tree_config->selected = array($category_srl);
-		$HTML_tree = $tree->toHTML($tree_config);
-		Context::set('HTML_tree', $HTML_tree);
-
-		// Current category details
-		if($category_srl)
-		{
-			$current_category = $category_repository->getCategory($category_srl);
-			Context::set('current_category', $current_category);
-
-			$breadcrumbs_items = $category_repository->getCategoryParents($current_category);
-			Context::set('breadcrumbs_items', $breadcrumbs_items);
-		}
+        $this->dispShopCategoryTree();
 
 		// Products list
-		$product_repository = $shopModel->getProductRepository();
+		$product_repository = $this->model->getProductRepository();
 		try{
 			$args = new stdClass();
 			$args->module_srl = $this->module_srl;
@@ -722,6 +720,33 @@ class shopView extends shop {
 			return new Object(-1, $e->getMessage());
 		}
 	}
+
+    public function dispShopCategoryTree(){
+        // Categories left tree
+        // Retrieve existing categories
+        $category_srl = Context::get('category_srl');
+        $category_repository = $this->model->getCategoryRepository();
+        $tree = $category_repository->getCategoriesTree($this->module_srl);
+
+        // Prepare tree for display
+        $tree_config = new HtmlCategoryTreeConfig();
+        $tree_config->linkCategoryName = TRUE;
+        $tree_config->openCloseSign = TRUE;
+        $tree_config->linkGetUrlParams = array('vid', $this->mid, 'act', 'dispShop');
+        if($category_srl) $tree_config->selected = array($category_srl);
+        $HTML_tree = $tree->toHTML($tree_config);
+        Context::set('HTML_tree', $HTML_tree);
+
+        // Current category details
+        if($category_srl)
+        {
+            $current_category = $category_repository->getCategory($category_srl);
+            Context::set('current_category', $current_category);
+
+            $breadcrumbs_items = $category_repository->getCategoryParents($current_category);
+            Context::set('breadcrumbs_items', $breadcrumbs_items);
+        }
+    }
 
 	/**
 	 * Frontend shop product page
