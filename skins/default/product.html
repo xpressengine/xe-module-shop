@@ -2,8 +2,12 @@
 <include target="_sidebar.html" />
 <include target="product_variants_datasource.html" />
 
+<div style="margin-left: 244px;">
+    <include target="breadcrumbs.html" />
+</div>
+
 <div id="body-content" class="body-two-columns main-content">
-    <h2>{$product->title}</h2>
+    <h1>{$product->title}</h1>
     <img src="{$product->getPrimaryImagePath()}" width="150px" height="150px" />
     <p>{$product->short_description}</p>
     <p>{$product->description}</p>

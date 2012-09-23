@@ -25,14 +25,6 @@ img{border:0}
     text-align: right;
 }
 
-#breadcrumbs
-{
-    border:1px solid gray;
-    padding: 10px;
-    width:40%;
-    float: left;
-}
-
 #content {
     padding: 10px;
 }
@@ -179,11 +171,6 @@ input[type="text"], textarea {
     -moz-border-radius: 2px;
     -webkit-border-radius: 2px;
     padding: 3px;
-}
-
-label {
-    min-width: 100px;
-    display: inline-block;
 }
 
 select {
@@ -739,6 +726,14 @@ li span.close-sign, li span.open-sign {
     color: #2d5375;
     font-size: 1.167em;
     line-height: 40px;
+}
+
+.breadcrumbs-title a {
+    text-decoration: none;
+}
+
+.breadcrumbs-title a:hover {
+    text-decoration: underline;
 }
 
 .breadcrumbs-options {
