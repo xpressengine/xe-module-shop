@@ -113,6 +113,12 @@ abstract class Product extends BaseItem
             return "./files/attach/shop/".getNumberingPath($this->module_srl,3)."/img/missingProduct.png";
         }
     }
+
+    public function isInStock()
+    {
+        if($this->qty > 0) return true;
+        return false;
+    }
 }
 
 /**

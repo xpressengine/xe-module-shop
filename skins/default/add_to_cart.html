@@ -1,0 +1,17 @@
+<!--@ // Requires a $product object as input -->
+<form action="./">
+    <div class="clearfix">
+        <p class="f-right">
+            <span class="quantity"><label>Quantity:</label><input type="text" value="1" /></span>
+        </p>
+        <!--@if($product->isSimple())-->
+            <input type="hidden" id="product_srl" name="product_srl" value="{$product->product_srl}" />
+        <!--@elseif($product->isConfigurable())-->
+            <include target="product_variants" />
+        <!--@end-->
+    </div>
+    <p class="buy">
+        <a class="add-to-cart" href="{getUrl('', 'act','procShopToolCartAddProduct', 'entry',   $product->product_type=='simple' ? $product->product_srl : 'REPLACE'  , 'quantity', 1)}">Add to cart</a>
+        <span class="price">{ShopDisplay::priceFormat($product->price, $shop->getCurrencySymbol())}</span>
+    </p>
+</form>

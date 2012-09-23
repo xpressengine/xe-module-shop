@@ -1,8 +1,5 @@
-<div class="product-variants clearfix" id="product_variants_{$product->product_srl}">
-    <p class="f-right">
-        <span class="quantity"><label>Quantity:</label><input type="text" value="1" /></span>
-    </p>
 <!--@if($product->isConfigurable())-->
+<div class="product-variants clearfix" id="product_variants_{$product->product_srl}">
 	<!-- Display just first two attributes -->
 		{@ $max_attributes = 2; $i = 1; }
 		<!--@foreach($product->configurable_attributes as $attribute_srl => $attribute_title)-->
@@ -24,5 +21,5 @@
 		{@ $i++;}
 		<!--@end-->
 		<input type="hidden" id="product_srl" name="product_srl" value="" class="product_srl" />
-<!--@end-->
 </div>
+<!--@end-->

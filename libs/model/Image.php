@@ -13,4 +13,9 @@ class Image extends BaseItem
         $regdate,
 		$source_filename;
 
+    public function getFullPath()
+    {
+        return "./files/attach/images/shop/$this->module_srl/product-images/$this->product_srl/$this->filename";
+    }
+
 }
