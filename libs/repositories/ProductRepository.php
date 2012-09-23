@@ -560,6 +560,9 @@ class ProductRepository extends BaseRepository
 
     /**
      * Retrieve only featured products
+     *
+     * // TODO Stop duplicating code - should call getProductsList instead
+     *
      * @author Dan Dragan (dev@xpressengine.org)
      *
      * @param stdClass $args Must have: module_srl; Can have: page, category_srl
@@ -567,7 +570,7 @@ class ProductRepository extends BaseRepository
      * @throws Exception
      * @return stdClass $output
      */
-    public function getFeaturedProducts($args, $loadAttributes = FALSE){
+    public function getFeaturedProducts($args, $loadAttributes = FALSE, $loadImages = FALSE){
         if (!isset($args->module_srl)) throw new Exception("Missing arguments for get product list : please provide [module_srl]");
         $args->is_featured = 'Y';
         $output = $this->query('getFeaturedProducts', $args, true);
@@ -578,10 +581,12 @@ class ProductRepository extends BaseRepository
             if ($product->product_type == 'simple') {
                 $product_object = new SimpleProduct($product);
                 if($loadAttributes) $this->getProductAttributes($product_object);
+                if($loadImages) $this->getProductImages($product_object);
             }
             else {
                 $product_object = new ConfigurableProduct($product);
                 if($loadAttributes) $this->getProductAttributes($product_object);
+                if($loadImages) $this->getProductImages($product_object);
                 $configurable_products[] = $product->product_srl;
             }
             $products[$product->product_srl] = $product_object;
@@ -595,7 +600,8 @@ class ProductRepository extends BaseRepository
             $associated_products = $associated_products_output->data;
             foreach ($associated_products as $associated_product) {
                 $product_object = new SimpleProduct($associated_product);
-                if ($loadAttributes) $this->getProductAttributes($product_object);
+                if($loadAttributes) $this->getProductAttributes($product_object);
+                if($loadImages) $this->getProductImages($product_object);
                 $products[$associated_product->parent_product_srl]->associated_products[] = $product_object;
             }
         }

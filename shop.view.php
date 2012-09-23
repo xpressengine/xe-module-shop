@@ -669,7 +669,7 @@ class shopView extends shop {
             $args->module_srl = $this->module_srl;
             $args->status = 'enabled';
             if($this->shop->getOutOfStockProducts() == 'N') $args->in_stock = Y ;
-            $output = $product_repository->getFeaturedProducts($args, TRUE);
+            $output = $product_repository->getFeaturedProducts($args, TRUE, TRUE);
             Context::set('products', $output->products);
 
             $datasourceJS = $this->getAssociatedProductsAttributesAsJavascriptArray($output->products);
