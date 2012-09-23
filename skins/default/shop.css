@@ -658,10 +658,13 @@ li span.close-sign, li span.open-sign {
     text-decoration: none;
 }
 
-.product-list .product-link img {
+.product-list .product-link .product-image-container {
     padding: 19px;
     border: 1px solid #cacaca;
     border-bottom: 0;
+    width: 170px;
+    height: 170px;
+    display: block;
 }
 
 .product-list .product-link h4 {
