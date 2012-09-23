@@ -242,7 +242,7 @@ class CategoryRepository extends BaseRepository
             $category_ids = new ArrayObject();
             foreach($categories as $category){
                 $cat = new Category($category);
-                $cat->filename = $this->saveCategoryImage($params->module_srl, $cat->filename,'./files/attach/shop/export-import/images/'.$cat->filename);
+                if($cat->filename) $cat->filename = $this->saveCategoryImage($params->module_srl, $cat->filename,'./files/attach/shop/export-import/images/'.$cat->filename);
                 $cat->module_srl = $params->module_srl;
                 if($cat->parent_srl){
                     $cat->parent_srl = $category_ids[$cat->parent_srl];
