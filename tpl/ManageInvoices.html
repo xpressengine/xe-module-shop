@@ -9,12 +9,9 @@
     <div cond="$XE_VALIDATOR_MESSAGE" class="message {$XE_VALIDATOR_MESSAGE_TYPE}">
         <p>{$XE_VALIDATOR_MESSAGE}</p>
     </div>
-    <div class="contentNavigation" cond="empty($invoices)">
-        No invoices
-    </div>
 
     <!-- listHeader -->
-    <div class="listHeader" cond="!empty($invoices)">
+    <div class="listHeader">
         <p class="info">
             <!--@if($search_keyword)-->{sprintf($lang->search_result_count,$page_navigation->total_count)}
             <!--@else-->{sprintf($lang->total_result_count,$page_navigation->total_count)}
@@ -22,13 +19,10 @@
         </p>
         <fieldset class="search">
             <legend>{$lang->cmd_search}</legend>
-            <form action="{Context::getRequestUri()}">
+            <form action="./">
                 <input type="hidden" name="published" value="{$published}"/>
-                <input type="hidden" name="vid" value="{$vid}"/>
-                <input type="hidden" name="act" value="{$act}"/>
-                <input type="hidden" name="mid" value="{$mid}"/>
-                <input name="search_keyword" type="text" title="{$lang->cmd_search}" class="iText"
-                       value="{htmlspecialchars($search_keyword)}"/>
+                <input type="hidden" name="act" value="procShopToolFilterInvoices"/>
+                <input name="search_keyword" type="text" title="{$lang->cmd_search}" class="iText" value="{$search}"/>
                 <span class="btnGray medium"><input type="submit" value="{$lang->cmd_search}"/></span>
             </form>
         </fieldset>
@@ -41,7 +35,7 @@
         <form action="" method="post">
             <table border="1" cellspacing="0" summary="{$lang->content_list}" class="tableData">
                 <thead>
-                <tr cond="!empty($invoices)">
+                <tr>
                     <th scope="col">
                         <input type="checkbox" class="inputCheck" onclick="jQuery('input.boxlist').click()"/>
                     </th>
@@ -55,7 +49,10 @@
                 <tbody>
 
                 <tr cond="empty($invoices)">
-                    <td class="noData" colspan="9"><p>No invoices</p></td>
+                    <td class="noData" colspan="9">
+                        <p cond="!$search">No invoices</p>
+                        <p cond="$search">No search results</p>
+                    </td>
                 </tr>
                 <!--@foreach($invoices as $invoice)-->
                 <tr>

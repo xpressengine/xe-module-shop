@@ -28,6 +28,7 @@
         <permission action="procShopToolAccountUpdate" target="manager" />
         <permission action="procShopToolInfoUpdate" target="manager" />
         <permission action="procShopToolDiscountUpdate" target="manager" />
+        <permission action="procShopToolManageProducts" target="manager" />
         <permission action="procShopToolCustomerInsert" target="manager" />
 
         <!-- Products -->
@@ -57,8 +58,9 @@
         <permission action="dispShopToolEditAttribute" target="manager"/>
         <permission action="procShopToolInsertAttribute" target="manager" />
         <permission action="procShopToolDeleteAttributes" target="manager" />
-		
-		<!-- Payment Gateway -->
+        <permission action="procShopToolFilterAttributes" target="manager"/>
+
+        <!-- Payment Gateway -->
         <permission action="dispShopToolManagePaymentMethods" target="manager" />
         <permission action="procUpdateShopActivatePaymentMethod" target="manager" />
         <permission action="procUpdateShopDeactivatePaymentMethod" target="manager" />
@@ -88,6 +90,9 @@
         <permission action="procShopToolHoldOrder" target="manager"/>
         <permission action="procShopToolUnholdOrder" target="manager"/>
         <permission action="procShopToolCancelOrder" target="manager"/>
+        <permission action="procShopToolFilterOrders" target="manager"/>
+        <permission action="procShopToolFilterCustomers" target="manager"/>
+        <permission action="procShopToolFilterInvoices" target="manager"/>
         <permission action="procShopToolInsertInvoice" target="manager"/>
         <permission action="procShopToolInsertShipment" target="manager"/>
         <permission action="dispShopToolInvoiceOrder" target="manager"/>
@@ -141,7 +146,7 @@
         <action name="dispShopToolConfigInfo" type="view"/>
         <action name="dispShopToolDiscountInfo" type="view"/>
 
-		<action name="procShopToolLayoutConfigSkin" type="controller" />
+        <action name="procShopToolLayoutConfigSkin" type="controller" />
 		<action name="procShopToolLayoutConfigMobileSkin" type="controller" />
 		<action name="procShopToolLayoutConfigEdit" type="controller" />
 		<action name="procShopToolLayoutResetConfigSkin" type="controller" />
@@ -154,9 +159,9 @@
         <action name="procShopToolInfoUpdate" type="controller" ruleset="update_shop_info" />
         <action name="procShopToolDiscountUpdate" type="controller" ruleset="discount_update"/>
         <action name="procShopToolCustomerInsert" type="controller" ruleset="insert_customer"/>
+        <action name="procShopToolManageProducts" type="controller"/>
 
-
-		<action name="procShopAdminCreate" type="controller" standalone="true" ruleset="insert_shop"  />
+        <action name="procShopAdminCreate" type="controller" standalone="true" ruleset="insert_shop"  />
 		<action name="procShopAdminUpdate" type="controller" standalone="true" ruleset="update_shop" />
         <action name="procShopAdminDelete" type="controller" standalone="true" ruleset="delete_shop"  />
         <action name="procShopAdminInsertCustomMenu" type="controller" standalone="true" />
@@ -191,8 +196,12 @@
         <action name="dispShopToolEditAttribute" type="view" />
         <action name="procShopToolInsertAttribute" type="controller" ruleset="insert_attribute"/>
         <action name="procShopToolDeleteAttributes" type="controller" />
+        <action name="procShopToolFilterAttributes" type="controller"/>
+        <action name="procShopToolFilterOrders" type="controller"/>
+        <action name="procShopToolFilterInvoices" type="controller"/>
+        <action name="procShopToolFilterCustomers" type="controller"/>
 
-		<!-- Payment Gateway -->
+        <!-- Payment Gateway -->
         <action name="dispShopToolManagePaymentMethods" type="view" />
         <action name="dispShopToolEditPaymentMethod" type="view" />
         <action name="dispShopTestCheckout" type="view" />

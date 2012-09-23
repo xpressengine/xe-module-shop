@@ -21,12 +21,11 @@ class InvoiceRepository extends BaseRepository
         return $this->query('updateInvoice', get_object_vars($invoice));
     }
 
-    public function getList($module_srl)
+    public function getList($module_srl, array $extraParams=array())
     {
         $params = array('module_srl'=> $module_srl);
-        $output = $this->query('getInvoiceList', $params);
-        foreach ($output->data as $i=>$data) $output->data[$i] = new Invoice((array) $data);
-        return $output;
+        $params = array_merge($params, $extraParams);
+        return $this->query('getInvoiceList', $params, 'Invoice');
     }
 
     public function getInvoiceByOrderSrl($order_srl)

@@ -8,13 +8,13 @@
 class OrderRepository extends BaseRepository
 {
 
-    public function getList($module_srl, $member_srl=null, $page = null)
+    public function getList($module_srl, $member_srl=null, array $extraParams = array(), $page = null)
     {
         $params = array('module_srl'=> $module_srl);
-        if ($member_srl) $params = array_merge($params, array('member_srl'=> $member_srl));
-        if ($page) $params = array_merge($params, array('page'=> $page));
-        $output = $this->query('getOrdersList', $params);
-        foreach ($output->data as $i=>$data) $output->data[$i] = new Order((array) $data);
+        if ($member_srl) $params['member_srl'] = $member_srl;
+        if ($page) $params['page'] = $page;
+        $params = array_merge($extraParams, $params);
+        $output = $this->query('getOrdersList', $params, 'Order');
         return $output;
     }
 

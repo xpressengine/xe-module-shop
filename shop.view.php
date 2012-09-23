@@ -338,17 +338,23 @@ class shopView extends shop {
 
     public function dispShopToolManageOrders()
     {
-        $page = Context::get('page');
+        $extraParams = array();
+        if ($search = Context::get('search')) {
+            $col = (Context::get('column') ? Context::get('column') : 'billing_address');
+            $extraParams[$col] = $search;
+        }
         $repo = new OrderRepository();
-        $orders = $repo->getList($this->module_info->module_srl, null, $page);
+        $orders = $repo->getList($this->module_info->module_srl, null, $extraParams, Context::get('page'));
         Context::set('orders', $orders->data);
         Context::set('page_navigation', $orders->page_navigation);
     }
 
     public function dispShopToolManageInvoices()
     {
+        $extraParams = array();
+        if ($search = Context::get('search')) $extraParams['search'] = $search;
         $repo = new InvoiceRepository();
-        $invoices = $repo->getList($this->module_info->module_srl);
+        $invoices = $repo->getList($this->module_info->module_srl, $extraParams);
         Context::set('invoices', $invoices->data);
         Context::set('page_navigation', $invoices->page_navigation);
     }
@@ -386,11 +392,9 @@ class shopView extends shop {
 
 	public function dispShopToolManageAttributes()
 	{
-        /** @var $shopModel shopModel */
-		$shopModel = getModel('shop');
-        /** @var $repository AttributeRepository */
-		$repository = $shopModel->getAttributeRepository();
-		$output = $repository->getAttributesList($this->module_info->module_srl);
+		$repository = new AttributeRepository();
+        $extraParams = (Context::get('search') ? array('search'=> Context::get('search')) : null);
+        $output = $repository->getAttributesList($this->module_info->module_srl, $extraParams);
 
 		Context::set('attributes_list', $output->attributes);
 		Context::set('page_navigation', $output->page_navigation);
@@ -456,24 +460,39 @@ class shopView extends shop {
 	 * @brief Shop display product tool page
 	 */
 	public function dispShopToolManageProducts(){
-		$product_repository = new ProductRepository();
 		$module_srl = $this->module_info->module_srl;
 
 		$args = new stdClass();
 		$args->module_srl = $module_srl;
 
-		$page = Context::get('page');
-		if($page) $args->page = $page;
+        if ($search = Context::get('search')) {
+            $col = (Context::get('column') ? Context::get('column') : 'title');
+            $args->$col = $search;
+        }
+        if ($cat_srl = Context::get('category')) {
+            if (!is_numeric($cat_srl)) throw new Exception('invalid category srl');
+            $cat = new Category($cat_srl);
+            Context::set('filterCategory', $cat);
+            $args->category_srls = array($cat_srl);
+        }
 
-		$output = $product_repository->getProductList($args);
-		Context::set('product_list',$output->products);
-		Context::set('page_navigation',$output->page_navigation);
+        if ($page = Context::get('page')) $args->page = $page;
 
-		$category_repository = new CategoryRepository();
-		$tree = $category_repository->getCategoriesTree($module_srl);
-		$flat_tree = $tree->toFlatStructure();
-		Context::set('category_list', $flat_tree);
-	}
+        Context::set('column_filters', array('title', 'description'));
+
+        $pRepo = new ProductRepository();
+        $output = $pRepo->getProductList($args);
+        Context::set('product_list', $output->products);
+        Context::set('page_navigation', $output->page_navigation);
+
+        $category_repository = new CategoryRepository();
+        $tree = $category_repository->getCategoriesTree($module_srl);
+        $flat_tree = $tree->toFlatStructure();
+
+        Context::set('productsCount', $pRepo->count('countProducts'));
+
+        Context::set('category_list', $flat_tree);
+    }
 
     /**
      * @brief Shop display page for import products
@@ -940,15 +959,12 @@ class shopView extends shop {
 
     public function dispShopOrderConfirmation()
     {
-        $cartRepository = new CartRepository();
-        $cart = $cartRepository->getCart($this->module_srl, null, Context::get('logged_info'), session_id());
-
         $payment_method_name = Context::get('payment_method_name');
         if($payment_method_name)
         {
             $payment_repository = new PaymentMethodRepository();
             $payment_method = $payment_repository->getPaymentMethod($payment_method_name);
-            $payment_method->onOrderConfirmationPageLoad($cart, $this->module_srl);
+            $payment_method->onOrderConfirmationPageLoad($this->module_srl);
         }
 
         $this->setTemplateFile('order_confirmation.html');
@@ -1018,11 +1034,12 @@ class shopView extends shop {
     /**
      * Customer management view (Admin)
      */
-    public function dispShopToolManageCustomers(){
-        $shopModel = getModel('shop');
-        $customerRepository = $shopModel->getCustomerRepository();
-        $output = $customerRepository->getCustomersList($this->site_srl);
-
+    public function dispShopToolManageCustomers()
+    {
+        $extraParams = array();
+        if ($search = Context::get('search')) $extraParams = array('search' => $search);
+        $cRepo = new CustomerRepository();
+        $output = $cRepo->getCustomersList($this->site_srl, $extraParams);
         Context::set('customers_list',$output->customers);
         Context::set('page_navigation',$output->page_navigation);
     }

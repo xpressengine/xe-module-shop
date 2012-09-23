@@ -595,8 +595,31 @@
          */
         public function procShopSearch()
         {
-            $searchQuery = Context::get('search');
-            $this->setRedirectUrl(getNotEncodedUrl('', 'act', 'dispShopSearch', 'q', $searchQuery));
+            if ($searchQuery = Context::get('search')) {
+                $url = getNotEncodedUrl('', 'act', 'dispShopSearch', 'q', $searchQuery);
+            }
+            else $url = getNotEncodedUrl('', 'act', 'dispShop');
+            $this->setRedirectUrl($url);
+        }
+
+        public function procShopToolManageProducts()
+        {
+            $params = array('', 'act', 'dispShopToolManageProducts');
+            if ($search = Context::get('search_keyword')) {
+                $params[] = 'search';
+                $params[] = $search;
+            }
+            if ($category = Context::get('search_category_srl')) {
+                $params[] = 'category';
+                $params[] = $category;
+            }
+            if ($col = Context::get('col_search')) {
+                if ($col != 'title' && $search) {
+                    $params[] = 'column';
+                    $params[] = $col;
+                }
+            }
+            $this->setRedirectUrl(call_user_func_array('getNotEncodedUrl', $params));
         }
 
         /*
@@ -923,7 +946,8 @@
         * @brief function for multiple attributes delete
         * @author Florin Ercus (dev@xpressengine.org)
         */
-        public function procShopToolDeleteAttributes(){
+        public function procShopToolDeleteAttributes()
+        {
             $shopModel = $this->model;
             $repository = $shopModel->getAttributeRepository();
             $args = new stdClass();
@@ -931,6 +955,57 @@
             $repository->deleteAttributes($args);
             $this->setMessage("success_deleted");
             $this->setRedirectUrl(getNotEncodedUrl('', 'act', 'dispShopToolManageAttributes'));
+        }
+
+        public function procShopToolFilterAttributes()
+        {
+            $params = array('', 'act', 'dispShopToolManageAttributes');
+            if ($search = Context::get('search_keyword')) {
+                $params[] = 'search';
+                $params[] = $search;
+            }
+            $this->setRedirectUrlFromArray($params);
+        }
+
+        public function procShopToolFilterOrders()
+        {
+            $params = array('', 'act', 'dispShopToolManageOrders');
+            if ($search = Context::get('search_keyword')) {
+                $params[] = 'search';
+                $params[] = $search;
+            }
+            if ($col = Context::get('col_search')) {
+                if ($col != 'billing_address' && $search) {
+                    $params[] = 'column';
+                    $params[] = $col;
+                }
+            }
+            $this->setRedirectUrlFromArray($params);
+        }
+
+        public function procShopToolFilterInvoices()
+        {
+            $params = array('', 'act', 'dispShopToolManageInvoices');
+            if ($search = Context::get('search_keyword')) {
+                $params[] = 'search';
+                $params[] = $search;
+            }
+            $this->setRedirectUrlFromArray($params);
+        }
+
+        public function procShopToolFilterCustomers()
+        {
+            $params = array('', 'act', 'dispShopToolManageCustomers');
+            if ($search = Context::get('search_keyword')) {
+                $params[] = 'search';
+                $params[] = $search;
+            }
+            $this->setRedirectUrlFromArray($params);
+        }
+
+        public function setRedirectUrlFromArray(array $params)
+        {
+            $this->setRedirectUrl(call_user_func_array('getNotEncodedUrl', $params));
         }
 
         /*
@@ -979,7 +1054,8 @@
         * @brief function for multiple customers delete
         * @author Dan Dragan (dev@xpressengine.org)
         */
-        public function procShopToolDeleteCustomers(){
+        public function procShopToolDeleteCustomers()
+        {
             $shopModel = $this->model;
             $target_member_srls = Context::get('target_member_srls');
             if(!$target_member_srls) return new Object(-1, 'msg_invalid_request');
@@ -1329,7 +1405,9 @@
             if ($this->cartBeforeLogin instanceof Cart) {
                 if ($memberCart = $cartRepo->getCart($this->module_info->module_srl, null, $logged_info->member_srl, session_id()))
                 {
-                    $memberCart->merge($this->cartBeforeLogin);
+                    if ($memberCart->cart_srl != $this->cartBeforeLogin->cart_srl) {
+                        $memberCart->merge($this->cartBeforeLogin);
+                    }
                     Context::set('cart', $memberCart);
                 } else {
                     $this->cartBeforeLogin->member_srl = $logged_info->member_srl;

@@ -520,37 +520,36 @@ class ProductRepository extends BaseRepository
 	 * @throws Exception
 	 * @return stdClass $output
 	 */
-    public function getProductList($args, $loadAttributes = FALSE){
-        if (!isset($args->module_srl)) throw new Exception("Missing arguments for get product list : please provide [module_srl]");
+    public function getProductList($args, $loadAttributes=false)
+    {
+        if (!$args->module_srl) throw new Exception("Missing arguments for get product list : please provide [module_srl]");
 		if (!$args->page) $args->page = 1;
-		if ($args->category_srls & !empty($args->category_srls)) $output = $this->query('getProductListByCategory', $args, true);
-		else $output = $this->query('getProductList', $args, true);
+        $query = ($args->category_srls && !empty($args->category_srls) ? 'getProductListByCategory' : 'getProductList');
+        $output = $this->query($query, $args, true);
 		// Get top level products
-		$configurable_products = array();
-        $products = array();
-        foreach ($output->data as $product) {
-			if ($product->product_type == 'simple') {
-				$product_object = new SimpleProduct($product);
-				if($loadAttributes) $this->getProductAttributes($product_object);
+		$confProdSrls = $products = array();
+        foreach ($output->data as $row) {
+			if ($row->product_type == 'simple') {
+				$product = new SimpleProduct($row);
+				if ($loadAttributes) $this->getProductAttributes($product);
 			}
 			else {
-				$product_object = new ConfigurableProduct($product);
-				if($loadAttributes) $this->getProductAttributes($product_object);
-				$configurable_products[] = $product->product_srl;
+				$product = new ConfigurableProduct($row);
+				if ($loadAttributes) $this->getProductAttributes($product);
+				$confProdSrls[] = $row->product_srl;
 			}
-            $products[$product->product_srl] = $product_object;
+            $products[$row->product_srl] = $product;
         }
-		if (!empty($configurable_products)) {
+		if (count($confProdSrls)) {
 			// Get associated products and link to their parents
-			$associated_products_args = new stdClass();
-			$associated_products_args->module_srl = $args->module_srl;
-			$associated_products_args->configurable_product_srls = $configurable_products;
-			$associated_products_output = $this->query('getAssociatedProducts', $associated_products_args, true);
-			$associated_products = $associated_products_output->data;
-			foreach ($associated_products as $associated_product) {
-				$product_object = new SimpleProduct($associated_product);
-				if ($loadAttributes) $this->getProductAttributes($product_object);
-				$products[$associated_product->parent_product_srl]->associated_products[] = $product_object;
+            $associatedProds = $this->query('getAssociatedProducts', array(
+                    'module_srl' => $args->module_srl,
+                    'configurable_product_srls' => $confProdSrls
+                ), true)->data;
+			foreach ($associatedProds as $associatedProd) {
+				$product = new SimpleProduct($associatedProd);
+				if ($loadAttributes) $this->getProductAttributes($product);
+				$products[$associatedProd->parent_product_srl]->associated_products[] = $product;
 			}
 		}
         $output->products = $products;
@@ -611,7 +610,8 @@ class ProductRepository extends BaseRepository
 	 * @throws Exception
 	 * @return Array $products
 	 */
-	public function getAllProducts($args){
+	public function getAllProducts($args)
+    {
 		if(!isset($args->module_srl))
 			throw new Exception("Missing arguments for get product list : please provide [module_srl]");
 

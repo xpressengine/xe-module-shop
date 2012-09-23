@@ -9,12 +9,7 @@
     <div cond="$XE_VALIDATOR_MESSAGE" class="message {$XE_VALIDATOR_MESSAGE_TYPE}">
         <p>{$XE_VALIDATOR_MESSAGE}</p>
     </div>
-    <div class="contentNavigation" cond="empty($orders)">
-        No orders
-    </div>
-
-    <!-- listHeader -->
-    <div class="listHeader" cond="!empty($orders)">
+    <div class="listHeader">
         <p class="info">
             <!--@if($search_keyword)-->{sprintf($lang->search_result_count,$page_navigation->total_count)}
             <!--@else-->{sprintf($lang->total_result_count,$page_navigation->total_count)}
@@ -22,13 +17,29 @@
         </p>
         <fieldset class="search">
             <legend>{$lang->cmd_search}</legend>
-            <form action="{Context::getRequestUri()}">
+            <form action="./">
                 <input type="hidden" name="published" value="{$published}"/>
-                <input type="hidden" name="vid" value="{$vid}"/>
-                <input type="hidden" name="act" value="{$act}"/>
-                <input type="hidden" name="mid" value="{$mid}"/>
-                <input name="search_keyword" type="text" title="{$lang->cmd_search}" class="iText"
-                       value="{htmlspecialchars($search_keyword)}"/>
+                <input type="hidden" name="act" value="procShopToolFilterOrders"/>
+
+                <script type="text/javascript">
+                    jQuery('select#search_category_srl').live('change', function () {
+                        jQuery(this).parents('form').submit();
+                    });
+                    jQuery('select#col_search').live('change', function () {
+                        var searchInput = jQuery('#search_keyword');
+                        if (searchInput.val()) jQuery(this).parents('form').submit();
+                        else searchInput.focus();
+                    });
+                </script>
+
+                {@ $column_filters = array('billing_address'=>'Billing address', 'shipping_address' => 'Shipping address') }
+                <select name="col_search" id="col_search">
+                    <!--@foreach($column_filters as $field=>$val)-->
+                    <option value="{$field}"<!--@if($column==$field)--> selected="selected"<!--@end-->>{ucfirst($val)}</option>
+                    <!--@end-->
+                </select>
+
+                <input name="search_keyword" id="search_keyword" type="text" title="{$lang->cmd_search}" class="iText" value="{$search}"/>
                 <span class="btnGray medium"><input type="submit" value="{$lang->cmd_search}"/></span>
             </form>
         </fieldset>
@@ -41,7 +52,7 @@
         <form action="" method="post">
             <table border="1" cellspacing="0" summary="{$lang->content_list}" class="tableData">
                 <thead>
-                <tr cond="!empty($orders)">
+                <tr>
                     <th scope="col">
                         <input type="checkbox" class="inputCheck" onclick="jQuery('input.boxlist').click()"/>
                     </th>
@@ -57,7 +68,8 @@
                 <tbody>
 
                 <tr cond="empty($orders)">
-                    <td class="noData" colspan="9"><p>No orders</p></td>
+                    <td cond="!$search" class="noData" colspan="9"><p>No orders</p></td>
+                    <td cond="$search" class="noData" colspan="9"><p>No search results</p></td>
                 </tr>
                 <!--@foreach($orders as $order)-->
                 <tr>

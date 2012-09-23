@@ -208,20 +208,19 @@ class AttributeRepository extends BaseRepository
      * Retrieve a list of Attributes object from the database by modul_srl
      * @author Florin Ercus (dev@xpressengine.org)
      * @param $module_srl int
+     * @param $extraArgs array
      * @return Attribute list
      */
-    public function getAttributesList($module_srl)
+    public function getAttributesList($module_srl, array $extraArgs=null)
     {
         if (!is_numeric($module_srl)) throw new Exception('module_srl must be a valid int');
-        $args = new stdClass();
-        $args->page = Context::get('page');
-        if (!$args->page) $args->page = 1;
-        Context::set('page', $args->page);
-
-        $args->module_srl = $module_srl;
-        if (!isset($args->module_srl)) throw new Exception("Missing arguments for attributes list : please provide module_srl");
-
-        $output = executeQueryArray('shop.getAttributesList', $args);
+        $params = array(
+            'page' => $page = (Context::get('page') ? Context::get('page') : 1),
+            'module_srl' => $module_srl
+        );
+        if ($extraArgs) $params = array_merge($params, $extraArgs);
+        Context::set('page', $page);
+        $output = $this->query('getAttributesList', $params);
         $attributes = array();
         foreach ($output->data as $properties) {
             $o = new Attribute($properties);

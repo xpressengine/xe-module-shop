@@ -1,0 +1,8 @@
+<query id="countProducts" action="select">
+    <tables>
+        <table name="shop_products" />
+    </tables>
+    <columns>
+        <column name="count(*)" alias="count" />
+    </columns>
+</query>

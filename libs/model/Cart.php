@@ -37,7 +37,9 @@ class Cart extends BaseItem
     public function merge(Cart $cart)
     {
         if (!$cart->cart_srl || !$this->cart_srl) throw new Exception('Missing srl(s) for carts merge');
-        if ($cart->cart_srl == $this->cart_srl) throw new Exception('Cannot merge with same cart');
+        if ($cart->cart_srl == $this->cart_srl) {
+            throw new Exception('Cannot merge with same cart');
+        }
         $this->copyProductLinksFrom($cart);
         $cart->delete();
     }

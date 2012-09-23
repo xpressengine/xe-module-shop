@@ -8,12 +8,13 @@ abstract class BaseItem
 
 	public function __construct($data = NULL)
 	{
-		if(!is_null($data) && !is_array($data) && !($data instanceof stdClass)) {
-			throw new Exception('invalid $data type');
-		}
-		if ($data) {
+		if (!is_null($data) && !is_numeric($data) && !is_array($data) && !($data instanceof stdClass)) {
+            throw new Exception('Invalid $data type');
+        }
+		if (is_array($data) || $data instanceof stdClass) {
 			$this->loadFromArray((array)$data);
 		}
+
         /**
          * Look for Item repository.
          * For IDE purposes like code completion $this->repo's type should be hinted in each Item the way I did in Cart.
@@ -44,6 +45,23 @@ abstract class BaseItem
             }
         }
 
+        //data can also be a serial
+        if (is_numeric($data)) {
+            if ($obj = $this->repo->get($data, "get%E", get_called_class())) {
+                $this->copy($obj);
+            }
+            else throw new Exception("No such {$this->repo->entity} srl $data");
+        }
+
+    }
+
+    public function copy(BaseItem $o)
+    {
+        foreach ($this as $field=>$value) {
+            if (property_exists($o, $field)) {
+                $this->$field = $o->$field;
+            }
+        }
     }
 
     protected function getRepo()

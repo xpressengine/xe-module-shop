@@ -18,6 +18,9 @@ class Category extends BaseItem
 	public $regdate;
 	public $last_update;
 
+    /** @var CategoryRepository */
+    public $repo;
+
 	/**
 	 * Calls getters for private properties when accessed directly
 	 *
@@ -95,6 +98,23 @@ class Category extends BaseItem
 
 		$this->include_in_navigation_menu = $include_in_navigation_menu;
 	}
+
+    public function getLinkBackend($search=null, $column='title')
+    {
+        $params = array('', 'act', 'dispShopToolManageProducts', 'category', $this->category_srl);
+        if ($search) {
+            $params[] = 'search';
+            $params[] = $search;
+        }
+        if ($column) {
+            if ($column != 'title') {
+                $params[] = 'column';
+                $params[] = $column;
+            }
+        }
+        return call_user_func_array('getNotEncodedUrl', $params);
+    }
+
 }
 
 /**
@@ -213,7 +233,7 @@ class CategoryTreeNode
 		return $flat_structure;
 	}
 
-	/**
+    /**
 	 * Returns an HTML representation of the tree
 	 *
 	 * @param HtmlCategoryTreeConfig $config options for generating the tree

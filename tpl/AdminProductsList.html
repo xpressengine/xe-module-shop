@@ -31,9 +31,23 @@
 </thead>
 <tbody>
 
-<!--@if(count($product_list)==0)-->
+<!--@if(empty($product_list))-->
 <tr>
-<td class="noData" colspan="9"><p>{sprintf($lang->no_product,getUrl('','act','dispShopToolAddProduct'),getUrl('','act','dispShopToolAddConfigurableProduct'))}</p></td>
+    <td class="noData"|cond="!$search&&!$category" colspan="9">
+        <div cond="$search||$category" style="text-align: center; font-weight: bold;">
+            <p>No search results for
+                <span cond="$search">
+                    query "<span style="color: #EA3F22" cond="$search">{$search}</span>"
+                </span>
+                <span cond="$category">
+                    <span cond="$search">and </span> category "<a href="{$filterCategory->getLinkBackend()}" style="color: #EA3F22">{$filterCategory->title}</a>"
+                </span>
+            </p>
+        </div>
+        <p cond="!$search&&!$category">
+            {sprintf($lang->no_product,getUrl('','act','dispShopToolAddProduct'),getUrl('','act','dispShopToolAddConfigurableProduct'))}
+        </p>
+    </td>
 </tr>
 <!--@else-->
 <!--@foreach($product_list as $no => $product_item)-->

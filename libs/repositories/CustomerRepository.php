@@ -7,16 +7,14 @@
  */
 class CustomerRepository extends BaseRepository
 {
-    public function getCustomersList($site_srl){
-      if(!isset($site_srl))
+    public function getCustomersList($site_srl, array $extraParams=array()){
+      if (!$site_srl) {
           throw new Exception("Missing arguments for get customers list : please provide [site_srl]");
-
-      $oMemberAdminModel = getAdminModel('member');
-      $shopModel = getModel('shop');
-      $addressRepository = $shopModel->getAddressRepository();
-      $page = Context::get('page');
-      $output = $oMemberAdminModel->getSiteMemberList($site_srl,$page);
-      foreach($output->data as $member){
+      }
+      $addressRepository = new AddressRepository();
+      $page = (Context::get('page') ? Context::get('page') : 1);
+      $output = $this->getSiteMemberList($site_srl, $page, $extraParams);
+      foreach ($output->data as $member) {
           $customer = new Customer($member);
           $customer->addresses = $addressRepository->getAddresses($customer->member_srl);
           $customer->telephone = $customer->addresses->default_billing->telephone;
@@ -29,6 +27,26 @@ class CustomerRepository extends BaseRepository
       }
       $output->customers = $customers;
       return $output;
+    }
+
+    /**
+     * Get a memebr list for site
+     *
+     * @param int $site_srl
+     * @param int $page
+     *
+     * @return array
+     **/
+    function getSiteMemberList($site_srl, $page, array $extraParams=array())
+    {
+        $params = array(
+            'site_srl' => $site_srl,
+            'page' => $page,
+            'list_count' => 40,
+            'page_count' => 10
+        );
+        $params = array_merge($params, $extraParams);
+        return $this->query('getSiteMemberList', $params, true);
     }
 
     public function getNewsletterCustomers($site_srl){

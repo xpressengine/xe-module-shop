@@ -15,6 +15,7 @@ abstract class BaseRepository
 
     public function query($name, $params = null, $asArray=false)
     {
+        if (!$params) $params = array();
         if ($params instanceof BaseItem) $params = get_object_vars($params);
         if (!is_array($params) && !($params instanceof stdClass)) throw new Exception('Wrong $params type');
         if (!strpos($name, '.')) $name = "shop.$name";
@@ -22,7 +23,7 @@ abstract class BaseRepository
         if ($params) $params = (object) $params;
         $function = 'executeQuery' . ($asArray ? 'Array' : '');
         $output = $function($name, $params);
-        if (is_string($asArray) && class_exists($asArray)) {
+        if (is_string($asArray) && class_exists($asArray) && !empty($output->data)) {
             self::rowsToEntities($output->data, $asArray);
         }
         if ($output->getMessage() == 'Specified query ID value is invalid.') {
@@ -87,6 +88,20 @@ abstract class BaseRepository
             $srls = array($srls);
         } elseif (!is_array($srls)) throw new Exception('Invalid $srls input');
         return $this->query($query, array('srls'=>$srls));
+    }
+
+    public function count($query="count%Es")
+    {
+        return $this->query($query)->data->count;
+    }
+
+    public function getList($query='list%Es', $page=null, array $params=array(), $entity = null)
+    {
+        $params['page'] = ($page ? $page : 1);
+        $entity = ($entity ? $entity : $this->entity);
+        if (!class_exists($entity)) throw new Exception("Class $entity doesn't exist");
+        $output = $this->query($query, $params, $entity);
+        return $output;
     }
 
 }
