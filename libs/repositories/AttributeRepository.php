@@ -136,14 +136,9 @@ class AttributeRepository extends BaseRepository
 	{
 		$args = new stdClass();
 		$args->attribute_srls = $srls;
-		$output = executeQuery('shop.getAttributesBySrls', $args);
+		$output = executeQueryArray('shop.getAttributesBySrls', $args);
 		self::check($output);
 		$rez = array();
-        if (count($srls) == 1) {
-            $attribute = new Attribute($output->data);
-            $this->getAttributeScope($attribute);
-            return $attribute;
-        }
         foreach ($output->data as $data) {
             $rez[$data->attribute_srl] = new Attribute($data);
             $this->getAttributeScope($rez[key($rez)]);
