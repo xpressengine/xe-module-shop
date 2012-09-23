@@ -25,7 +25,7 @@
     <!--@foreach($products as $product)-->
         <div id="product_{$product->product_srl}" class="product {$product->product_type}">
             <a href="{getUrl('vid', $mid, 'act', 'dispShopProduct', 'product_srl', $product->product_srl, 'category_srl', $category_srl)}" class="product-link">
-                <img src="{$product->getPrimaryImagePath()}" width="170px" height="170px" />
+                <img src="{$product->getPrimaryImage()->getThumbnailPath(170)}" />
                 <h4>
                     <!--@if(strlen($product->title)>22)-->
                         {substr($product->title, 0, 22)}...

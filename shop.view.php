@@ -697,7 +697,7 @@ class shopView extends shop {
 			$category_srl = Context::get('category_srl');
 			if($category_srl) $args->category_srls = array($category_srl);
 
-			$output = $product_repository->getProductList($args, TRUE);
+			$output = $product_repository->getProductList($args, TRUE, TRUE);
 			Context::set('products', $output->products);
 			Context::set('page_navigation', $output->page_navigation);
 

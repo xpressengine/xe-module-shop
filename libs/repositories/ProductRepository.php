@@ -479,7 +479,7 @@ class ProductRepository extends BaseRepository
 		foreach($output->data as $image)
 		{
 			$oImage = new Image($image);
-			$product->images[] = $oImage;
+			$product->images[$image->filename] = $oImage;
 		}
 
 		return TRUE;
@@ -520,9 +520,8 @@ class ProductRepository extends BaseRepository
 	 * @throws Exception
 	 * @return stdClass $output
 	 */
-    public function getProductList($args, $loadAttributes=false)
-    {
-        if (!$args->module_srl) throw new Exception("Missing arguments for get product list : please provide [module_srl]");
+    public function getProductList($args, $loadAttributes = FALSE, $loadImages = FALSE){
+        if (!isset($args->module_srl)) throw new Exception("Missing arguments for get product list : please provide [module_srl]");
 		if (!$args->page) $args->page = 1;
         $query = ($args->category_srls && !empty($args->category_srls) ? 'getProductListByCategory' : 'getProductList');
         $output = $this->query($query, $args, true);
@@ -532,10 +531,12 @@ class ProductRepository extends BaseRepository
 			if ($row->product_type == 'simple') {
 				$product = new SimpleProduct($row);
 				if ($loadAttributes) $this->getProductAttributes($product);
+                if($loadImages) $this->getProductImages($product);
 			}
 			else {
 				$product = new ConfigurableProduct($row);
 				if ($loadAttributes) $this->getProductAttributes($product);
+                if($loadImages) $this->getProductImages($product);
 				$confProdSrls[] = $row->product_srl;
 			}
             $products[$row->product_srl] = $product;
@@ -549,6 +550,7 @@ class ProductRepository extends BaseRepository
 			foreach ($associatedProds as $associatedProd) {
 				$product = new SimpleProduct($associatedProd);
 				if ($loadAttributes) $this->getProductAttributes($product);
+                if ($loadImages) $this->getProductImages($product);
 				$products[$associatedProd->parent_product_srl]->associated_products[] = $product;
 			}
 		}
@@ -610,8 +612,7 @@ class ProductRepository extends BaseRepository
 	 * @throws Exception
 	 * @return Array $products
 	 */
-	public function getAllProducts($args)
-    {
+	public function getAllProducts($args){
 		if(!isset($args->module_srl))
 			throw new Exception("Missing arguments for get product list : please provide [module_srl]");
 

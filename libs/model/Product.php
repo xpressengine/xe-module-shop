@@ -99,19 +99,11 @@ abstract class Product extends BaseItem
 		return $this->product_type == 'configurable';
 	}
 
-    /**
-     * Return path to product image
-     */
-    public function getPrimaryImagePath()
+    public function getPrimaryImage()
     {
-        if($this->primary_image_filename)
-        {
-            return "./files/attach/images/shop/$this->module_srl/product-images/$this->product_srl/$this->primary_image_filename";
-        }
-        else
-        {
-            return "./files/attach/shop/".getNumberingPath($this->module_srl,3)."/img/missingProduct.png";
-        }
+        if($this->primary_image_filename && isset($this->images[$this->primary_image_filename]))
+            return $this->images[$this->primary_image_filename];
+        return new Image(array('module_srl' => $this->module_srl));
     }
 
     public function isInStock()

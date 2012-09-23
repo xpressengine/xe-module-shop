@@ -8,10 +8,10 @@
 
 <div id="body-content" class="body-two-columns main-content">
     <div style="float:left; margin: 20px">
-        <img src="{$product->getPrimaryImagePath()}" width="150px" height="150px" />
+        <img src="{$product->getPrimaryImage()->getThumbnailPath(150)}" />
         <br/>
         <!--@foreach($product->images as $image)-->
-            <img src="{$image->getFullPath()}" width="50px" height="50px" />
+            <img src="{$image->getThumbnailPath(50)}" />
         <!--@end-->
     </div>
 
