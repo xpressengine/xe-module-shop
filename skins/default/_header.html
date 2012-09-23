@@ -46,12 +46,20 @@
         <form action="./">
             <p id="header-search" class="f-left">
                 <input type="hidden" id="act" name="act" value="procShopSearch" />
-                <select>
+                <select name="search_category_srl" id="search_category_srl">
                     <option>All</option>
-                    <option>Categories</option>
-                    <option>Products</option>
-                    <option>Comments</option>
-                </select><input type="text" name="search" value="{$search_value}"/>
+                    <!--@foreach($search_categories as $node)-->
+                    {@ $val = $node->category }
+                    <option value="{$val->category_srl}" <!--@if($search_category_srl==$val->category_srl)-->selected="selected"<!--@end-->>
+                    <!--@for($i = 0; $i < $node->depth; $i++)-->
+                    &nbsp;
+                    <!--@end-->
+                    {$val->title}
+                    </option>
+                    <!--@end-->
+                </select>
+
+                <input type="text" name="search" value="{$search_value}"/>
                 <input type="image" src="img/search_button.gif" alt="Search" />
             </p>
         </form>

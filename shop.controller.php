@@ -596,7 +596,8 @@
         public function procShopSearch()
         {
             if ($searchQuery = Context::get('search')) {
-                $url = getNotEncodedUrl('', 'act', 'dispShopSearch', 'q', $searchQuery);
+                $category_srl = Context::get('search_category_srl');
+                $url = getNotEncodedUrl('', 'act', 'dispShopSearch', 'q', $searchQuery, 'search_category_srl', $category_srl);
             }
             else $url = getNotEncodedUrl('', 'act', 'dispShop');
             $this->setRedirectUrl($url);

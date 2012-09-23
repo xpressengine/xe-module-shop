@@ -172,6 +172,12 @@ class shopView extends shop {
         // Load menu for display on all pages (in header)
         $shop_menu = $oShopModel->getShopMenu($this->site_srl);
         Context::set('menu', $shop_menu);
+
+        // Load categories for display in search dropdown (header)
+        $category_repository = new CategoryRepository();
+        $tree = $category_repository->getCategoriesTree($this->module_srl);
+        $flat_tree = $tree->toFlatStructure();
+        Context::set('search_categories', $flat_tree);
 	}
 
 
@@ -862,20 +868,21 @@ class shopView extends shop {
 
     public function dispShopSearch()
     {
-        $repo = new ProductRepository();
+        $product_repository = new ProductRepository();
         $page = Context::get('page');
         $search = Context::get('q');
-        $searchArray = array(
-            'sku'=> $search,
-            'title'=> $search,
-            'description'=> $search,
-            'page'=> $page,
-            'module_srl'=> $this->module_srl
-        );
-        $output = $repo->query('getProductList', $searchArray, 'SimpleProduct');
-        Context::set('products', $output->data);
+        $args = new stdClass();
+        $args->sku = $search;
+        $args->title = $search;
+        $args->description = $search;
+        $args->page = $page;
+        $args->module_srl = $this->module_srl;
+        $category_srl = Context::get('search_category_srl');
+        if($category_srl) $args->category_srls = array($category_srl);
+
+        $output = $product_repository->getProductList($args);
+        Context::set('products', $output->products);
         Context::set('page_navigation', $output->page_navigation);
-        Context::set('search_results', $output);
         Context::set('search_value', $search);
         $this->setTemplateFile("product_search.html");
     }
