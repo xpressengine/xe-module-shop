@@ -7,7 +7,7 @@
 </div>
 
 <div id="body-content" class="body-two-columns main-content">
-    <div style="float:left; margin: 20px">
+    <div>
         <img src="{$product->getPrimaryImage()->getThumbnailPath(150)}" />
         <br/>
         <!--@foreach($product->images as $image)-->
@@ -18,22 +18,39 @@
     <h1>{$product->title}</h1>
 
     <p>{$product->short_description}</p>
-    <p>{$product->description}</p>
+
     <p>
-        <b>SKU </b> {$product->sku}
+        Stock:
+        <span class="{$product->isInStock() ? 'green' : 'red'}" >
+            {$product->isInStock() ? 'Available' : 'Out of stock'}
+        </span>
     </p>
+
+    <include target="add_to_cart"/>
+
+
+    <div id="description">
+    <p>{$product->description}</p>
+    </div>
+
+    <div id="additional_info">
+    <!--<p>-->
+        <!--<b>SKU </b> {$product->sku}-->
+    <!--</p>-->
     <p>
         <b> Weight </b> {$product->weight}
     </p>
-    <p>
-        <b> Price </b> {ShopDisplay::priceFormat($product->price, $shop->getCurrencySymbol())}
-    </p>
+    <!--<p>-->
+        <!--<b> Price </b> {ShopDisplay::priceFormat($product->price, $shop->getCurrencySymbol())}-->
+    <!--</p>-->
     <!--@foreach($product->attributes as $attribute_srl => $attribute_value)-->
         <p>
             <b>{$attributes[$attribute_srl]->title}</b> {$attribute_value}
         </p>
     <!--@end-->
-    <include target="product_variants" />
+    </div>
+
+
     <a href="{getUrl('vid', $mid, 'act', 'dispShop', 'product_srl', '')}">Go back</a>
 </div>
 
