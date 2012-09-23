@@ -794,3 +794,45 @@ li span.close-sign, li span.open-sign {
 .footer-box p {
     font-size: 1.083em;
 }
+
+/* MEMBER MODULE HACK */
+.xm {
+    margin-left: 244px;
+    background: #fff;
+    border-top: 1px solid #bec9d4 !important;
+    border: 1px solid #bec9d4;
+    border-radius: 3px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    padding: 0 10px 10px;
+    font-family: Arial, Helvetica, sans;
+    font-size: 1em;
+    color: #000;
+}
+
+.xm .nav {
+    display: none;
+}
+
+.xm .h1 {
+    font-size: 1.500em;
+    border: 0;
+}
+
+.xm .table table {
+    border: none !important;
+    border-color: #fff;
+    border-collapse: collapse;
+}
+
+.xm .table th, .xm .table.even tbody tr:nth-of-type(2n) td {
+    background: none;
+}
+
+.xm .table th, .xm .table td {
+    border-right: 0;
+}
+
+.xm .form ul, .xm .form li {
+    border: 0;
+}
