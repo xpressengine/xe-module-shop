@@ -22,6 +22,23 @@
         </p>
     </div>
 </div>
+<div cond="$cart" id="cart-details" style="display:none">
+    <span id="products_count">{$cart->items}</span>
+    <span id="cart_total_price">{$cart->getPrice()}</span>
+    <ul id="cart-products">
+    <!--parametrul ala "6" nu merge (n-a mers un query si nu mai stau acum s-o intreb pe corina ce-are), dar rezolvam-->
+    <!--@foreach ($cart->getProducts(6) as $i=>$product) -->
+        <li id="cart-product-{$product->product_srl}">
+            Poza: {$product->primary_image_filename}<br>
+            Titlu: {$product->title}<br>
+            Pret: {$product->price}<br>
+            Discount: {$product->discount_price}<br>
+            In stock? {$product->in_stock}<br>
+            Product quantity in cart: {$product->quantity}
+        </li>
+    <!--@endforeach -->
+    </ul>
+</div>
 <div id="header">
     <div class="layout-centered clearfix">
         <a id="header-logo" class="f-left" href="{getUrl('', 'act', 'dispShop')}"><img src="img/logo.gif" title="My Store" alt="My Store"/></a>

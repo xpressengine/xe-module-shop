@@ -58,14 +58,13 @@ class Cart extends BaseItem
                     break;
                 }
             }
-            if ($have) { //if I have it update my quantity
-                $this->repo->updateCartProduct($this->cart_srl, $cp->product_srl, $cp->quantity + $cp2->quantity);
-            }
-            else { //else add it
-                $this->repo->insertCartProduct($this->cart_srl, $cp->product_srl, $cp->quantity);
-            }
+            //if I have it update my quantity
+            if ($have) $this->repo->updateCartProduct($this->cart_srl, $cp->product_srl, $cp->quantity + $cp2->quantity);
+            //else add it
+            else $this->repo->insertCartProduct($this->cart_srl, $cp->product_srl, $cp->quantity);
         }
         //count again
+        $this->setExtra('price', $this->getPrice(true));
         $this->items = $this->count(true);
         $this->save();
     }
@@ -93,12 +92,24 @@ class Cart extends BaseItem
             $cp = $output->data[0];
             $return = $this->setProductQuantity($product_srl, $relativeQuantity ? $cp->quantity + $quantity : $quantity);
         }
-
+        //calculate cart total price
+        $this->setExtra('price', $this->getPrice(true));
         //count with quantities
         $this->items = $this->count(true);
         $this->save();
-
         return $return;
+    }
+
+    public function getPrice($refresh=false)
+    {
+        if (!$refresh && is_numeric($price = $this->getExtra('price'))) return $price;
+        //calculate new price
+        $price = 0;
+        /** @var $product SimpleProduct */
+        foreach ($this->getProducts() as $product) {
+            $price += $product->price * $product->quantity;
+        }
+        return $price;
     }
 
     /**
@@ -117,10 +128,18 @@ class Cart extends BaseItem
         return $this->repo->updateCartProduct($this->cart_srl, $product_srl, $quantity);
     }
 
-    public function getProducts()
+    /**
+     * @param null $n number of products to return
+     *
+     * @return mixed Cart products
+     * @throws Exception
+     */
+    public function getProducts($n=null)
     {
         if (!$this->cart_srl) throw new Exception('Cart is not persisted');
-        $output = $this->query('getCartAllProducts', array('cart_srl'=> $this->cart_srl), true);
+        $params = array('cart_srl'=> $this->cart_srl);
+        if ($n) $params['limit'] = $n;
+        $output = $this->query('getCartAllProducts', $params, true);
         foreach ($output->data as $i=>&$data) {
             if ($data->product_srl) {
                 $product = new SimpleProduct($data);
@@ -150,11 +169,7 @@ class Cart extends BaseItem
             $shipping_repository = new ShippingRepository();
             $shipping = $shipping_repository->getShippingMethod($shipping_method);
             return $shipping->calculateShipping($this, $this->getShippingAddress());
-        }
-        else
-        {
-            return 0;
-        }
+        } else return 0;
     }
 
     public function getTotal()
@@ -184,6 +199,7 @@ class Cart extends BaseItem
         if (empty($product_srls)) throw new Exception('Empty array $products_srls');
         $output = $this->query('deleteCartProducts', array('cart_srl'=>$this->cart_srl, 'product_srls'=>$product_srls));
         //TODO: optimize queries here
+        $this->setExtra('price', $this->getPrice(true));
         $this->items = $this->count(true);
         $this->save();
     }
@@ -198,6 +214,7 @@ class Cart extends BaseItem
             else $this->query('updateCartProduct', array('cart_srl'=>$this->cart_srl, 'product_srl'=>$product_srl, 'quantity'=>$quantity));
         }
         //TODO: and here
+        $this->setExtra('price', $this->getPrice(true));
         $this->items = $this->count(true);
         $this->save();
     }

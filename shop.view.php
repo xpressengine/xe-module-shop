@@ -847,8 +847,6 @@ class shopView extends shop {
 	public function dispShopCart()
 	{
         /** @var $cart Cart */
-        $cartRepo = new CartRepository();
-        $productRepo = $this->model->getProductRepository();
         if ($cart = Context::get('cart')) {
             $output = $cart->getProductsList(array('page' => Context::get('page')));
             $total = 0;

@@ -19,4 +19,7 @@
     <conditions>
         <condition operation="equal" column="c.cart_srl" var="cart_srl" notnull="notnull" />
     </conditions>
+    <navigation>
+        <list_count var="limit" default="10"/>
+    </navigation>
 </query>
