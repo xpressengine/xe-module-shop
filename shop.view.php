@@ -877,7 +877,7 @@ class shopView extends shop {
         Context::set('page_navigation', $output->page_navigation);
         Context::set('search_results', $output);
         Context::set('search_value', $search);
-        $this->setTemplateFile("product_list.html");
+        $this->setTemplateFile("product_search.html");
     }
 
     public function dispShopViewOrder(){

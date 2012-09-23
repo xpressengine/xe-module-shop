@@ -1,0 +1,62 @@
+<!--
+    Shop layout page
+-->
+<include target="_header.html" />
+<include target="_sidebar.html" />
+<include target="product_variants_datasource.html" />
+
+        <h1>New search page</h1>
+
+<div id="body-content" class="body-two-columns">
+    <div cond="$XE_VALIDATOR_MESSAGE" class="message {$XE_VALIDATOR_MESSAGE_TYPE}">
+        <p>{$XE_VALIDATOR_MESSAGE}</p>
+    </div>
+    <div class="breadcrumbs">
+        <span class="breadcrumbs-title">Products</span>
+        <span class="breadcrumbs-options">
+            sort by:
+            <select>
+                <option>price</option>
+                <option>rating</option>
+            </select><a href="#" class="breadcrumbs-button"><img src="img/grid-icon.png" alt="Grid view" title="Grid view" /></a><a href="#" class="breadcrumbs-button"><img src="img/list-icon.png" alt="List view" title="List view" /></a>
+        </span>
+    </div>
+    <h2 cond="$q && $act == 'dispShopSearch'">Searching for "{$q}"</h2>
+    <h2 cond="!$products || empty($products)">No products</h2>
+    <div class="product-list clearfix">
+        <!--@foreach($products as $product)-->
+        <div id="product_{$product->product_srl}" class="product {$product->product_type}">
+            <a href="{getUrl('vid', $mid, 'act', 'dispShopProduct', 'product_srl', $product->product_srl, 'category_srl', $category_srl)}" class="product-link">
+                <img src="{$product->getPrimaryImage()->getThumbnailPath(170)}" />
+                <h4>
+                    <!--@if(strlen($product->title)>22)-->
+                    {substr($product->title, 0, 22)}...
+                    <!--@else-->
+                    {$product->title}
+                    <!--@end-->
+                </h4>
+            </a>
+            <include target="add_to_cart"/>
+        </div>
+        <!--@end-->
+    </div>
+
+    <!-- Pagination -->
+    <!--@if($page_navigation)-->
+    <div class="pagination" cond="$products && !empty($products)">
+        <a href="{getUrl('page','','mid',$mid)}" class="prev">&laquo; {$lang->first_page}</a>
+        <!--@while($page_no = $page_navigation->getNextPage())-->
+        <!--@if($page == $page_no)-->
+        <span>{$page_no}</span>
+        <!--@else-->
+        <a href="{getUrl('page',$page_no,'mid',$mid)}" class="number">{$page_no}</a>
+        <!--@end-->
+        <!--@end-->
+        <a href="{getUrl('page',$page_navigation->last_page,'module_srl','')}" class="next">{$lang->last_page} &raquo;</a>
+    </div>
+    <!--@end-->
+    <!-- /Pagination -->
+    <div class="clearfix"></div>
+</div>
+
+<include target="_footer.html"/>
