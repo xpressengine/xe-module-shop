@@ -52,6 +52,16 @@ class shopModel extends shop
 		return $oShop;
 	}
 
+    /**
+     * Shop return order statistics
+     *
+     * @author Arnia (dev@xpressengine.org)
+     */
+    public function getOrderStatistics(){
+        $output = executeQuery("shop.getOrderStatistics");
+        return $output->data;
+    }
+
 	/**
 	 * Shop return list
 	 *

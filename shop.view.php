@@ -179,62 +179,10 @@ class shopView extends shop {
 	 * @brief Tool dashboard
 	 **/
 	public function dispShopToolDashboard(){
-		set_include_path(_XE_PATH_."libs/PEAR");
-		require_once('PEAR.php');
-		require_once('HTTP/Request.php');
-
 		$oCounterModel = getModel('counter');
-		$oDocumentModel = getModel('document');
-		$oCommentModel = getModel('comment');
 		$oShopModel = getModel('shop');
 
-		$url = sprintf("http://news.shop.kr/%s/news.php", Context::getLangType());
-		$cache_file = sprintf("%sfiles/cache/shop/news/%s%s.cache.xml", _XE_PATH_,getNumberingPath($this->module_srl),Context::getLangType());
-		if(!file_exists($cache_file) || filemtime($cache_file)+ 60*60 < time()) {
-			FileHandler::writeFile($cache_file,'');
-
-			if(__PROXY_SERVER__!==NULL) {
-				$oRequest = new HTTP_Request(__PROXY_SERVER__);
-				$oRequest->setMethod('POST');
-				$oRequest->_timeout = $timeout;
-				$oRequest->addPostData('arg', serialize(array('Destination'=>$url)));
-			} else {
-				$oRequest = new HTTP_Request($url);
-				if(!$content_type) $oRequest->addHeader('Content-Type', 'text/html');
-				else $oRequest->addHeader('Content-Type', $content_type);
-				if(count($headers)) {
-					foreach($headers as $key => $val) {
-						$oRequest->addHeader($key, $val);
-					}
-				}
-				$oRequest->_timeout = 2;
-			}
-			if(isSiteID($this->shop->domain)) $oRequest->addHeader('REQUESTURL', Context::getRequestUri().$this->shop->domain);
-			else $oRequest->addHeader('REQUESTURL', $this->shop->domain);
-			$oResponse = $oRequest->sendRequest();
-			$body = $oRequest->getResponseBody();
-			FileHandler::writeFile($cache_file, $body);
-		}
-
-		if(file_exists($cache_file)) {
-			$oXml = new XmlParser();
-			$buff = $oXml->parse(FileHandler::readFile($cache_file));
-
-			$item = $buff->news->item;
-			if($item) {
-				if(!is_array($item)) $item = array($item);
-
-				foreach($item as $key => $val) {
-					$obj = NULL;
-					$obj->title = $val->body;
-					$obj->date = $val->attrs->date;
-					$obj->url = $val->attrs->url;
-					$news[] = $obj;
-				}
-				Context::set('news', $news);
-			}
-		}
-
+        //get visitor graph details
 		$time = time();
 		$w = date("D");
 		while(date("D",$time) != "Sun") {
@@ -262,16 +210,16 @@ class shopView extends shop {
 		foreach($thisWeek as $day) {
 			$v = (int)$thisWeekCounter[$day]->unique_visitor;
 			if($v && $v>$max) $max = $v;
-			$status->week[date("D",strtotime($day))]->this = $v;
+			$stat->week[date("D",strtotime($day))]->this = $v;
 		}
 		foreach($lastWeek as $day) {
 			$v = (int)$lastWeekCounter[$day]->unique_visitor;
 			if($v && $v>$max) $max = $v;
-			$status->week[date("D",strtotime($day))]->last = $v;
+			$stat->week[date("D",strtotime($day))]->last = $v;
 		}
-		$status->week_max = $max;
+		$stat->week_max = $max;
 		$idx = 0;
-		foreach($status->week as $key => $val) {
+		foreach($stat->week as $key => $val) {
 			$_item[] = sprintf("<item id=\"%d\" name=\"%s\" />", $idx, $thisWeek[$idx]);
 			$_thisWeek[] = $val->this;
 			$_lastWeek[] = $val->last;
@@ -285,16 +233,34 @@ class shopView extends shop {
 		Context::set('xml', $buff);
 
 		$counter = $oCounterModel->getStatus(array(0,date("Ymd")),$this->site_srl);
-		$status->total_visitor = $counter[0]->unique_visitor;
-		$status->visitor = $counter[date("Ymd")]->unique_visitor;
+		$stat->total_visitor = $counter[0]->unique_visitor;
+		$stat->visitor = $counter[date("Ymd")]->unique_visitor;
 
+        $order_statistics = $oShopModel->getOrderStatistics();
+        $stat->placed_orders = 0;
+        foreach($order_statistics as $stats){
+            $stat->placed_orders += $stats->count;
+            switch($stats->order_status){
+                case Order::ORDER_STATUS_COMPLETED:
+                    $stat->lifetime_sales = $stats->total;
+                    $stat->total_sales = $stats->count;
+                    break;
+                case Order::ORDER_STATUS_PENDING:
+                    $stat->pending_orders = $stats->count;
+                    break;
+                case Order::ORDER_STATUS_PROCESSING:
+                    $stat->proccessing_orders = $stats->count;
+                    break;
+            }
+        }
+        if(!isset($stat->lifetime_sales)) $stat->lifetime_sales = 0;
+        if(!isset($stat->total_sales)) $stat->lifetime_sales = 0;
+        if(!isset($stat->pending_orders)) $stat->pending_orders = 0;
+        if(!isset($stat->processing_orders)) $stat->processing_orders = 0;
 
-		Context::set('status', $status);
+        if( $stat->total_sales != 0) $stat->average_sale_amount = number_format($stat->lifetime_sales / $stat->total_sales ,2) ;
 
-		unset($args);
-		$args->module_srl = $this->module_srl;
-		$args->page = 1;
-		$args->list_count = 5;
+		Context::set('stat', $stat);
 	}
 
 	/**

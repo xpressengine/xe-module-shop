@@ -93,6 +93,13 @@
     $lang->resend = 'Resend';
     $lang->unsubscribe_message = 'To unsubscribe from this newsletter click <a href="%s">here</a>';
 
+    $lang->lifetime_sales = 'Lifetime Sales';
+    $lang->average_sale_amount = 'Average sale amount';
+    $lang->total_sales = 'Total sales number';
+    $lang->placed_orders = 'Placed orders';
+    $lang->completed_orders = 'Completed orders';
+    $lang->current_processing_orders = 'Current processing orders';
+
     $lang->cmd_delete_favicon = 'Remove favicon';
     $lang->favicon = 'Favicon';
     $lang->registed_favicon = 'Registered Favicon';
