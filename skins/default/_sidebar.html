@@ -1,4 +1,4 @@
-
+<!--@if(strpos(Context::get('act'),'dispMember') === false )-->
 <!--%import("categories.js")-->
 
 <div id="body-left-sidebar">
@@ -27,4 +27,6 @@
         </div>
     </div>
 </div>
-
+<!--@else-->
+<include target="_my_account_sidebar.html" />
+<!--@end-->
