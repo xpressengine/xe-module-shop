@@ -848,7 +848,7 @@
          */
         public function procShopToolCartAddProduct() {
             $cartRepository = new CartRepository();
-            if ($product_srl = Context::get('entry')) {
+            if ($product_srl = Context::get('product_srl')) {
                 $productsRepo = $this->model->getProductRepository();
                 if ($product = $productsRepo->getProduct($product_srl)) {
                     if (!($product instanceof SimpleProduct)) {
@@ -863,7 +863,7 @@
                 //TODO: 404
                 else throw new Exception('404 product not found?');
             }
-            else throw new Exception('Missing product friendly_url');
+            else throw new Exception('Missing product srl');
 
             $shop = $this->model->getShop($this->module_srl);
             $returnUrl = getSiteUrl($shop->domain);
