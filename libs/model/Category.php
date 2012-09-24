@@ -17,6 +17,7 @@ class Category extends BaseItem
 	private $include_in_navigation_menu = 'Y';
 	public $regdate;
 	public $last_update;
+    public $order;
 
     /** @var CategoryRepository */
     public $repo;
@@ -282,14 +283,15 @@ class CategoryTreeNode
 				$html .= '</li>';
 			}
 
-			$class = '';
+			$class = "class='open";
 			if(in_array($node->category->category_srl, $config->selected))
 			{
-				$class = "class='active'";
+				$class .= " active ";
 			}
+            $class .= "'";
 			$html .= '<li id="tree_' . $node->category->category_srl . '" ' . $class . '>';
 
-			$nodeContent = '<p>';
+			$nodeContent = '<span>';
 
             if ($config->openCloseSign && count($node->children) && $config->HTMLmode) {
 
@@ -340,7 +342,7 @@ class CategoryTreeNode
                 }
 
 			}
-			$nodeContent .= '</p>';
+			$nodeContent .= '</span>';
 
 			if($config->showManagingLinks)
 			{

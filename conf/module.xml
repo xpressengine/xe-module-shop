@@ -189,6 +189,7 @@
         <action name="dispShopToolManageCategories" type="view"/>
         <action name="dispShopToolAddCategory" type="view"/>
         <action name="procShopToolInsertCategory" type="controller" />
+        <action name="procShopServiceMoveCategory" type="controller" standalone="true" />
         <action name="procShopServiceDeleteCategory" type="controller" standalone="true" />
         <action name="procShopServiceGetCategory" type="controller" standalone="true" />
 

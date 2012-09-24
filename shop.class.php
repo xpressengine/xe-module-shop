@@ -78,6 +78,7 @@
             if(!$oDB->isColumnExists("shop_order_products","related_products")) return true;
             if(!$oDB->isColumnExists("shop_order_products","regdate")) return true;
             if(!$oDB->isColumnExists("shop_order_products","last_update")) return true;
+            if(!$oDB->isColumnExists("shop_categories","order")) return true;
 
             return false;
         }
@@ -206,6 +207,11 @@
 
             if(!$oDB->isColumnExists("shop_order_products","last_update")) {
                 $oDB->addColumn('shop_order_products',"last_update","date");
+            }
+
+            if(!$oDB->isColumnExists("shop_categories","order")) {
+                $oDB->addColumn('shop_categories',"order","number", 11);
+                executeQuery('shop.fixCategoriesOrder');
             }
 
            return new Object(0, 'success_updated');

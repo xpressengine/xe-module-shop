@@ -134,7 +134,7 @@ jQuery(document).ready(function($)
         },
         afterMove:function(destination, source, pos){
             if(destination.size() == 0){
-                alert("Destination size 0");
+                location.href = location.href;
                 return;
             }
             var module_srl = jQuery("#categoryForm input[name=module_srl]").val();
@@ -148,30 +148,17 @@ jQuery(document).ready(function($)
                 parent_srl = 0;
             }
 
-            alert("Pos: " + pos + "\n"
-                    + "parent_srl (destination): " + parent_srl + "\n"
-                    + "source_srl (source): " + source_srl + "\n"
-                    + "target_srl: " + target_srl + "\n"
-            );
-
-//            jQuery.exec_json("document.procDocumentMoveCategory",{ "module_srl":module_srl,"parent_srl":parent_srl,"target_srl":target_srl,"source_srl":source_srl},
-//                function(data){
-//                    jQuery('#category_info').html('');
-//                    if(data.error > 0) Tree(xml_url);
-//                });
+            jQuery.exec_json("shop.procShopServiceMoveCategory",
+                { "module_srl":module_srl
+                    ,"parent_srl":parent_srl
+                    ,"target_srl":target_srl
+                    ,"source_srl":source_srl},
+                function(data){
+                    completeReload(data);
+                });
 
         },
         animate:true,
         docToFolderConvert:true
     });
-
-    nodeToggleAll();
-
 });
-
-
-function nodeToggleAll(){
-    jQuery("[class*=close]", simpleTreeCollection[0]).each(function(){
-        simpleTreeCollection[0].nodeToggle(this);
-    });
-}

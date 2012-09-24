@@ -20,6 +20,8 @@ class CategoryRepository extends BaseRepository
 	public function insertCategory(Category $category)
 	{
 		$category->category_srl = getNextSequence();
+        $category->order = $category->parent_srl;
+
 		$output = executeQuery('shop.insertCategory', $category);
 		if(!$output->toBool())
 		{
@@ -153,12 +155,23 @@ class CategoryRepository extends BaseRepository
 		// Arrange hierarchically
 		$nodes = array();
 		$nodes[0] = new CategoryTreeNode();
-		foreach($output->data as $pc)
+		while(count($output->data))
 		{
+            // Get first element in $output->data
+            $first_element_key = array_shift(array_keys($output->data));
+            $pc = $output->data[$first_element_key];
 			$nodes[$pc->category_srl] = new CategoryTreeNode(new Category($pc));
             if(isset($nodes[$pc->parent_srl]))
             {
                 $nodes[$pc->parent_srl]->addChild($nodes[$pc->category_srl]);
+                unset($output->data[$first_element_key]);
+            }
+            else
+            {
+                // Remove category from the begining of the array ..
+                unset($output->data[$first_element_key]);
+                // .. and add to the end
+                $output->data[] = $pc;
             }
 		}
 
@@ -328,6 +341,15 @@ class CategoryRepository extends BaseRepository
 
 		return array_merge($parents, $rest_of_parents);
 	}
+
+    /**
+     *
+     */
+    public function increaseCategoriesOrder($parent_srl, $order = null)
+    {
+        $args = array( 'parent_srl' => $parent_srl, 'order' => $order);
+        $this->query('updateCategoriesIncreaseOrder', $args);
+    }
 
 }
 /* End of file CategoryRepository.php */
