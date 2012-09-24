@@ -1187,8 +1187,10 @@ class shopView extends shop {
 
 		Context::set('HTML_tree', $HTML_tree);
 
+        // Load jQuery tree plugin
+        Context::loadJavascriptPlugin('ui.tree');
+
 		// Initialize new empty Category object
-		require_once('libs/model/Category.php');
 		$category = new Category();
 		$category->module_srl = $this->module_srl;
 		Context::set('category', $category);

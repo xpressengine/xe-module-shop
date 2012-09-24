@@ -128,4 +128,50 @@ jQuery(document).ready(function($)
         )
     });
 
+    simpleTreeCollection = jQuery('.simpleTree').simpleTree({
+        autoclose: false,
+        afterClick:function(node){
+        },
+        afterMove:function(destination, source, pos){
+            if(destination.size() == 0){
+                alert("Destination size 0");
+                return;
+            }
+            var module_srl = jQuery("#categoryForm input[name=module_srl]").val();
+            var parent_srl = destination.attr('id').replace(/.*_/g,'');
+            var source_srl = source.attr('id').replace(/.*_/g,'');
+
+            var target = source.prevAll("li:not([class^=line])");
+            var target_srl = 0;
+            if(target.length >0){
+                target_srl = source.prevAll("li:not([class^=line])").get(0).id.replace(/.*_/g,'');
+                parent_srl = 0;
+            }
+
+            alert("Pos: " + pos + "\n"
+                    + "parent_srl (destination): " + parent_srl + "\n"
+                    + "source_srl (source): " + source_srl + "\n"
+                    + "target_srl: " + target_srl + "\n"
+            );
+
+//            jQuery.exec_json("document.procDocumentMoveCategory",{ "module_srl":module_srl,"parent_srl":parent_srl,"target_srl":target_srl,"source_srl":source_srl},
+//                function(data){
+//                    jQuery('#category_info').html('');
+//                    if(data.error > 0) Tree(xml_url);
+//                });
+
+        },
+        animate:true,
+        docToFolderConvert:true
+    });
+
+    nodeToggleAll();
+
 });
+
+
+function nodeToggleAll(){
+    jQuery("[class*=close]", simpleTreeCollection[0]).each(function(){
+        simpleTreeCollection[0].nodeToggle(this);
+    });
+}
