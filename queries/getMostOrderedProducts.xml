@@ -9,6 +9,7 @@
         <column name="p.primary_image_filename" />
         <column name="p.product_type" />
         <column name="p.price" />
+        <column name="p.module_srl" />
         <column name="sum(op.quantity)" alias="qty"/>
         <column name="count(distinct op.order_srl)" alias="order_count"/>
     </columns>
