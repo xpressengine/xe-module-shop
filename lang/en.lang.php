@@ -99,6 +99,9 @@
     $lang->placed_orders = 'Placed orders';
     $lang->completed_orders = 'Completed orders';
     $lang->current_processing_orders = 'Current processing orders';
+    $lang->no_orders = 'There are no orders added';
+    $lang->order_count = 'Order count';
+    $lang->order_revenue = 'Order revenue';
 
     $lang->cmd_delete_favicon = 'Remove favicon';
     $lang->favicon = 'Favicon';
@@ -207,6 +210,7 @@
     );
     $lang->no_attribute = 'No attributes, <a href="%s">add one!</a>';
     $lang->no_customers = 'No customers, <a href="%s">add one!</a>';
+    $lang->no_top_customers = 'No top customers';
     $lang->no_addresses = 'No addresses, <a href="%s">add one!</a>';
     $lang->new_attribute = 'New attribute';
     $lang->edit_attribute = 'Edit attribute';

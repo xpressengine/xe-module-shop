@@ -22,10 +22,29 @@ class OrderRepository extends BaseRepository
     {
         $params = array('module_srl'=> $module_srl);
         if ($member_srl) $params = array_merge($params, array('member_srl'=> $member_srl));
-        $output = $this->query('getRecentOrders', $params);
+        $output = $this->query('getRecentOrders', $params,true);
         $orders = array();
         foreach ($output->data as $data) $orders[] = new Order((array) $data);
         return $orders;
+    }
+
+    public function getMostOrderedProducts($module_srl){
+        $params = array('module_srl'=> $module_srl);
+        $output = $this->query('getMostOrderedProducts', $params, true);
+        foreach ($output->data as $data) {
+            if($data->product_type == 'simple') $product = new SimpleProduct((array) $data);
+            elseif($data->product_type == 'configurable') $product = new ConfigurableProduct((array) $data);
+            $product->order_count = $data->order_count;
+            $products[] = $product;
+        }
+        return $products;
+    }
+
+    public function getTopCustomers($module_srl){
+        $params = array('module_srl'=> $module_srl);
+        $output = $this->query('getTopCustomers', $params, true);
+
+        return $output->data;
     }
 
     public function getLastOrder($module_srl, $member_srl)

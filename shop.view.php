@@ -245,6 +245,7 @@ class shopView extends shop {
 		$stat->total_visitor = $counter[0]->unique_visitor;
 		$stat->visitor = $counter[date("Ymd")]->unique_visitor;
 
+        //get order and sale statistics
         $order_statistics = $oShopModel->getOrderStatistics();
         $stat->placed_orders = 0;
         foreach($order_statistics as $stats){
@@ -263,13 +264,27 @@ class shopView extends shop {
             }
         }
         if(!isset($stat->lifetime_sales)) $stat->lifetime_sales = 0;
-        if(!isset($stat->total_sales)) $stat->lifetime_sales = 0;
+        if(!isset($stat->total_sales)) $stat->total_sales = 0;
         if(!isset($stat->pending_orders)) $stat->pending_orders = 0;
         if(!isset($stat->processing_orders)) $stat->processing_orders = 0;
 
+
         if( $stat->total_sales != 0) $stat->average_sale_amount = number_format($stat->lifetime_sales / $stat->total_sales ,2) ;
+        else $stat->average_sale_amount = 0;
+        // get 5 recent orders
+        $orderRepository = $this->model->getOrderRepository();
+        $recent_orders = $orderRepository->getRecentOrders($this->module_info->module_srl);
+
+        // get most ordered products
+        $top_products = $orderRepository->getMostOrderedProducts($this->module_info->module_srl);
+
+        //get top 5 customers
+        $top_customers = $orderRepository->getTopCustomers($this->module_info->module_srl);
 
 		Context::set('stat', $stat);
+        Context::set('recent_orders',$recent_orders);
+        Context::set('top_products',$top_products);
+        Context::set('top_customers',$top_customers);
 	}
 
 	/**
@@ -706,6 +721,8 @@ class shopView extends shop {
 			$category_srl = Context::get('category_srl');
 			if($category_srl) $args->category_srls = array($category_srl);
 
+            $args->status = 'enabled';
+            if($this->shop->getOutOfStockProducts() == 'N') $args->in_stock = Y ;
 			$output = $product_repository->getProductList($args, TRUE, TRUE);
 			Context::set('products', $output->products);
 			Context::set('page_navigation', $output->page_navigation);

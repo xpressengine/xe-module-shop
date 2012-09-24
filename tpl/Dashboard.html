@@ -67,100 +67,71 @@
 <div class="partitionContainer">
     <div class="partition partitionLeft">
 
-        <!-- Lates 5 orders -->
+        <!-- Last 5 orders -->
         <div class="section">
 
             <h4 class="dashboardH4">Last 5 orders</h4>
             <div class="dashboardWire">
-                <!--@if(count($newest_documents))-->
-                <ul class="lastPost">
-                    <!--@foreach($newest_documents as $key => $val)-->
+                <!--@if(count($recent_orders))-->
+                <ul class="lastOrder">
+                    <!--@foreach($recent_orders as $order)-->
                     <li>
-                        {@$_url='#'}
-                        {@$_target=''}
-                        <!--@if($val->get('module_srl') == $logged_info->member_srl)-->
-                        {@$_url=getUrl('act','dispShopToolPostManageWrite','document_srl',$val->document_srl,'page',$page)}
-                        <!--@else if($val->get('module_srl')<=0)-->
-                        {@$_url=getUrl('act','dispShopToolPostManageWrite','document_srl',$val->document_srl,'page',$page)}
-                        <!--@else-->
-                        {@$_url=getUrl('','document_srl',$val->document_srl)}
-                        {@$_target=" target=\"_blank\"";}
-                        <!--@end-->
-
-                        <p class="title"><a href="{$_url}" {$_target}>{$val->getTitle()}</a><span class="date">{$val->getRegdate("Y.m.d")}</span></p>
+                        <p class="title"><a href="{getUrl('','act','dispShopToolViewOrder','order_srl',$order->order_srl)}">{reset(explode(',',$order->billing_address))}</a><span class="date">{zdate($order->regdate)}</span></p>
                         <p class="state">
-                            <!--@if($val->get('module_srl') == $logged_info->member_srl)-->
-                            <strong class="publishState draft"><span>{$lang->temp}</span></strong>
-                            <!--@else if($val->get('module_srl')<=0)-->
-                            <strong class="publishState draft"><span>{$lang->reserve}</span></strong>
+                            <!--@if($order->order_status == Order::ORDER_STATUS_COMPLETED)-->
+                            <strong class="publishState out"><span>{$order->order_status}</span></strong>
                             <!--@else-->
-                            <strong class="publishState out"><span>{$lang->publish}</span></strong>
+                            <strong class="publishState draft"><span>{$order->order_status}</span></strong>
                             <!--@end-->
-                            <!--@if($val->getCommentCount())-->
-                            <span class="reply">{$lang->comment} <strong>{$val->getCommentCount()}</strong></span>
-                            <!--@end-->
-                            <!--@if($val->getTrackbackCount())-->
-                            <span class="trackback">{$lang->trackback} <strong>{$val->getTrackbackCount()}</strong></span>
-                            <!--@end-->
+                            <span>{$lang->grand_total}: {ShopDisplay::priceFormat($order->total,$shop->getCurrencySymbol())}</span>
                         </p>
                     </li>
                     <!--@end-->
                 </ul>
                 <!--@else-->
-                <p class="noData">{@printf($lang->no_post, getUrl('act','dispShopToolPostManageWrite'))}</p>
+                <p class="noData">{$lang->no_orders}</p>
                 <!--@end-->
             </div>
             <a href="{getUrl('','act','dispShopToolOrdersStatistics')}" class="dashboardMoreTop">{$lang->more}</a>
         </div>
-        <!-- /Last  Post -->
+        <!-- /Last 5 orders -->
 
 
-        <!-- Last Guestbook -->
+        <!-- Top Customers -->
         <div class="section">
             <h4 class="dashboardH4">Top 5 customers</h4>
             <div class="dashboardWire">
-                <!--@if(count($guestbook_list))-->
+                <!--@if(count($top_customers))-->
 
-                <ul class="lastReply">
-                    <!--@foreach($guestbook_list as $k => $v)-->
+                <ul class="topCustomer">
+                    <!--@foreach($top_customers as $customer)-->
                     <li>
-                        <!--@if($v->profile_image)-->
-
-                        <img src="{$v->profile_image}" alt="{$v->nick_name}" class="author" />
-                        <!--@else-->
-                        <img height="39" width="39" alt="" src="img/iconEmoticonDefault.gif" class="author"/>
-                        <!--@end-->
-                        <p class="member_{$v->member_srl} content"><strong>{$v->nick_name}</strong> <a href="{getUrl('','mid',$mid,'act','dispShopToolCommunicationGuestbookReply','shop_guestbook_srl',$v->shop_guestbook_srl)}">{strip_tags($v->content)}</a> <button type="button" class="delete" onclick="deleteGuestbookItem({$v->shop_guestbook_srl},1)"><span>{$lang->cmd_delete}</span></button></p>
+                        <p class="member_{$customer->member_srl} content"><strong><a href="{getUrl('','mid',$mid,'act','dispShopToolEditCustomer','member-srl',$customer->member_srl)}">{$customer->user_name}</a></strong>, <strong>{$customer->email_address}</strong>{$lang->total}: <strong>{ShopDisplay::priceFormat($customer->total,$shop->getCurrencySymbol())}</strong> & {$lang->order_count}: <strong>{$customer->order_count}</strong> </p>
                     </li>
                     <!--@end-->
                 </ul>
                 <!--@else-->
-                <p class="noData">{$lang->newest_no_guestbooks}</p>
+                <p class="noData">{$lang->no_top_customer}</p>
                 <!--@end-->
             </div>
             <a href="{getUrl('','act','dispShopToolCommunicationGuestbook')}" class="dashboardMoreTop">{$lang->more}</a>
         </div>
-        <!-- /Last Subject -->
+        <!-- /Top Customers -->
 
     </div>
 
     <div class="partition partitionRight">
 
-        <!-- Last Reply-->
+        <!-- Most ordered products -->
         <div class="section">
-            <h4 class="dashboardH4">Top 5 selling products</h4>
+            <h4 class="dashboardH4">5 most ordered products</h4>
             <div class="dashboardWire">
-                <!--@if(count($newest_comments))-->
-                <ul class="lastReply">
-                    <!--@foreach($newest_comments as $key => $val)-->
-                    {@$_profile_image = $val->getProfileImage()}
+                <!--@if(count($top_products))-->
+                <ul class="topProduct">
+                    <!--@foreach($top_products as $product)-->
                     <li>
-                        <!--@if($_profile_image)-->
-                        <img src="{$_profile_image}" alt="{htmlspecialchars($val->getNickName())}" class="author" />
-                        <!--@else-->
-                        <img height="39" width="39" alt="" src="img/iconEmoticonDefault.gif" class="author"/>
-                        <!--@end-->
-                        <p class="content"><span class="member_{$val->get('member_srl')}"><strong>{$val->getNickName()}</strong></span> <a href="{$val->getPermanentUrl()}">{$val->getSummary(200)}</a> <button type="button" class="delete" onclick="deleteCommentItem({$val->comment_srl},1)"><span>{$lang->cmd_delete}</span></button></p>
+                        <img src="{$product->getPrimaryImage()->getThumbnailPath(50)}" alt="{$product->title}" class="author" />
+                        <p class="content"><span class="product_{$product->product_srl}"><strong><a href="{getUrl('','act','dispShopToolEditProduct','product_srl',$product->product_srl)}">{$product->title}</a></strong></span> {$lang->qty}: <strong>{$product->qty}</strong> & {$lang->order_count}: <strong>{$product->order_count}</strong> {$lang->order_revenue}: <strong>{ShopDisplay::priceFormat($product->price * $product->qty,$shop->getCurrencySymbol())}</strong></p>
                     </li>
                     <!--@end-->
                 </ul>
@@ -170,7 +141,7 @@
             </div>
             <a href="{getUrl('','act','dispShopToolCommunicationComment')}" class="dashboardMoreTop">{$lang->more}</a>
         </div>
-        <!-- Last Reply-->
+        <!-- Most ordered products -->
 
         <!-- Visotors Graph -->
         <div class="section">

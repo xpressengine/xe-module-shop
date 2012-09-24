@@ -58,7 +58,7 @@ class shopModel extends shop
      * @author Arnia (dev@xpressengine.org)
      */
     public function getOrderStatistics(){
-        $output = executeQuery("shop.getOrderStatistics");
+        $output = executeQueryArray("shop.getOrderStatistics");
         return $output->data;
     }
 
