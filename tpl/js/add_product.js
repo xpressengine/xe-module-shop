@@ -2,26 +2,7 @@ jQuery(document).ready(function($){
     $( ".attribute.date" ).datepicker();
 
     $("#categories input[type='checkbox']").change(function(){
-        // Select/deselect parent categories
-        var parent = $(this).parent();
-        var this_is_checked = $(this).is(':checked');
-        while(parent.attr("id") != "categories") // Iterate to all elements above current one until root ul
-        {
-            if(parent.is("ul"))
-            {
-                parent_checkbox = parent.parent().children("p").children("input[type='checkbox']");
-
-                // If we are about to change the parent value,
-                // we need to make sure it doesn't need to stay checked for other children
-                if(parent_checkbox.attr("checked") !=  this_is_checked)
-                {
-
-
-                    parent_checkbox.attr("checked", this_is_checked);
-                }
-            }
-            parent = parent.parent();
-        }
+        checkOrUncheckParents($(this), 'categories');
 
         // Get list of visible categories
         var visible_categories = new Array();

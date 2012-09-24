@@ -1,6 +1,15 @@
 <!--#include("_tool_header.html")-->
 <!--%import("css/pagination.css",optimized=false)-->
 
+<script type="text/javascript">
+    jQuery(document).ready(function($){
+        $("#category_scope input:checkbox").change(function(){
+            checkOrUncheckParents($(this), 'category_scope');
+        });
+    });
+
+</script>
+
 <!-- Content -->
 <div id="content">
     <!-- contentHeader -->

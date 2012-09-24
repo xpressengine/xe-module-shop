@@ -690,3 +690,39 @@ jQuery(function($){
         })
         .blur();
 });
+
+// Function for checking / unchecking categories in a hierarchy
+// Taking into account parents and children
+// (when checking a child, parents should also be checked
+function checkOrUncheckParents(clicked_category_checkbox, root_ul_id)
+{
+    // Select/deselect parent categories
+    var parent = clicked_category_checkbox.parent();
+    var this_is_checked = clicked_category_checkbox.is(':checked');
+    while(parent.attr("id") != root_ul_id) // Iterate to all elements above current one until root ul
+    {
+        if(parent.is("ul"))
+        {
+            parent_checkbox = parent.parent().children("p").children("input[type='checkbox']");
+
+            // If we are about to change the parent value,
+            // we need to make sure it doesn't need to stay checked for other children
+            if(this_is_checked == false)
+            {
+                var atLeastOneChildIsChecked = false;
+                if(parent.find("input:checked").length > 0)
+                {
+                    var atLeastOneChildIsChecked = true;
+                }
+
+                if(atLeastOneChildIsChecked)
+                {
+                    parent = parent.parent();
+                    continue;
+                }
+            }
+            parent_checkbox.attr("checked", this_is_checked);
+        }
+        parent = parent.parent();
+    }
+}
