@@ -637,7 +637,7 @@ class shopView extends shop {
             $col = (Context::get('column') ? Context::get('column') : 'title');
             $args->$col = $search;
         }
-        if ($cat_srl = Context::get('category')) {
+        if ($cat_srl = Context::get('category_srl')) {
             if (!is_numeric($cat_srl)) throw new Exception('invalid category srl');
             $cat = new Category($cat_srl);
             Context::set('filterCategory', $cat);
@@ -824,7 +824,7 @@ class shopView extends shop {
      **/
     public function dispShopHome(){
         // Products list
-        $this->dispShopCategoryTree();
+        $this->loadShopCategoryTree();
         $product_repository = $this->model->getProductRepository();
         try{
             $args = new stdClass();
@@ -850,7 +850,7 @@ class shopView extends shop {
 	 **/
 	public function dispShop() {
 
-        $this->dispShopCategoryTree();
+        $this->loadShopCategoryTree();
 
 		// Products list
 		$product_repository = $this->model->getProductRepository();
@@ -882,7 +882,7 @@ class shopView extends shop {
 		}
 	}
 
-    public function dispShopCategoryTree(){
+    protected function loadShopCategoryTree($selected_categories = array()){
         // Categories left tree
         // Retrieve existing categories
         $category_srl = Context::get('category_srl');
@@ -894,7 +894,8 @@ class shopView extends shop {
         $tree_config->linkCategoryName = TRUE;
         $tree_config->openCloseSign = TRUE;
         $tree_config->linkGetUrlParams = array('vid', $this->mid, 'act', 'dispShop');
-        if($category_srl) $tree_config->selected = array($category_srl);
+        $tree_config->selected = $selected_categories;
+        if($category_srl) $tree_config->selected[] = $category_srl;
         $HTML_tree = $tree->toHTML($tree_config);
         Context::set('HTML_tree', $HTML_tree);
 
@@ -948,16 +949,7 @@ class shopView extends shop {
 		$HTML_tree = $tree->toHTML($tree_config);
 		Context::set('HTML_tree', $HTML_tree);
 
-		// Current category details
-		$category_srl = Context::get('category_srl');
-		if($category_srl)
-		{
-			$current_category = $category_repository->getCategory($category_srl);
-			Context::set('current_category', $current_category);
-
-			$breadcrumbs_items = $category_repository->getCategoryParents($current_category);
-			Context::set('breadcrumbs_items', $breadcrumbs_items);
-		}
+        $this->loadShopCategoryTree();
 
 		$this->setTemplateFile('product.html');
 	}
@@ -1358,12 +1350,16 @@ class shopView extends shop {
 		$tree_config = new HtmlCategoryTreeConfig();
 		$tree_config->showManagingLinks = TRUE;
         $tree_config->HTMLmode = FALSE;
+        $tree_config->linkCategoryName = TRUE;
+        $tree_config->linkGetUrlParams = array('act', 'dispShopToolManageProducts');
 		$HTML_tree = $tree->toHTML($tree_config);
 
 		Context::set('HTML_tree', $HTML_tree);
 
+        // Load jQuery tree plugin
+        Context::loadJavascriptPlugin('ui.tree');
+
 		// Initialize new empty Category object
-		require_once('libs/model/Category.php');
 		$category = new Category();
 		$category->module_srl = $this->module_srl;
 		Context::set('category', $category);
