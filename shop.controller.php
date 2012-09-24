@@ -611,7 +611,7 @@
                 $params[] = $search;
             }
             if ($category = Context::get('search_category_srl')) {
-                $params[] = 'category';
+                $params[] = 'category_srl';
                 $params[] = $category;
             }
             if ($col = Context::get('col_search')) {

@@ -475,7 +475,7 @@ class shopView extends shop {
             $col = (Context::get('column') ? Context::get('column') : 'title');
             $args->$col = $search;
         }
-        if ($cat_srl = Context::get('category')) {
+        if ($cat_srl = Context::get('category_srl')) {
             if (!is_numeric($cat_srl)) throw new Exception('invalid category srl');
             $cat = new Category($cat_srl);
             Context::set('filterCategory', $cat);
@@ -1194,6 +1194,8 @@ class shopView extends shop {
 		$tree_config = new HtmlCategoryTreeConfig();
 		$tree_config->showManagingLinks = TRUE;
         $tree_config->HTMLmode = FALSE;
+        $tree_config->linkCategoryName = TRUE;
+        $tree_config->linkCategoryNameAct = 'dispShopToolManageProducts';
 		$HTML_tree = $tree->toHTML($tree_config);
 
 		Context::set('HTML_tree', $HTML_tree);
