@@ -149,10 +149,6 @@ class HtmlCategoryTreeConfig
 	 */
 	public $linkCategoryName = FALSE;
     /**
-     * @var string If given, represents the act the link should point to
-     */
-    public $linkCategoryNameAct = NULL;
-    /**
 	 * @var array When $linkCategoryName is true, this is used to create the URL to link to; Represents parameters for getUrl function
 	 */
 	public $linkGetUrlParams = array();
@@ -328,11 +324,6 @@ class CategoryTreeNode
 			{
 				$config->linkGetUrlParams[] = 'category_srl';
 				$config->linkGetUrlParams[] = $node->category->category_srl;
-                if($config->linkCategoryNameAct)
-                {
-                    $config->linkGetUrlParams[] = 'act';
-                    $config->linkGetUrlParams[] = $config->linkCategoryNameAct;
-                }
 				$nodeTitle = '<a href="' . call_user_func_array('getUrl', $config->linkGetUrlParams) . '">' . $nodeTitle . '</a>';
 			}
 			$nodeContent .= $nodeTitle;
