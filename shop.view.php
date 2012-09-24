@@ -168,9 +168,6 @@ class shopView extends shop {
         $logged_info = Context::get('logged_info');
         $cart = $cartRepo->getCart($this->module_srl, null, $logged_info->member_srl, session_id());
         Context::set('cart', $cart);
-        //TODO: fix limit
-        if ($cart) Context::set('preview_products', $cart->getProducts(6));
-        Context::set('grid_view', $_SESSION['grid_view']);
 
         // Load menu for display on all pages (in header)
         $shop_menu = $oShopModel->getShopMenu($this->site_srl);
@@ -286,6 +283,153 @@ class shopView extends shop {
         Context::set('top_products',$top_products);
         Context::set('top_customers',$top_customers);
 	}
+
+    /**
+     * @brief display shop tool statistics visitor
+     **/
+    function dispShopToolStatisticsVisitor() {
+        global $lang;
+
+        $selected_date = Context::get('selected_date');
+        if(!$selected_date) $selected_date = date("Ymd");
+        Context::set('selected_date', $selected_date);
+
+        $oCounterModel = &getModel('counter');
+
+        $type = Context::get('type');
+        if(!$type) {
+            $type = 'day';
+            Context::set('type',$type);
+        }
+
+        $site_module_info = Context::get('site_module_info');
+
+        $xml->item = array();
+        $xml->value = array(array(),array());
+        $selected_count = 0;
+
+        // total & today
+        $counter = $oCounterModel->getStatus(array(0,date("Ymd")),$site_module_info->site_srl);
+        $total->total = $counter[0]->unique_visitor;
+        $total->today = $counter[date("Ymd")]->unique_visitor;
+
+        switch($type) {
+            case 'month' :
+                $xml->selected_title = Context::getLang('this_month');
+                $xml->last_title = Context::getLang('before_month');
+
+                $disp_selected_date = date("Y", strtotime($selected_date));
+                $before_url = getUrl('selected_date', date("Ymd",strtotime($selected_date)-60*60*24*365));
+                $after_url = getUrl('selected_date', date("Ymd",strtotime($selected_date)+60*60*24*365));
+                $detail_status = $oCounterModel->getHourlyStatus('month', $selected_date, $site_module_info->site_srl);
+                $i=0;
+                foreach($detail_status->list as $key => $val) {
+                    $_k = substr($selected_date,0,4).'.'.sprintf('%02d',$key);
+                    $output->list[$_k]->val = $val;
+                    if($selected_date == date("Ymd")&&$key == date("m")){
+                        $selected_count = $val;
+                        $output->list[$_k]->selected = true;
+                    }else{
+                        $output->list[$_k]->selected = false;
+                    }
+                    $output->list[$_k]->val = $val;
+                    $xml->item[] = sprintf('<item id="%d" name="%s" />',$i++,$_k);
+                    $xml->value[0][] = $val;
+                }
+
+
+                $last_date = date("Ymd",strtotime($selected_date)-60*60*24*365);
+                $last_detail_status = $oCounterModel->getHourlyStatus('month', $last_date, $site_module_info->site_srl);
+                foreach($last_detail_status->list as $key => $val) {
+                    $xml->value[1][] = $val;
+                }
+
+                break;
+            case 'week' :
+                $xml->selected_title = Context::getLang('this_week');
+                $xml->last_title = Context::getLang('last_week');
+
+                $before_url = getUrl('selected_date', date("Ymd",strtotime($selected_date)-60*60*24*7));
+                $after_url = getUrl('selected_date', date("Ymd",strtotime($selected_date)+60*60*24*7));
+                $disp_selected_date = date("Y.m.d", strtotime($selected_date));
+                $detail_status = $oCounterModel->getHourlyStatus('week', $selected_date, $site_module_info->site_srl);
+                foreach($detail_status->list as $key => $val) {
+                    $_k = date("Y.m.d", strtotime($key)).'('.$lang->unit_week[date('l',strtotime($key))].')';
+                    if($selected_date == date("Ymd")&&$key == date("Ymd")){
+                        $selected_count = $val;
+                        $output->list[$_k]->selected = true;
+                    }else{
+                        $output->list[$_k]->selected = false;
+                    }
+                    $output->list[$_k]->val = $val;
+                    $xml->item[] = sprintf('<item id="%s" name="%s" />',$_k,$_k);
+                    $xml->value[0][] = $val;
+                }
+
+                $last_date = date("Ymd",strtotime($selected_date)-60*60*24*7);
+                $last_detail_status = $oCounterModel->getHourlyStatus('week', $last_date, $site_module_info->site_srl);
+                foreach($last_detail_status->list as $key => $val) {
+                    $xml->value[1][] = $val;
+                }
+
+
+                break;
+            case 'day' :
+                $xml->selected_title = Context::getLang('today');
+                $xml->last_title = Context::getLang('day_before');
+
+                $before_url = getUrl('selected_date', date("Ymd",strtotime($selected_date)-60*60*24));
+                $after_url = getUrl('selected_date', date("Ymd",strtotime($selected_date)+60*60*24));
+                $disp_selected_date = date("Y.m.d", strtotime($selected_date));
+
+
+                $detail_status = $oCounterModel->getHourlyStatus('hour', $selected_date, $site_module_info->site_srl);
+
+                foreach($detail_status->list as $key => $val) {
+                    $_k = sprintf('%02d',$key);
+                    if($selected_date == date("Ymd")&&$key == date("H")){
+                        $selected_count = $val;
+                        $output->list[$_k]->selected = true;
+                    }else{
+                        $output->list[$_k]->selected = false;
+                    }
+                    $output->list[$_k]->val = $val;
+                    $xml->item[] = sprintf('<item id="%d" name="%02d" />',$key,$key);
+                    $xml->value[0][] = $val;
+                }
+
+                $last_date = date("Ymd",strtotime($selected_date)-60*60*24);
+                $last_detail_status = $oCounterModel->getHourlyStatus('hour', $last_date, $site_module_info->site_srl);
+                foreach($last_detail_status->list as $key => $val) {
+                    $xml->value[1][] = $val;
+                }
+
+
+                break;
+        }
+
+        // set xml
+        //  $xml->data = '<Graph><gdata title="Shop Visitor" id="'.$type.'"><fact>';
+        $xml->data = '<Graph><gdata title="Shop Visitor" id="data"><fact>';
+        $xml->data .= join("",$xml->item);
+        $xml->data .= "</fact><subFact>";
+        $xml->data .='<item id="0"><data name="'.$xml->selected_title.'">'. join("|",$xml->value[0]) .'</data></item>';
+        $xml->data .='<item id="1"><data name="'.$xml->last_title.'">'. join("|",$xml->value[1]) .'</data></item>';
+        $xml->data .= '</subFact></gdata></Graph>';
+
+
+        //Context::set('xml', urlencode($xml->data));
+        Context::set('xml', $xml->data);
+        Context::set('before_url', $before_url);
+        Context::set('after_url', $after_url);
+        Context::set('disp_selected_date', $disp_selected_date);
+        $output->sum = $detail_status->sum;
+        $output->max = $detail_status->max;
+        $output->selected_count = $selected_count;
+        $output->total = $total->total;
+        $output->today = $total->today;
+        Context::set('detail_status', $output);
+    }
 
 	/**
 	 * @brief Login
@@ -493,7 +637,7 @@ class shopView extends shop {
             $col = (Context::get('column') ? Context::get('column') : 'title');
             $args->$col = $search;
         }
-        if ($cat_srl = Context::get('category_srl')) {
+        if ($cat_srl = Context::get('category')) {
             if (!is_numeric($cat_srl)) throw new Exception('invalid category srl');
             $cat = new Category($cat_srl);
             Context::set('filterCategory', $cat);
@@ -680,7 +824,7 @@ class shopView extends shop {
      **/
     public function dispShopHome(){
         // Products list
-        $this->loadShopCategoryTree();
+        $this->dispShopCategoryTree();
         $product_repository = $this->model->getProductRepository();
         try{
             $args = new stdClass();
@@ -706,7 +850,7 @@ class shopView extends shop {
 	 **/
 	public function dispShop() {
 
-        $this->loadShopCategoryTree();
+        $this->dispShopCategoryTree();
 
 		// Products list
 		$product_repository = $this->model->getProductRepository();
@@ -738,7 +882,7 @@ class shopView extends shop {
 		}
 	}
 
-    protected function loadShopCategoryTree($selected_categories = array()){
+    public function dispShopCategoryTree(){
         // Categories left tree
         // Retrieve existing categories
         $category_srl = Context::get('category_srl');
@@ -750,8 +894,7 @@ class shopView extends shop {
         $tree_config->linkCategoryName = TRUE;
         $tree_config->openCloseSign = TRUE;
         $tree_config->linkGetUrlParams = array('vid', $this->mid, 'act', 'dispShop');
-        $tree_config->selected = $selected_categories;
-        if($category_srl) $tree_config->selected[] = $category_srl;
+        if($category_srl) $tree_config->selected = array($category_srl);
         $HTML_tree = $tree->toHTML($tree_config);
         Context::set('HTML_tree', $HTML_tree);
 
@@ -797,7 +940,24 @@ class shopView extends shop {
 		$category_repository = $shopModel->getCategoryRepository();
 		$tree = $category_repository->getCategoriesTree($this->module_srl);
 
-		$this->loadShopCategoryTree();
+		// Prepare tree for display
+		$tree_config = new HtmlCategoryTreeConfig();
+		$tree_config->linkCategoryName = TRUE;
+		$tree_config->linkGetUrlParams = array('vid', $this->mid, 'act', 'dispShop');
+		$tree_config->selected = $product->categories;
+		$HTML_tree = $tree->toHTML($tree_config);
+		Context::set('HTML_tree', $HTML_tree);
+
+		// Current category details
+		$category_srl = Context::get('category_srl');
+		if($category_srl)
+		{
+			$current_category = $category_repository->getCategory($category_srl);
+			Context::set('current_category', $current_category);
+
+			$breadcrumbs_items = $category_repository->getCategoryParents($current_category);
+			Context::set('breadcrumbs_items', $breadcrumbs_items);
+		}
 
 		$this->setTemplateFile('product.html');
 	}
@@ -1198,16 +1358,12 @@ class shopView extends shop {
 		$tree_config = new HtmlCategoryTreeConfig();
 		$tree_config->showManagingLinks = TRUE;
         $tree_config->HTMLmode = FALSE;
-        $tree_config->linkCategoryName = TRUE;
-        $tree_config->linkGetUrlParams = array('act', 'dispShopToolManageProducts');
 		$HTML_tree = $tree->toHTML($tree_config);
 
 		Context::set('HTML_tree', $HTML_tree);
 
-        // Load jQuery tree plugin
-        Context::loadJavascriptPlugin('ui.tree');
-
 		// Initialize new empty Category object
+		require_once('libs/model/Category.php');
 		$category = new Category();
 		$category->module_srl = $this->module_srl;
 		Context::set('category', $category);

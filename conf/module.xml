@@ -16,6 +16,7 @@
         <permission action="dispShopToolChangePassword" target="manager" />
         <permission action="dispShopToolConfigInfo" target="manager" />
         <permission action="dispShopToolDiscountInfo" target="manager" />
+        <permission action="dispShopToolStatisticsVisitor" target="manager" />
 
 		<permission action="procShopInfoUpdate" target="manager" />
 		<permission action="procShopToolLayoutConfigSkin" target="manager" />
@@ -145,6 +146,7 @@
         <action name="dispShopToolChangePassword" type="view"/>
         <action name="dispShopToolConfigInfo" type="view"/>
         <action name="dispShopToolDiscountInfo" type="view"/>
+        <action name="dispShopToolStatisticsVisitor" type="view"/>
 
         <action name="procShopToolLayoutConfigSkin" type="controller" />
 		<action name="procShopToolLayoutConfigMobileSkin" type="controller" />

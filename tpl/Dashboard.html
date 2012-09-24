@@ -131,7 +131,7 @@
                     <!--@foreach($top_products as $product)-->
                     <li>
                         <img src="{$product->getPrimaryImage()->getThumbnailPath(50)}" alt="{$product->title}" class="author" />
-                        <p class="content"><span class="product_{$product->product_srl}"><strong><a href="{getUrl('','act','dispShopToolEditProduct','product_srl',$product->product_srl)}">{$product->title}</a></strong></span> {$lang->qty}: <strong>{$product->qty}</strong> & {$lang->order_count}: <strong>{$product->order_count}</strong> {$lang->order_revenue}: <strong>{ShopDisplay::priceFormat($product->price * $product->qty,$shop->getCurrencySymbol())}</strong></p>
+                        <p class="content"><span class="product_{$product->product_srl}"><strong><a href="{getUrl('','act','dispShopToolEditProduct','product_srl',$product->product_srl)}">{$product->title}</a></strong></span> {$lang->qty}: <strong>{$product->qty}</strong> & {$lang->order_count}: <strong>{$product->order_count}</strong> & {$lang->order_revenue}: <strong>{ShopDisplay::priceFormat($product->price * $product->qty,$shop->getCurrencySymbol())}</strong></p>
                     </li>
                     <!--@end-->
                 </ul>
