@@ -16,7 +16,9 @@
             <select>
                 <option>price</option>
                 <option>rating</option>
-            </select><a href="#" class="breadcrumbs-button"><img src="img/grid-icon.png" alt="Grid view" title="Grid view" /></a><a href="#" class="breadcrumbs-button"><img src="img/list-icon.png" alt="List view" title="List view" /></a>
+            </select>
+            <a cond="!$grid_view" href="{getUrl('', 'act', 'procShopToggleGridView', 'mode', 'grid')}" class="breadcrumbs-button"><img src="img/grid-icon.png" alt="Grid view" title="Grid view" /></a>
+            <a cond="$grid_view" href="{getUrl('', 'act', 'procShopToggleGridView', 'mode', 'list')}" class="breadcrumbs-button"><img src="img/list-icon.png" alt="List view" title="List view" /></a>
         </span>
     </div>
     <h2 cond="$q && $act == 'dispShopSearch'">Searching for "{$q}"</h2>

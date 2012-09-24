@@ -27,7 +27,7 @@
     <span id="cart_total_price">{$cart->getPrice()}</span>
     <ul id="cart-products">
     <!--parametrul ala "6" nu merge (n-a mers un query si nu mai stau acum s-o intreb pe corina ce-are), dar rezolvam-->
-    <!--@foreach ($cart->getProducts(6) as $i=>$cart_product) -->
+    <!--@foreach ($preview_products as $i=>$cart_product) -->
         <li id="cart-product-{$product->product_srl}">
             Poza: {$cart_product->primary_image_filename}<br>
             Titlu: {$cart_product->title}<br>

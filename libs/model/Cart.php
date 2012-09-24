@@ -138,7 +138,7 @@ class Cart extends BaseItem
     {
         if (!$this->cart_srl) throw new Exception('Cart is not persisted');
         $params = array('cart_srl'=> $this->cart_srl);
-        if ($n) $params['limit'] = $n;
+        if ($n) $params['list_count'] = $n;
         $output = $this->query('getCartAllProducts', $params, true);
         foreach ($output->data as $i=>&$data) {
             if ($data->product_srl) {

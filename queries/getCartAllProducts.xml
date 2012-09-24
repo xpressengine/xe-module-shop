@@ -20,6 +20,6 @@
         <condition operation="equal" column="c.cart_srl" var="cart_srl" notnull="notnull" />
     </conditions>
     <navigation>
-        <list_count var="limit" default="10"/>
+        <list_count var="list_count" default="10"/>
     </navigation>
 </query>

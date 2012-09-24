@@ -74,6 +74,17 @@
 			$this->setRedirectUrl($returnUrl);
         }
 
+        public function procShopToggleGridView()
+        {
+            $mode = Context::get('mode');
+            if ($mode == 'grid') $sess = true;
+            elseif ($mode == 'list') $sess = false;
+            else throw new Exception("Invalid setting $mode");
+            $_SESSION['grid_view'] = $sess;
+            $url = ($_SERVER["HTTP_REFERER"] ? $_SERVER["HTTP_REFERER"] : getNotEncodedUrl('', 'act', 'dispShopHome'));
+            $this->setRedirectUrl($url);
+        }
+
         public function procShopSignToNewsletter(){
             $this->updateNewsletterExtraVar();
             $this->setMessage("Successfully signed to newsletter");

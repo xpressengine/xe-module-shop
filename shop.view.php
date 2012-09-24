@@ -168,6 +168,9 @@ class shopView extends shop {
         $logged_info = Context::get('logged_info');
         $cart = $cartRepo->getCart($this->module_srl, null, $logged_info->member_srl, session_id());
         Context::set('cart', $cart);
+        //TODO: fix limit
+        if ($cart) Context::set('preview_products', $cart->getProducts(6));
+        Context::set('grid_view', $_SESSION['grid_view']);
 
         // Load menu for display on all pages (in header)
         $shop_menu = $oShopModel->getShopMenu($this->site_srl);

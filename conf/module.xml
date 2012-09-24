@@ -282,6 +282,7 @@
         <action name="procShopToolCancelOrder" type="controller"/>
         <action name="procShopToolInsertInvoice" type="controller"/>
         <action name="procShopToolInsertShipment" type="controller"/>
+        <action name="procShopToggleGridView" type="controller"/>
         <action name="dispShopToolShipOrder" type="view"/>
 
     </actions>
