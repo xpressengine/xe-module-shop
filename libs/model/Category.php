@@ -17,7 +17,7 @@ class Category extends BaseItem
 	private $include_in_navigation_menu = 'Y';
 	public $regdate;
 	public $last_update;
-    public $order;
+    public $list_order;
 
     /** @var CategoryRepository */
     public $repo;
