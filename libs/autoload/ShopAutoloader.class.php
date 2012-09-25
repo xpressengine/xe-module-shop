@@ -73,8 +73,13 @@ class ShopAutoloader
             if ($node['function'] == 'loader' && $node['class'] == get_called_class()) break;
         }
         $callerFile = str_replace('\\', '/', $backTrace[$i+1]['file']);
-        $shopRoot = realpath(_XE_PATH_ . 'modules/shop');
+        $shopRoot = self::changeWinSlashes(realpath(_XE_PATH_ . 'modules/shop'));
         return substr($callerFile, 0, strlen($shopRoot)) === $shopRoot;
+    }
+
+    public static function changeWinSlashes($str)
+    {
+        return str_replace('\\', '/', $str);
     }
 
     public static function isInstantiable($class)
