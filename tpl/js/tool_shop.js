@@ -40,6 +40,7 @@ function makeFileList(){
             jQuery(p).insertBefore(list);
         }
         index++;
+        document.getElementById('0').checked = true;
     }
     else {
         chrome_index++;
@@ -58,8 +59,10 @@ function makeFileList(){
             var li = document.createElement('li');
 
             var checkbox = document.createElement('input');
+
             checkbox.type = "radio";
             checkbox.name = "primary_image";
+            if(index == 0) checkbox.checked = true;
             checkbox.value = index;
             checkbox.id = index;
 
@@ -81,6 +84,7 @@ function makeFileList(){
 
             jQuery(p).insertBefore(list);
         }
+        document.getElementById('0').checked = true;
     }
 
     if (browserName!="Microsoft Internet Explorer") {
