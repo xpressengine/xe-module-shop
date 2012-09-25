@@ -3,9 +3,9 @@
 -- http://www.phpmyadmin.net
 --
 -- Gazda: localhost
--- Timp de generare: 04 Sep 2012 la 15:46
+-- Timp de generare: 25 Sep 2012 la 12:40
 -- Versiune server: 5.5.24-0ubuntu0.12.04.1
--- Versiune PHP: 5.3.10-1ubuntu3.2
+-- Versiune PHP: 5.3.10-1ubuntu3.4
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -77,7 +77,7 @@ CREATE TABLE IF NOT EXISTS `xe_admin_favorite` (
   `module` varchar(80) DEFAULT NULL,
   `type` varchar(30) DEFAULT NULL,
   PRIMARY KEY (`admin_favorite_srl`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=106 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=437 ;
 
 -- --------------------------------------------------------
 
@@ -1376,7 +1376,7 @@ DROP TABLE IF EXISTS `xe_sequence`;
 CREATE TABLE IF NOT EXISTS `xe_sequence` (
   `seq` bigint(64) NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`seq`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=215 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=511 ;
 
 -- --------------------------------------------------------
 
@@ -1417,7 +1417,18 @@ CREATE TABLE IF NOT EXISTS `xe_shop` (
   `input_email` char(1) DEFAULT 'R',
   `input_website` char(1) DEFAULT 'R',
   `timezone` varchar(10) DEFAULT '+0900',
+  `currency` varchar(5) DEFAULT NULL,
+  `VAT` float DEFAULT NULL,
+  `telephone` bigint(20) DEFAULT NULL,
+  `address` text,
   `regdate` varchar(14) NOT NULL,
+  `currency_symbol` varchar(5) DEFAULT NULL,
+  `discount_min_amount` bigint(20) DEFAULT NULL,
+  `discount_type` varchar(40) DEFAULT NULL,
+  `discount_amount` bigint(20) DEFAULT NULL,
+  `discount_tax_phase` varchar(40) DEFAULT NULL,
+  `out_of_stock_products` char(1) DEFAULT NULL,
+  `minimum_order` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`module_srl`),
   KEY `idx_member_srl` (`member_srl`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
@@ -1425,7 +1436,7 @@ CREATE TABLE IF NOT EXISTS `xe_shop` (
 -- --------------------------------------------------------
 
 --
--- Structura de tabel pentru tabelul `xe_shop_address`
+-- Structura de tabel pentru tabelul `xe_shop_addresses`
 --
 
 DROP TABLE IF EXISTS `xe_shop_addresses`;
@@ -1436,11 +1447,14 @@ CREATE TABLE IF NOT EXISTS `xe_shop_addresses` (
   `country` varchar(45) DEFAULT NULL,
   `region` varchar(45) DEFAULT NULL,
   `city` varchar(45) DEFAULT NULL,
+  `company` varchar(100) DEFAULT NULL,
   `postal_code` varchar(45) DEFAULT NULL,
-  `phone` varchar(45) DEFAULT NULL,
+  `telephone` varchar(45) DEFAULT NULL,
   `fax` varchar(45) DEFAULT NULL,
-  `type` varchar(45) DEFAULT NULL,
-  `info` text,
+  `default_shipping` char(1) DEFAULT 'N',
+  `default_billing` char(1) DEFAULT 'N',
+  `email` varchar(45) DEFAULT NULL,
+  `additional_info` text,
   `regdate` varchar(14) DEFAULT NULL,
   `last_update` varchar(14) DEFAULT NULL,
   PRIMARY KEY (`address_srl`)
@@ -1493,7 +1507,10 @@ CREATE TABLE IF NOT EXISTS `xe_shop_cart` (
   `module_srl` bigint(11) NOT NULL,
   `member_srl` bigint(11) DEFAULT NULL,
   `session_id` varchar(255) DEFAULT NULL,
+  `billing_address_srl` bigint(11) DEFAULT NULL,
+  `shipping_address_srl` bigint(11) DEFAULT NULL,
   `items` bigint(11) DEFAULT NULL,
+  `extra` text,
   `regdate` varchar(14) DEFAULT NULL,
   `last_update` varchar(14) DEFAULT NULL,
   PRIMARY KEY (`cart_srl`)
@@ -1532,6 +1549,7 @@ CREATE TABLE IF NOT EXISTS `xe_shop_categories` (
   `include_in_navigation_menu` char(1) DEFAULT 'Y',
   `regdate` varchar(14) DEFAULT NULL,
   `last_update` varchar(14) DEFAULT NULL,
+  `order` bigint(11) DEFAULT NULL,
   PRIMARY KEY (`category_srl`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -1554,11 +1572,45 @@ CREATE TABLE IF NOT EXISTS `xe_shop_guests` (
 -- --------------------------------------------------------
 
 --
--- Structura de tabel pentru tabelul `xe_shop_order`
+-- Structura de tabel pentru tabelul `xe_shop_invoices`
 --
 
-DROP TABLE IF EXISTS `xe_shop_order`;
-CREATE TABLE IF NOT EXISTS `xe_shop_order` (
+DROP TABLE IF EXISTS `xe_shop_invoices`;
+CREATE TABLE IF NOT EXISTS `xe_shop_invoices` (
+  `invoice_srl` bigint(11) NOT NULL,
+  `order_srl` bigint(11) NOT NULL,
+  `module_srl` bigint(11) NOT NULL,
+  `comments` text,
+  `regdate` varchar(14) DEFAULT NULL,
+  PRIMARY KEY (`invoice_srl`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Structura de tabel pentru tabelul `xe_shop_newsletters`
+--
+
+DROP TABLE IF EXISTS `xe_shop_newsletters`;
+CREATE TABLE IF NOT EXISTS `xe_shop_newsletters` (
+  `newsletter_srl` bigint(11) NOT NULL,
+  `module_srl` bigint(11) NOT NULL,
+  `subject` text,
+  `sender_name` varchar(45) DEFAULT NULL,
+  `sender_email` varchar(45) DEFAULT NULL,
+  `content` text,
+  `regdate` varchar(14) DEFAULT NULL,
+  PRIMARY KEY (`newsletter_srl`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Structura de tabel pentru tabelul `xe_shop_orders`
+--
+
+DROP TABLE IF EXISTS `xe_shop_orders`;
+CREATE TABLE IF NOT EXISTS `xe_shop_orders` (
   `order_srl` bigint(11) NOT NULL,
   `module_srl` bigint(11) NOT NULL,
   `cart_srl` bigint(11) DEFAULT NULL,
@@ -1570,12 +1622,13 @@ CREATE TABLE IF NOT EXISTS `xe_shop_order` (
   `shipping_address` text,
   `payment_method` varchar(255) DEFAULT NULL,
   `shipping_method` varchar(255) DEFAULT NULL,
-  `shipping_cost` bigint(11) NOT NULL,
-  `total` bigint(11) NOT NULL,
-  `vat` bigint(11) NOT NULL,
+  `shipping_cost` bigint(11) DEFAULT NULL,
+  `total` bigint(11) DEFAULT NULL,
+  `vat` bigint(11) DEFAULT NULL,
   `order_status` varchar(255) DEFAULT NULL,
   `ip` varchar(255) DEFAULT NULL,
   `regdate` varchar(14) DEFAULT NULL,
+  `transaction_id` varchar(128) DEFAULT NULL,
   PRIMARY KEY (`order_srl`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -1589,6 +1642,25 @@ DROP TABLE IF EXISTS `xe_shop_order_products`;
 CREATE TABLE IF NOT EXISTS `xe_shop_order_products` (
   `order_srl` bigint(11) NOT NULL,
   `product_srl` bigint(11) NOT NULL,
+  `quantity` bigint(11) DEFAULT NULL,
+  `member_srl` bigint(11) NOT NULL,
+  `parent_product_srl` bigint(11) DEFAULT NULL,
+  `product_type` varchar(250) NOT NULL,
+  `title` varchar(250) NOT NULL,
+  `description` longtext,
+  `short_description` varchar(500) DEFAULT NULL,
+  `sku` varchar(250) NOT NULL,
+  `weight` float DEFAULT NULL,
+  `status` varchar(50) DEFAULT NULL,
+  `friendly_url` varchar(50) DEFAULT NULL,
+  `price` float NOT NULL,
+  `discount_price` float NOT NULL,
+  `qty` float DEFAULT NULL,
+  `in_stock` char(1) DEFAULT 'N',
+  `primary_image_filename` varchar(250) DEFAULT NULL,
+  `related_products` varchar(500) DEFAULT NULL,
+  `regdate` varchar(14) DEFAULT NULL,
+  `last_update` varchar(14) DEFAULT NULL,
   PRIMARY KEY (`order_srl`,`product_srl`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -1600,13 +1672,14 @@ CREATE TABLE IF NOT EXISTS `xe_shop_order_products` (
 
 DROP TABLE IF EXISTS `xe_shop_payment_gateways`;
 CREATE TABLE IF NOT EXISTS `xe_shop_payment_gateways` (
-  `id` bigint(3) NOT NULL AUTO_INCREMENT,
+  `id` bigint(3) NOT NULL,
   `name` varchar(255) NOT NULL,
+  `display_name` varchar(255) NOT NULL,
   `status` bigint(1) DEFAULT '0',
   `props` text,
   PRIMARY KEY (`id`),
   UNIQUE KEY `unique_name` (`name`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -1635,6 +1708,8 @@ CREATE TABLE IF NOT EXISTS `xe_shop_products` (
   `related_products` varchar(500) DEFAULT NULL,
   `regdate` varchar(14) DEFAULT NULL,
   `last_update` varchar(14) DEFAULT NULL,
+  `discount_price` float DEFAULT NULL,
+  `is_featured` char(1) DEFAULT NULL,
   PRIMARY KEY (`product_srl`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -1683,6 +1758,23 @@ CREATE TABLE IF NOT EXISTS `xe_shop_product_images` (
   `regdate` varchar(14) DEFAULT NULL,
   PRIMARY KEY (`image_srl`),
   UNIQUE KEY `unique_shop_product_images` (`product_srl`,`filename`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Structura de tabel pentru tabelul `xe_shop_shipments`
+--
+
+DROP TABLE IF EXISTS `xe_shop_shipments`;
+CREATE TABLE IF NOT EXISTS `xe_shop_shipments` (
+  `shipment_srl` bigint(11) NOT NULL,
+  `order_srl` bigint(11) NOT NULL,
+  `module_srl` bigint(11) NOT NULL,
+  `package_number` bigint(20) DEFAULT NULL,
+  `comments` text,
+  `regdate` varchar(14) DEFAULT NULL,
+  PRIMARY KEY (`shipment_srl`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
