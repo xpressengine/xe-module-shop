@@ -2,7 +2,7 @@
 <ruleset version="1.5.0">
     <customrules>
         <rule name = "float" type = "regex" test = "/^-?(?:\d+|\d*\.\d+)$/"/>
-        <rule name = "alpha_" type = "regex" test = "/^[a-z][a-z0-9-_]*$/i"/>
+        <rule name = "alpha_" type = "regex" test = "/^[a-z0-9_-]*$/i"/>
     </customrules>
     <fields>
         <field name="title" required="true" length="3:250" />
