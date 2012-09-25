@@ -25,7 +25,7 @@
     <!-- listHeader -->
     <div class="listHeader">
         <p class="info">
-            <strong>{$productsCount}</strong> total products
+            <strong>{$productsCount?$productsCount:0}</strong> product{$productsCount!=1 ? 's':''} in shop
             <span cond="$search||$category">, <strong>{$page_navigation->total_count}</strong> product{$page_navigation->total_count>1?'s':''} matched your criteria</span>
         </p>
         <fieldset class="search">
@@ -47,7 +47,7 @@
                     <option>categories</option>
                     <!--@foreach($category_list as $node)-->
 					 {@ $val = $node->category }
-                    <option value="{$val->category_srl}" <!--@if($category==$val->category_srl)-->selected="selected"<!--@end-->>
+                    <option value="{$val->category_srl}" <!--@if($category_srl==$val->category_srl)-->selected="selected"<!--@end-->>
 					    <!--@for($i = 0; $i < $node->depth; $i++)-->
 					    	&nbsp;
 						<!--@end-->

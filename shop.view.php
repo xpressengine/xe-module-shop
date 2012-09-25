@@ -657,7 +657,7 @@ class shopView extends shop {
         $tree = $category_repository->getCategoriesTree($module_srl);
         $flat_tree = $tree->toFlatStructure();
 
-        Context::set('productsCount', $pRepo->count('countProducts'));
+        Context::set('productsCount', $pRepo->count('countProducts', array('module_srl' => $module_srl)));
 
         Context::set('category_list', $flat_tree);
     }

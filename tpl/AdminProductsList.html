@@ -33,18 +33,18 @@
 
 <!--@if(empty($product_list))-->
 <tr>
-    <td class="noData"|cond="!$search&&!$category" colspan="9">
-        <div cond="$search||$category" style="text-align: center; font-weight: bold;">
-            <p>No search results for
-                <span cond="$search">
-                    query "<span style="color: #EA3F22" cond="$search">{$search}</span>"
+    <td class="noData"|cond="!$search&&!$filterCategory" colspan="9">
+        <div cond="$search||$filterCategory" style="text-align: center; font-weight: bold;">
+            <p>No products
+                <span cond="$filterCategory">
+                    in <span cond="$search">in </span> category "<a href="{$filterCategory->getLinkBackend()}" style="color: #EA3F22">{$filterCategory->title}</a>"
                 </span>
-                <span cond="$category">
-                    <span cond="$search">and </span> category "<a href="{$filterCategory->getLinkBackend()}" style="color: #EA3F22">{$filterCategory->title}</a>"
+                <span cond="$search">
+                     with a {$column?$column:'title'} like *<span style="color: #EA3F22" cond="$search">{$search}</span>*
                 </span>
             </p>
         </div>
-        <p cond="!$search&&!$category">
+        <p cond="!$search&&!$filterCategory">
             {sprintf($lang->no_product,getUrl('','act','dispShopToolAddProduct'),getUrl('','act','dispShopToolAddConfigurableProduct'))}
         </p>
     </td>

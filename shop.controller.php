@@ -81,8 +81,7 @@
             elseif ($mode == 'list') $sess = false;
             else throw new Exception("Invalid setting $mode");
             $_SESSION['grid_view'] = $sess;
-            $url = ($_SERVER["HTTP_REFERER"] ? $_SERVER["HTTP_REFERER"] : getNotEncodedUrl('', 'act', 'dispShopHome'));
-            $this->setRedirectUrl($url);
+            $this->setRedirectUrlIfNoReferer(getNotEncodedUrl('', 'act', 'dispShopHome'));
         }
 
         public function procShopSignToNewsletter(){
@@ -857,7 +856,8 @@
         /*
          * @author Florin Ercus (dev@xpressengine.org)
          */
-        public function procShopToolCartAddProduct() {
+        public function procShopToolCartAddProduct()
+        {
             $cartRepository = new CartRepository();
             if ($product_srl = Context::get('product_srl')) {
                 $productsRepo = $this->model->getProductRepository();
@@ -875,10 +875,8 @@
                 else throw new Exception('404 product not found?');
             }
             else throw new Exception('Missing product srl');
-
             $shop = $this->model->getShop($this->module_srl);
-            $returnUrl = getSiteUrl($shop->domain);
-            $this->setRedirectUrl($returnUrl);
+            $this->setRedirectUrlIfNoReferer(getSiteUrl($shop->domain));
         }
 
         /*
@@ -907,7 +905,7 @@
         public function procShopCartUpdateProducts() {
             $cart_srl = Context::get('cart_srl');
             if ($cart_srl && !is_numeric($cart_srl)) throw new Exception('Invalid cart_srl');
-            if (!is_array($quantities = Context::get('products'))) {
+            if (!is_array($quantities = Context::get('quantity'))) {
                 throw new Exception('Invalid products array input.');
             }
             $cartRepo = new CartRepository();
@@ -916,7 +914,18 @@
                 throw new Exception('No cart');
             }
             $cart->updateProducts($quantities);
-            $this->setRedirectUrl(getNotEncodedUrl('', 'act', 'dispShopCart'));
+            $this->setRedirectUrlIfNoReferer(getNotEncodedUrl('', 'act', 'dispShopCart'));
+        }
+
+        /**
+         * Acts like setRedirectUrl, but it gives priority to the referer
+         * @param string $url
+         * @param null   $output
+         */
+        public function setRedirectUrlIfNoReferer($url='./', $output = NULL)
+        {
+            $url = ($_SERVER["HTTP_REFERER"] ? $_SERVER["HTTP_REFERER"] : $url);
+            return $this->setRedirectUrl($url, $output);
         }
 
         /*

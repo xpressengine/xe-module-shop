@@ -12,7 +12,7 @@ jQuery(function () {
     //multiple delete
     $('#cart #delete_multiple').click(function (e) {
         if (!$(this).parents('table').find('input[type=checkbox].boxlist').filter(':checked').length) {
-            alert('nothing selected for delete');
+            alert('Nothing selected for delete');
             return false;
         }
         if (!confirm('Are you sure you want to remove these products from your shopping cart?')) {
@@ -25,6 +25,12 @@ jQuery(function () {
     });
 
     //update
+    $('#cart #update_multiple').click(function (e) {
+        e.preventDefault();
+        var form = $(this).parents('form');
+        form.find('input[name=act]').val('procShopCartUpdateProducts');
+        form.submit();
+    });
     $('td.quantity input').on('change', function(){
         var flag = 'quantity';
         var self = $(this);
@@ -100,7 +106,7 @@ jQuery(function () {
                         <a class="remove" href="{getUrl('act','procShopCartRemoveProducts','cart_srl',$cart->cart_srl, 'product_srls', $product->product_srl)}">{$lang->cmd_delete}</a>
                     </td>
                     <td>
-                        <a class="update" href="{getUrl('act','procShopCartUpdateProducts','cart_srl',$cart->cart_srl, 'products['.$product->product_srl.']', 'QUANTITY')}">{$lang->cmd_update}</a>
+                        <a class="update" href="{getUrl('act','procShopCartUpdateProducts','cart_srl',$cart->cart_srl, 'quantity['.$product->product_srl.']', 'QUANTITY')}">{$lang->cmd_update}</a>
                     </td>
                 </tr>
 <!--@end-->

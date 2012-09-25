@@ -102,7 +102,7 @@ class Category extends BaseItem
 
     public function getLinkBackend($search=null, $column='title')
     {
-        $params = array('', 'act', 'dispShopToolManageProducts', 'category', $this->category_srl);
+        $params = array('', 'act', 'dispShopToolManageProducts', 'category_srl', $this->category_srl);
         if ($search) {
             $params[] = 'search';
             $params[] = $search;

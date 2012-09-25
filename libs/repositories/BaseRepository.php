@@ -90,9 +90,9 @@ abstract class BaseRepository
         return $this->query($query, array('srls'=>$srls));
     }
 
-    public function count($query="count%Es")
+    public function count($query="count%Es", array $extraParams=array())
     {
-        return $this->query($query)->data->count;
+        return $this->query($query, $extraParams)->data->count;
     }
 
     public function getList($query='list%Es', $page=null, array $params=array(), $entity = null)

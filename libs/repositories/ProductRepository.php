@@ -211,16 +211,15 @@ class ProductRepository extends BaseRepository
 	 */
 	public function deleteProduct($args)
 	{
-		if(!isset($args->product_srl))
-			throw new Exception("Missing arguments for Product delete: please provide [product_srl] or [module_srl]");
+		if(!isset($args->product_srl)) {
+            throw new Exception("Missing arguments for Product delete: please provide [product_srl] or [module_srl]");
+        }
 		$this->query('deleteProduct',$args);
 
-		if($args->product_type == 'simple') {
-			$product = new SimpleProduct($args);
-		}else {
-			$product = new ConfigurableProduct($args);
-		}
-		if($product->product_type == 'configurable') $this->deleteAssociatedProducts($product);
+		if ($args->product_type == 'simple') $product = new SimpleProduct($args);
+        else $product = new ConfigurableProduct($args);
+
+        if ($product->product_type == 'configurable') $this->deleteAssociatedProducts($product);
 		$this->deleteProductCategories($product);
 		$this->deleteProductAttributes($product);
 		$this->deleteProductImages($product);
@@ -236,8 +235,9 @@ class ProductRepository extends BaseRepository
      */
     public function deleteProducts($args)
     {
-        if(!isset($args->product_srls))
+        if(!isset($args->product_srls)) {
             throw new Exception("Missing arguments for Products delete: please provide [product_srls]");
+        }
 
 		$this->query('deleteProducts',$args);
 		$args->parent_product_srls = $args->product_srls;
@@ -278,13 +278,9 @@ class ProductRepository extends BaseRepository
 	 * @param $product Product
 	 * @return boolean
 	 */
-	public function deleteAssociatedProducts(Product &$product)
+	public function deleteAssociatedProducts(Product $product)
 	{
-		$args = new stdClass();
-		$args->parent_product_srls = $product->product_srl;
-		$output = executeQuery('shop.deleteAssociatedProducts',$args);
-		if (!$output->toBool()) throw new Exception($output->getMessage(), $output->getError());
-		return TRUE;
+		return $this->query('deleteAssociatedProducts', array('parent_product_srls' => $product->product_srl));
 	}
 
 	/**
@@ -296,8 +292,7 @@ class ProductRepository extends BaseRepository
 	 */
 	public function deleteProductAttributes(Product &$product)
 	{
-		if(!$product->product_srl)
-		{
+		if(!$product->product_srl) {
 			throw new Exception("Invalid arguments! Please provide product_srl for delete atrributes.");
 		}
 
@@ -322,7 +317,7 @@ class ProductRepository extends BaseRepository
 	{
 		if(!$product->product_srl)
 		{
-			throw new Exception("Invalid arguments! Please provide product_srl for delete atrributes.");
+			throw new Exception("Invalid arguments! Please provide product_srl for delete attributes.");
 		}
 
 		$args = new stdClass();
@@ -348,37 +343,21 @@ class ProductRepository extends BaseRepository
 	{
 		$args = new stdClass();
 		$args->product_srl = $product_srl;
-
-		$output = executeQuery('shop.getProduct', $args);
-		if(!$output->toBool())
-		{
-			throw new Exception($output->getMessage(), $output->getError());
-		}
-
+		$output = $this->query('getProduct', $args);
 		// If product does not exist, return null
-		if(!$output->data)
-		{
-			return NULL;
-		}
-
-		if($output->data->product_type == 'simple')
-		{
+		if(!$output->data) return NULL;
+		if($output->data->product_type == 'simple') {
 			$product = new SimpleProduct($output->data);
 		}
-		else
-		{
+		else {
 			$product = new ConfigurableProduct($output->data);
-
 			// Get associated products
 			$associated_products_args = new stdClass();
 			$associated_products_args->configurable_product_srls = array($product->product_srl);
-
 			$associated_products_output = executeQueryArray('shop.getAssociatedProducts', $associated_products_args);
-			if(!$associated_products_output->toBool())
-			{
+			if(!$associated_products_output->toBool()) {
 				throw new Exception($associated_products_output->getMessage());
 			}
-
 			$associated_products = $associated_products_output->data;
 			foreach($associated_products as $associated_product)
 			{
