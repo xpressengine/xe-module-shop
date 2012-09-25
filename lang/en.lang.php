@@ -337,6 +337,10 @@
     $lang->content = 'Content';
     $lang->about_content = 'Enter content';
 
+    $lang->manage_orders = 'Manage Orders';
+    $lang->manage_accounts = 'Manage Accounts';
+    $lang->manage_products = 'Manage Products';
+
     $lang->shop_first_menus = array(
         array('dispShopToolDashboard','Dashboard'),
         array('','Catalog'),
@@ -373,8 +377,6 @@
 		),
         array(
             'dispShopToolStatisticsVisitor'=>'Visitor statistics',
-            'dispShopToolStatisticsSales'=>'Sales statistics',
-            'dispShopToolStatisticsCatalog'=>'Catalog statistics',
         ),
         array(
             'dispShopToolLayoutConfigSkin'=>'Skins',
