@@ -9,6 +9,6 @@ class ShopDisplay
 
     public static function numberFormat($number)
     {
-        return number_format($number, 2);
+        return number_format($number, 2, '.', '');
     }
 }
