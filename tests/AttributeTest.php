@@ -243,9 +243,12 @@ class AttributeTest extends Shop_Generic_Tests_DatabaseTestCase
 		$product_srl = $product_repository->insertProduct($associated_product);
 
 		// Check that attributes were successfully saved and loaded
+        // Aka - both attributes where saved even though one is not in scope
+        // This is a special case for associated products
 		$new_associated_product = $product_repository->getProduct($product_srl);
-		$this->assertEquals(1, count($new_associated_product->attributes));
+		$this->assertEquals(2, count($new_associated_product->attributes));
 		$this->assertEquals("sa", $new_associated_product->attributes[1407]);
+        $this->assertEquals("he", $new_associated_product->attributes[1408]);
 
 		// Check that parent product configurable attributes are still there
 		$new_configurable_product = $product_repository->getProduct($configurable_product_srl);

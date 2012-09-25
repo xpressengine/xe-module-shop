@@ -9,7 +9,7 @@ require_once dirname(__FILE__) . '/../libs/model/Category.php';
  *  Test features related to Product categories hierarchical tree display and sorting
  * @author Corina Udrescu (dev@xpressengine.org)
  */
-class CategoryHierarchyTest extends Shop_Generic_Tests_DatabaseTestCase
+class CategoryTreeSortingTest extends Shop_Generic_Tests_DatabaseTestCase
 {
 
     const CATEGORY_PHONES = 1,
