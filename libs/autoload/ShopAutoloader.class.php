@@ -73,7 +73,7 @@ class ShopAutoloader
             if ($node['function'] == 'loader' && $node['class'] == get_called_class()) break;
         }
         $callerFile = str_replace('\\', '/', $backTrace[$i+1]['file']);
-        $shopRoot = _XE_PATH_ . 'modules/shop';
+        $shopRoot = realpath(_XE_PATH_ . 'modules/shop');
         return substr($callerFile, 0, strlen($shopRoot)) === $shopRoot;
     }
 
