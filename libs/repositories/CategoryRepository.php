@@ -386,10 +386,10 @@ class CategoryRepository extends BaseRepository
      *
      * @param $parent_srl
      */
-    public function getMaxCategoryOrder($parent_srl)
+    public function getMinCategoryOrder($parent_srl)
     {
         $args = array('parent_srl' => $parent_srl);
-        $output = $this->query('getMaxCategoryOrder', $args);
+        $output = $this->query('getMinCategoryOrder', $args);
         return $output->data->max_order;
     }
 
@@ -438,9 +438,10 @@ class CategoryRepository extends BaseRepository
      */
     public function moveNodeUnderneath($category, $parent_category_srl)
     {
-        $max_order = $this->getMaxCategoryOrder($parent_category_srl);
+        $min_order = $this->getMinCategoryOrder($parent_category_srl);
+        $this->increaseCategoriesOrder($parent_category_srl);
         $category->parent_srl = $parent_category_srl;
-        $category->list_order = $max_order + 1;
+        $category->list_order = $min_order;
         $this->updateCategory($category);
         return;
     }
