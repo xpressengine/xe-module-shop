@@ -521,5 +521,10 @@
 
     //cart
     $lang->quantity = 'Quantity';
-    $lang->subscribe = 'Subscribe'
+    $lang->subscribe = 'Subscribe';
+
+    $lang->no_products_categ = "There are no products in this category";
+    $lang->front_search_results = "Search results for";
+    $lang->front_search_returned = "returned";
+    $lang->front_results = "results";
 ?>

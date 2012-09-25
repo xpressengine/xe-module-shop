@@ -17,14 +17,13 @@
                 <option>price</option>
                 <option>rating</option>
             </select>
-            <a cond="!$grid_view" href="{getUrl('', 'act', 'procShopToggleGridView', 'mode', 'grid')}" class="breadcrumbs-button"><img src="img/grid-icon.png" alt="Grid view" title="Grid view" /></a>
-            <a cond="$grid_view" href="{getUrl('', 'act', 'procShopToggleGridView', 'mode', 'list')}" class="breadcrumbs-button"><img src="img/list-icon.png" alt="List view" title="List view" /></a>
+            <a href="{getUrl('', 'act', 'procShopToggleGridView', 'mode', 'grid')}" class="breadcrumbs-button <!--@if(!$grid_view)-->selected<!--@end-->"><img src="img/grid-icon.png" alt="Grid view" title="Grid view"/></a><a href="{getUrl('', 'act', 'procShopToggleGridView', 'mode', 'list')}" class="breadcrumbs-button <!--@if($grid_view)-->selected<!--@end-->"><img src="img/list-icon.png" alt="List view" title="List view"/></a>
         </span>
     </div>
     <h2 cond="$q && $act == 'dispShopSearch'">Searching for "{$q}"</h2>
     <div class="product-list clearfix">
-        <div class="product" cond="!$products || empty($products)" style="width: 694px; text-align: cnter;;">
-            <h2>No products marked as featured.</h2>
+        <div class="product" cond="!$products || empty($products)" style="width: 694px; text-align: center;">
+            <h2>{$lang->no_products_categ}</h2>
         </div>
     <!--@foreach($products as $product)-->
         <div id="product_{$product->product_srl}" class="product {$product->product_type}">

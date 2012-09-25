@@ -5,24 +5,16 @@
 <include target="_sidebar.html" />
 <include target="product_variants_datasource.html" />
 
-        <h1>New search page</h1>
+<div class="breadcrumbs main-content">
+    <span class="breadcrumbs-title">{$lang->front_search_results} <strong>"{$q}"</strong> {$lang->front_search_returned} <strong>{count($products)}</strong> {$lang->front_results}</span>
+    <span class="breadcrumbs-options"></span>
+</div>
 
-<div id="body-content" class="body-two-columns">
+<div id="body-content" class="body-two-columns main-content">
     <div cond="$XE_VALIDATOR_MESSAGE" class="message {$XE_VALIDATOR_MESSAGE_TYPE}">
         <p>{$XE_VALIDATOR_MESSAGE}</p>
     </div>
-    <div class="breadcrumbs">
-        <span class="breadcrumbs-title">Products</span>
-        <span class="breadcrumbs-options">
-            sort by:
-            <select>
-                <option>price</option>
-                <option>rating</option>
-            </select>
-            <a cond="!$grid_view" href="{getUrl('', 'act', 'procShopToggleGridView', 'mode', 'grid')}" class="breadcrumbs-button"><img src="img/grid-icon.png" alt="Grid view" title="Grid view" /></a>
-            <a cond="$grid_view" href="{getUrl('', 'act', 'procShopToggleGridView', 'mode', 'list')}" class="breadcrumbs-button"><img src="img/list-icon.png" alt="List view" title="List view" /></a>
-        </span>
-    </div>
+
     <h2 cond="$q && $act == 'dispShopSearch'">Searching for "{$q}"</h2>
     <h2 cond="!$products || empty($products)">No products</h2>
     <div class="product-list clearfix">

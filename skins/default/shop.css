@@ -719,6 +719,11 @@ li span.close-sign, li span.open-sign {
     -webkit-box-shadow: 0 1px 0 0 #BDC6D0;
 }
 
+.breadcrumbs.main-content {
+    padding: 0;
+    margin-left: 244px;
+}
+
 .body-two-columns .breadcrumbs {
     margin-left: 10px;
 }

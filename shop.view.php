@@ -1040,6 +1040,9 @@ class shopView extends shop {
         Context::set('products', $output->products);
         Context::set('page_navigation', $output->page_navigation);
         Context::set('search_value', $search);
+
+        $this->loadShopCategoryTree();
+
         $this->setTemplateFile("product_search.html");
     }
 
