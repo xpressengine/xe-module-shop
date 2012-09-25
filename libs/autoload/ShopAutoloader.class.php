@@ -74,7 +74,7 @@ class ShopAutoloader
         }
         $callerFile = str_replace('\\', '/', $backTrace[$i+1]['file']);
         $shopRoot = _XE_PATH_ . 'modules/shop';
-        return substr($callerFile, 0, strlen($shopRoot)) === $shopRoot;
+        return substr($callerFile, 0, strlen($shopRoot) + 1) === $shopRoot;
     }
 
     public static function isInstantiable($class)
