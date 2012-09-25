@@ -57,7 +57,19 @@ class CategoryTest extends Shop_Generic_Tests_DatabaseTestCase
                 array('category_srl' => '4464','module_srl' => '1111','parent_srl' => '4463','filename' => './files/attach/images/shop/107/product-categories/product-category-505dc98bb0f06.','title' => 'Fujitsu','description' => '','product_count' => '5','friendly_url' => '','include_in_navigation_menu' => 'Y','regdate' => '20120922172203','last_update' => '20120923191348','order' => '4464'),
                 array('category_srl' => '4502','module_srl' => '1111','parent_srl' => '0','filename' => NULL,'title' => 'Phones','description' => NULL,'product_count' => '0','friendly_url' => NULL,'include_in_navigation_menu' => 'Y','regdate' => '20120924184414','last_update' => '20120924184414','order' => '4502'),
                 array('category_srl' => '4503','module_srl' => '1111','parent_srl' => '0','filename' => NULL,'title' => 'Cars','description' => NULL,'product_count' => '0','friendly_url' => NULL,'include_in_navigation_menu' => 'Y','regdate' => '20120924184441','last_update' => '20120924184441','order' => '4503'),
-                array('category_srl' => '4508','module_srl' => '1111','parent_srl' => '4502','filename' => NULL,'title' => 'Sony Ericsson','description' => NULL,'product_count' => '0','friendly_url' => NULL,'include_in_navigation_menu' => 'Y','regdate' => '20120924185725','last_update' => '20120924185725','order' => '4508')
+                array('category_srl' => '4508','module_srl' => '1111','parent_srl' => '4502','filename' => NULL,'title' => 'Sony Ericsson','description' => NULL,'product_count' => '0','friendly_url' => NULL,'include_in_navigation_menu' => 'Y','regdate' => '20120924185725','last_update' => '20120924185725','order' => '4508'),
+
+                array('category_srl' => '5451','module_srl' => '2222','parent_srl' => '5502','filename' => NULL,'title' => 'Samsung','description' => 'sdfsadfsadfsa','product_count' => '0','friendly_url' => NULL,'include_in_navigation_menu' => 'Y','regdate' => '20120921192939','last_update' => '20120924180718','order' => '5451'),
+                array('category_srl' => '5473','module_srl' => '2222','parent_srl' => '5451','filename' => NULL,'title' => 'Nokia','description' => 'sdfdasf','product_count' => '0','friendly_url' => NULL,'include_in_navigation_menu' => 'Y','regdate' => '20120922183752','last_update' => '20120924180728','order' => '5473'),
+                array('category_srl' => '5474','module_srl' => '2222','parent_srl' => '5451','filename' => NULL,'title' => 'LG','description' => 'sdfsaf','product_count' => '0','friendly_url' => NULL,'include_in_navigation_menu' => 'Y','regdate' => '20120922183758','last_update' => '20120924180737','order' => '5474'),
+                array('category_srl' => '5475','module_srl' => '2222','parent_srl' => '5474','filename' => NULL,'title' => 'Maserati','description' => 'aaaa','product_count' => '0','friendly_url' => NULL,'include_in_navigation_menu' => 'Y','regdate' => '20120922183804','last_update' => '20120924180750','order' => '1'),
+                array('category_srl' => '5462','module_srl' => '2222','parent_srl' => '0','filename' => './files/attach/images/shop/2222/product-categories/product-category-505dc98bad977.','title' => 'Laptops','description' => 'descriere laptops','product_count' => '6','friendly_url' => '','include_in_navigation_menu' => 'Y','regdate' => '20120922172203','last_update' => '20120923191348','order' => '5462'),
+                array('category_srl' => '5463','module_srl' => '2222','parent_srl' => '5462','filename' => './files/attach/images/shop/2222/product-categories/product-category-505dc98bafb2a.','title' => 'Apple','description' => '','product_count' => '0','friendly_url' => '','include_in_navigation_menu' => 'Y','regdate' => '20120922172203','last_update' => '20120924180743','order' => '5463'),
+                array('category_srl' => '5464','module_srl' => '2222','parent_srl' => '5463','filename' => './files/attach/images/shop/2222/product-categories/product-category-505dc98bb0f06.','title' => 'Fujitsu','description' => '','product_count' => '5','friendly_url' => '','include_in_navigation_menu' => 'Y','regdate' => '20120922172203','last_update' => '20120923191348','order' => '5464'),
+                array('category_srl' => '5502','module_srl' => '2222','parent_srl' => '0','filename' => NULL,'title' => 'Phones','description' => NULL,'product_count' => '0','friendly_url' => NULL,'include_in_navigation_menu' => 'Y','regdate' => '20120924184414','last_update' => '20120924184414','order' => '5502'),
+                array('category_srl' => '5503','module_srl' => '2222','parent_srl' => '0','filename' => NULL,'title' => 'Cars','description' => NULL,'product_count' => '0','friendly_url' => NULL,'include_in_navigation_menu' => 'Y','regdate' => '20120924184441','last_update' => '20120924184441','order' => '5503'),
+                array('category_srl' => '5508','module_srl' => '2222','parent_srl' => '5451','filename' => NULL,'title' => 'Sony Ericsson','description' => NULL,'product_count' => '0','friendly_url' => NULL,'include_in_navigation_menu' => 'Y','regdate' => '20120924185725','last_update' => '20120924185725','order' => '511')
+
 			),
 			'xe_shop_products' => array(),
 			'xe_shop_product_categories' => array()
@@ -570,6 +582,75 @@ class CategoryTest extends Shop_Generic_Tests_DatabaseTestCase
             {
                 $this->assertEquals('4' . self::CATEGORY_CARS, $node->category->category_srl);
                 $this->assertEquals(1, count($node->children));
+            }
+            else
+            {
+                $this->fail("Unexpected node found as root: " . $id);
+            }
+        }
+    }
+
+
+    /**
+     * Test a more mingled hierarchy, with more levels
+     *
+     * This bug caused two nodes to be ignored, because the sorting was done by parent srl
+     * but not taking into account depth, thus the missing nodes
+     */
+    public function testMoreComplicatedTreeHierarchyAfterManuallyChanginParentsAndOrder2()
+    {
+        // Retrieve tree
+        $shopModel = &getModel('shop');
+        $repository = $shopModel->getCategoryRepository();
+
+        $tree = $repository->getCategoriesTree(2222);
+
+        // Check hierarchy
+        $this->assertNotNull($tree);
+        $this->assertNull($tree->category); // Root node should not have any product category associated
+
+        foreach($tree->children as $id => $node)
+        {
+            if($id == '5' . self::CATEGORY_LAPTOPS)
+            {
+                $this->assertEquals('5' . self::CATEGORY_LAPTOPS, $node->category->category_srl);
+                $this->assertEquals(1, count($node->children));
+
+                    $first_child_node = array_shift(array_values($node->children));
+                    $this->assertEquals('5' . self::CATEGORY_APPLE, $first_child_node->category->category_srl);
+                    $this->assertEquals(1, count($first_child_node->children));
+
+                        $first_child_of_child_node = array_shift(array_values($first_child_node->children));
+                        $this->assertEquals('5' . self::CATEGORY_FUJITSU, $first_child_of_child_node->category->category_srl);
+                        $this->assertEquals(0, count($first_child_of_child_node->children));
+            }
+            elseif($id == '5' . self::CATEGORY_PHONES)
+            {
+                $this->assertEquals('5' . self::CATEGORY_PHONES, $node->category->category_srl);
+                $this->assertEquals(1, count($node->children));
+
+                    $samsung = array_shift($node->children);
+                    $this->assertEquals('5' . self::CATEGORY_SAMSUNG, $samsung->category->category_srl);
+                    $this->assertEquals(3, count($samsung->children));
+
+                        $nokia = array_shift($samsung->children);
+                        $this->assertEquals('5' . self::CATEGORY_NOKIA, $nokia->category->category_srl);
+
+                        $lg = array_shift($samsung->children);
+                        $this->assertEquals('5' . self::CATEGORY_LG, $lg->category->category_srl);
+                        $this->assertEquals(1, count($lg->children), "LG does not have any children but it should contain Maserati");
+
+                            $maserati = array_shift($lg->children);
+                            $this->assertEquals('5' . self::CATEGORY_MASERATI, $maserati->category->category_srl);
+                            $this->assertEquals(0, count($maserati->children));
+
+                        $sony = array_shift($samsung->children);
+                        $this->assertEquals('5' . self::CATEGORY_SONY_ERICSSON, $sony->category->category_srl);
+            }
+            elseif($id == '5' . self::CATEGORY_CARS)
+            {
+                $this->assertEquals('5' . self::CATEGORY_CARS, $node->category->category_srl);
+                $this->assertEquals(0, count($node->children));
             }
             else
             {

@@ -167,7 +167,13 @@ class CategoryRepository extends BaseRepository
             // Get first element in $output->data
             $first_element_key = array_shift(array_keys($output->data));
             $pc = $output->data[$first_element_key];
-			$nodes[$pc->category_srl] = new CategoryTreeNode(new Category($pc));
+
+            // Only add each node once, otherwise they will overwrite each other
+            if(!isset($nodes[$pc->category_srl]))
+            {
+                $nodes[$pc->category_srl] = new CategoryTreeNode(new Category($pc));
+            }
+
             if(isset($nodes[$pc->parent_srl]))
             {
                 $nodes[$pc->parent_srl]->addChild($nodes[$pc->category_srl]);
@@ -375,6 +381,18 @@ class CategoryRepository extends BaseRepository
         $this->query('updateCategoriesIncreaseOrder', $args);
     }
 
+    /**
+     * Returns the greatest `order` of categories under a parent
+     *
+     * @param $parent_srl
+     */
+    public function getMaxCategoryOrder($parent_srl)
+    {
+        $args = array('parent_srl' => $parent_srl);
+        $output = $this->query('getMaxCategoryOrder', $args);
+        return $output->data->max_order;
+    }
+
     public function moveCategory($category_srl, $parent_category_srl, $target_category_srl)
     {
         $category = $this->getCategory($category_srl);
@@ -412,9 +430,9 @@ class CategoryRepository extends BaseRepository
      */
     public function moveNodeUnderneath($category, $parent_category_srl)
     {
-        $this->increaseCategoriesOrder($parent_category_srl);
+        $max_order = $this->getMaxCategoryOrder($parent_category_srl);
         $category->parent_srl = $parent_category_srl;
-        $category->order = $parent_category_srl;
+        $category->order = $max_order + 1;
         $this->updateCategory($category);
         return;
     }
