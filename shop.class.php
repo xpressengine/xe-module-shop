@@ -216,7 +216,7 @@
             }
 
             if(!$oDB->isColumnExists("shop_categories","list_order")) {
-                $oDB->addColumn('shop_categories',"list_order","number", 11);
+                $oDB->addColumn('shop_categories',"list_order","number", 11, 0, true);
                 executeQuery('shop.fixCategoriesOrder');
             }
 

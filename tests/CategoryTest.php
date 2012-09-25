@@ -253,8 +253,7 @@ class CategoryTest extends Shop_Generic_Tests_DatabaseTestCase
 	public function testCategoryFlatTreeHierarchy()
 	{
 		// Retrieve tree
-		$shopModel = &getModel('shop');
-		$repository = $shopModel->getCategoryRepository();
+		$repository = new CategoryRepository();
 
 		$tree = $repository->getCategoriesTree(1001);
 		$flat_tree = $tree->toFlatStructure();

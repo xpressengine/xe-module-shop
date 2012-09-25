@@ -220,23 +220,24 @@ class CategoryHierarchyTest extends Shop_Generic_Tests_DatabaseTestCase
                 $this->assertEquals('5' . self::CATEGORY_PHONES, $node->category->category_srl);
                 $this->assertEquals(1, count($node->children));
 
-                $samsung = array_shift($node->children);
-                $this->assertEquals('5' . self::CATEGORY_SAMSUNG, $samsung->category->category_srl);
-                $this->assertEquals(3, count($samsung->children));
+                    $samsung = array_shift($node->children);
+                    $this->assertEquals('5' . self::CATEGORY_SAMSUNG, $samsung->category->category_srl);
+                    $this->assertEquals(3, count($samsung->children));
 
-                $nokia = array_shift($samsung->children);
-                $this->assertEquals('5' . self::CATEGORY_NOKIA, $nokia->category->category_srl);
 
-                $lg = array_shift($samsung->children);
-                $this->assertEquals('5' . self::CATEGORY_LG, $lg->category->category_srl);
-                $this->assertEquals(1, count($lg->children), "LG does not have any children but it should contain Maserati");
+                        $sony = array_shift($samsung->children);
+                        $this->assertEquals('5' . self::CATEGORY_SONY_ERICSSON, $sony->category->category_srl);
 
-                $maserati = array_shift($lg->children);
-                $this->assertEquals('5' . self::CATEGORY_MASERATI, $maserati->category->category_srl);
-                $this->assertEquals(0, count($maserati->children));
+                        $nokia = array_shift($samsung->children);
+                        $this->assertEquals('5' . self::CATEGORY_NOKIA, $nokia->category->category_srl);
 
-                $sony = array_shift($samsung->children);
-                $this->assertEquals('5' . self::CATEGORY_SONY_ERICSSON, $sony->category->category_srl);
+                        $lg = array_shift($samsung->children);
+                        $this->assertEquals('5' . self::CATEGORY_LG, $lg->category->category_srl);
+                        $this->assertEquals(1, count($lg->children), "LG does not have any children but it should contain Maserati");
+
+                            $maserati = array_shift($lg->children);
+                            $this->assertEquals('5' . self::CATEGORY_MASERATI, $maserati->category->category_srl);
+                            $this->assertEquals(0, count($maserati->children));
             }
             elseif($id == '5' . self::CATEGORY_CARS)
             {
@@ -248,26 +249,6 @@ class CategoryHierarchyTest extends Shop_Generic_Tests_DatabaseTestCase
                 $this->fail("Unexpected node found as root: " . $id);
             }
         }
-    }
-
-    /**
-     * Move any node under parent 0 and as the first in list
-     *
-     * Input from client side tree:
-     *  parent_srl = 0
-     *  target_srl = 0
-     */
-    public function testMoveNodeAsFirstInListRootLevel()
-    {
-        $category_repository = new CategoryRepository();
-        // We'll move Maserati at the top of the tree
-        $category_repository->moveCategory(self::CATEGORY_MASERATI, 0, 0);
-
-        $tree = $category_repository->getCategoriesTree(107);
-
-        $first_category = array_shift($tree->children);
-        $this->assertEquals(self::CATEGORY_MASERATI, $first_category->category->category_srl);
-
     }
 }
 
