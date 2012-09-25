@@ -22,8 +22,10 @@
         </span>
     </div>
     <h2 cond="$q && $act == 'dispShopSearch'">Searching for "{$q}"</h2>
-    <h2 cond="!$products || empty($products)">No products</h2>
     <div class="product-list clearfix">
+        <div class="product" cond="!$products || empty($products)" style="width: 694px; text-align: cnter;;">
+            <h2>No products marked as featured.</h2>
+        </div>
     <!--@foreach($products as $product)-->
         <div id="product_{$product->product_srl}" class="product {$product->product_type}">
             <a href="{getUrl('vid', $mid, 'act', 'dispShopProduct', 'product_srl', $product->product_srl, 'category_srl', $category_srl)}" class="product-link">

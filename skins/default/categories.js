@@ -18,8 +18,8 @@ jQuery(document).ready(function($) {
                     if (item.get(0).tagName.toLowerCase()=='ul') {
 
                         item.show();
-                        item.prev('p').children('span.open-sign').hide();
-                        item.prev('p').children('span.close-sign').show();
+                        item.prev('span').children('span.open-sign').hide();
+                        item.prev('span').children('span.close-sign').show();
 
                     }
 

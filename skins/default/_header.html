@@ -46,6 +46,7 @@
         <form action="./">
             <p id="header-search" class="f-left">
                 <input type="hidden" id="act" name="act" value="procShopSearch" />
+                <!-- DO NOT ADD SPACE BETWEEN THIS SELECT AND THE FOLLOWING INPUT -->
                 <select name="search_category_srl" id="search_category_srl">
                     <option>All</option>
                     <!--@foreach($search_categories as $node)-->
@@ -57,9 +58,7 @@
                     {$val->title}
                     </option>
                     <!--@end-->
-                </select>
-
-                <input type="text" name="search" value="{$search_value}"/>
+                </select><input type="text" name="search" value="{$search_value}"/>
                 <input type="image" src="img/search_button.gif" alt="Search" />
             </p>
         </form>

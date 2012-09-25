@@ -509,6 +509,12 @@ table tbody tr td:last-child {
     padding: 0;
 }
 
+.body-left-panel li>span {
+    border-top: 1px solid #ececec;
+    padding: 9px;
+    display: block;
+}
+
 .body-left-panel li ul {
     display: none;
 }
@@ -522,18 +528,12 @@ table tbody tr td:last-child {
     background: #fff;
 }
 
-.body-left-panel ul li p {
-    border-top: 1px solid #ececec;
-    padding: 9px;
-    margin: 0;
-}
-
-.body-left-panel ul li p a {
+.body-left-panel ul li span a {
     text-decoration: none;
     color: #2a5072;
 }
 
-.body-left-panel li.active>p {
+.body-left-panel li.active>span {
     background: #15ace2;
     background: -moz-linear-gradient(top,  #15ace2 0%, #1196dc 100%);
     background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#15ace2), color-stop(100%,#1196dc));
@@ -548,7 +548,7 @@ table tbody tr td:last-child {
     -webkit-box-shadow: inset 0px 0px 0px 1px #3ab9e6;
 }
 
-.body-left-panel li.active>p span.product-count {
+.body-left-panel li.active>span span.product-count {
     background: #fff;
     border-radius: 4px;
     -moz-border-radius: 4px;
@@ -570,7 +570,7 @@ table tbody tr td:last-child {
     cursor: pointer;
 }
 
-li.active>p span.close-sign, li.active>p span.open-sign {
+li.active>span span.close-sign, li.active>span span.open-sign {
     text-shadow: 1px 1px 0px #0f80b2;
     -moz-text-shadow: 1px 1px 0px #0f80b2;
     -webkit-text-shadow: 1px 1px 0px #0f80b2;
@@ -594,18 +594,18 @@ li span.close-sign, li span.open-sign {
     display: none;
 }
 
-.body-left-panel li.active>p a {
+.body-left-panel li.active>span a {
     color: #fff;
     text-shadow: 1px 1px 0px #0f80b2;
     -moz-text-shadow: 1px 1px 0px #0f80b2;
     -webkit-text-shadow: 1px 1px 0px #0f80b2;
 }
 
-.body-left-panel ul>li>ul>li p {
+.body-left-panel ul>li>ul>li>span {
     padding: 10px 10px 10px 20px;
 }
 
-.body-left-panel ul>li>ul>li>ul>li p {
+.body-left-panel ul>li>ul>li>ul>li>span {
     padding: 10px 10px 10px 30px;
 }
 
