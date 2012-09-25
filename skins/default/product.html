@@ -11,12 +11,14 @@
 </div>
 
 <div id="body-content" class="body-two-columns main-content">
-    <div style="float:left; margin: 10px;">
-        <img src="{$product->getPrimaryImage()->getThumbnailPath(150)}" />
-        <br/>
-        <!--@foreach($product->images as $image)-->
-            <img src="{$image->getThumbnailPath(50)}" />
-        <!--@end-->
+    <div id="product-images">
+        <div id="product-image">
+            <img src="{$product->getPrimaryImage()->getThumbnailPath(340, 240)}" />
+        </div>
+        <div id="thumbnails">
+            <!-- DO NOT ADD SPACES IN FOREACH BECAUSE IT ADDS SPACES IN TEMPLATE -->
+            <!--@foreach($product->images as $image)--><img src="{$image->getThumbnailPath(74)}" /><!--@end-->
+        </div>
     </div>
 
     <h1>{$product->title}</h1>
