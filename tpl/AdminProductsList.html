@@ -33,8 +33,8 @@
 
 <!--@if(empty($product_list))-->
 <tr>
-    <td class="noData"|cond="!$search&&!$filterCategory" colspan="9">
-        <div cond="$search||$filterCategory" style="text-align: center; font-weight: bold;">
+    <td class="noData"|cond="(!$search&&!$filterCategory)||!$productsCount" colspan="9">
+        <div cond="($search||$filterCategory)&&$productsCount" style="text-align: center; font-weight: bold;">
             <p>No products
                 <span cond="$filterCategory">
                     in <span cond="$search">in </span> category "<a href="{$filterCategory->getLinkBackend()}" style="color: #EA3F22">{$filterCategory->title}</a>"
@@ -44,7 +44,7 @@
                 </span>
             </p>
         </div>
-        <p cond="!$search&&!$filterCategory">
+        <p cond="(!$search&&!$filterCategory)||!$productsCount">
             {sprintf($lang->no_product,getUrl('','act','dispShopToolAddProduct'),getUrl('','act','dispShopToolAddConfigurableProduct'))}
         </p>
     </td>
@@ -83,7 +83,7 @@
 <div class="listFooter">
 
 <!-- Change-->
-<div class="change">
+<div class="change" cond="$productsCount">
 <p class="p1">{$lang->selected_articles}</p>
 <span class="btnGray large"><button type="button" onclick="deleteProductItems({$page})"><img src="img/buttonTableDataX.gif" width="7" height="7" alt="" class="icon" />{$lang->cmd_delete}</button></span>
 
@@ -91,7 +91,7 @@
 <!-- /Change -->
 
 <!-- Pagination -->
-<!--@if($page_navigation)-->
+<!--@if($page_navigation && $page_navigation->page_count > 1)-->
 <div class="pagination">
 <a href="{getUrl('page','','mid',$mid)}" class="prev"><span>{$lang->first_page}</span></a>
 

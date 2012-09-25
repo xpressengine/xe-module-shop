@@ -26,7 +26,7 @@
     <div class="listHeader">
         <p class="info">
             <strong>{$productsCount?$productsCount:0}</strong> product{$productsCount!=1 ? 's':''} in shop
-            <span cond="$search||$category">, <strong>{$page_navigation->total_count}</strong> product{$page_navigation->total_count>1?'s':''} matched your criteria</span>
+            <span cond="($search||$category)&&$productsCount">, <strong>{$page_navigation->total_count}</strong> product{$page_navigation->total_count>1?'s':''} matched your criteria</span>
         </p>
         <fieldset class="search">
             <legend>{$lang->cmd_search}</legend>
