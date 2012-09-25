@@ -3,6 +3,6 @@
         <table name="shop_categories" />
     </tables>
     <columns>
-        <column name="order" default="shop_categories.parent_srl" />
+        <column name="list_order" default="shop_categories.category_srl" />
     </columns>
 </query>

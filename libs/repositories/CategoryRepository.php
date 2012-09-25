@@ -20,7 +20,7 @@ class CategoryRepository extends BaseRepository
 	public function insertCategory(Category $category)
 	{
 		$category->category_srl = getNextSequence();
-        $category->order = $category->parent_srl;
+        $category->list_order = $category->parent_srl;
 
 		$output = executeQuery('shop.insertCategory', $category);
 		if(!$output->toBool())
@@ -377,7 +377,7 @@ class CategoryRepository extends BaseRepository
      */
     public function increaseCategoriesOrder($parent_srl, $order = null)
     {
-        $args = array( 'parent_srl' => $parent_srl, 'order' => $order);
+        $args = array( 'parent_srl' => $parent_srl, 'list_order' => $order);
         $this->query('updateCategoriesIncreaseOrder', $args);
     }
 
@@ -403,7 +403,7 @@ class CategoryRepository extends BaseRepository
             return;
         }
 
-        if($target_category_srl > 0)
+        if($target_category_srl >= 0)
         {
             $this->moveNodeAfter($category, $target_category_srl);
             return;
@@ -417,10 +417,18 @@ class CategoryRepository extends BaseRepository
      */
     public function moveNodeAfter($category, $target_category_srl)
     {
-        $target_category = $this->getCategory($target_category_srl);
-        $this->increaseCategoriesOrder($target_category->parent_srl, $target_category->order);
+        try
+        {
+            $target_category = $this->getCategory($target_category_srl);
+        }
+        catch(Exception $e)
+        {
+            $target_category = new Category();
+        }
+
+        $this->increaseCategoriesOrder($target_category->parent_srl, $target_category->list_order);
         $category->parent_srl = $target_category->parent_srl;
-        $category->order = $target_category->order + 2; // one after the above update and then another one
+        $category->order = $target_category->list_order + 1; // one after the above update and then another one
         $this->updateCategory($category);
         return;
     }

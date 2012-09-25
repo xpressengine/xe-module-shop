@@ -13,7 +13,7 @@
         <column name="browser_title" var="browser_title" />
         <column name="include_in_navigation_menu" var="include_in_navigation_menu" />
         <column name="last_update" var="last_update" default="curdate()" />
-        <column name="order" var="order" />
+        <column name="list_order" var="list_order" />
     </columns>
     <conditions>
         <condition operation="equal" column="category_srl" var="category_srl" filter="number" notnull="notnull" />

@@ -10,5 +10,5 @@
   <column name="include_in_navigation_menu" type="char" size="1" default="Y" />
   <column name="regdate" type="date" />
   <column name="last_update" type="date" />
-  <column name="order" type="number" size="11" />
+  <column name="list_order" type="number" size="11" />
 </table>

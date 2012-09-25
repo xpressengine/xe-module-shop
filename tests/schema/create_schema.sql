@@ -1549,7 +1549,7 @@ CREATE TABLE IF NOT EXISTS `xe_shop_categories` (
   `include_in_navigation_menu` char(1) DEFAULT 'Y',
   `regdate` varchar(14) DEFAULT NULL,
   `last_update` varchar(14) DEFAULT NULL,
-  `order` bigint(11) DEFAULT NULL,
+  `list_order` bigint(11) DEFAULT NULL,
   PRIMARY KEY (`category_srl`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
