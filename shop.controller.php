@@ -1571,27 +1571,7 @@
             $target_category_srl = Context::get('target_srl');
 
             $category_repository = new CategoryRepository();
-            $category = $category_repository->getCategory($source_category_srl);
-
-            // Move node under new parent as first element
-            if($parent_category_srl > 0)
-            {
-                $category_repository->increaseCategoriesOrder($parent_category_srl);
-                $category->parent_srl = $parent_category_srl;
-                $category->order = $parent_category_srl;
-                $category_repository->updateCategory($category);
-                return;
-            }
-
-            if($target_category_srl > 0)
-            {
-                $target_category = $category_repository->getCategory($target_category_srl);
-                $category_repository->increaseCategoriesOrder($target_category->parent_srl, $target_category->order);
-                $category->parent_srl = $target_category->parent_srl;
-                $category->order = $target_category->order + 1;
-                $category_repository->updateCategory($category);
-                return;
-            }
+            $category_repository->moveCategory($source_category_srl, $parent_category_srl, $target_category_srl);
         }
 
 		// endregion

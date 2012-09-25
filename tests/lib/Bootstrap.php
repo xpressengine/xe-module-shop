@@ -9,7 +9,7 @@ require_once(_XE_PATH_ . 'config/config.inc.php');
 require_once(_XE_PATH_ . 'modules/shop/libs/autoload/autoload.php');
 
 // Delete any cache files
-FileHandler::removeDir(_XE_PATH_ . 'files/cache');
+FileHandler::removeFilesInDir(_XE_PATH_ . 'files/cache');
 
 $oContext = Context::getInstance();
 Context::setLangType('en');

@@ -155,6 +155,13 @@ class CategoryRepository extends BaseRepository
 		// Arrange hierarchically
 		$nodes = array();
 		$nodes[0] = new CategoryTreeNode();
+
+        $nodes_that_exist = array();
+        foreach($output->data as $node)
+        {
+            $nodes_that_exist[] = $node->category_srl;
+        }
+
 		while(count($output->data))
 		{
             // Get first element in $output->data
@@ -170,12 +177,29 @@ class CategoryRepository extends BaseRepository
             {
                 // Remove category from the begining of the array ..
                 unset($output->data[$first_element_key]);
-                // .. and add to the end
-                $output->data[] = $pc;
+                // .. and add to the end if its parent actually exists
+                if(in_array($pc->parent_srl, $nodes_that_exist))
+                {
+                    $output->data[] = $pc;
+                }
             }
 		}
 
 		return $nodes[0];
+
+//        // Arrange hierarchically
+//        $nodes = array();
+//        $nodes[0] = new CategoryTreeNode();
+//        foreach($output->data as $pc)
+//        {
+//            $nodes[$pc->category_srl] = new CategoryTreeNode(new Category($pc));
+//            if(isset($nodes[$pc->parent_srl]))
+//            {
+//                $nodes[$pc->parent_srl]->addChild($nodes[$pc->category_srl]);
+//            }
+//        }
+//
+//        return $nodes[0];
 	}
 
     /**
@@ -349,6 +373,50 @@ class CategoryRepository extends BaseRepository
     {
         $args = array( 'parent_srl' => $parent_srl, 'order' => $order);
         $this->query('updateCategoriesIncreaseOrder', $args);
+    }
+
+    public function moveCategory($category_srl, $parent_category_srl, $target_category_srl)
+    {
+        $category = $this->getCategory($category_srl);
+
+        if($parent_category_srl > 0)
+        {
+            $this->moveNodeUnderneath($category, $parent_category_srl);
+            return;
+        }
+
+        if($target_category_srl > 0)
+        {
+            $this->moveNodeAfter($category, $target_category_srl);
+            return;
+        }
+    }
+
+    /**
+     * Move node after a certain node
+     *
+     * This means under the same parent, after the given category_srl
+     */
+    public function moveNodeAfter($category, $target_category_srl)
+    {
+        $target_category = $this->getCategory($target_category_srl);
+        $this->increaseCategoriesOrder($target_category->parent_srl, $target_category->order);
+        $category->parent_srl = $target_category->parent_srl;
+        $category->order = $target_category->order + 2; // one after the above update and then another one
+        $this->updateCategory($category);
+        return;
+    }
+
+    /**
+     * Move node under a certain node
+     */
+    public function moveNodeUnderneath($category, $parent_category_srl)
+    {
+        $this->increaseCategoriesOrder($parent_category_srl);
+        $category->parent_srl = $parent_category_srl;
+        $category->order = $parent_category_srl;
+        $this->updateCategory($category);
+        return;
     }
 
 }

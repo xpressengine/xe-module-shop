@@ -8,6 +8,7 @@
     </conditions>
     <navigation>
         <index default="parent_srl" var="parent_srl" order="asc" />
-        <index default="category_srl" var="category" order="asc" />
+        <index default="order" var="order" order="asc" />
+        <index default="category_srl" var="category_srl" order="asc" />
     </navigation>
 </query>

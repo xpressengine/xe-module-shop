@@ -15,5 +15,6 @@
         <column name="include_in_navigation_menu" var="include_in_navigation_menu" />
         <column name="regdate" var="regdate" default="curdate()" />
         <column name="last_update" var="last_update" default="curdate()" />
+        <column name="order" var="order" />
     </columns>
 </query>
