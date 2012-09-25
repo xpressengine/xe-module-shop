@@ -6,7 +6,7 @@
  */
 class Category extends BaseItem
 {
-	public $category_srl;
+	public $category_srl = 0;
 	public $module_srl;
 	public $parent_srl = 0;
 	public $filename;
@@ -17,7 +17,7 @@ class Category extends BaseItem
 	private $include_in_navigation_menu = 'Y';
 	public $regdate;
 	public $last_update;
-    public $list_order;
+    public $list_order = 0;
 
     /** @var CategoryRepository */
     public $repo;

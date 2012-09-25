@@ -428,7 +428,7 @@ class CategoryRepository extends BaseRepository
 
         $this->increaseCategoriesOrder($target_category->parent_srl, $target_category->list_order);
         $category->parent_srl = $target_category->parent_srl;
-        $category->order = $target_category->list_order + 1; // one after the above update and then another one
+        $category->list_order = $target_category->list_order + 1; // one after the above update and then another one
         $this->updateCategory($category);
         return;
     }
@@ -440,7 +440,7 @@ class CategoryRepository extends BaseRepository
     {
         $max_order = $this->getMaxCategoryOrder($parent_category_srl);
         $category->parent_srl = $parent_category_srl;
-        $category->order = $max_order + 1;
+        $category->list_order = $max_order + 1;
         $this->updateCategory($category);
         return;
     }
