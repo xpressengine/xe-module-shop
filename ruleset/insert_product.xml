@@ -12,7 +12,7 @@
         <field name="discount_price" required="true" rule="float" lenght="1:20" />
         <field name="weight" required="true" rule="float" lenght="1:20" />
         <field name="qty" required="true" rule="float" lenght="1:20" />
-        <field name="sku" required="true" rule="alpha_" length="1:10" />
+        <field name="sku" required="true" rule="alpha_" length="1:20" />
         <field name="friendly_url" required="true" rule="alpha_" lenght="1:50"/>
     </fields>
 </ruleset>
