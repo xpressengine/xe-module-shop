@@ -707,7 +707,7 @@ function checkOrUncheckParents(clicked_category_checkbox, root_ul_id)
     {
         if(parent.is("ul"))
         {
-            parent_checkbox = parent.parent().children("p").children("input[type='checkbox']");
+            parent_checkbox = parent.parent().children("span").children("input[type='checkbox']");
 
             // If we are about to change the parent value,
             // we need to make sure it doesn't need to stay checked for other children
