@@ -410,7 +410,7 @@ table tbody tr td:last-child {
     text-decoration: none;
     color: #2a5072;
     margin: 0 1px;
-    padding: 5px 9px;
+    padding: 4px 8px;
 }
 
 .pagination span, .pagination a.number:hover {
@@ -474,6 +474,7 @@ table tbody tr td:last-child {
     -moz-border-radius: 3px;
     -webkit-border-radius: 3px;
     padding: 0 10px 10px;
+    margin: 0 0 10px;
 }
 
 .body-left-panel {
@@ -717,9 +718,11 @@ li span.close-sign, li span.open-sign {
     box-shadow: 0 1px 0 0 #BDC6D0;
     -moz-box-shadow: 0 1px 0 0 #BDC6D0;
     -webkit-box-shadow: 0 1px 0 0 #BDC6D0;
+    height: 40px;
+    overflow: hidden;
 }
 
-.breadcrumbs.main-content {
+.breadcrumbs.main-content, .pagination.main-content {
     padding: 0;
     margin-left: 244px;
 }
