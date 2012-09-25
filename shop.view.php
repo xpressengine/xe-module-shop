@@ -603,8 +603,9 @@ class shopView extends shop {
 		$shopModel = getModel('shop');
 		$attributeRepository = $shopModel->getAttributeRepository();
 		$srl = Context::get('attribute_srl');
-		if (!$attribute = $attributeRepository->getAttributes(array($srl))) throw new Exception("Attribute doesn't exist");
-		Context::set('attribute', $attribute);
+		if (!$attributes = $attributeRepository->getAttributes(array($srl))) throw new Exception("Attribute doesn't exist");
+		$attribute = array_shift($attributes);
+        Context::set('attribute', $attribute);
 		Context::set('types', $attributeRepository->getTypes(Context::get('lang')));
 
 		// Retrieve existing categories
