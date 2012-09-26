@@ -20,7 +20,7 @@ class FlatRateShipping extends ShippingMethodAbstract
      */
     public function calculateShipping(Cart $cart, $shipping_address)
     {
-        if($this->getType() == 'per_item')
+        if($this->type == 'per_item')
         {
             $products = $cart->getProducts();
             $total_quantity = 0;

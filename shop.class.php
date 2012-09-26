@@ -82,6 +82,9 @@
             if($oDB->isColumnExists("shop_categories","order")) return true;
             if(!$oDB->isColumnExists("shop_categories","list_order")) return true;
 
+            if(!$oDB->isColumnExists("shop_addresses","firstname")) return true;
+            if(!$oDB->isColumnExists("shop_addresses","lastname")) return true;
+
             return false;
         }
 
@@ -218,6 +221,14 @@
             if(!$oDB->isColumnExists("shop_categories","list_order")) {
                 $oDB->addColumn('shop_categories',"list_order","number", 11, 0, true);
                 executeQuery('shop.fixCategoriesOrder');
+            }
+
+            if(!$oDB->isColumnExists("shop_addresses","firstname")) {
+                $oDB->addColumn('shop_addresses',"firstname","varchar", 45);
+            }
+
+            if(!$oDB->isColumnExists("shop_addresses","lastname")) {
+                $oDB->addColumn('shop_addresses',"lastname","varchar", 45);
             }
 
            return new Object(0, 'success_updated');

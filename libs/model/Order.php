@@ -46,9 +46,9 @@ class Order extends BaseItem
                 $this->cart_srl = $cart->cart_srl;
                 $this->module_srl = $cart->module_srl;
                 $this->member_srl = $cart->member_srl;
-                $this->client_name = $cart->getExtra('firstname') . ' ' . $cart->getExtra('lastname');
-                $this->client_email = $cart->getExtra('email');
-                $this->client_company = $cart->getExtra('company');
+                $this->client_name = $cart->getBillingAddress()->firstname . ' ' . $cart->getBillingAddress()->lastname;
+                $this->client_email = $cart->getBillingAddress()->email;
+                $this->client_company = $cart->getBillingAddress()->company;
                 $this->billing_address = (string) $cart->getBillingAddress();
                 $this->shipping_address = (string) $cart->getShippingAddress();
                 $this->payment_method = $cart->getExtra('payment_method');
@@ -70,6 +70,16 @@ class Order extends BaseItem
             }
         }
         parent::__construct($data);
+    }
+
+    public function getBillToName()
+    {
+        return $this->client_name;
+    }
+
+    public function getShipToName()
+    {
+        return reset(explode(',',$this->shipping_address));
     }
 
     public function saveCartProducts(Cart $cart, $calculateTotal=true)
