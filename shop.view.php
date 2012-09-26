@@ -978,7 +978,8 @@ class shopView extends shop {
     public function dispShopMyOrders(){
         $logged_user = Context::get('logged_info');
         $orderRepository = $this->model->getOrderRepository();
-        $output = $orderRepository->getList($this->module_info->module_srl,$logged_user->member_srl);
+        $extraParams['order_type'] = 'desc';
+        $output = $orderRepository->getList($this->module_info->module_srl,$logged_user->member_srl,$extraParams, Context::get('page'));
         Context::set('orders',$output->data);
         Context::set('page_navigation',$output->page_navigation);
         $this->setTemplateFile('my_orders.html');
