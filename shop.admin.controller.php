@@ -159,7 +159,22 @@
             /**
              * Setup default shipping method
              */
+            $shipping_repository = new ShippingRepository();
+            $shipping_method = $shipping_repository->installPlugin('flat_rate_shipping');
+            $shipping_method->type = 'per_order';
+            $shipping_method->price = '10';
+            $shipping_method->status = 1;
+            $shipping_repository->updatePlugin($shipping_method);
 
+            /**
+             * Set default currency
+             */
+            $args = new stdClass();
+            $args->currency = 'USD';
+            $args->currency_symbol = '$';
+            $args->module_srl = $module_srl;
+            $output = executeQuery('shop.updateShopInfo',$args);
+            if(!$output->toBool()) return $output;
 
             $output = new Object();
             $output->add('module_srl',$module_srl);
