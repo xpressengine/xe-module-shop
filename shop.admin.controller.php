@@ -156,6 +156,10 @@
             $payment_method->status = 1;
             $payment_repository->updatePaymentMethod($payment_method);
 
+            /**
+             * Setup default shipping method
+             */
+
 
             $output = new Object();
             $output->add('module_srl',$module_srl);

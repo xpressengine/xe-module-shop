@@ -1,62 +1,23 @@
 <?php
 
-require_once dirname(__FILE__) . '/../../plugins_payment/PaymentMethodAbstract.php';
-
 /**
  * Handles database operations for Product
  *
  * @author Dan Dragan (dev@xpressengine.org)
  */
-class PaymentMethodRepository extends BaseRepository
+class PaymentMethodRepository extends AbstractPluginRepository
 {
-    public static $PAYMENT_METHODS_DIR;
-
-    public function __construct()
+    public function getPluginsDirectoryPath()
     {
-        self::$PAYMENT_METHODS_DIR = _XE_PATH_ . 'modules/shop/plugins_payment';
+        return _XE_PATH_ . 'modules/shop/plugins_payment';
     }
 
-    private function getPaymentMethodInstanceByName($payment_extension_name)
+    public function getClassNameThatPluginsMustExtend()
     {
-        // Skip files (we are only interested in the folders)
-        if(!is_dir(self::$PAYMENT_METHODS_DIR . DIRECTORY_SEPARATOR . $payment_extension_name))
-        {
-            throw new Exception("Given folder name is not a directory");
-        }
-
-        // Convert from under_scores to CamelCase in order to get class name
-        $payment_class_name = str_replace(' ', '', ucwords(str_replace('_', ' ', $payment_extension_name)));
-        $payment_class_path = self::$PAYMENT_METHODS_DIR
-            . DIRECTORY_SEPARATOR . $payment_extension_name
-            . DIRECTORY_SEPARATOR . $payment_class_name . '.php';
-
-        if(!file_exists($payment_class_path)) {
-            throw new Exception("Payment class was not found in given folder");
-        };
-
-        // Include class and check if it extends the required abstract class
-        require_once $payment_class_path;
-
-        $payment_instance = new $payment_class_name;
-        if(!($payment_instance instanceof PaymentMethodAbstract))
-        {
-            throw new Exception("Payment class does not extend required PaymentMethodAbstract");
-        };
-
-        return $payment_instance;
+        return "PaymentMethodAbstract";
     }
 
-    private function getPaymentMethodFromProperties($data)
-    {
-        $data->properties = unserialize($data->props);
-        unset($data->props);
-
-        $payment_method = $this->getPaymentMethodInstanceByName($data->name);
-        $payment_method->setProperties($data);
-        return $payment_method;
-    }
-
-    public function getPaymentMethod($name)
+    protected function getPluginInfoFromDatabase($name)
     {
         $args = new stdClass();
         $args->name = $name;
@@ -65,31 +26,74 @@ class PaymentMethodRepository extends BaseRepository
         if(!$output->toBool()) {
             throw new Exception($output->getMessage(), $output->getError());
         }
+        return $output->data;
+    }
 
-        // If payment method exists in the database, return it as is
-        if($output->data)
-        {
-            return $this->getPaymentMethodFromProperties($output->data);
+    protected function updatePluginInfo($payment_method)
+    {
+        $output = executeQuery('shop.updatePaymentMethod', $payment_method);
+
+        if(!$output->toBool()) {
+            throw new Exception($output->getMessage(), $output->getError());
+        }
+    }
+
+    protected function insertPluginInfo(AbstractPlugin $payment_method)
+    {
+        $payment_method->id = getNextSequence();
+        $output = executeQuery('shop.insertPaymentMethod', $payment_method);
+        if(!$output->toBool()) {
+            throw new Exception($output->getMessage(), $output->getError());
+        }
+    }
+
+    protected function deletePluginInfo($name)
+    {
+        $args = new stdClass();
+        $args->name = $name;
+        $output = executeQuery('shop.deletePaymentMethod',$args);
+        if (!$output->toBool()) {
+            throw new Exception($output->getMessage(), $output->getError());
         }
 
-        // Otherwise, initialize it with info from the extension class and insert in database
-        $payment_method = $this->getPaymentMethodInstanceByName($name);
+        return $output->data;
+    }
 
-        $this->insertPaymentMethod($payment_method);
+    protected function getAllPluginsInDatabase()
+    {
+        $output = executeQueryArray('shop.getPaymentMethods');
 
-        return $this->getPaymentMethod($name);
+        if (!$output->toBool())
+        {
+            throw new Exception($output->getMessage(), $output->getError());
+        }
+
+        return $output->data;
+    }
+
+    protected function getAllActivePluginsInDatabase()
+    {
+        $args = new stdClass();
+        $args->status = 1;
+        $output = executeQueryArray('shop.getPaymentMethods', $args);
+
+        if (!$output->toBool())
+        {
+            throw new Exception($output->getMessage(), $output->getError());
+        }
+
+        return $output->data;
+    }
+
+    public function getPaymentMethod($name)
+    {
+        return $this->getPlugin($name);
     }
 
     public function installPaymentMethod($name)
     {
         return $this->getPaymentMethod($name);
     }
-
-    private function getPaymentMethodsByFolder()
-    {
-        return FileHandler::readDir(self::$PAYMENT_METHODS_DIR);
-    }
-
 
     /**
      * Returns all available payment methods
@@ -99,23 +103,7 @@ class PaymentMethodRepository extends BaseRepository
      */
     public function getAvailablePaymentMethods()
     {
-        // Scan through the plugins_shipping extension directory to retrieve available methods
-        $payment_extensions = $this->getPaymentMethodsByFolder();
-
-        $payment_methods = array();
-        foreach($payment_extensions as $payment_extension_name)
-        {
-            try
-            {
-                $payment_methods[] = $this->getPaymentMethod($payment_extension_name);
-            }
-            catch(Exception $e)
-            {
-                continue;
-            }
-        }
-
-        return $payment_methods;
+        return $this->getAvailablePlugins();
     }
 
      /**
@@ -130,20 +118,7 @@ class PaymentMethodRepository extends BaseRepository
       * @return boolean
      */
     public function updatePaymentMethod($payment_method) {
-
-        if(isset($payment_method->properties) && !is_string($payment_method->properties))
-        {
-            $serialized_properties = serialize($payment_method->properties);
-            $payment_method->properties = $serialized_properties;
-        }
-
-        $output = executeQuery('shop.updatePaymentMethod', $payment_method);
-
-        if(!$output->toBool()) {
-            throw new Exception($output->getMessage(), $output->getError());
-        }
-
-        return TRUE;
+       $this->updatePlugin($payment_method);
     }
 
     /**
@@ -156,24 +131,7 @@ class PaymentMethodRepository extends BaseRepository
      */
     public function insertPaymentMethod($args)
     {
-        $args->id = getNextSequence();
-        $output = executeQuery('shop.insertPaymentMethod', $args);
-        if(!$output->toBool()) {
-            throw new Exception($output->getMessage(), $output->getError());
-        }
-        return TRUE;
-    }
-
-    private function getPaymentMethodsInDatabase()
-    {
-        $output = executeQueryArray('shop.getPaymentMethods');
-
-        if (!$output->toBool())
-        {
-            throw new Exception($output->getMessage(), $output->getError());
-        }
-
-        return $output->data;
+        $this->insertPlugin($args);
     }
 
     /**
@@ -184,68 +142,18 @@ class PaymentMethodRepository extends BaseRepository
      * @return object
      */
     public function getActivePaymentMethods() {
-
-        $args = new stdClass();
-        $args->status = 1;
-        $output = executeQueryArray('shop.getPaymentMethods',$args);
-
-        if (!$output->toBool())
-        {
-            throw new Exception($output->getMessage(), $output->getError());
-        }
-
-        $active_payment_methods = array();
-        foreach($output->data as $data)
-        {
-            try
-            {
-                $active_payment_methods[] = $this->getPaymentMethodFromProperties($data);
-            }
-            catch(Exception $e)
-            {
-                continue;
-            }
-        }
-
-        return $active_payment_methods;
+        return $this->getActivePlugins();
     }
 
     /**
      * Deletes a  payment method
-     *
-     * @author Daniel Ionescu (dev@xpressengine.org)
-     * @param  $args
-     * @throws exception
-     * @return boolean
      */
     public function deletePaymentMethod($args) {
-
-        $output = executeQuery('shop.deletePaymentMethod',$args);
-
-        if (!$output->toBool()) {
-
-            throw new Exception($output->getMessage(), $output->getError());
-
-        }
-
-        return $output->data;
-
+        $this->deletePlugin($args->name);
     }
 
-    /**
-     * Deletes payment methods from DB if they do not have a folder with a corresponding name
-     *
-     * @author Daniel Ionescu (dev@xpressengine.org)
-     * @param  none
-     */
     public function sanitizePaymentMethods() {
-        $pgByDatabase = $this->getPaymentMethodsInDatabase();
-        $pgByFolders = $this->getPaymentMethodsByFolder();
-
-        foreach ($pgByDatabase as $obj) {
-            if (!in_array($obj->name,$pgByFolders)) {
-                $this->deletePaymentMethod($obj);
-            }
-        }
+        $this->sanitizePlugins();
     }
+
 }

@@ -35,8 +35,30 @@ class ShopAutoloader
                     $repoClass = $class . 'Repository';
                 }
 
-                if (!in_array($class, array('Shipping', 'PaymentMethod'))) {
+                if (!in_array($class, array('Shipping','ShippingMethodInterface', 'PaymentMethod'))) {
                     $this->getFile(__DIR__ . "/../model/$itemClass.php", $itemClass);
+                }
+                else
+                {
+                    if(strpos($itemClass, 'Payment') !== false)
+                    {
+                        $itemClass = $itemClass . 'Abstract';
+                        $this->getFile(__DIR__ . "/../../plugins_payment/$itemClass.php", $itemClass);
+                    }
+                    elseif(strpos($itemClass, 'Shipping') !== false)
+                    {
+                        if(strpos($itemClass, 'Interface') === false)
+                        {
+                            $itemClass = $itemClass . 'MethodAbstract';
+                            $this->getFile(__DIR__ . "/../../plugins_shipping/$itemClass.php", $itemClass);
+                        }
+                        else
+                        {
+                            $this->getFile(__DIR__ . "/../../plugins_shipping/$itemClass.php", $itemClass);
+                            return;
+                        }
+
+                    }
                 }
                 $this->getFile(__DIR__ . "/../repositories/$repoClass.php", $repoClass);
             }
@@ -58,7 +80,7 @@ class ShopAutoloader
             foreach ($classToCheck as $class) {
                 $reflection = new ReflectionClass($class);
                 if (!$reflection->isInstantiable()) {
-                    if (!$reflection->isAbstract()) {
+                    if (!$reflection->isAbstract() && !$reflection->isInterface()) {
                         throw new Exception("$class class is not instantiable");
                     }
                 }

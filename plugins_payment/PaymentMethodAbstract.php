@@ -1,80 +1,13 @@
 <?php
 
-abstract class PaymentMethodAbstract
+abstract class PaymentMethodAbstract extends AbstractPlugin
 {
     static protected $frontend_form = 'form_payment.html';
     static protected $backend_form = 'form_admin_settings.html';
 
-    public $id = null;
-    public $display_name;  /// Display name
-    public $name; /// Unique name = folder name
-    public $status = 0;
-    public $properties;
-
-    public function __construct()
+    public function getPaymentMethodDir()
     {
-        $this->name = $this->getName();
-        $this->display_name = $this->getDisplayName();
-    }
-
-    /**
-     * Returns the payment methods's name
-     * Defaults: Splits folder name into words and makes them uppercase
-     * @return string
-     */
-    public function getDisplayName()
-    {
-        if(!isset($this->display_name))
-        {
-            $name = $this->getName();
-            $this->display_name = ucwords(str_replace('_', ' ', $name));
-        }
-        return $this->display_name;
-    }
-
-    /**
-     * Returns unique identifier for Payment method
-     * Represents the folder name where the payment method class is found
-     */
-    final public function getName()
-    {
-        if(!isset($this->name))
-        {
-            $payment_class_directory_path = $this->getPaymentMethodDir();
-            $folders = explode(DIRECTORY_SEPARATOR, $payment_class_directory_path);
-            $this->name = array_pop($folders);
-        }
-        return $this->name;
-    }
-
-    public function setProperties($data)
-    {
-        foreach($data as $property_name => $property_value)
-        {
-            $this->{$property_name} = $property_value;
-        }
-    }
-
-    public function isActive()
-    {
-        return $this->status ? true : false;
-    }
-
-    public function __set($name, $value)
-    {
-        $this->properties->$name = $value;
-    }
-
-    public function __get($name)
-    {
-        return $this->properties->$name;
-    }
-
-
-    private function getPaymentMethodDir()
-    {
-        $reflector = new ReflectionClass(get_class($this));
-        return dirname($reflector->getFileName());
+        return $this->getPluginDir();
     }
 
     private function getFormHtml($filename)
