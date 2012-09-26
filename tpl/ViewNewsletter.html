@@ -65,7 +65,7 @@
                         <th scope="row">
                         </th>
                         <td class="title">
-                            <a cond="$newsletter->newsletter_srl" title="delete newsletter '{$newsletter->newsletter_srl}'" href="{getNotEncodedUrl('', 'act', 'procShopToolDeleteNewsletters', 'newsletters_srls', $newsletter->newsletter_srl)}" onclick="if (!confirm('Are you sure?')) return false;" style="display: block; float: right; margin-right: 100px;">
+                            <a class="delete_link" cond="$newsletter->newsletter_srl" title="delete newsletter '{$newsletter->newsletter_srl}'" href="{getNotEncodedUrl('', 'act', 'procShopToolDeleteNewsletters', 'newsletter_srls', $newsletter->newsletter_srl)}" onclick="if (!confirm('Are you sure?')) return false;" >
                                 {$lang->cmd_delete}
                             </a>
                            <a href="{getUrl('','act','dispShopToolManageNewsletters')}" style="display: block; float: right; margin-right: 100px;">{$lang->cmd_back}</a>
@@ -76,6 +76,8 @@
                 </table>
 
             </fieldset>
+            <div id="regdate" cond="$newsletter->regdate">Created at: {zdate($newsletter->regdate)}</div>
+            <div id="last_login" cond="$newsletter->last_login">Last login: {zdate($newsletter->last_login)}</div>
         </div>
     </form>
 

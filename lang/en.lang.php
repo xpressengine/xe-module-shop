@@ -230,6 +230,7 @@
     $lang->invoice = 'Invoice';
     $lang->ship = 'Ship';
     $lang->reorder = 'Reorder';
+    $lang->purchased_on = 'Purchased On';
 
     $lang->total_result_count = 'Total <strong>%d</strong> Items';
     $lang->search_result_count = '<strong>%d</strong> results are found.';

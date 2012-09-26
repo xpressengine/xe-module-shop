@@ -625,7 +625,7 @@ class ProductRepository extends BaseRepository
 		//table header for products csv
 		foreach($products[0] as $key => $value)
 		{
-			if(!in_array($key,array('member_srl','module_srl','regdate','last_updated','primary_image','repo','associated_products')))
+			if(!in_array($key,array('member_srl','module_srl','regdate','last_update','primary_image','repo','associated_products')))
 			{
                 if($key == 'product_srl') $buff = $buff.'id,';
 				else $buff = $buff.$key.",";
@@ -642,7 +642,7 @@ class ProductRepository extends BaseRepository
                 FileHandler::copyFile($filename,$export_filename);
             }
 			foreach($product as $key => $value){
-				if(!in_array($key,array('member_srl','module_srl','regdate','last_updated','primary_image','primary_image_filename','repo','categories','attributes','images','associated_products','configurable_attributes')))
+				if(!in_array($key,array('member_srl','module_srl','regdate','last_update','primary_image','primary_image_filename','repo','categories','attributes','images','associated_products','configurable_attributes')))
 				{
 					$buff = $buff.str_replace(",",";;",$value).",";
 				}

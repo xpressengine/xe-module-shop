@@ -24,7 +24,7 @@ abstract class Product extends BaseItem
     public $in_stock;
     public $is_featured;
     public $regdate;
-    public $last_updated;
+    public $last_update;
     public $related_products;
     public $categories = array();
 	public $attributes = array();

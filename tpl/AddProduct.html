@@ -282,6 +282,9 @@
                     <th scope="row">
                     </th>
                     <td class="title">
+                        <a class="delete_link" cond="$product->product_srl" title="delete product '{$product->title}'" href="{getNotEncodedUrl('', 'act', 'procShopToolDeleteProduct', 'product_srl', $product->product_srl)}" onclick="if (!confirm('Are you sure?')) return false;">
+                            {$lang->cmd_delete}
+                        </a>
                         <!--@if(!isset($product->product_srl))-->
                             <span class="btn"><input type="submit" value="{$lang->cmd_submit}" /></span>
                         <!--@else-->
@@ -292,6 +295,8 @@
             </table>
             </form>
         </fieldset>
+        <div id="regdate" cond="$product->regdate">Created at: {zdate($product->regdate)}</div>
+        <div id="last_update" cond="$product->last_update">Last update: {zdate($product->last_update)}</div>
     </div>
 
 </div>

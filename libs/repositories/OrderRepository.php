@@ -127,7 +127,7 @@ class OrderRepository extends BaseRepository
             'in_stock' => $product->in_stock,
             'primary_image_filename' => $product->primary_image_filename,
             'regdate' => $product->regdate,
-            'last_update' => $product->last_updated
+            'last_update' => $product->last_update
         );
         return $this->query('insertOrderProduct', $params);
     }

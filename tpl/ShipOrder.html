@@ -90,8 +90,8 @@
                 </table>
 
             </fieldset>
-            <div id="regdate" cond="$attribute->regdate">Created at: {date('D, d M Y H:i:s', $attribute->regdate)}</div>
-            <div id="last_update" cond="$attribute->last_update">Last update: {date('D, d M Y H:i:s', $attribute->last_update)}</div>
+            <div id="regdate" cond="$order->shipment->regdate">Created at: {zdate($order->shipment->regdate)}</div>
+            <div id="last_update" cond="$order->shipment->last_update">Last update: {zdate($order->shipment->last_update)}</div>
         </div>
     </form>
 

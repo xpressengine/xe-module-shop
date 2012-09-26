@@ -183,6 +183,7 @@ a.skipToContent{text-align:center;color:#fff;position:absolute;width:100%;font-s
 .extension.e1 .language ul li button{color:#666}
 .extension.e1 .language ul.hide{display:none}
 
+
 /* Dashboard Header */
 .dashboardHeader{position:relative;padding:29px 0 23px 0;border-bottom:2px solid #cbd4df;background:url(../img/iconH3dashboard.gif) no-repeat left center}
 .dashboardHeader .h3{font-size:18px;text-indent:50px;margin:0}
@@ -407,6 +408,7 @@ a.skipToContent{text-align:center;color:#fff;position:absolute;width:100%;font-s
 .tableData tr.articles{background:#f9f9f9}
 .tableData th,
 .tableData td{border:0;padding:8px 10px 7px 10px;vertical-align:top;white-space:nowrap;color:#555;text-align:left}
+.tableData .delete_link{display: block; float: right; margin-right: 100px}
 .tableData td.title{white-space:normal}
 .tableData td.tag{white-space:normal}
 .tableData th{text-align:left;white-space:nowrap}

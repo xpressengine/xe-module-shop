@@ -70,9 +70,6 @@
                         <th scope="row">
                         </th>
                         <td class="title">
-                            <a cond="$newsleter->newsletter_srl" title="delete newsletter '{$newsletter->newsletter_srl}'" href="{getNotEncodedUrl('', 'act', 'procShopToolDeleteNewsletters', 'newsletters_srls', $newsletter->newsletter_srl)}" onclick="if (!confirm('Are you sure?')) return false;" style="display: block; float: right; margin-right: 100px;">
-                                {$lang->cmd_delete}
-                            </a>
                             <span class="btn"><input type="submit" value="{$lang->cmd_save_send}"/></span>
                         </td>
                     </tr>

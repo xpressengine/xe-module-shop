@@ -44,6 +44,7 @@
     <fieldset>
         <h4 class="h4">{$lang->order_status}</h4>
         <p>{$lang->current_order_status} <b>{$order->order_status}</b></p>
+        <p>{$lang->purchased_on}: <b>{zdate($order->regdate)}</b></p>
     </fieldset>
     <fieldset>
         <h4 class="h4">{$lang->account_info}</h4>

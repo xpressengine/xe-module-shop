@@ -1093,6 +1093,7 @@
             }
 
             $this->setMessage('success_deleted');
+            $this->setRedirectUrl(getNotEncodedUrl('', 'act', 'dispShopToolManageCustomers'));
         }
 
         /*
@@ -1172,6 +1173,7 @@
             $shopModel = $this->model;
             $addressRepository = $shopModel->getAddressRepository();
             $address_srls = Context::get('address_srls');
+            $member_srl = Context::get('member_srl');
             if(!$address_srls) return new Object(-1, 'msg_invalid_request');
             $address_srls = explode(',', $address_srls);
 
@@ -1184,6 +1186,8 @@
             }
 
             $this->setMessage('success_deleted');
+            $returnUrl = getNotEncodedUrl('','act', 'dispShopToolManageAddresses','member_srl',$member_srl);
+            $this->setRedirectUrl($returnUrl);
         }
 
         public function procShopToolLayoutConfigSkin() {

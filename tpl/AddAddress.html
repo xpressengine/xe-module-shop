@@ -170,7 +170,7 @@
                         <th scope="row">
                         </th>
                         <td class="title">
-                            <a cond="$customer->member_srl" title="delete customer '{$customer->user_name}'" href="{getNotEncodedUrl('', 'act', 'procShopToolDeleteCustomers', 'member_srls', $customer->member_srl)}" onclick="if (!confirm('Are you sure?')) return false;" style="display: block; float: right; margin-right: 100px;">
+                            <a class="delete_link" cond="$address->address" title="delete address '{$address->address_srl}'" href="{getNotEncodedUrl('', 'act', 'procShopToolDeleteAddresses', 'address_srls', $address->address_srl, 'member_srl', Context::get('member_srl'))}" onclick="if (!confirm('Are you sure?')) return false;">
                                 {$lang->cmd_delete}
                             </a>
                             <span class="btn"><input type="submit" value="{$lang->cmd_save}"/></span>
@@ -180,8 +180,8 @@
                 </table>
 
             </fieldset>
-            <div id="regdate" cond="$attribute->regdate">Created at: {date('D, d M Y H:i:s', $attribute->regdate)}</div>
-            <div id="last_update" cond="$attribute->last_update">Last update: {date('D, d M Y H:i:s', $attribute->last_update)}</div>
+            <div id="regdate" cond="$address->regdate">Created at: {zdate($address->regdate)}</div>
+            <div id="last_update" cond="$address->last_update">Last update: {zdate($address->last_update)}</div>
         </div>
     </form>
 </div>

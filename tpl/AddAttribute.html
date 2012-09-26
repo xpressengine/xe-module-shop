@@ -1,15 +1,6 @@
 <!--#include("_tool_header.html")-->
 <!--%import("css/pagination.css",optimized=false)-->
 
-<script type="text/javascript">
-    jQuery(document).ready(function($){
-        $("#category_scope input:checkbox").change(function(){
-            checkOrUncheckParents($(this), 'category_scope');
-        });
-    });
-
-</script>
-
 <!-- Content -->
 <div id="content">
     <!-- contentHeader -->
@@ -125,7 +116,7 @@
                         <th scope="row">
                         </th>
                         <td class="title">
-                            <a cond="$attribute->attribute_srl" title="delete attribute '{$attribute->title}'" href="{getNotEncodedUrl('', 'act', 'procShopToolDeleteAttributes', 'attribute_srls', $attribute->attribute_srl)}" onclick="if (!confirm('Are you sure?')) return false;" style="display: block; float: right; margin-right: 100px;">
+                            <a class="delete_link" cond="$attribute->attribute_srl" title="delete attribute '{$attribute->title}'" href="{getNotEncodedUrl('', 'act', 'procShopToolDeleteAttributes', 'attribute_srls', $attribute->attribute_srl)}" onclick="if (!confirm('Are you sure?')) return false;" >
                                 {$lang->cmd_delete}
                             </a>
                             <span class="btn"><input type="submit" value="{$lang->cmd_save}"/></span>
@@ -135,8 +126,8 @@
                 </table>
 
             </fieldset>
-            <div id="regdate" cond="$attribute->regdate">Created at: {date('D, d M Y H:i:s', $attribute->regdate)}</div>
-            <div id="last_update" cond="$attribute->last_update">Last update: {date('D, d M Y H:i:s', $attribute->last_update)}</div>
+            <div id="regdate" cond="$attribute->regdate">Created at: {zdate($attribute->regdate)}</div>
+            <div id="last_update" cond="$attribute->last_update">Last update: {zdate($attribute->last_update)}</div>
         </div>
     </form>
 
