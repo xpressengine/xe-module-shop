@@ -992,6 +992,8 @@ li span.close-sign, li span.open-sign {
 }
 
 .not-available {
-    /*background-color: #fbdfca;*/
-    text-decoration: line-through;
+    background-color: #fbdfca;
+}
+.product.deleted {
+    background-color: #a8daf8;
 }

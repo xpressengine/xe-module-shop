@@ -71,7 +71,7 @@ abstract class BaseItem
 
 	protected function loadFromArray(array $data)
 	{
-		foreach ($data as $field=> $value)
+		foreach ($data as $field => $value)
 		{
 			if (property_exists(get_called_class(), $field)) {
 				$this->$field = $value;

@@ -23,7 +23,7 @@ abstract class BaseRepository
         if ($params) $params = (object) $params;
         $function = 'executeQuery' . ($asArray ? 'Array' : '');
         $output = $function($name, $params);
-        if ((is_string($asArray) || is_array($asArray)) && class_exists($asArray) && !empty($output->data)) {
+        if ((is_string($asArray) || is_array($asArray)) && !empty($output->data)) {
             self::rowsToEntities($output->data, $asArray);
         }
         if ($output->getMessage() == 'Specified query ID value is invalid.') {

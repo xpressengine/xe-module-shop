@@ -78,6 +78,7 @@
             if(!$oDB->isColumnExists("shop_order_products","related_products")) return true;
             if(!$oDB->isColumnExists("shop_order_products","regdate")) return true;
             if(!$oDB->isColumnExists("shop_order_products","last_update")) return true;
+            if(!$oDB->isColumnExists("shop_cart_products","title")) return true;
 
             if($oDB->isColumnExists("shop_categories","order")) return true;
             if(!$oDB->isColumnExists("shop_categories","list_order")) return true;
@@ -204,6 +205,10 @@
 
             if(!$oDB->isColumnExists("shop_order_products","related_products")) {
                 $oDB->addColumn('shop_order_products',"related_products","varchar", 500);
+            }
+
+            if(!$oDB->isColumnExists("shop_cart_products","title")) {
+                $oDB->addColumn('shop_cart_products',"title","varchar", 255);
             }
 
             if(!$oDB->isColumnExists("shop_order_products","regdate")) {

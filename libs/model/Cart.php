@@ -99,10 +99,12 @@ class Cart extends BaseItem
         }
 
         if ($cp = $this->getCartProduct($product)) {
-            $return = $this->setProductQuantity($product->product_srl, $relativeQuantity ? $cp->quantity + $quantity : $quantity);
+            $cartProductQuantity = ($relativeQuantity ? $cp->quantity + $quantity : $quantity);
+            $return = $this->setProductQuantity($product->product_srl, $cartProductQuantity, array('title' => $product->title));
         }
         else {
-            $return = $this->repo->insertCartProduct($this->cart_srl, $product->product_srl, $quantity);
+            $cartProductQuantity = $quantity;
+            $return = $this->repo->insertCartProduct($this->cart_srl, $product->product_srl, $cartProductQuantity, array('title' => $product->title));
         }
         $this->setExtra('price', $this->getPrice(true));
         $this->items = $this->count(true);
@@ -124,19 +126,7 @@ class Cart extends BaseItem
             $product = $pRepo->getProduct($product);
         }
         else throw new Exception('Invalid input');
-
-        if ($checkIfInStock) {
-            $shopInfo = new ShopInfo($this->module_srl);
-            $checkIfInStock = ($shopInfo->getOutOfStockProducts() == 'Y');
-        }
-
-        return
-            $product &&
-            $product->status != 'disabled' &&
-            (
-                !$checkIfInStock ||
-                ($checkIfInStock && $product->in_stock == 'Y')
-            );
+        return $product && $product->isAvailable($checkIfInStock);
     }
 
     public function hasProduct($product)
@@ -171,10 +161,10 @@ class Cart extends BaseItem
         return $this->repo->countCartProducts($this->module_srl, $this->cart_srl, $this->member_srl, $this->session_id, $sumQuantities);
     }
 
-    public function setProductQuantity($product_srl, $quantity)
+    public function setProductQuantity($product_srl, $quantity, array $extraParams=array())
     {
         if (!$this->cart_srl) throw new Exception('Cart is not persisted');
-        return $this->repo->updateCartProduct($this->cart_srl, $product_srl, $quantity);
+        return $this->repo->updateCartProduct($this->cart_srl, $product_srl, $quantity, $extraParams);
     }
 
     /**
@@ -235,12 +225,15 @@ class Cart extends BaseItem
         $shopInfo = new ShopInfo($this->module_srl);
         $checkIfInStock = ($shopInfo->getOutOfStockProducts() == 'Y');
 
-        $output = $this->query('getCartProductsList', array_merge(array('cart_srl'=>$this->cart_srl), $args));
+        $output = $this->query('getCartProductsList', array_merge(array('cart_srl'=>$this->cart_srl), $args), true);
         foreach ($output->data as $i=>&$data) {
-            if ($data->product_srl) {
+            //if ($data->product_srl is missing) then product was deleted by shop admin
+            if ($data->cart_product_srl) {
                 $product = new SimpleProduct($data);
                 $product->quantity = $data->quantity;
-                $product->available = $this->productStillAvailable($product, $checkIfInStock);
+                $product->available = ( $data->product_srl ? $this->productStillAvailable($product, $checkIfInStock) : false );
+                $product->cart_product_srl = $data->cart_product_srl;
+                $product->cart_product_title = $data->cart_product_title;
                 $data = $product;
             }
             else unset($output->data[$i]);

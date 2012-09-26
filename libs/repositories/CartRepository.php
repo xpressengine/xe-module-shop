@@ -35,9 +35,11 @@ class CartRepository extends BaseRepository
 
 
     //region CartProducts operations
-    public function insertCartProduct($cart_srl, $product_srl, $quantity=1)
+    public function insertCartProduct($cart_srl, $product_srl, $quantity=1, array $extraParams=array())
     {
-        return $this->query('insertCartProduct', array('cart_srl' => $cart_srl, 'product_srl' => $product_srl, 'quantity' => $quantity));
+        $params = array('cart_srl' => $cart_srl, 'product_srl' => $product_srl, 'quantity' => $quantity);
+        $extraParams = array_merge($params, $extraParams);
+        return $this->query('insertCartProduct', $extraParams);
     }
 
     public function getCartProducts($cart_srl, array $product_srls=null)
@@ -65,9 +67,11 @@ class CartRepository extends BaseRepository
         return $this->query('deleteCartProducts', array('cart_srl' => $cart_srl, 'product_srls' => $product_srls));
     }
 
-    public function updateCartProduct($cart_srl, $product_srl, $quantity)
+    public function updateCartProduct($cart_srl, $product_srl, $quantity, array $extraParams=array())
     {
-        return $this->query('updateCartProduct', array('cart_srl' => $cart_srl, 'product_srl' => $product_srl, 'quantity' => $quantity));
+        $params = array('cart_srl' => $cart_srl, 'product_srl' => $product_srl, 'quantity' => $quantity);
+        $params = array_merge($params, $extraParams);
+        return $this->query('updateCartProduct', $params);
     }
     //endregion
 

@@ -170,8 +170,10 @@ class shopView extends shop {
         Context::set('cart', $cart);
 
         // Load cart preview (for ajax cart feature in header)
-        $preview_products = $cart->getProducts(3);
-        Context::set('preview_products', $preview_products);
+        if ($cart) {
+            $preview_products = $cart->getProducts(3);
+            Context::set('preview_products', $preview_products);
+        }
 
         // Load menu for display on all pages (in header)
         $shop_menu = $oShopModel->getShopMenu($this->site_srl);
@@ -1021,9 +1023,11 @@ class shopView extends shop {
         if ($cart = Context::get('cart')) {
             $output = $cart->getProductsList(array('page' => Context::get('page')));
             $total = 0;
-            /** @var $product Product */
+            /** @var $product SimpleProduct */
             foreach ($output->data as $product) {
-                $total += $product->price * $product->quantity;
+                if ($product->available) {
+                    $total += $product->price * $product->quantity;
+                }
             }
             Context::set('products', $output);
             Context::set('total_price', $total);

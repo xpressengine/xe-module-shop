@@ -89,13 +89,14 @@ jQuery(function () {
                 <tbody>
 
 <!--@foreach($products->data as $no => $product)-->
-                <tr class="product{!$product->available ? ' not-available' : ''}" data-price="{$product->price}" class="not-available"|cond="!$product->available">
+                <tr cond="$product->product_srl" class="product{!$product->available ? ' not-available' : ''}" data-price="{$product->price}">
                     <td>
-                        <input type="checkbox" name="product_srls[]" value="{$product->product_srl}" class="inputCheck boxlist"/>
+                        <input type="checkbox" name="product_srls[]" value="{$product->product_srl}" class="inputCheck boxlist" cond="$product->product_srl" />
                     </td>
                     <td class="title">
                         <a href="{getUrl('act','dispShopProduct','product_srl',$product->product_srl)}">{$product->title}</a>
                     </td>
+<!--@if ($product->available)-->
                     <td class="quantity">
                         <input type="text" data-quantity="{$product->quantity}" value="{$product->quantity}" name="quantity[{$product->product_srl}]">
                     </td>
@@ -107,6 +108,17 @@ jQuery(function () {
                     </td>
                     <td>
                         <a class="update" href="{getUrl('act','procShopCartUpdateProducts','cart_srl',$cart->cart_srl, 'quantity['.$product->product_srl.']', 'QUANTITY')}">{$lang->cmd_update}</a>
+                    </td>
+<!--@else-->
+                    <td colspan="4">
+                        Product is no longer available. <a class="remove" href="{getUrl('act','procShopCartRemoveProducts','cart_srl',$cart->cart_srl, 'product_srls', $product->product_srl)}">{$lang->cmd_delete}</a> it from cart?
+                    </td>
+<!--@endif-->
+                </tr>
+                <tr cond="!$product->product_srl" class="product deleted">
+                    <td></td>
+                    <td colspan="6">
+                        <p>Product "<b>{$product->cart_product_title}</b>" was deleted by admin after you added it. <a href="{getUrl('act','procShopCartRemoveProducts','cart_srl',$cart->cart_srl, 'product_srls', $product->cart_product_srl)}">Yes, I got it.</a></p>
                     </td>
                 </tr>
 <!--@end-->

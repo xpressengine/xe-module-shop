@@ -4,6 +4,7 @@
     </tables>
     <columns>
         <column name="quantity" var="quantity" default="1"/>
+        <column name="title" var="title"/>
     </columns>
     <conditions>
         <condition operation="equal" column="cart_srl" var="cart_srl" filter="number" notnull="notnull" />

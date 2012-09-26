@@ -1,5 +1,5 @@
 <!--@ // Requires a $product object as input -->
-<form action="./" method="post">
+<form action="./" method="post" cond="isset($product->available) ? $product->available : $product->isAvailable()">
     <input type="hidden" name="act" value="procShopToolCartAddProduct" />
     <div class="clearfix">
         <p class="f-right">

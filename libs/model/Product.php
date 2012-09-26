@@ -134,6 +134,23 @@ class SimpleProduct extends Product
     {
         return 'ProductRepository';
     }
+
+    public function isAvailable($shopSettingsCheck=true)
+    {
+        if (!$this->isPersisted()) {
+            throw new Exception('Product not persisted');
+        }
+        if ($shopSettingsCheck) {
+            $shopInfo = new ShopInfo($this->module_srl);
+            $shopSettingsCheck = ($shopInfo->getOutOfStockProducts() == 'Y');
+        }
+        return
+            $this->status != 'disabled' &&
+            (
+                !$shopSettingsCheck ||
+                ($shopSettingsCheck && $this->in_stock == 'Y')
+            );
+    }
 }
 
 /**
