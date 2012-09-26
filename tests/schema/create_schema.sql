@@ -1670,8 +1670,8 @@ CREATE TABLE IF NOT EXISTS `xe_shop_order_products` (
 -- Structura de tabel pentru tabelul `xe_shop_payment_gateways`
 --
 
-DROP TABLE IF EXISTS `xe_shop_payment_gateways`;
-CREATE TABLE IF NOT EXISTS `xe_shop_payment_gateways` (
+DROP TABLE IF EXISTS `xe_shop_payment_methods`;
+CREATE TABLE IF NOT EXISTS `xe_shop_payment_methods` (
   `id` bigint(3) NOT NULL,
   `name` varchar(255) NOT NULL,
   `display_name` varchar(255) NOT NULL,

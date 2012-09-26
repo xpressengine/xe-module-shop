@@ -1,6 +1,6 @@
-<query id="getGateways" action="select">
+<query id="getPaymentMethods" action="select">
     <tables>
-        <table name="shop_payment_gateways" />
+        <table name="shop_payment_methods" />
     </tables>
     <columns>
     </columns>

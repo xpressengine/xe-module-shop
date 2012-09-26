@@ -61,7 +61,7 @@
         <permission action="procShopToolDeleteAttributes" target="manager" />
         <permission action="procShopToolFilterAttributes" target="manager"/>
 
-        <!-- Payment Gateway -->
+        <!-- Payment methods -->
         <permission action="dispShopToolManagePaymentMethods" target="manager" />
         <permission action="procUpdateShopActivatePaymentMethod" target="manager" />
         <permission action="procUpdateShopDeactivatePaymentMethod" target="manager" />
@@ -204,7 +204,7 @@
         <action name="procShopToolFilterInvoices" type="controller"/>
         <action name="procShopToolFilterCustomers" type="controller"/>
 
-        <!-- Payment Gateway -->
+        <!-- Payment methods -->
         <action name="dispShopToolManagePaymentMethods" type="view" />
         <action name="dispShopToolEditPaymentMethod" type="view" />
         <action name="dispShopTestCheckout" type="view" />

@@ -1580,10 +1580,10 @@
 
 		// endregion
 
-        // region Payment Gateway
+        // region Payment methods
 
         /**
-         * Activates a gateway
+         * Activates a new payment method
          *
          * @author Daniel Ionescu (dev@xpressengine.org)
          */
@@ -1602,11 +1602,11 @@
             $shopModel = getModel('shop');
             $payment_repository = $shopModel->getPaymentMethodRepository();
 
-            $gateway = new stdClass();
-            $gateway->name = $name;
-            $gateway->status = 1;
+            $payment_method = new stdClass();
+            $payment_method->name = $name;
+            $payment_method->status = 1;
 
-            $payment_repository->updatePaymentMethod($gateway);
+            $payment_repository->updatePaymentMethod($payment_method);
 
             $vid = Context::get('vid');
             $returnUrl = getNotEncodedUrl('', 'vid', $vid, 'act', 'dispShopToolManagePaymentMethods');
@@ -1614,7 +1614,7 @@
         }
 
         /**
-         * Deactivates a gateway
+         * Deactivates a payment method
          *
          * @author Daniel Ionescu (dev@xpressengine.org)
          */
@@ -1633,11 +1633,11 @@
             $shopModel = getModel('shop');
             $payment_repository = $shopModel->getPaymentMethodRepository();
 
-            $gateway = new stdClass();
-            $gateway->name = $name;
-            $gateway->status = 0;
+            $payment_method = new stdClass();
+            $payment_method->name = $name;
+            $payment_method->status = 0;
 
-            $payment_repository->updatePaymentMethod($gateway);
+            $payment_repository->updatePaymentMethod($payment_method);
 
             $vid = Context::get('vid');
             $returnUrl = getNotEncodedUrl('', 'vid', $vid, 'act', 'dispShopToolManagePaymentMethods');
@@ -1646,7 +1646,7 @@
         }
 
         /**
-         * Deletes the gateway folder and database entry
+         * Deletes the payment plugins folder and database entry
          *
          * @author Daniel Ionescu (dev@xpressengine.org)
          */
@@ -1664,10 +1664,10 @@
                 $shopModel = $this->model;
                 $repository = $shopModel->getPaymentMethodRepository();
 
-                $gateway = new stdClass();
-                $gateway->name = $name;
+                $payment_method = new stdClass();
+                $payment_method->name = $name;
 
-                $repository->deletePaymentMethod($gateway);
+                $repository->deletePaymentMethod($payment_method);
 
                 $fullPath = $baseDir . $name;
                 if (!rmdir($fullPath)) {
@@ -1722,7 +1722,7 @@
         }
 
         /**
-         * Uploads and installs a new payment gateway
+         * Uploads and installs a new payment method
          *
          * @author Daniel Ionescu (dev@xpressengine.org)
          */
@@ -1772,21 +1772,21 @@
                                 $pg = new stdClass();
                                 $pg->name = $name[0];
                                 $pg->status = 1;
-                                $output = $repository->getGateway($pg);
+                                $output = $repository->getPaymentMethod($pg);
 
                                 if ($output) {
 
-                                    $output = $repository->updatePaymentGatewayStatus($pg);
+                                    $output = $repository->updatePaymentMethod($pg);
 
                                     if ($output) {
 
-                                        $this->setMessage('An older installation of this gateway has been found. Reverting to old settings.','info');
+                                        $this->setMessage('An older installation of this payment method has been found. Reverting to old settings.','info');
 
                                     }
 
                                 } else {
 
-                                    $output = $repository->insertPaymentGateway($pg);
+                                    $output = $repository->insertPaymentMethody($pg);
 
                                     if (!$output) {
 
@@ -1810,7 +1810,7 @@
 
                     } else {
 
-                        $this->setMessage('Unable to create gateway directory at '.$folderPath,'error');
+                        $this->setMessage('Unable to create payment plugins directory at '.$folderPath,'error');
 
                     }
 
@@ -1824,7 +1824,7 @@
         }
 
         /**
-         * Sanitizes the payment gateway database
+         * Sanitizes the payment methods database
          */
         public function procSanitizePaymentMethods() {
 
@@ -1837,11 +1837,11 @@
             try {
 
                 $repository->sanitizePaymentMethods();
-                $this->setMessage('Successfully sanitized gateway','info');
+                $this->setMessage('Successfully sanitized payment methods database table','info');
 
             } catch (Exception $e) {
 
-                $this->setMessage('Unable to sanitize payment gateway table.','error');
+                $this->setMessage('Unable to sanitize payment methods table.','error');
 
             }
 

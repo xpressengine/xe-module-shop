@@ -301,7 +301,7 @@ class shopModel extends shop
 	}
 
     /**
-     * Returns an instance of the Payment Gateways repository
+     * Returns an instance of the Payment Methods repository
      *
      * @author Daniel Ionescu (dev@xpressengine.org)
      * @return PaymentMethodRepository

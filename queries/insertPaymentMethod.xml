@@ -1,6 +1,6 @@
-<query id="insertGateway" action="insert">
+<query id="insertPaymentMethod" action="insert">
     <tables>
-        <table name="shop_payment_gateways" />
+        <table name="shop_payment_methods" />
     </tables>
     <columns>
         <column name="id" var="id" filter="number" />

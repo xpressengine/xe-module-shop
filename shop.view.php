@@ -1370,7 +1370,7 @@ class shopView extends shop {
 	}
 	// endregion
 
-	// region Payment Gateways
+	// region Payment methods
 
 	/**
 	 * Displays the Payment methods management page
@@ -1388,7 +1388,7 @@ class shopView extends shop {
 	}
 
     /**
-     * Display settings for a payment gateway
+     * Display settings for a payment method
      */
     public function dispShopToolEditPaymentMethod()
     {

@@ -18,7 +18,7 @@ abstract class PaymentMethodAbstract
     }
 
     /**
-     * Returns the payment gateway's name
+     * Returns the payment methods's name
      * Defaults: Splits folder name into words and makes them uppercase
      * @return string
      */
@@ -33,8 +33,8 @@ abstract class PaymentMethodAbstract
     }
 
     /**
-     * Returns unique identifier for Payment gateway
-     * Represents the folder name where the gateway class is found
+     * Returns unique identifier for Payment method
+     * Represents the folder name where the payment method class is found
      */
     final public function getName()
     {

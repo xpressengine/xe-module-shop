@@ -1,6 +1,6 @@
-<query id="updateGateway" action="update">
+<query id="updatePaymentMethod" action="update">
     <tables>
-        <table name="shop_payment_gateways" />
+        <table name="shop_payment_methods" />
     </tables>
     <columns>
         <column name="status" var="status" filter="number" />

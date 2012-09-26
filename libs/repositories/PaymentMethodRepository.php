@@ -51,9 +51,9 @@ class PaymentMethodRepository extends BaseRepository
         $data->properties = unserialize($data->props);
         unset($data->props);
 
-        $payment_gateway = $this->getPaymentMethodInstanceByName($data->name);
-        $payment_gateway->setProperties($data);
-        return $payment_gateway;
+        $payment_method = $this->getPaymentMethodInstanceByName($data->name);
+        $payment_method->setProperties($data);
+        return $payment_method;
     }
 
     public function getPaymentMethod($name)
@@ -61,21 +61,21 @@ class PaymentMethodRepository extends BaseRepository
         $args = new stdClass();
         $args->name = $name;
 
-        $output = executeQuery('shop.getGateway',$args);
+        $output = executeQuery('shop.getPaymentMethod',$args);
         if(!$output->toBool()) {
             throw new Exception($output->getMessage(), $output->getError());
         }
 
-        // If payment gateway exists in the database, return it as is
+        // If payment method exists in the database, return it as is
         if($output->data)
         {
             return $this->getPaymentMethodFromProperties($output->data);
         }
 
         // Otherwise, initialize it with info from the extension class and insert in database
-        $payment_gateway = $this->getPaymentMethodInstanceByName($name);
+        $payment_method = $this->getPaymentMethodInstanceByName($name);
 
-        $this->insertPaymentMethod($payment_gateway);
+        $this->insertPaymentMethod($payment_method);
 
         return $this->getPaymentMethod($name);
     }
@@ -137,7 +137,7 @@ class PaymentMethodRepository extends BaseRepository
             $payment_method->properties = $serialized_properties;
         }
 
-        $output = executeQuery('shop.updateGateway', $payment_method);
+        $output = executeQuery('shop.updatePaymentMethod', $payment_method);
 
         if(!$output->toBool()) {
             throw new Exception($output->getMessage(), $output->getError());
@@ -147,7 +147,7 @@ class PaymentMethodRepository extends BaseRepository
     }
 
     /**
-     * Inserts a new payment gateway
+     * Inserts a new payment method
      *
      * @author Daniel Ionescu (dev@xpressengine.org)
      * @param  args
@@ -157,7 +157,7 @@ class PaymentMethodRepository extends BaseRepository
     public function insertPaymentMethod($args)
     {
         $args->id = getNextSequence();
-        $output = executeQuery('shop.insertGateway', $args);
+        $output = executeQuery('shop.insertPaymentMethod', $args);
         if(!$output->toBool()) {
             throw new Exception($output->getMessage(), $output->getError());
         }
@@ -166,7 +166,7 @@ class PaymentMethodRepository extends BaseRepository
 
     private function getPaymentMethodsInDatabase()
     {
-        $output = executeQueryArray('shop.getGateways');
+        $output = executeQueryArray('shop.getPaymentMethods');
 
         if (!$output->toBool())
         {
@@ -177,7 +177,7 @@ class PaymentMethodRepository extends BaseRepository
     }
 
     /**
-     * Get active payment gateways
+     * Get active payment methods
      *
      * @author Daniel Ionescu (dev@xpressengine.org)
      * @throws exception
@@ -187,19 +187,19 @@ class PaymentMethodRepository extends BaseRepository
 
         $args = new stdClass();
         $args->status = 1;
-        $output = executeQueryArray('shop.getGateways',$args);
+        $output = executeQueryArray('shop.getPaymentMethods',$args);
 
         if (!$output->toBool())
         {
             throw new Exception($output->getMessage(), $output->getError());
         }
 
-        $active_payment_gateways = array();
+        $active_payment_methods = array();
         foreach($output->data as $data)
         {
             try
             {
-                $active_payment_gateways[] = $this->getPaymentMethodFromProperties($data);
+                $active_payment_methods[] = $this->getPaymentMethodFromProperties($data);
             }
             catch(Exception $e)
             {
@@ -207,11 +207,11 @@ class PaymentMethodRepository extends BaseRepository
             }
         }
 
-        return $active_payment_gateways;
+        return $active_payment_methods;
     }
 
     /**
-     * Deletes a  payment gateway
+     * Deletes a  payment method
      *
      * @author Daniel Ionescu (dev@xpressengine.org)
      * @param  $args
@@ -233,7 +233,7 @@ class PaymentMethodRepository extends BaseRepository
     }
 
     /**
-     * Deletes payment gateways from DB if they do not have a folder with a corresponding name
+     * Deletes payment methods from DB if they do not have a folder with a corresponding name
      *
      * @author Daniel Ionescu (dev@xpressengine.org)
      * @param  none
