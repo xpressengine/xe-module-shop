@@ -529,8 +529,10 @@
     $lang->no_products_categ = "There are no products in this category";
     $lang->front_search_results = "Search results for";
     $lang->front_search_returned = "returned";
-        $lang->front_search_no_results = "Your search retuned no results";
+    $lang->front_search_no_results = "Your search retuned no results";
     $lang->front_results = "results";
     $lang->checkout = "checkout";
     $lang->edit_cart = "edit cart";
+    $lang->add_to_cart = "Add to cart";
+    $lang->frontend_cart_empty = "Your cart is empty.";
 ?>

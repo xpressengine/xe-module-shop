@@ -27,22 +27,27 @@
 
     <h1 cond="!$products || empty($products)">{$lang->front_search_no_results}</h1>
     <div class="search-product-list">
-        <!--@foreach($products as $product)-->
-        <div id="product_{$product->product_srl}" class="product {$product->product_type} clearfix">
-            <a href="{getUrl('vid', $mid, 'act', 'dispShopProduct', 'product_srl', $product->product_srl, 'category_srl', $category_srl)}" class="product-link">
-                <img src="{$product->getPrimaryImage()->getThumbnailPath(100)}" />
-                <h2>{$product->title}</h2>
-            </a>
-            <
-            {$product->short_description}
-            {ShopDisplay::priceFormat($product->price, $shop->getCurrencySymbol())}
-            <form action="./" method="post">
-                <input type="hidden" name="act" value="procShopToolCartAddProduct" />
-                <p class="buy">
-                    <input class="add-to-cart" type="submit" value="Add to cart" />
-                </p>
-            </form>
-        </div>
+        <!--@if(count($products))-->
+            <ul>
+            <!--@foreach($products as $product)-->
+            <li id="product_{$product->product_srl}" class="product {$product->product_type} clearfix">
+                <a href="{getUrl('vid', $mid, 'act', 'dispShopProduct', 'product_srl', $product->product_srl, 'category_srl', $category_srl)}" class="product-link">
+                    <img src="{$product->getPrimaryImage()->getThumbnailPath(100)}" />
+                </a>
+                <h2>
+                    <a href="{getUrl('vid', $mid, 'act', 'dispShopProduct', 'product_srl', $product->product_srl, 'category_srl', $category_srl)}" class="product-link">
+                        {$product->title}
+                    </a>
+                </h2>
+                <div class="actions f-right">
+                    <p class="a-right">{ShopDisplay::priceFormat($product->price, $shop->getCurrencySymbol())}</p>
+                    <p class="a-right"><a class="add-to-cart" href="{getUrl('vid', $mid, 'act', 'dispShopProduct', 'product_srl', $product->product_srl, 'category_srl', $category_srl)}">{$lang->add_to_cart}</a></p>
+                </div>
+                {$product->short_description}
+            </li>
+            <!--@end-->
+            </ul>
+        <!--@else-->
         <!--@end-->
     </div>
 

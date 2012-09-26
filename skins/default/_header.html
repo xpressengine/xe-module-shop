@@ -3,10 +3,10 @@
         <p id="header-socials" class="f-left">
             Follow us on <a href="">Twitter</a>, <a href="">Facebook</a> and <a href="">Google Plus</a>
         </p>
-        <p class="f-right cart">
+        <div class="f-right cart">
             <span>
                 <span id="cart-button">
-                    <span cond="isset($cart) && $cart->items">{$cart->items}</span>
+                    <span>{$cart->items}</span>
                     {$lang->your_cart}
                     <img src="img/arrow_dropdown.png" alt="" title=""/>
                 </span>
@@ -16,8 +16,8 @@
                         <li id="cart-product-{$cart_product->product_srl}" class="clearfix">
                             <img src="{$cart_product->getPrimaryImage()->getThumbnailPath(50)}" alt="" title=""/>
                             <p class="cart-preview-title">
-                                <!--@if(strlen($cart_product->title)>45)-->
-                                    {substr($cart_product->title,0,45)}...
+                                <!--@if(strlen($cart_product->title)>42)-->
+                                    {substr($cart_product->title,0,42)}...
                                 <!--@else-->
                                     {$cart_product->title}
                                 <!--@end-->
@@ -26,17 +26,26 @@
                         </li>
                         <!--@endforeach-->
                     </ul>
-                    <p id="cart-costs" class="clearfix">
-                        <span class="f-left">{$lang->grand_total}:</span>
-                        <span class="f-right">{ShopDisplay::priceFormat($product->price, $shop->getCurrencySymbol())}</span>
-                    </p>
-                    <p>
-                        <span class="f-left"><a href="{getURL('', 'act','dispShopCart')}">{$lang->edit_cart}</a></span>
-                        <span class="f-right"><a href="{getURL('', 'act','dispShopCheckout')}">{$lang->checkout}</a></span>
-                    </p>
+                    <!--@if($cart_product->price)-->
+                        <p id="cart-costs" class="clearfix">
+                            <span class="f-left">{$lang->grand_total}:</span>
+                            <span class="f-right">{ShopDisplay::priceFormat($cart_product->price, $shop->getCurrencySymbol())}</span>
+                        </p>
+                        <p>
+                            <span class="f-left"><a href="{getURL('', 'act','dispShopCart')}">{$lang->edit_cart}</a></span>
+                            <span class="f-right"><a href="{getURL('', 'act','dispShopCheckout')}">{$lang->checkout}</a></span>
+                        </p>
+                    <!--@else-->
+                        <p class="a-center">
+                            <br />
+                            {$lang->frontend_cart_empty}
+                            <br />
+                            <br />
+                        </p>
+                    <!--@end-->
                 </span>
             </span>
-        </p>
+        </div>
         <p class="f-right header-separator">
             <select onchange="langSelect()" id="languages">
                 <option value="{$lang_type}">{$lang_supported[$lang_type]}</option>

@@ -165,6 +165,18 @@ body {
     float: right;
 }
 
+.a-left {
+    text-align: left;
+}
+
+.a-center {
+    text-align: center;
+}
+
+.a-right {
+    text-align: right;
+}
+
 input[type="text"], textarea {
     border: 1px solid #bcc1ca;
     border-radius: 2px;
@@ -191,6 +203,11 @@ select {
     -webkit-box-shadow: inset 0px -1px 1px 0px #e8e8e8;
     color: #8a9cac;
     padding: 5px;
+    height: 28px;
+}
+
+input[type="submit"] {
+    font-size: 1em;
 }
 
 a {
@@ -214,6 +231,11 @@ h2 {
     margin: 2.500em 0 1.250em;
     color: #2d5375;
 }
+
+h2 a {
+    text-decoration: none;
+}
+
 
 table {
     width: 100%;
@@ -311,6 +333,12 @@ table tbody tr td:last-child {
     position: relative;
 }
 
+#upper-header div {
+    vertical-align: middle;
+    position: relative;
+    line-height: 28px;
+}
+
 #upper-header p.cart {
     padding: 0;
 }
@@ -335,7 +363,7 @@ table tbody tr td:last-child {
 }
 
 #cart-button {
-    padding: 17px 10px;
+    padding: 18px 10px;
     z-index: 1000;
     border-left: 1px solid #F6F7F8;
     border-right: 1px solid #F6F7F8;
@@ -569,6 +597,10 @@ table tbody tr td:last-child {
     margin: 0 0 10px;
 }
 
+.main-content p, .main-content h1, .main-content h2, .main-content h3 {
+    line-height: 1.5em;
+}
+
 .body-left-panel {
     font-size: 1.063em;
     margin: 0 0 10px 0;
@@ -786,10 +818,13 @@ li span.close-sign, li span.open-sign {
     color: #000;
 }
 
-.product-list .add-to-cart {
-    padding: 0 0 0 20px;
+.add-to-cart {
     background: url('img/bag-icon-w12.png') 0 center no-repeat;
     text-decoration: none;
+    padding: 0 0 0 20px;
+    cursor: pointer;
+    color: #2D5375;
+    border: 0;
 }
 
 .product-list .price {
@@ -868,6 +903,16 @@ li span.close-sign, li span.open-sign {
     float: left;
 }
 
+.search-product-list ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.search-product-list ul li {
+    border-bottom: 1px dotted #cacaca;
+}
+
 .search-product-list img {
     border: 1px solid #cacaca;
     margin: 0 10px 10px 0;
@@ -877,6 +922,16 @@ li span.close-sign, li span.open-sign {
 
 .search-product-list h2 {
     margin: 10px 0;
+}
+
+.search-product-list .actions {
+    margin: 0 0 0 50px;
+    width: 100px;
+}
+
+.search-product-list .actions p {
+    font-size: 1.167em;
+    color: #2D5375;
 }
 
 /**
