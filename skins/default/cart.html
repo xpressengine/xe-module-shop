@@ -89,7 +89,7 @@ jQuery(function () {
                 <tbody>
 
 <!--@foreach($products->data as $no => $product)-->
-                <tr class="product" data-price="{$product->price}">
+                <tr class="product{!$product->available ? ' not-available' : ''}" data-price="{$product->price}" class="not-available"|cond="!$product->available">
                     <td>
                         <input type="checkbox" name="product_srls[]" value="{$product->product_srl}" class="inputCheck boxlist"/>
                     </td>

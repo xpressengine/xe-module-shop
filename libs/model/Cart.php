@@ -80,24 +80,73 @@ class Cart extends BaseItem
      */
     public function addProduct($product, $quantity=1, $relativeQuantity=true)
     {
-        if (!$this->cart_srl) throw new Exception('Cart is not persisted');
-        $product_srl = ( $product instanceof Product ? $product->product_srl : $product );
-        if (!$product_srl) throw new Exception('Product is not persisted');
-        //check if product already added
-        $output = $this->repo->getCartProducts($this->cart_srl, array($product_srl));
-        if (empty($output->data)) {
-            $return = $this->repo->insertCartProduct($this->cart_srl, $product_srl, $quantity);
+        if (!$this->isPersisted()) throw new Exception('Cart is not persisted');
+
+        if ($product instanceof SimpleProduct) {
+            if (!$product_srl = $product->product_srl) {
+                throw new Exception('Product is not persisted');
+            }
+        }
+        elseif (is_numeric($product)) {
+            $product = new SimpleProduct($product);
         }
         else {
-            $cp = $output->data[0];
-            $return = $this->setProductQuantity($product_srl, $relativeQuantity ? $cp->quantity + $quantity : $quantity);
+            throw new Exception('Wrong $product input for addProduct to cart');
         }
-        //calculate cart total price
+
+        if (!$this->productStillAvailable($product)) {
+            throw new Exception('Product is not available anymore, cannot add it to cart.');
+        }
+
+        if ($cp = $this->getCartProduct($product)) {
+            $return = $this->setProductQuantity($product->product_srl, $relativeQuantity ? $cp->quantity + $quantity : $quantity);
+        }
+        else {
+            $return = $this->repo->insertCartProduct($this->cart_srl, $product->product_srl, $quantity);
+        }
         $this->setExtra('price', $this->getPrice(true));
-        //count with quantities
         $this->items = $this->count(true);
+
         $this->save();
+
         return $return;
+    }
+
+    public function productStillAvailable($product, $checkIfInStock=true)
+    {
+        if ($product instanceof SimpleProduct) {
+            if (!$product->isPersisted()) {
+                throw new Exception('Product not persisted');
+            }
+        }
+        elseif (is_numeric($product)) {
+            $pRepo = new ProductRepository();
+            $product = $pRepo->getProduct($product);
+        }
+        else throw new Exception('Invalid input');
+
+        if ($checkIfInStock) {
+            $shopInfo = new ShopInfo($this->module_srl);
+            $checkIfInStock = ($shopInfo->getOutOfStockProducts() == 'Y');
+        }
+
+        return
+            $product &&
+            $product->status != 'disabled' &&
+            (
+                !$checkIfInStock ||
+                ($checkIfInStock && $product->in_stock == 'Y')
+            );
+    }
+
+    public function hasProduct($product)
+    {
+        return $this->getCartProduct($product) ? true : false;
+    }
+
+    public function getCartProduct($product)
+    {
+        return $this->repo->getCartProduct($this->cart_srl, $product);
     }
 
     public function getPrice($refresh=false)
@@ -182,11 +231,16 @@ class Cart extends BaseItem
     public function getProductsList(array $args=array())
     {
         if (!$this->cart_srl) throw new Exception('Cart is not persisted');
+
+        $shopInfo = new ShopInfo($this->module_srl);
+        $checkIfInStock = ($shopInfo->getOutOfStockProducts() == 'Y');
+
         $output = $this->query('getCartProductsList', array_merge(array('cart_srl'=>$this->cart_srl), $args));
         foreach ($output->data as $i=>&$data) {
             if ($data->product_srl) {
                 $product = new SimpleProduct($data);
                 $product->quantity = $data->quantity;
+                $product->available = $this->productStillAvailable($product, $checkIfInStock);
                 $data = $product;
             }
             else unset($output->data[$i]);

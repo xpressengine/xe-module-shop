@@ -47,6 +47,19 @@ class CartRepository extends BaseRepository
         return $this->query('getCartProducts', $params, true);
     }
 
+    public function getCartProduct($cart_srl, $product)
+    {
+        if ($product instanceof SimpleProduct) {
+            if (!$product->isPersisted()) {
+                throw new Exception('Product is not persisted');
+            }
+            $product_srl = $product->product_srl;
+        }
+        elseif (is_numeric($product)) $product_srl = $product;
+        $out = $this->getCartProducts($cart_srl, array($product_srl));
+        return empty($out->data) ? null : $out->data[0];
+    }
+
     public function deleteCartProducts($cart_srl, array $product_srls=null)
     {
         return $this->query('deleteCartProducts', array('cart_srl' => $cart_srl, 'product_srls' => $product_srls));

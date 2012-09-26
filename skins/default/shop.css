@@ -879,3 +879,8 @@ li span.close-sign, li span.open-sign {
 .xm .form ul, .xm .form li {
     border: 0;
 }
+
+.not-available {
+    /*background-color: #fbdfca;*/
+    text-decoration: line-through;
+}
