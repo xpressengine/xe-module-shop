@@ -134,10 +134,14 @@
         }
 
         public function procShopDeleteAddress(){
-            $shopModel = getModel('shop');
+            $shopModel = $this->model;
             $addressRepository = $shopModel->getAddressRepository();
 
             $address_srl = Context::get('address_srl');
+            $address = $addressRepository->getAddress($address_srl);
+            $logged_info = Context::get('logged_info');
+            if($logged_info->member_srl != $address->member_srl) return new Object(-1,'msg_invalid_request');
+
             $addressRepository->deleteAddress($address_srl);
 
             $this->setMessage("Address has been deleted succesfully");
@@ -611,6 +615,30 @@
             }
             else $url = getNotEncodedUrl('', 'act', 'dispShop');
             $this->setRedirectUrl($url);
+        }
+
+        public function procShopRenewOrder(){
+            $shopModel = $this->model;
+            $orderRepository = $shopModel->getOrderRepository();
+            $cartRepository = $shopModel->getCartRepository();
+            $productRepository = $shopModel->getProductRepository();
+
+            $order_srl = Context::get('order_srl');
+            $order = $orderRepository->getOrderBySrl($order_srl);
+            $logged_info = Context::get('logged_info');
+            if($logged_info->member_srl != $order->member_srl){
+                return new Object(-1, 'This is not your order');
+            }
+
+            $order_items = $orderRepository->getOrderItems($order);
+            $cart = $cartRepository->getCart($this->module_info->module_srl,null,$logged_info->member_srl, session_id(), true);
+            $cartRepository->deleteCartProducts($cart->cart_srl);
+            foreach($order_items as $item){
+                $cart->addProduct($item,$item->ordered_qty);
+            }
+            $this->setMessage("Ordered renewed");
+            $returnUrl = getNotEncodedUrl('', 'act', 'dispShopCart');
+            $this->setRedirectUrl($returnUrl);
         }
 
         public function procShopToolManageProducts()

@@ -132,6 +132,7 @@
         <action name="procShopSignToNewsletter" type="controller" />
         <action name="procShopUnsignToNewsletter" type="controller" />
         <action name="procShopSearch" type="controller"/>
+        <action name="procShopRenewOrder" type="controller"/>
 
         <!-- Shop backend -->
         <action name="dispShopToolLogin" type="view" />
