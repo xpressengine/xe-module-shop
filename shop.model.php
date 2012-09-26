@@ -57,8 +57,10 @@ class shopModel extends shop
      *
      * @author Arnia (dev@xpressengine.org)
      */
-    public function getOrderStatistics(){
-        $output = executeQueryArray("shop.getOrderStatistics");
+    public function getOrderStatistics($module_srl){
+        $args = new stdClass();
+        $args->module_srl = $module_srl;
+        $output = executeQueryArray("shop.getOrderStatistics",$args);
         return $output->data;
     }
 

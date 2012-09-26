@@ -243,7 +243,7 @@ class shopView extends shop {
 		$stat->visitor = $counter[date("Ymd")]->unique_visitor;
 
         //get order and sale statistics
-        $order_statistics = $oShopModel->getOrderStatistics();
+        $order_statistics = $oShopModel->getOrderStatistics($this->module_info->module_srl);
         $stat->placed_orders = 0;
         foreach($order_statistics as $stats){
             $stat->placed_orders += $stats->count;
