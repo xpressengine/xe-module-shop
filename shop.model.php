@@ -312,18 +312,6 @@ class shopModel extends shop
     }
 
     /**
-     * Returns an instance of the Product Category Manager
-     *
-     * @author Daniel Ionescu (dev@xpressengine.org)
-     * @return PaymentGatewayManager
-     */
-    public function getPaymentGatewayManager()
-    {
-        require_once dirname(__FILE__) . '/libs/model/PaymentGatewayManager.php';
-        return new PaymentGatewayManager();
-    }
-
-    /**
      * Returns an instance of the Cart repository
      *
      * @author Florin Ercus (dev@xpressengine.org)
