@@ -28,7 +28,7 @@
                     </ul>
                     <p id="cart-costs" class="clearfix">
                         <span class="f-left">{$lang->grand_total}:</span>
-                        <span class="f-right">{$cart->getPrice()} {$shop->getCurrencySymbol()}</span>
+                        <span class="f-right">{ShopDisplay::priceFormat($product->price, $shop->getCurrencySymbol())}</span>
                     </p>
                     <p>
                         <span class="f-left"><a href="{getURL('', 'act','dispShopCart')}">{$lang->edit_cart}</a></span>
