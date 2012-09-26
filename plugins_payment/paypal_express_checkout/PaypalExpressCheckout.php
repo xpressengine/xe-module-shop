@@ -40,6 +40,9 @@ class PaypalExpressCheckout extends PaymentMethodAbstract
             , $this->signature
         );
 
+        // Get shop info
+        $shop_info = new ShopInfo($cart->module_srl);
+
         // Prepare cart info
         $items = $this->getItemsFromCart($cart);
 
@@ -49,7 +52,7 @@ class PaypalExpressCheckout extends PaymentMethodAbstract
             , 0
             , ShopDisplay::numberFormat($cart->getShippingCost())
             , ShopDisplay::numberFormat($cart->getTotal())
-            , 'USD'
+            , $shop_info->getCurrency()
             , $success_url
             , $cancel_url);
 
@@ -88,6 +91,10 @@ class PaypalExpressCheckout extends PaymentMethodAbstract
             , $this->api_password
             , $this->signature
         );
+
+        // Get shop info
+        $shop_info = new ShopInfo($cart->module_srl);
+
         // Prepare cart info
         $items = $this->getItemsFromCart($cart);
 
@@ -98,7 +105,7 @@ class PaypalExpressCheckout extends PaymentMethodAbstract
             , 0
             , ShopDisplay::numberFormat($cart->getShippingCost())
             , ShopDisplay::numberFormat($cart->getTotal())
-            , 'USD'
+            , $shop_info->getCurrency()
         );
 
         if(!$paypalAPI->success)

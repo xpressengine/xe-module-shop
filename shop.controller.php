@@ -1624,16 +1624,9 @@
                 return new Object(-1, 'msg_invalid_request');
             }
 
-            /**
-             * @var shopModel $shopModel
-             */
-            $shopModel = getModel('shop');
-            $payment_repository = $shopModel->getPaymentMethodRepository();
-
-            $payment_method = new stdClass();
-            $payment_method->name = $name;
+            $payment_repository = new PaymentMethodRepository();
+            $payment_method = $payment_repository->getPaymentMethod($name);
             $payment_method->status = 1;
-
             $payment_repository->updatePaymentMethod($payment_method);
 
             $vid = Context::get('vid');
@@ -1655,16 +1648,9 @@
                 return new Object(-1, 'msg_invalid_request');
             }
 
-            /**
-             * @var shopModel $shopModel
-             */
-            $shopModel = getModel('shop');
-            $payment_repository = $shopModel->getPaymentMethodRepository();
-
-            $payment_method = new stdClass();
-            $payment_method->name = $name;
+            $payment_repository = new PaymentMethodRepository();
+            $payment_method = $payment_repository->getPaymentMethod($name);
             $payment_method->status = 0;
-
             $payment_repository->updatePaymentMethod($payment_method);
 
             $vid = Context::get('vid');
