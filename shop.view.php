@@ -512,6 +512,7 @@ class shopView extends shop {
             $extraParams[$col] = $search;
         }
         $repo = new OrderRepository();
+        $extraParams['order_type'] = 'desc';
         $orders = $repo->getList($this->module_info->module_srl, null, $extraParams, Context::get('page'));
         Context::set('orders', $orders->data);
         Context::set('page_navigation', $orders->page_navigation);
