@@ -5,6 +5,8 @@
     <columns>
         <column name="address_srl" var="address_srl" filter="number" notnull="notnull" />
         <column name="member_srl" var="member_srl" filter="number" />
+        <column name="firstname" var="firstname"/>
+        <column name="lastname" var="lastname"/>
         <column name="address" var="address"/>
         <column name="country" var="country"/>
         <column name="company" var="company"/>
