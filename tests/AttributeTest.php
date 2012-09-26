@@ -99,6 +99,50 @@ class AttributeTest extends Shop_Generic_Tests_DatabaseTestCase
         $this->assertEquals(5, $this->getConnection()->getRowCount('xe_shop_attributes'), "Insert failed");
     }
 
+    public function testAddEntryWithSpaces()
+    {
+        $this->assertEquals(4, $this->getConnection()->getRowCount('xe_shop_attributes'), "First count");
+
+        /**
+         * @var shopModel $model
+         */
+        $model = getModel('shop');
+        $attribute_repository = $model->getAttributeRepository();
+        $attribute = new Attribute((object) array(
+            'member_srl'    => 7,
+            'module_srl'	=> 9,
+            'title'         => 'yoyo',
+            'type'          => 'select',
+            'required'      => 'Y',
+            'status'        => 'Y',
+            'values'        => 'a | b | c ',
+            'default_value' => 'c',
+            'regdate'       => '20100424121513',
+            'last_update'   => '20100424141412'
+        ));
+        $attribute_repository->insertAttribute($attribute);
+        $this->assertEquals(5, $this->getConnection()->getRowCount('xe_shop_attributes'), "Insert failed");
+
+        $attributes = $attribute_repository->getAttributes(array());
+        $attribute = null;
+        foreach($attributes as $attribute)
+        {
+            if(!in_array($attribute->attribute_srl, array(1405, 1406, 1407, 1408)))
+            {
+                break;
+            }
+        }
+
+        $this->assertEquals('a|b|c', implode('|', $attribute->values));
+
+        $attribute->values = 'a   |b    |c';
+        $attribute_repository->updateAttribute($attribute);
+        $attribute = array_shift($attribute_repository->getAttributes(array($attribute->attribute_srl)));
+
+        $this->assertEquals('a|b|c', implode('|', $attribute->values));
+
+    }
+
 	/**
 	 * Test that configurable attributes are properly stored in the product object
 	 */

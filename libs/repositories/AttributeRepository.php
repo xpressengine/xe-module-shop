@@ -26,7 +26,14 @@ class AttributeRepository extends BaseRepository
 	{
         if ($attribute->attribute_srl) throw new Exception('A srl must NOT be specified');
         $attribute->attribute_srl = getNextSequence();
-        if(count($attribute->values ) == 0) unset($attribute->values);
+        if(count($attribute->values ) == 0)
+        {
+            unset($attribute->values);
+        }
+        else
+        {
+            $attribute->values = implode('|', array_map('trim', explode('|', $attribute->values)));
+        }
 		$output = executeQuery('shop.insertAttribute', $attribute);
 		self::check($output);
         $this->insertAttributeScope($attribute);
@@ -63,7 +70,14 @@ class AttributeRepository extends BaseRepository
     public function updateAttribute(Attribute $attribute)
     {
         if (!$attribute->attribute_srl) throw new Exception('Target srl must be specified');
-        if (count($attribute->values ) == 0) unset($attribute->values);
+        if (count($attribute->values ) == 0)
+        {
+            unset($attribute->values);
+        }
+        else
+        {
+            $attribute->values = implode('|', array_map('trim', explode('|', $attribute->values)));
+        }
         $output = executeQuery('shop.updateAttribute', $attribute);
         self::check($output);
         $this->updateAttributeScope($attribute);
