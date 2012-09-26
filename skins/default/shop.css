@@ -308,6 +308,98 @@ table tbody tr td:last-child {
     padding: 10px;
     line-height: 28px;
     vertical-align: middle;
+    position: relative;
+}
+
+#upper-header p.cart {
+    padding: 0;
+}
+
+.cart>span:hover #cart-details {
+    display: block;
+    box-shadow: -2px -2px 3px rgba(0,0,0,.15), 2px 2px 3px rgba(0,0,0,.15);
+    -moz-box-shadow: 0 0 5px rgba(0,0,0,.35);
+    -webkit-box-shadow: -2px -2px 3px rgba(0,0,0,.15), 2px 2px 3px rgba(0,0,0,.15);
+}
+
+.cart>span:hover #cart-button {
+    border-left: 1px solid #cacaca;
+    border-right: 1px solid #cacaca;
+    box-shadow: -2px -2px 3px rgba(0,0,0,.15), 2px -2px 3px rgba(0,0,0,.15);
+    -moz-box-shadow: 0 -4px 5px rgba(0,0,0,.35);
+    -webkit-box-shadow: -2px -2px 3px rgba(0,0,0,.15), 2px -2px 3px rgba(0,0,0,.15);
+}
+
+.cart>span:hover > span {
+    background: #f7f8fa !important;
+}
+
+#cart-button {
+    padding: 17px 10px;
+    z-index: 1000;
+    border-left: 1px solid #F6F7F8;
+    border-right: 1px solid #F6F7F8;
+    position: relative;
+}
+
+#cart-button span {
+    background: url('img/cart_icon.png') 0 7px no-repeat;
+    text-align: center;
+    position: relative;
+    display: inline-block;
+    padding: 10px 0;
+    margin: 0 10px 0 0;
+    color: #fff;
+    width: 28px;
+    top: 2px;
+}
+
+#cart-button img {
+    margin: 0 0 0 10px;
+}
+
+#cart-details {
+    border: 1px solid #cacaca;
+    background: #f6f7f8;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    width: 250px;
+    z-index: 999;
+    display: none;
+}
+
+#cart-details p {
+    padding: 0 10px;
+}
+
+#cart-products {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
+
+#cart-products li {
+    padding: 10px;
+    border-bottom: 1px dotted #c5c6c7;
+}
+
+#cart-products img {
+    border: 1px solid #cacaca;
+    margin: 0 10px 0 0;
+    background: #fff;
+    padding: 5px;
+    float: left;
+}
+
+#cart-products p {
+    line-height: 1.250em;
+    margin: 0 0 5px;
+    padding: 0;
+}
+
+#cart-costs {
+    border-bottom: 1px dotted #c5c6c7;
 }
 
 #header-socials, #header-socials a {

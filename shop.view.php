@@ -169,6 +169,10 @@ class shopView extends shop {
         $cart = $cartRepo->getCart($this->module_srl, null, $logged_info->member_srl, session_id());
         Context::set('cart', $cart);
 
+        // Load cart preview (for ajax cart feature in header)
+        $preview_products = $cart->getProducts(3);
+        Context::set('preview_products', $preview_products);
+
         // Load menu for display on all pages (in header)
         $shop_menu = $oShopModel->getShopMenu($this->site_srl);
         Context::set('menu', $shop_menu);

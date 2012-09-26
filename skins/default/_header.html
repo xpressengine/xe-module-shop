@@ -3,10 +3,39 @@
         <p id="header-socials" class="f-left">
             Follow us on <a href="">Twitter</a>, <a href="">Facebook</a> and <a href="">Google Plus</a>
         </p>
-        <p class="f-right">
-            <!-- Cart -->
-            <a href="{getURL('', 'act','dispShopCart')}">Cart<span cond="isset($cart) && $cart->items"> [{$cart->items}]</span></a>
-            <!-- /Cart -->
+        <p class="f-right cart">
+            <span>
+                <span id="cart-button">
+                    <span cond="isset($cart) && $cart->items">{$cart->items}</span>
+                    {$lang->your_cart}
+                    <img src="img/arrow_dropdown.png" alt="" title=""/>
+                </span>
+                <span cond="$cart" id="cart-details">
+                    <ul id="cart-products" cond="count($preview_products) != 0">
+                        <!--@foreach($preview_products as $i=>$cart_product)-->
+                        <li id="cart-product-{$cart_product->product_srl}" class="clearfix">
+                            <img src="{$cart_product->getPrimaryImage()->getThumbnailPath(50)}" alt="" title=""/>
+                            <p class="cart-preview-title">
+                                <!--@if(strlen($cart_product->title)>45)-->
+                                    {substr($cart_product->title,0,45)}...
+                                <!--@else-->
+                                    {$cart_product->title}
+                                <!--@end-->
+                            </p>
+                            <p class="cart-preview-price">{$cart_product->quantity} x {$cart_product->price}</p>
+                        </li>
+                        <!--@endforeach-->
+                    </ul>
+                    <p id="cart-costs" class="clearfix">
+                        <span class="f-left">{$lang->grand_total}:</span>
+                        <span class="f-right">{$cart->getPrice()} {$shop->getCurrencySymbol()}</span>
+                    </p>
+                    <p>
+                        <span class="f-left"><a href="{getURL('', 'act','dispShopCart')}">{$lang->edit_cart}</a></span>
+                        <span class="f-right"><a href="{getURL('', 'act','dispShopCheckout')}">{$lang->checkout}</a></span>
+                    </p>
+                </span>
+            </span>
         </p>
         <p class="f-right header-separator">
             <select onchange="langSelect()" id="languages">
@@ -21,23 +50,6 @@
             <a href="{getUrl('act', 'procShopToolResetSkin')}" style="color:#bc8f8f; text-decoration: none;" id="reset_skin" title="Ctrl+Shift+S">refresh skin</a>
         </p>
     </div>
-</div>
-<div cond="$cart" id="cart-details" style="display:none">
-    <span id="products_count">{$cart->items}</span>
-    <span id="cart_total_price">{$cart->getPrice()}</span>
-    <ul id="cart-products">
-    <!--parametrul ala "6" nu merge (n-a mers un query si nu mai stau acum s-o intreb pe corina ce-are), dar rezolvam-->
-    <!--@foreach ($preview_products as $i=>$cart_product) -->
-        <li id="cart-product-{$product->product_srl}">
-            Poza: {$cart_product->primary_image_filename}<br>
-            Titlu: {$cart_product->title}<br>
-            Pret: {$cart_product->price}<br>
-            Discount: {$cart_product->discount_price}<br>
-            In stock? {$cart_product->in_stock}<br>
-            Product quantity in cart: {$cart_product->quantity}
-        </li>
-    <!--@endforeach -->
-    </ul>
 </div>
 <div id="header">
     <div class="layout-centered clearfix">
