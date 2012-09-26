@@ -2175,16 +2175,26 @@
         // region Shipping
         public function procShopToolShippingUpdate()
         {
-            $shipping_info = Context::getRequestVars();
+            $name = Context::get('name');
 
-            /**
-             * @var shopModel $shopModel
-             */
-            $shopModel = getModel('shop');
-            $shipping_repository = $shopModel->getShippingRepository();
+            $shipping_repository = new ShippingRepository();
+            $shipping_method = $shipping_repository->getShippingMethod($name);
+
+            // Update object with values submitted by user
+            $data = Context::getRequestVars();
+            $property_names = array_keys(get_object_vars($data));
+            foreach($property_names as $property_name)
+            {
+                if(in_array($property_name, array('mid', 'vid','error_return_url', 'xe_form_id', 'act')))
+                {
+                    unset($data->$property_name);
+                }
+            }
+            $shipping_method->setProperties($data);
+
             try
             {
-                $shipping_repository->updateShippingMethod($shipping_info);
+                $shipping_repository->updateShippingMethod($shipping_method);
             }
             catch(Exception $e)
             {
@@ -2200,25 +2210,21 @@
 
         public function procShopServiceActivateShippingMethod()
         {
-            $code = Context::get('code');
-            $is_active = Context::get('is_active');
+            $name = Context::get('name');
+            $status = Context::get('status');
 
-            if(!isset($code) || !isset($is_active))
+            if(!isset($name) || !isset($status))
             {
                 return new Object(-1, 'msg_invalid_request');
             }
 
-            /**
-             * @var shopModel $shopModel
-             */
-            $shopModel = getModel('shop');
-            $shipping_repository = $shopModel->getShippingRepository();
+            $shipping_repository = new ShippingRepository();
+            $shipping_method = $shipping_repository->getShippingMethod($name);
+            $shipping_method->status = $status;
+
             try
             {
-                $shipping_info = new stdClass();
-                $shipping_info->code = $code;
-                $shipping_info->is_active = $is_active;
-                $shipping_repository->updateShippingMethod($shipping_info);
+                $shipping_repository->updateShippingMethod($shipping_method);
             }
             catch(Exception $e)
             {

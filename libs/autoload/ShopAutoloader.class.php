@@ -35,11 +35,12 @@ class ShopAutoloader
                     $repoClass = $class . 'Repository';
                 }
 
-                if (!in_array($class, array('Shipping','ShippingMethodInterface', 'PaymentMethod'))) {
+                if (!in_array($class, array('Shipping','PaymentMethod'))) {
                     $this->getFile(__DIR__ . "/../model/$itemClass.php", $itemClass);
                 }
                 else
                 {
+                    // TODO Remove this include hack; should add a map or something
                     if(strpos($itemClass, 'Payment') !== false)
                     {
                         $itemClass = $itemClass . 'Abstract';
@@ -47,17 +48,8 @@ class ShopAutoloader
                     }
                     elseif(strpos($itemClass, 'Shipping') !== false)
                     {
-                        if(strpos($itemClass, 'Interface') === false)
-                        {
-                            $itemClass = $itemClass . 'MethodAbstract';
-                            $this->getFile(__DIR__ . "/../../plugins_shipping/$itemClass.php", $itemClass);
-                        }
-                        else
-                        {
-                            $this->getFile(__DIR__ . "/../../plugins_shipping/$itemClass.php", $itemClass);
-                            return;
-                        }
-
+                        $itemClass = $itemClass . 'MethodAbstract';
+                        $this->getFile(__DIR__ . "/../../plugins_shipping/$itemClass.php", $itemClass);
                     }
                 }
                 $this->getFile(__DIR__ . "/../repositories/$repoClass.php", $repoClass);

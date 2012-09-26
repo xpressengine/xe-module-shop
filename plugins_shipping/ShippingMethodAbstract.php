@@ -1,10 +1,9 @@
 <?php
 
-abstract class ShippingMethodAbstract extends AbstractPlugin implements ShippingMethodInterface
+abstract class ShippingMethodAbstract extends AbstractPlugin
 {
     public $shipping_info;
     protected $shipping_method_dir;
-    static protected $config_file_name = 'config.xml';
     static protected $template_file_name = 'template.html';
 
     public function getCode()
@@ -14,13 +13,13 @@ abstract class ShippingMethodAbstract extends AbstractPlugin implements Shipping
 
     public function getFormHtml()
     {
-        if(!file_exists($this->shipping_method_dir . DIRECTORY_SEPARATOR . self::$template_file_name))
+        if(!file_exists($this->getPluginDir() . DIRECTORY_SEPARATOR . self::$template_file_name))
         {
             return '';
         }
 
         $oTemplate = &TemplateHandler::getInstance();
-        return $oTemplate->compile($this->shipping_method_dir, self::$template_file_name);
+        return $oTemplate->compile($this->getPluginDir(), self::$template_file_name);
     }
 
     /**

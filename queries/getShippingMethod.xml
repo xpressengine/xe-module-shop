@@ -1,0 +1,10 @@
+<query id="getShippingMethod" action="select">
+    <tables>
+        <table name="shop_shipping_methods" />
+    </tables>
+    <columns>
+    </columns>
+    <conditions>
+        <condition operation="equal" column="name" var="name" notnull="notnull" />
+    </conditions>
+</query>

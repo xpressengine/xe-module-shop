@@ -5,7 +5,7 @@
 <div id="content">
     <!-- contentHeader -->
     <div class="contentHeader">
-        <h3 class="h3">{$shipping_method->getName()}</h3>
+        <h3 class="h3">{$shipping_method->display_name}</h3>
     </div>
 
     <div cond="$XE_VALIDATOR_MESSAGE" class="message {$XE_VALIDATOR_MESSAGE_TYPE}">
@@ -14,7 +14,7 @@
     <!-- /contentHeader -->
 
     <form action="./" method="POST">
-        <input type="hidden" id="code" name="code" value="{$shipping_method->getCode()}" />
+        <input type="hidden" id="name" name="name" value="{$shipping_method->name}" />
         <input type="hidden" id="act" name="act" value="procShopToolShippingUpdate" />
         <p>
             <label for="display_name">Display name</label>
@@ -23,7 +23,7 @@
 
         <p>
             <label for="is_active">Is active</label>
-            <select name="is_active" id="is_active">
+            <select name="status" id="is_active">
                 <option value="1" <!--@if($shipping_method->isActive())-->selected<!--@endif-->>Yes</option>
                 <option value="0" <!--@if(!$shipping_method->isActive())-->selected<!--@endif-->>No</option>
             </select>

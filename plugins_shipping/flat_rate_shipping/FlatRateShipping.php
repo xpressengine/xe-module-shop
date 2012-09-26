@@ -2,40 +2,12 @@
 
 require_once dirname(__FILE__) . '/../ShippingMethodAbstract.php';
 
-class FlatRateShipping extends ShippingMethodAbstract implements ShippingMethodInterface
+class FlatRateShipping extends ShippingMethodAbstract
 {
     public function __construct()
     {
         $this->shipping_method_dir = _XE_PATH_ . 'modules/shop/plugins_shipping/flat_rate_shipping';
         parent::__construct();
-    }
-
-    public function getType()
-    {
-        return $this->shipping_info->type;
-    }
-
-    private function setType($type)
-    {
-        if(!isset($type)) return;
-        $this->shipping_info->type = $type;
-    }
-
-    public function getPrice()
-    {
-        return floatval($this->shipping_info->price);
-    }
-
-    private function setPrice($price)
-    {
-        if(!isset($price)) return;
-        $this->shipping_info->price = $price;
-    }
-
-    protected function saveShippingInfo($shipping_info)
-    {
-        $this->setPrice($shipping_info->price);
-        $this->setType($shipping_info->type);
     }
 
     /**
@@ -54,9 +26,9 @@ class FlatRateShipping extends ShippingMethodAbstract implements ShippingMethodI
             $total_quantity = 0;
             foreach($products as $product)
                 $total_quantity += $product->quantity;
-            return $total_quantity * $this->getPrice();
+            return $total_quantity * $this->price;
         }
 
-        return $this->getPrice();
+        return $this->price;
     }
 }

@@ -61,16 +61,16 @@ abstract class AbstractPluginRepository extends BaseRepository
     public function getPlugin($name)
     {
         $data = $this->getPluginInfoFromDatabase($name);
-        // If payment method exists in the database, return it as is
+        // If plugin exists in the database, return it as is
         if($data)
         {
             return $this->getPluginInstanceFromProperties($data);
         }
 
         // Otherwise, initialize it with info from the extension class and insert in database
-        $payment_method = $this->getPluginInstanceByName($name);
+        $plugin = $this->getPluginInstanceByName($name);
 
-        $this->insertPaymentMethod($payment_method);
+        $this->insertPlugin($plugin);
 
         return $this->getPlugin($name);
     }
@@ -114,12 +114,12 @@ abstract class AbstractPluginRepository extends BaseRepository
     {
         $plugins_info = $this->getAllActivePluginsInDatabase();
 
-        $active_payment_methods = array();
+        $active_plugins = array();
         foreach($plugins_info as $data)
         {
             try
             {
-                $active_payment_methods[] = $this->getPluginInstanceFromProperties($data);
+                $active_plugins[] = $this->getPluginInstanceFromProperties($data);
             }
             catch(Exception $e)
             {
@@ -127,12 +127,12 @@ abstract class AbstractPluginRepository extends BaseRepository
             }
         }
 
-        return $active_payment_methods;
+        return $active_plugins;
     }
 
     /**
      *
-     * Updates a payment method
+     * Updates a plugin
      *
      * Status: active = 1; inactive = 0
      *
@@ -141,8 +141,12 @@ abstract class AbstractPluginRepository extends BaseRepository
      * @throws exception
      * @return boolean
      */
-    public function updatePlugin($plugin) {
-
+    public function updatePlugin(AbstractPlugin $plugin)
+    {
+        if(!isset($plugin->name))
+        {
+            throw new Exception("Please provide the name of the element you want to update");
+        }
         if(isset($plugin->properties) && !is_string($plugin->properties))
         {
             $serialized_properties = serialize($plugin->properties);

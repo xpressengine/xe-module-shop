@@ -1587,7 +1587,7 @@ class shopView extends shop {
 
     public function dispShopToolEditShipping()
     {
-        $code = Context::get('code');
+        $code = Context::get('name');
         /**
          * @var shopModel $shopModel
          */

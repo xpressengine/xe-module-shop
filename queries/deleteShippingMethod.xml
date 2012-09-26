@@ -1,0 +1,8 @@
+<query id="deleteShippingMethod" action="delete">
+    <tables>
+        <table name="shop_shipping_methods" />
+    </tables>
+    <conditions>
+        <condition operation="equal" column="name" var="name" />
+    </conditions>
+</query>

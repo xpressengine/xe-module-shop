@@ -2,23 +2,23 @@
 
 <script type="text/javascript">
     jQuery(document).ready(function($){
-        $("form.activateShippingMethod input[type='checkbox'][name='is_active']").change(function(){
+        $("form.activateShippingMethod input[type='checkbox'][name='status']").change(function(){
             if($(this).is(':checked'))
             {
-                $is_active = 'Y';
+                $status = '1';
             }
             else
             {
-                $is_active = 'N';
+                $status = '0';
             }
-            $code = $(this).prev("input").val();
+            $name = $(this).prev("input").val();
 
             $.exec_json('shop.procShopServiceActivateShippingMethod'
-                    , { code : $code, is_active :  $is_active}
+                    , { name : $name, status : $status}
                     , function(data){
                         if(data.error != 0)
                         {
-                            alert("Error " + data.error + " " + data.message);
+                            alert("Error " + data.message);
                             return;
                         }
 
@@ -45,7 +45,10 @@
     <table class="tableData">
         <thead>
             <tr>
-                <th scope="col">Shipping method</th>
+                <th scope="col" width="25px">
+                    <input type="checkbox" class="inputCheck" onclick="jQuery('input.boxlist').click()" />
+                </th>
+                <th scope="col" width="35px">Settings</th>
                 <th scope="col">Display name</th>
                 <th scope="col">Active</th>
             </tr>
@@ -54,16 +57,21 @@
         <!--@foreach($shipping_methods as $shipping_method)-->
             <tr>
                 <td>
-                    <a href="{getUrl('act', 'dispShopToolEditShipping', 'code', $shipping_method->getCode())}">
-                    {$shipping_method->getName()}
-                    </a>
+                    <input type="checkbox" class="inputCheck boxlist" />
+                </td>
+                <td>
+                    <span class="btnGray medium">
+                        <a href="{getUrl('act', 'dispShopToolEditShipping', 'name', $shipping_method->name)}">
+                            Settings
+                        </a>
+                    </span>
                 </td>
                 <td>{$shipping_method->getDisplayName()}</td>
                 <td>
                     <form action="./" method="post" class="activateShippingMethod">
-                        <input type="hidden" name="code" value="{$shipping_method->getCode()}" />
+                        <input type="hidden" name="name" value="{$shipping_method->name}" />
 
-                        <input type="checkbox" name="is_active" <!--@if($shipping_method->isActive())-->checked<!--@end--> />
+                        <input type="checkbox" name="status" <!--@if($shipping_method->isActive())-->checked<!--@end--> />
                     </form>
                 </td>
             </tr>

@@ -4,7 +4,7 @@
  * Defines blueprint for plugins, bet it shipping, payment, or something else
  *
  */
-abstract class AbstractPlugin
+abstract class AbstractPlugin extends BaseItem
 {
     public $id = null;
     public $display_name;  /// Display name
