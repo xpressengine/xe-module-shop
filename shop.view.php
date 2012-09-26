@@ -610,6 +610,8 @@ class shopView extends shop {
 		$srl = Context::get('attribute_srl');
 		if (!$attributes = $attributeRepository->getAttributes(array($srl))) throw new Exception("Attribute doesn't exist");
 		$attribute = array_shift($attributes);
+        if(is_array($attribute->values)) $attribute->values = implode('|', $attribute->values);
+
         Context::set('attribute', $attribute);
 		Context::set('types', $attributeRepository->getTypes(Context::get('lang')));
 
