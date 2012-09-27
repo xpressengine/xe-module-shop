@@ -86,6 +86,9 @@
             if(!$oDB->isColumnExists("shop_addresses","firstname")) return true;
             if(!$oDB->isColumnExists("shop_addresses","lastname")) return true;
 
+            if(!$oDB->isColumnExists("shop_payment_methods","module_srl")) return true;
+            if(!$oDB->isColumnExists("shop_shipping_methods","module_srl")) return true;
+
             return false;
         }
 
@@ -234,6 +237,14 @@
 
             if(!$oDB->isColumnExists("shop_addresses","lastname")) {
                 $oDB->addColumn('shop_addresses',"lastname","varchar", 45);
+            }
+
+            if(!$oDB->isColumnExists("shop_payment_methods","module_srl")) {
+                $oDB->addColumn('shop_payment_methods',"module_srl","number", 11, 0, true);
+            }
+
+            if(!$oDB->isColumnExists("shop_shipping_methods","module_srl")) {
+                $oDB->addColumn('shop_shipping_methods',"module_srl","number", 11, 0, true);
             }
 
            return new Object(0, 'success_updated');
