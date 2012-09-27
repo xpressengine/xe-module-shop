@@ -61,6 +61,7 @@ class ShippingRepository extends AbstractPluginRepository
 
     protected function insertPluginInfo(AbstractPlugin $plugin)
     {
+        $plugin->id = getNextSequence();
         $this->query('shop.insertShippingMethod', $plugin);
     }
 
