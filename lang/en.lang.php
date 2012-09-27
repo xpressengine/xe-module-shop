@@ -52,6 +52,7 @@
     $lang->about_password = 'Password';
     $lang->change_password = 'Change existing password';
     $lang->customer_about_email_address = 'Email address';
+    $lang->product = 'Product';
     $lang->product_type = 'Product Type';
     $lang->no_product = 'There is no product added, <a href="%s">Add a simple product</a> or <a href="%s">Add a configurable product</a>. ';
     $lang->msg_confirm_delete_product = 'Are you sure you want to delete this product?';
@@ -525,14 +526,21 @@
     $lang->subscribe = 'Subscribe';
     $lang->your_cart = 'Your cart';
 
-    $lang->no_products_categ = "There are no products in this category";
-    $lang->no_products_categ = "There are no products in this category";
-    $lang->front_search_results = "Search results for";
-    $lang->front_search_returned = "returned";
-    $lang->front_search_no_results = "Your search retuned no results";
-    $lang->front_results = "results";
-    $lang->checkout = "checkout";
-    $lang->edit_cart = "edit cart";
-    $lang->add_to_cart = "Add to cart";
-    $lang->frontend_cart_empty = "Your cart is empty.";
+    $lang->no_products_categ = 'There are no products in this category';
+    $lang->no_products_categ = 'There are no products in this category';
+    $lang->front_search_results = 'Search results for';
+    $lang->front_search_returned = 'returned';
+    $lang->front_search_no_results = 'Your search returned no results';
+    $lang->front_results = 'results';
+    $lang->checkout = 'checkout';
+    $lang->edit_cart = 'edit cart';
+    $lang->add_to_cart = 'Add to cart';
+    $lang->frontend_cart_empty = 'Your cart is empty.';
+
+    $lang->skip_to_content = 'Skip to content';
+    $lang->created_at = 'Created at';
+    $lang->last_update = 'Last update';
+    $lang->manage_associated_products = 'Manage associated products';
+    $lang->select_associated_products_combination = 'Select associated products combination';
+    $lang->about_adding_associated_products = 'You are adding associated products to the configurable product that has the title <b>%s</b> and sku: <b>%s</b>';
 ?>

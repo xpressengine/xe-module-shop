@@ -5,7 +5,7 @@
 <div id="content">
     <!-- contentHeader -->
     <div class="contentHeader postListHeader">
-        <h3 class="h3">Manage associated products</h3>
+        <h3 class="h3">{$lang->manage_associated_products}</h3>
     </div>
     <div cond="$XE_VALIDATOR_MESSAGE" class="message {$XE_VALIDATOR_MESSAGE_TYPE}">
         <p>{$XE_VALIDATOR_MESSAGE}</p>
@@ -18,10 +18,10 @@
 
         <div class="wOption">
             <fieldset class="visualFieldset">
-                <legend class="visualLabel">Select associated products combination</legend>
+                <legend class="visualLabel">{$lang->select_associated_products_combination}</legend>
                 <table border="1" cellspacing="0" class="tableData">
                     <tr>
-                        <span>You are adding associated products to the configurable product that has the title <b>{$product->title}</b> and sku: <b>{$product->sku}</b></span>
+                        <span>{sprintf($lang->about_adding_associated_products,$product->title,$product->sku)</span>
                     </tr>
                     <tr>
                         <th scope="row">

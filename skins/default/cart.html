@@ -31,7 +31,7 @@ jQuery(function () {
         form.find('input[name=act]').val('procShopCartUpdateProducts');
         form.submit();
     });
-    $('td.quantity input').on('change', function(){
+    $('td.quantity input').on('input', function(){
         var flag = 'quantity';
         var self = $(this);
         var upd = $('a.update', self.parents('.product'));
@@ -79,9 +79,10 @@ jQuery(function () {
                         <th scope="col">
                             <input cond="$cart->countAvailableProducts()" type="checkbox" class="inputCheck" onclick="jQuery(this).parents('table').find('input[type=checkbox].boxlist').attr('checked', jQuery(this).is(':checked'))"/>
                         </th>
-                        <th scope="col" class="title">Product</th>
-                        <th scope="col">{$lang->quantity}</th>
+                        <th scope="col" class="title">{$lang->product}</th>
                         <th scope="col">{$lang->price}</th>
+                        <th scope="col">{$lang->quantity}</th>
+                        <th scope="col">{$lang->subtotal}</th>
                         <th scope="col">&nbsp;</th>
                         <th scope="col">&nbsp;</th>
                     </tr>
@@ -94,14 +95,18 @@ jQuery(function () {
                         <input type="checkbox" name="product_srls[]" value="{$product->product_srl}" class="inputCheck boxlist" cond="$product->product_srl" />
                     </td>
                     <td class="title">
+                        <img src="{$product->getPrimaryImage()->getThumbnailPath(50)}" alt="" title=""/>
                         <a href="{getUrl('act','dispShopProduct','product_srl',$product->product_srl)}">{$product->title}</a>
                     </td>
 <!--@if ($product->available)-->
+                    <td class="price">
+                        {ShopDisplay::priceFormat($product->price, $shop->getCurrencySymbol())}
+                    </td>
                     <td class="quantity">
                         <input type="text" data-quantity="{$product->quantity}" value="{$product->quantity}" name="quantity[{$product->product_srl}]">
                     </td>
                     <td class="price">
-                        {$product->price * $product->quantity}
+                        {ShopDisplay::priceFormat($product->price * $product->quantity, $shop->getCurrencySymbol())}
                     </td>
                     <td>
                         <a class="remove" href="{getUrl('act','procShopCartRemoveProducts','cart_srl',$cart->cart_srl, 'product_srls', $product->product_srl)}">{$lang->cmd_delete}</a>
@@ -117,16 +122,20 @@ jQuery(function () {
                 </tr>
                 <tr cond="!$product->product_srl" class="product deleted">
                     <td></td>
-                    <td colspan="6">
+                    <td colspan="7">
                         <p>Product "<b>{$product->cart_product_title}</b>" was deleted by admin after you added it. <a href="{getUrl('act','procShopCartRemoveProducts','cart_srl',$cart->cart_srl, 'product_srls', $product->cart_product_srl)}">Yes, I got it.</a></p>
                     </td>
                 </tr>
 <!--@end-->
                 <tr class="bottom">
+                    <td></td>
+                    <td>
+                        {$lang->grand_total}
+                    </td>
                     <td colspan="3">
                     </td>
                     <td>
-                        {$total_price}
+                        {ShopDisplay::priceFormat($total_price, $shop->getCurrencySymbol())}
                     </td>
                     <td>
                         <input cond="$cart->countAvailableProducts()" type="submit" value="{$lang->cmd_delete}" name="del_cart_products" id="delete_multiple">
