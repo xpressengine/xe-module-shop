@@ -891,18 +891,16 @@
                 $productsRepo = $this->model->getProductRepository();
                 if ($product = $productsRepo->getProduct($product_srl)) {
                     if (!($product instanceof SimpleProduct)) {
-                        //TODO: 404
-                        throw new Exception('Not a valid product');
+                        return new Object(-1, 'msg_invalid_request');
                     }
                     $logged_info = Context::get('logged_info');
                     $cart = $cartRepository->getCart($this->module_info->module_srl, null, $logged_info->member_srl, session_id(), true);
                     $quantity = (is_numeric(Context::get('quantity')) && Context::get('quantity') > 0 ? Context::get('quantity') : 1);
                     $cart->addProduct($product, $quantity);
                 }
-                //TODO: 404
-                else throw new Exception('404 product not found?');
+                else return new Object(-1, 'msg_invalid_request');
             }
-            else throw new Exception('Missing product srl');
+            else return new Object(-1, 'msg_invalid_request');
             $shop = $this->model->getShop($this->module_srl);
             $this->setRedirectUrlIfNoReferer(getSiteUrl($shop->domain));
         }
