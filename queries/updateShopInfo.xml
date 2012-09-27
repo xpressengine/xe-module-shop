@@ -13,6 +13,7 @@
         <column name="out_of_stock_products" var="out_of_stock_products" />
         <column name="minimum_order" var="minimum_order" />
         <column name="VAT" var="VAT" />
+        <column name="show_VAT" var="show_VAT" />
     </columns>
     <conditions>
         <condition operation="equal" column="module_srl" var="module_srl" filter="number" notnull="notnull" />

@@ -60,6 +60,7 @@
             if(!$oDB->isColumnExists("shop","discount_tax_phase")) return true;
             if(!$oDB->isColumnExists("shop","out_of_stock_products")) return true;
             if(!$oDB->isColumnExists("shop","minimum_order")) return true;
+            if(!$oDB->isColumnExists("shop","show_VAT")) return true;
             if(!$oDB->isColumnExists("shop_order_products","member_srl")) return true;
             if(!$oDB->isColumnExists("shop_order_products","parent_product_srl")) return true;
             if(!$oDB->isColumnExists("shop_order_products","product_type")) return true;
@@ -120,6 +121,10 @@
 
             if(!$oDB->isColumnExists("shop_products","is_featured")) {
                 $oDB->addColumn('shop_products',"is_featured","char",1);
+            }
+
+            if(!$oDB->isColumnExists("shop","show_VAT")) {
+                $oDB->addColumn('shop',"show_VAT","char",1);
             }
 
             if(!$oDB->isColumnExists("shop","discount_min_amount")) {

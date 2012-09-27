@@ -243,7 +243,8 @@ class Cart extends BaseItem
     {
         $shopInfo = new ShopInfo($this->module_srl);
         if ($minOrder = $shopInfo->getMinimumOrder()) {
-            if ($this->getPrice() < $minOrder) {
+            // TO DO getPrice() doesn't work without true
+            if ($this->getPrice(true) < $minOrder) {
                 throw new Exception("Minimum order amount of $minOrder not met (cart value: {$this->getPrice()})");
             }
         }

@@ -144,7 +144,21 @@ jQuery(function () {
                         <input type="submit" value="{$lang->cmd_update}" name="upd_cart_products" id="update_multiple">
                     </td>
                 </tr>
-
+                <!--@if($shop->getShowVAT() == 'Y' && $shop->getVAT() > 0)-->
+                <tr >
+                    <td></td>
+                    <td>
+                        {$lang->taxes}
+                    </td>
+                    <td colspan="2">
+                    </td>
+                    <td>
+                        {ShopDisplay::priceFormat($total_price * ($shop->getVAT()/100), $shop->getCurrencySymbol())}
+                    </td>
+                    <td colspan="2">
+                    </td>
+                </tr>
+                <!--@end-->
                 </tbody>
             </table>
 

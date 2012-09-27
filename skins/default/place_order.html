@@ -73,6 +73,17 @@
                     {ShopDisplay::priceFormat($cart->getTotal(), $shop->getCurrencySymbol())}
                 </td>
             </tr>
+            <!--@if($shop->getShowVAT() == 'Y' && $shop->getVAT() > 0)-->
+            <tr style="background-color: #9acd32;">
+                <td colspan="3"></td>
+                <td>
+                    {$lang->taxes}
+                </td>
+                <td>
+                    {ShopDisplay::priceFormat($cart->getTotal() * ($shop->getVAT()/100), $shop->getCurrencySymbol())}
+                </td>
+            </tr>
+            <!--@end-->
             </tbody>
         </table>
     </fieldset>

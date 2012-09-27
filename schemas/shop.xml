@@ -10,6 +10,7 @@
   <column name="currency" type="varchar" size="5" />
   <column name="currency_symbol" type="varchar" size="5" />
   <column name="VAT" type="float" size="7" />
+  <column name="show_VAT" type="char" size="1" default="N" />
   <column name="telephone" type="number" size="20" />
   <column name="address" type="text" />
   <column name="out_of_stock_products" type="char" size="1" default="N" />

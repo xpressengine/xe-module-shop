@@ -110,6 +110,15 @@
                             <p>{$lang->about_VAT}</p>
                         </td>
                     </tr>
+                    <tr>
+                        <th scope="row"><label for="show_VAT">{$lang->show_VAT}</label></th>
+                        <td>
+                            <select name="show_VAT" id="show_VAT">
+                                <option value="N" <!--@if($shop->getShowVAT()=='N')-->selected<!--@end-->>{$lang->no}</option>
+                                <option value="Y" <!--@if($shop->getShowVAT()=='Y')-->selected<!--@end-->>{$lang->yes}</option>
+                            </select>
+                        </td>
+                    </tr>
                 </table>
             </fieldset>
 

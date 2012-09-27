@@ -43,12 +43,21 @@
                     <!--@end-->
                     <tfoot>
                     <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
+                        <td colspan="3"></td>
                         <td><b>{$lang->grand_total}</b></td>
                         <td>{ShopDisplay::priceFormat($order->total, $shop->getCurrencySymbol())}</td>
                     </tr>
+                    <!--@if($shop->getShowVAT() == 'Y' && $shop->getVAT() > 0)-->
+                    <tr >
+                        <td colspan="3"></td>
+                        <td>
+                            {$lang->taxes}
+                        </td>
+                        <td>
+                            {ShopDisplay::priceFormat($order->total * ($shop->getVAT()/100), $shop->getCurrencySymbol())}
+                        </td>
+                    </tr>
+                    <!--@end-->
                     </tfoot>
 
                     </tbody>

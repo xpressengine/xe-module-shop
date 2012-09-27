@@ -111,6 +111,9 @@
     $lang->currency = 'Currency';
     $lang->about_currency = 'Enter shop default currency';
     $lang->VAT = 'VAT';
+    $lang->show_VAT = 'Show VAT on prices on frontend';
+    $lang->about_price_VAT = 'This price will be the total product price (including VAT)';
+    $lang->taxes = 'From wich taxes';
     $lang->about_VAT = 'Enter VAT amount in %';
     $lang->comments = 'Comments';
     $lang->about_comments = 'Enter comments for this action';

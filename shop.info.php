@@ -159,6 +159,11 @@
             return $this->get('VAT');
         }
 
+        public function getShowVAT() {
+            if(!$this->isExists()) return;
+            return $this->get('show_VAT');
+        }
+
         public function getShopDiscountMinAmount() {
             if(!$this->isExists()) return;
             return $this->get('discount_min_amount');
