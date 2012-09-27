@@ -117,23 +117,6 @@ abstract class Product extends BaseItem
         if($this->qty > 0) return true;
         return false;
     }
-}
-
-/**
- * Model class for a simple product
- */
-class SimpleProduct extends Product
-{
-	public function __construct($args = null)
-	{
-		parent::__construct($args);
-		$this->product_type = 'simple';
-	}
-
-    public function getRepo()
-    {
-        return 'ProductRepository';
-    }
 
     public function isAvailable($shopSettingsCheck=true)
     {
@@ -150,6 +133,24 @@ class SimpleProduct extends Product
                 !$shopSettingsCheck ||
                 ($shopSettingsCheck && $this->in_stock == 'Y')
             );
+    }
+
+}
+
+/**
+ * Model class for a simple product
+ */
+class SimpleProduct extends Product
+{
+	public function __construct($args = null)
+	{
+		parent::__construct($args);
+		$this->product_type = 'simple';
+	}
+
+    public function getRepo()
+    {
+        return 'ProductRepository';
     }
 }
 
