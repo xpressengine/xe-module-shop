@@ -22,14 +22,14 @@
                                     {$cart_product->title}
                                 <!--@end-->
                             </p>
-                            <p class="cart-preview-price">{$cart_product->quantity} x {$cart_product->price}</p>
+                            <p class="cart-preview-price">{$cart_product->quantity} x {ShopDisplay::priceFormat($cart_product->price, $shop->getCurrencySymbol())}</p>
                         </li>
                         <!--@endforeach-->
                     </ul>
                     <!--@if($cart_product->price)-->
                         <p id="cart-costs" class="clearfix">
                             <span class="f-left">{$lang->grand_total}:</span>
-                            <span class="f-right">{ShopDisplay::priceFormat($cart_product->price, $shop->getCurrencySymbol())}</span>
+                            <span class="f-right">{ShopDisplay::priceFormat($cart->getTotal(), $shop->getCurrencySymbol())}</span>
                         </p>
                         <p>
                             <span class="f-left"><a href="{getURL('', 'act','dispShopCart')}">{$lang->edit_cart}</a></span>
