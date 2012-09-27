@@ -27,7 +27,7 @@
                 <td class="small">{$order->order_srl}</td>
                 <td class="small">{zdate($order->regdate)}</td>
                 <td class="title">{reset(explode(',',$order->billing_address))}</td>
-                <td class="small">{$order->total}</td>
+                <td class="small">{ShopDisplay::priceFormat($order->total, $shop->getCurrencySymbol())}</td>
                 <td class="small">{$order->order_status}</td>
                 <td>
                     <a href="{getUrl('','act','dispShopViewOrder','order_srl',$order->order_srl)}">View </a> | <a title="This will fill your cart with the products existing on this order so you can buy them again" href="{getUrl('','act','procShopRenewOrder','order_srl',$order->order_srl)}">Renew </a>

@@ -77,10 +77,10 @@
                         <input type="checkbox" name="order_srl" value="{$order->order_srl}" class="inputCheck boxlist"/>
                     </td>
                     <td class="small">{$order->order_srl}</td>
-                    <td class="title"><a href="{getUrl('act','dispShopToolViewOrder','order_srl',$order->order_srl)}" class="attributeTitle">{$order->getBillToName()}</a></td>
-                    <td class="small">{$order->getShipToName()}</td>
+                    <td class="title"><a href="{getUrl('act','dispShopToolViewOrder','order_srl',$order->order_srl)}" class="attributeTitle">{reset(explode(',',$order->billing_address))}</a></td>
+                    <td class="small">{reset(explode(',',$order->shipping_address))}</td>
                     <td class="small">{zdate($order->regdate)}</td>
-                    <td class="small">{$order->total}</td>
+                    <td class="small">{ShopDisplay::priceFormat($order->total, $shop->getCurrencySymbol())}</td>
                     <td class="small">{$order->order_status}</td>
                     <td>
                         <span class="btnGray small">

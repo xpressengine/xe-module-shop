@@ -36,9 +36,9 @@
                     <tr>
                         <td class="title">{$item->title}</td>
                         <td class="small">{$item->sku}</td>
-                        <td class="small">{$item->price}</td>
+                        <td class="small">{ShopDisplay::priceFormat($item->price, $shop->getCurrencySymbol())}</td>
                         <td class="small">{$item->ordered_qty}</td>
-                        <td class="small">{$item->price * $item->ordered_qty}</td>
+                        <td class="small">{ShopDisplay::priceFormat($item->price * $item->ordered_qty, $shop->getCurrencySymbol())}</td>
                     </tr>
                     <!--@end-->
                     <tfoot>
@@ -47,7 +47,7 @@
                         <td></td>
                         <td></td>
                         <td><b>{$lang->grand_total}</b></td>
-                        <td>{$order->total}</td>
+                        <td>{ShopDisplay::priceFormat($order->total, $shop->getCurrencySymbol())}</td>
                     </tr>
                     </tfoot>
 
