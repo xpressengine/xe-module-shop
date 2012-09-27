@@ -239,6 +239,17 @@ class Cart extends BaseItem
         return $this->getProducts($n, true);
     }
 
+    public function check()
+    {
+        $shopInfo = new ShopInfo($this->module_srl);
+        if ($minOrder = $shopInfo->getMinimumOrder()) {
+            if ($this->getPrice() < $minOrder) {
+                throw new Exception("Minimum order amount of $minOrder not met (cart value: {$this->getPrice()})");
+            }
+        }
+        return true;
+    }
+
     public function getItemTotal($onlyAvailable=false)
     {
         $output = $onlyAvailable ? $this->getAvailableProducts() : $this->getProducts();
@@ -305,6 +316,7 @@ class Cart extends BaseItem
     public function checkout(array $orderData)
     {
         if (!$this->cart_srl) throw new Exception('Cart is not persisted');
+        $this->check();
         $orderData = $this->formTranslation($orderData);
         $this->setExtra($orderData['extra']);
         $this->billing_address_srl = $orderData['billing_address_srl'];

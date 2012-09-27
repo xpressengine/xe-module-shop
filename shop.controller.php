@@ -686,13 +686,18 @@
                 $shipping = Context::get('shipping');
                 if(!$haveShipping) unset($shipping['address_srl']);
 
-                $cart->checkout(array(
-                    'billing'  => Context::get('billing'),
-                    'new_billing_address' => Context::get('new_billing_address'),
-                    'shipping' => $shipping,
-                    'new_shipping_address' => $haveShipping ? Context::get('new_shipping_address') : null,
-                    'payment'  => Context::get('payment'),
-                ));
+                try {
+                    $cart->checkout(array(
+                        'billing'  => Context::get('billing'),
+                        'new_billing_address' => Context::get('new_billing_address'),
+                        'shipping' => $shipping,
+                        'new_shipping_address' => $haveShipping ? Context::get('new_shipping_address') : null,
+                        'payment'  => Context::get('payment'),
+                    ));
+                }
+                catch (Exception $e) {
+                    return new Object(-1, $e->getMessage());
+                }
 
                 // Get selected payment method name
                 $payment = Context::get('payment');

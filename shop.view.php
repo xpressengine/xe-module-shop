@@ -170,6 +170,7 @@ class shopView extends shop {
         Context::set('cart', $cart);
 
         // Load cart preview (for ajax cart feature in header)
+        Context::set('cart_available_products_count', $cart ? $cart->countAvailableProducts() : 0);
         if ($cart) {
             $preview_products = $cart->getProducts(3, true);
             Context::set('preview_products', $preview_products);
