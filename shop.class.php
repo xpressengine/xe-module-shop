@@ -90,6 +90,9 @@
             if(!$oDB->isColumnExists("shop_payment_methods","module_srl")) return true;
             if(!$oDB->isColumnExists("shop_shipping_methods","module_srl")) return true;
 
+            if($oDB->isIndexExists("shop_payment_methods","unique_name")) return true;
+            if($oDB->isIndexExists("shop_shipping_methods","unique_name")) return true;
+
             return false;
         }
 
@@ -250,6 +253,18 @@
 
             if(!$oDB->isColumnExists("shop_shipping_methods","module_srl")) {
                 $oDB->addColumn('shop_shipping_methods',"module_srl","number", 11, 0, true);
+            }
+
+            if($oDB->isIndexExists("shop_payment_methods","unique_name"))
+            {
+                $oDB->dropIndex("shop_payment_methods", "unique_name", true);
+                $oDB->addIndex("shop_payment_methods", "unique_module_srl_name", array('module_srl', 'name'), true);
+            }
+
+            if($oDB->isIndexExists("shop_shipping_methods","unique_name"))
+            {
+                $oDB->dropIndex("shop_shipping_methods", "unique_name", true);
+                $oDB->addIndex("shop_shipping_methods", "unique_module_srl_name", array('module_srl', 'name'), true);
             }
 
            return new Object(0, 'success_updated');

@@ -11,6 +11,7 @@ abstract class AbstractPluginRepository extends BaseRepository
     abstract protected function deletePluginInfo($name, $module_srl);
     abstract protected function getAllPluginsInDatabase($module_srl);
     abstract protected function getAllActivePluginsInDatabase($module_srl);
+    abstract protected function fixPlugin($name, $old_module_srl, $new_module_srl);
 
     protected function getPluginInstanceByName($plugin_name, $module_srl)
     {
@@ -70,9 +71,9 @@ abstract class AbstractPluginRepository extends BaseRepository
             $data = $this->getPluginInfoFromDatabase($name, 0);
             if($data)
             {
-                $plugin = $this->getPluginInstanceFromProperties($data);
-                $plugin->module_srl = $module_srl;
-                $this->updatePlugin($plugin);
+                ShopLogger::log("Upgrading plugin $name - setting module_srl from 0 to $module_srl");
+                $this->fixPlugin($data->name, 0, $module_srl);
+                $data->module_srl = $module_srl;
             }
         }
 

@@ -54,6 +54,11 @@ class ShippingRepository extends AbstractPluginRepository
         return $output->data;
     }
 
+    protected function fixPlugin($name, $old_module_srl, $new_module_srl)
+    {
+        $this->query('shop.fixShippingMethod', array('name' => $name, 'module_srl' => $new_module_srl, 'source_module_srl' => $old_module_srl));
+    }
+
     protected function updatePluginInfo($plugin)
     {
         $this->query('shop.updateShippingMethod', $plugin);
