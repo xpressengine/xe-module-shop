@@ -10,9 +10,9 @@ class ShippingRepository extends AbstractPluginRepository
     /**
      * Returns all available shipping methods
      */
-    public function getAvailableShippingMethods()
+    public function getAvailableShippingMethods($module_srl)
     {
-        return $this->getAvailablePlugins();
+        return $this->getAvailablePlugins($module_srl);
     }
 
     /**
@@ -22,9 +22,9 @@ class ShippingRepository extends AbstractPluginRepository
      *
      * @return ShippingMethodAbstract
      */
-    public function getShippingMethod($name)
+    public function getShippingMethod($name, $module_srl)
     {
-        return $this->getPlugin($name);
+        return $this->getPlugin($name, $module_srl);
     }
 
     public function updateShippingMethod($shipping_info)
@@ -48,9 +48,9 @@ class ShippingRepository extends AbstractPluginRepository
         return "ShippingMethodAbstract";
     }
 
-    protected function getPluginInfoFromDatabase($name)
+    protected function getPluginInfoFromDatabase($name, $module_srl)
     {
-        $output = $this->query('shop.getShippingMethod', array('name' => $name));
+        $output = $this->query('shop.getShippingMethod', array('name' => $name, 'module_srl' => $module_srl));
         return $output->data;
     }
 
@@ -65,18 +65,18 @@ class ShippingRepository extends AbstractPluginRepository
         $this->query('shop.insertShippingMethod', $plugin);
     }
 
-    protected function deletePluginInfo($name)
+    protected function deletePluginInfo($name, $module_srl)
     {
-        $this->query('shop.deleteShippingMethod', array('name' => $name));
+        $this->query('shop.deleteShippingMethod', array('name' => $name, 'module_srl' => $module_srl));
     }
 
-    protected function getAllPluginsInDatabase()
+    protected function getAllPluginsInDatabase($module_srl)
     {
-        $this->query('shop.getPaymentMethods', null, true);
+        $this->query('shop.getPaymentMethods', array('module_srl' => $module_srl), true);
     }
 
-    protected function getAllActivePluginsInDatabase()
+    protected function getAllActivePluginsInDatabase($module_srl)
     {
-        $this->query('shop.getPaymentMethods', array('status' => 1), true);
+        $this->query('shop.getPaymentMethods', array('status' => 1, 'module_srl' => $module_srl), true);
     }
 }

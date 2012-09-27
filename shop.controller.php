@@ -179,6 +179,7 @@
             if(!$output->toBool()) return $output;
 
 			unset($args);
+            $args = new stdClass();
             $args->index_module_srl = $this->module_srl;
             $args->default_language = Context::get('language');
             $args->site_srl = $this->site_srl;
@@ -705,7 +706,7 @@
 
                 // Get payment class
                 $payment_repository = new PaymentMethodRepository();
-                $payment_method = $payment_repository->getPaymentMethod($payment_method_name);
+                $payment_method = $payment_repository->getPaymentMethod($payment_method_name, $this->module_srl);
 
                 $error_message = '';
                 if(!$payment_method->onCheckoutFormSubmit($cart, $error_message))
@@ -870,7 +871,7 @@
 
             // Get payment class
             $payment_repository = new PaymentMethodRepository();
-            $payment_method = $payment_repository->getPaymentMethod($cart->getExtra('payment_method'));
+            $payment_method = $payment_repository->getPaymentMethod($cart->getExtra('payment_method'), $this->module_srl);
 
             $error_message = '';
             if(!$payment_method->processPayment($cart, $error_message))
@@ -1402,6 +1403,7 @@
          * @brief shop update browser title
          **/
         public function updateShopBrowserTitle($module_srl, $browser_title) {
+            $args = new stdClass();
             $args->module_srl = $module_srl;
             $args->browser_title = $browser_title;
             return executeQuery('shop.updateShopBrowserTitle', $args);
@@ -1628,7 +1630,7 @@
             }
 
             $payment_repository = new PaymentMethodRepository();
-            $payment_method = $payment_repository->getPaymentMethod($name);
+            $payment_method = $payment_repository->getPaymentMethod($name, $this->module_srl);
             $payment_method->status = 1;
             $payment_repository->updatePaymentMethod($payment_method);
 
@@ -1652,7 +1654,7 @@
             }
 
             $payment_repository = new PaymentMethodRepository();
-            $payment_method = $payment_repository->getPaymentMethod($name);
+            $payment_method = $payment_repository->getPaymentMethod($name, $this->module_srl);
             $payment_method->status = 0;
             $payment_repository->updatePaymentMethod($payment_method);
 
@@ -1668,7 +1670,7 @@
          * @author Daniel Ionescu (dev@xpressengine.org)
          */
         public function procUpdateShopDeletePaymentMethod() {
-
+            global $lang;
             $name = Context::get('name');
 
             if ($name != '') {
@@ -1681,10 +1683,7 @@
                 $shopModel = $this->model;
                 $repository = $shopModel->getPaymentMethodRepository();
 
-                $payment_method = new stdClass();
-                $payment_method->name = $name;
-
-                $repository->deletePaymentMethod($payment_method);
+                $repository->deletePaymentMethod($name, $this->module_srl);
 
                 $fullPath = $baseDir . $name;
                 if (!rmdir($fullPath)) {
@@ -1695,6 +1694,7 @@
 
             }
 
+            $vid = Context::get('vid');
             $returnUrl = getNotEncodedUrl('', 'vid', $vid, 'act', 'dispShopToolManagePaymentMethods');
             $this->setRedirectUrl($returnUrl);
 
@@ -1715,7 +1715,7 @@
             $payment_repository = $shopModel->getPaymentMethodRepository();
 
             // Retrieve payment method from database
-            $payment_method = $payment_repository->getPaymentMethod($name);
+            $payment_method = $payment_repository->getPaymentMethod($name, $this->module_srl);
 
             // Update object with values submitted by user
             $data = Context::getRequestVars();
@@ -1789,7 +1789,7 @@
                                 $pg = new stdClass();
                                 $pg->name = $name[0];
                                 $pg->status = 1;
-                                $output = $repository->getPaymentMethod($pg);
+                                $output = $repository->getPaymentMethod($pg, $this->module_srl);
 
                                 if ($output) {
 
@@ -1835,6 +1835,7 @@
 
             }
 
+            $vid = Context::get('vid');
             $returnUrl = getNotEncodedUrl('', 'vid', $vid, 'act', 'dispShopToolManagePaymentMethods');
             $this->setRedirectUrl($returnUrl);
 
@@ -1853,7 +1854,7 @@
 
             try {
 
-                $repository->sanitizePaymentMethods();
+                $repository->sanitizePaymentMethods($this->module_srl);
                 $this->setMessage('Successfully sanitized payment methods database table','info');
 
             } catch (Exception $e) {
@@ -1862,6 +1863,7 @@
 
             }
 
+            $vid = Context::get('vid');
             $returnUrl = getNotEncodedUrl('', 'vid', $vid, 'act', 'dispShopToolManagePaymentMethods');
             $this->setRedirectUrl($returnUrl);
 
@@ -1874,7 +1876,7 @@
         {
             $payment_method_name = Context::get('payment_method_name');
             $payment_repository = new PaymentMethodRepository();
-            $payment_method = $payment_repository->getPaymentMethod($payment_method_name);
+            $payment_method = $payment_repository->getPaymentMethod($payment_method_name, $this->module_srl);
             $payment_method->notify();
         }
 
@@ -2167,7 +2169,7 @@
             $name = Context::get('name');
 
             $shipping_repository = new ShippingRepository();
-            $shipping_method = $shipping_repository->getShippingMethod($name);
+            $shipping_method = $shipping_repository->getShippingMethod($name, $this->module_srl);
 
             // Update object with values submitted by user
             $data = Context::getRequestVars();
@@ -2208,7 +2210,7 @@
             }
 
             $shipping_repository = new ShippingRepository();
-            $shipping_method = $shipping_repository->getShippingMethod($name);
+            $shipping_method = $shipping_repository->getShippingMethod($name, $this->module_srl);
             $shipping_method->status = $status;
 
             try

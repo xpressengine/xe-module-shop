@@ -6,5 +6,6 @@
     </columns>
     <conditions>
         <condition operation="equal" column="name" var="name" notnull="notnull" />
+        <condition operation="equal" column="module_srl" var="module_srl" pipe="and" notnull="notnull" />
     </conditions>
 </query>

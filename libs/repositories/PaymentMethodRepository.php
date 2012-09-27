@@ -17,10 +17,11 @@ class PaymentMethodRepository extends AbstractPluginRepository
         return "PaymentMethodAbstract";
     }
 
-    protected function getPluginInfoFromDatabase($name)
+    protected function getPluginInfoFromDatabase($name, $module_srl)
     {
         $args = new stdClass();
         $args->name = $name;
+        $args->module_srl = $module_srl;
 
         $output = executeQuery('shop.getPaymentMethod',$args);
         if(!$output->toBool()) {
@@ -47,10 +48,11 @@ class PaymentMethodRepository extends AbstractPluginRepository
         }
     }
 
-    protected function deletePluginInfo($name)
+    protected function deletePluginInfo($name, $module_srl)
     {
         $args = new stdClass();
         $args->name = $name;
+        $args->module_srl = $module_srl;
         $output = executeQuery('shop.deletePaymentMethod',$args);
         if (!$output->toBool()) {
             throw new Exception($output->getMessage(), $output->getError());
@@ -59,22 +61,10 @@ class PaymentMethodRepository extends AbstractPluginRepository
         return $output->data;
     }
 
-    protected function getAllPluginsInDatabase()
-    {
-        $output = executeQueryArray('shop.getPaymentMethods');
-
-        if (!$output->toBool())
-        {
-            throw new Exception($output->getMessage(), $output->getError());
-        }
-
-        return $output->data;
-    }
-
-    protected function getAllActivePluginsInDatabase()
+    protected function getAllPluginsInDatabase($module_srl)
     {
         $args = new stdClass();
-        $args->status = 1;
+        $args->module_srl = $module_srl;
         $output = executeQueryArray('shop.getPaymentMethods', $args);
 
         if (!$output->toBool())
@@ -85,14 +75,29 @@ class PaymentMethodRepository extends AbstractPluginRepository
         return $output->data;
     }
 
-    public function getPaymentMethod($name)
+    protected function getAllActivePluginsInDatabase($module_srl)
     {
-        return $this->getPlugin($name);
+        $args = new stdClass();
+        $args->status = 1;
+        $args->module_srl = $module_srl;
+        $output = executeQueryArray('shop.getPaymentMethods', $args);
+
+        if (!$output->toBool())
+        {
+            throw new Exception($output->getMessage(), $output->getError());
+        }
+
+        return $output->data;
     }
 
-    public function installPaymentMethod($name)
+    public function getPaymentMethod($name, $module_srl)
     {
-        return $this->getPaymentMethod($name);
+        return $this->getPlugin($name, $module_srl);
+    }
+
+    public function installPaymentMethod($name, $module_srl)
+    {
+        return $this->getPaymentMethod($name, $module_srl);
     }
 
     /**
@@ -101,9 +106,9 @@ class PaymentMethodRepository extends AbstractPluginRepository
      * Looks in the database and also in the plugins_payment folder to see
      * if any new extension showed up. If yes, also adds it in the database
      */
-    public function getAvailablePaymentMethods()
+    public function getAvailablePaymentMethods($module_srl)
     {
-        return $this->getAvailablePlugins();
+        return $this->getAvailablePlugins($module_srl);
     }
 
      /**
@@ -141,19 +146,19 @@ class PaymentMethodRepository extends AbstractPluginRepository
      * @throws exception
      * @return object
      */
-    public function getActivePaymentMethods() {
-        return $this->getActivePlugins();
+    public function getActivePaymentMethods($module_srl) {
+        return $this->getActivePlugins($module_srl);
     }
 
     /**
      * Deletes a  payment method
      */
-    public function deletePaymentMethod($args) {
-        $this->deletePlugin($args->name);
+    public function deletePaymentMethod($name, $module_srl) {
+        $this->deletePlugin($name, $module_srl);
     }
 
-    public function sanitizePaymentMethods() {
-        $this->sanitizePlugins();
+    public function sanitizePaymentMethods($module_srl) {
+        $this->sanitizePlugins($module_srl);
     }
 
 }

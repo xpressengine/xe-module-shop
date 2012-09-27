@@ -5,14 +5,14 @@ abstract class AbstractPluginRepository extends BaseRepository
     abstract function getPluginsDirectoryPath();
     abstract function getClassNameThatPluginsMustExtend();
 
-    abstract protected function getPluginInfoFromDatabase($name);
+    abstract protected function getPluginInfoFromDatabase($name, $module_srl);
     abstract protected function updatePluginInfo($plugin);
     abstract protected function insertPluginInfo(AbstractPlugin $plugin);
-    abstract protected function deletePluginInfo($name);
-    abstract protected function getAllPluginsInDatabase();
-    abstract protected function getAllActivePluginsInDatabase();
+    abstract protected function deletePluginInfo($name, $module_srl);
+    abstract protected function getAllPluginsInDatabase($module_srl);
+    abstract protected function getAllActivePluginsInDatabase($module_srl);
 
-    protected function getPluginInstanceByName($plugin_name)
+    protected function getPluginInstanceByName($plugin_name, $module_srl)
     {
         // Skip files (we are only interested in the folders)
         if(!is_dir($this->getPluginsDirectoryPath() . DIRECTORY_SEPARATOR . $plugin_name))
@@ -40,6 +40,7 @@ abstract class AbstractPluginRepository extends BaseRepository
             throw new Exception("Plugin class does not extend required $class_name_that_plugin_must_extend");
         };
 
+        $plugin_instance->module_srl = $module_srl;
         return $plugin_instance;
     }
 
@@ -53,14 +54,28 @@ abstract class AbstractPluginRepository extends BaseRepository
         $data->properties = unserialize($data->props);
         unset($data->props);
 
-        $plugin = $this->getPluginInstanceByName($data->name);
+        $plugin = $this->getPluginInstanceByName($data->name, $data->module_srl);
         $plugin->setProperties($data);
         return $plugin;
     }
 
-    public function getPlugin($name)
+    public function getPlugin($name, $module_srl)
     {
-        $data = $this->getPluginInfoFromDatabase($name);
+        $data = $this->getPluginInfoFromDatabase($name, $module_srl);
+
+        // Update code; add module srl to plugins that have module_srl = 0
+        // TODO Remove this when releasing XE Shop
+        if(!$data)
+        {
+            $data = $this->getPluginInfoFromDatabase($name, 0);
+            if($data)
+            {
+                $plugin = $this->getPluginInstanceFromProperties($data);
+                $plugin->module_srl = $module_srl;
+                $this->updatePlugin($plugin);
+            }
+        }
+
         // If plugin exists in the database, return it as is
         if($data)
         {
@@ -68,16 +83,16 @@ abstract class AbstractPluginRepository extends BaseRepository
         }
 
         // Otherwise, initialize it with info from the extension class and insert in database
-        $plugin = $this->getPluginInstanceByName($name);
+        $plugin = $this->getPluginInstanceByName($name, $module_srl);
 
         $this->insertPlugin($plugin);
 
-        return $this->getPlugin($name);
+        return $this->getPlugin($name, $module_srl);
     }
 
-    public function installPlugin($name)
+    public function installPlugin($name, $module_srl)
     {
-        return $this->getPlugin($name);
+        return $this->getPlugin($name, $module_srl);
     }
 
     /**
@@ -86,7 +101,7 @@ abstract class AbstractPluginRepository extends BaseRepository
      * Looks in the database and also in the plugins folder to see
      * if any new extension showed up. If yes, also adds it in the database
      */
-    public function getAvailablePlugins()
+    public function getAvailablePlugins($module_srl)
     {
         // Scan through the plugins_shipping extension directory to retrieve available methods
         $extensions = $this->getPluginsByFolder();
@@ -96,7 +111,7 @@ abstract class AbstractPluginRepository extends BaseRepository
         {
             try
             {
-                $plugins[] = $this->getPlugin($extension_name);
+                $plugins[] = $this->getPlugin($extension_name, $module_srl);
             }
             catch(Exception $e)
             {
@@ -110,9 +125,9 @@ abstract class AbstractPluginRepository extends BaseRepository
     /**
      * Get all enabled plugins
      */
-    public function getActivePlugins()
+    public function getActivePlugins($module_srl)
     {
-        $plugins_info = $this->getAllActivePluginsInDatabase();
+        $plugins_info = $this->getAllActivePluginsInDatabase($module_srl);
 
         $active_plugins = array();
         foreach($plugins_info as $data)
@@ -161,21 +176,21 @@ abstract class AbstractPluginRepository extends BaseRepository
         $this->insertPluginInfo($plugin);
     }
 
-    public function deletePlugin($name)
+    public function deletePlugin($name, $module_srl)
     {
-        $this->deletePluginInfo($name);
+        $this->deletePluginInfo($name, $module_srl);
     }
 
     /**
      * Deletes plugins from DB if they do not have a folder with a corresponding name
      */
-    public function sanitizePlugins() {
-        $pgByDatabase = $this->getAllPluginsInDatabase();
+    public function sanitizePlugins($module_srl) {
+        $pgByDatabase = $this->getAllPluginsInDatabase($module_srl);
         $pgByFolders = $this->getPluginsByFolder();
 
         foreach ($pgByDatabase as $obj) {
             if (!in_array($obj->name,$pgByFolders)) {
-                $this->deletePlugin($obj);
+                $this->deletePlugin($obj->name, $module_srl);
             }
         }
     }

@@ -4,6 +4,7 @@
     </tables>
     <columns>
         <column name="id" var="id" filter="number" />
+        <column name="module_srl" var="module_srl" notnull="notnull" />
         <column name="name" var="name" notnull="notnull" />
         <column name="display_name" var="display_name" filter="varchar" />
         <column name="status" var="status" filter="number" />

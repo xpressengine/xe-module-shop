@@ -274,7 +274,7 @@ class Cart extends BaseItem
         $shipping_method = $this->getExtra('shipping_method');
         if($shipping_method){
             $shipping_repository = new ShippingRepository();
-            $shipping = $shipping_repository->getShippingMethod($shipping_method);
+            $shipping = $shipping_repository->getShippingMethod($shipping_method, $this->module_srl);
             return $shipping->calculateShipping($this, $this->getShippingAddress());
         } else return 0;
     }

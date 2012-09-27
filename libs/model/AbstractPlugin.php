@@ -7,6 +7,7 @@
 abstract class AbstractPlugin extends BaseItem
 {
     public $id = null;
+    public $module_srl = 0;
     public $display_name;  /// Display name
     public $name; /// Unique name = folder name
     public $status = 0;

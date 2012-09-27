@@ -152,7 +152,7 @@
              * Insert default payment method and activate it
              */
             $payment_repository = new PaymentMethodRepository();
-            $payment_method = $payment_repository->installPaymentMethod('cash_on_delivery');
+            $payment_method = $payment_repository->installPaymentMethod('cash_on_delivery', $module_srl);
             $payment_method->status = 1;
             $payment_repository->updatePaymentMethod($payment_method);
 
@@ -160,7 +160,7 @@
              * Setup default shipping method
              */
             $shipping_repository = new ShippingRepository();
-            $shipping_method = $shipping_repository->installPlugin('flat_rate_shipping');
+            $shipping_method = $shipping_repository->installPlugin('flat_rate_shipping', $module_srl);
             $shipping_method->type = 'per_order';
             $shipping_method->price = '10';
             $shipping_method->status = 1;

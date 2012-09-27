@@ -1080,13 +1080,13 @@ class shopView extends shop {
         //shipping methods
         $shipping = array();
         /** @var $shippingMethod ShippingMethodAbstract */
-        foreach ($shippingRepo->getAvailableShippingMethods() as $shippingMethod) {
+        foreach ($shippingRepo->getAvailableShippingMethods($this->module_srl) as $shippingMethod) {
             $shipping[$shippingMethod->getCode()] = $shippingMethod->getDisplayName();
         }
         Context::set('shipping_methods', $shipping);
 
         // payment methods
-        $payment_methods = $paymentRepo->getActivePaymentMethods();
+        $payment_methods = $paymentRepo->getActivePaymentMethods($this->module_srl);
         Context::set('payment_methods', $payment_methods);
 
         Context::set('addresses', $cart->getAddresses());
@@ -1114,7 +1114,7 @@ class shopView extends shop {
 
         // Get payment class
         $payment_repository = $shopModel->getPaymentMethodRepository();
-        $payment_method = $payment_repository->getPaymentMethod($payment_method_name);
+        $payment_method = $payment_repository->getPaymentMethod($payment_method_name, $this->module_srl);
 
         $payment_method->onPlaceOrderFormLoad();
 
@@ -1127,7 +1127,7 @@ class shopView extends shop {
 
         $shipping_method_name = $cart->getExtra('shipping_method');
         $shipping_repository = new ShippingRepository();
-        $shipping_method = $shipping_repository->getShippingMethod($shipping_method_name);
+        $shipping_method = $shipping_repository->getShippingMethod($shipping_method_name, $this->module_srl);
         Context::set('shipping_method', $shipping_method->getDisplayName());
 
         Context::set('extra', $cart->getExtraArray());
@@ -1144,7 +1144,7 @@ class shopView extends shop {
         if($payment_method_name)
         {
             $payment_repository = new PaymentMethodRepository();
-            $payment_method = $payment_repository->getPaymentMethod($payment_method_name);
+            $payment_method = $payment_repository->getPaymentMethod($payment_method_name, $this->module_srl);
             $payment_method->onOrderConfirmationPageLoad($cart, $this->module_srl);
         }
 
@@ -1398,7 +1398,7 @@ class shopView extends shop {
 		 */
 		$shopModel = getModel('shop');
 		$repository = $shopModel->getPaymentMethodRepository();
-        $payment_methods = $repository->getAvailablePaymentMethods();
+        $payment_methods = $repository->getAvailablePaymentMethods($this->module_srl);
 
 		Context::set('payment_methods',$payment_methods);
 	}
@@ -1420,7 +1420,7 @@ class shopView extends shop {
         $payment_repository = $shopModel->getPaymentMethodRepository();
 
         // Retrieve payment method, and save in context for it to be accessible from the plugin template
-        $payment_method = $payment_repository->getPaymentMethod($name);
+        $payment_method = $payment_repository->getPaymentMethod($name, $this->module_srl);
         Context::set('payment_method', $payment_method);
 
         // Retrieve backend form fields
@@ -1596,19 +1596,19 @@ class shopView extends shop {
         $shopModel = getModel('shop');
         $shipping_repository = $shopModel->getShippingRepository();
 
-        $shipping_methods = $shipping_repository->getAvailableShippingMethods();
+        $shipping_methods = $shipping_repository->getAvailableShippingMethods($this->module_srl);
         Context::set('shipping_methods', $shipping_methods);
     }
 
     public function dispShopToolEditShipping()
     {
-        $code = Context::get('name');
+        $name = Context::get('name');
         /**
          * @var shopModel $shopModel
          */
         $shopModel = getModel('shop');
         $shipping_repository = $shopModel->getShippingRepository();
-        $shipping_instance = $shipping_repository->getShippingMethod($code);
+        $shipping_instance = $shipping_repository->getShippingMethod($name, $this->module_srl, $this->module_srl);
         Context::set('shipping_method', $shipping_instance);
 
         $shipping_form_html = $shipping_instance->getFormHtml();
