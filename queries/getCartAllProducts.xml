@@ -22,6 +22,7 @@
         <condition operation="equal" column="c.cart_srl" var="cart_srl" notnull="notnull" />
     </conditions>
     <navigation>
+        <index var="product_order" default="cp.product_srl" order="desc" />
         <list_count var="list_count" default="10"/>
     </navigation>
 </query>
