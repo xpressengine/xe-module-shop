@@ -2168,7 +2168,7 @@
         {
             $name = Context::get('name');
 
-            $shipping_repository = new ShippingRepository();
+            $shipping_repository = new ShippingMethodRepository();
             $shipping_method = $shipping_repository->getShippingMethod($name, $this->module_srl);
 
             // Update object with values submitted by user
@@ -2209,7 +2209,7 @@
                 return new Object(-1, 'msg_invalid_request');
             }
 
-            $shipping_repository = new ShippingRepository();
+            $shipping_repository = new ShippingMethodRepository();
             $shipping_method = $shipping_repository->getShippingMethod($name, $this->module_srl);
             $shipping_method->status = $status;
 

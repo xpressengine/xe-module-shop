@@ -35,7 +35,7 @@ class ShopAutoloader
                     $repoClass = $class . 'Repository';
                 }
 
-                if (!in_array($class, array('Shipping','PaymentMethod'))) {
+                if (!in_array($class, array('ShippingMethod','PaymentMethod'))) {
                     $this->getFile(__DIR__ . "/../model/$itemClass.php", $itemClass);
                 }
                 else
@@ -48,7 +48,7 @@ class ShopAutoloader
                     }
                     elseif(strpos($itemClass, 'Shipping') !== false)
                     {
-                        $itemClass = $itemClass . 'MethodAbstract';
+                        $itemClass = $itemClass . 'Abstract';
                         $this->getFile(__DIR__ . "/../../plugins_shipping/$itemClass.php", $itemClass);
                     }
                 }

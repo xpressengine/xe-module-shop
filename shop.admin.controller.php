@@ -159,7 +159,7 @@
             /**
              * Setup default shipping method
              */
-            $shipping_repository = new ShippingRepository();
+            $shipping_repository = new ShippingMethodRepository();
             $shipping_method = $shipping_repository->installPlugin('flat_rate_shipping', $module_srl);
             $shipping_method->type = 'per_order';
             $shipping_method->price = '10';

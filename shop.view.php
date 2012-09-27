@@ -1074,7 +1074,7 @@ class shopView extends shop {
             throw new Exception('Cart is empty, you have nothing to checkout');
         }
 
-        $shippingRepo = new ShippingRepository();
+        $shippingRepo = new ShippingMethodRepository();
         $paymentRepo = new PaymentMethodRepository();
 
         //shipping methods
@@ -1126,7 +1126,7 @@ class shopView extends shop {
         Context::set('shipping_address', $cart->getShippingAddress());
 
         $shipping_method_name = $cart->getExtra('shipping_method');
-        $shipping_repository = new ShippingRepository();
+        $shipping_repository = new ShippingMethodRepository();
         $shipping_method = $shipping_repository->getShippingMethod($shipping_method_name, $this->module_srl);
         Context::set('shipping_method', $shipping_method->getDisplayName());
 

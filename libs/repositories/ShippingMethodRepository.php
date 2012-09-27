@@ -5,7 +5,7 @@
  *
  * @author Corina Udrescu (dev@xpressengine.org)
  */
-class ShippingRepository extends AbstractPluginRepository
+class ShippingMethodRepository extends AbstractPluginRepository
 {
     /**
      * Returns all available shipping methods

@@ -406,7 +406,7 @@ class shopModel extends shop
      */
     public function getShippingRepository()
     {
-        return new ShippingRepository();
+        return new ShippingMethodRepository();
     }
 
     /**
