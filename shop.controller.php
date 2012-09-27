@@ -528,11 +528,10 @@
             $currencies = require_once(_XE_PATH_.'modules/shop/shop.currencies.php');
             $args->currency_symbol = $currencies[$args->currency]['symbol'];
 
-            try{
-                $output = executeQuery('shop.updateShopInfo',$args);
-            }
-            catch(Exception $e) {
-                return new Object(-1, $e->getMessage());
+            $output = executeQuery('shop.updateShopInfo',$args);
+            if(!$output->toBool()) {
+                $this->setMessage('failed_updated');
+                return $output;
             }
 
             $module_info = $oModuleModel->getModuleInfoByModuleSrl($this->module_srl);

@@ -1031,6 +1031,11 @@ class shopView extends shop {
             }
             Context::set('products', $output);
             Context::set('total_price', $total);
+            if ($discount = $cart->getDiscount()) {
+                Context::set('discount', $discount);
+                Context::set('discount_value', $discount->getReductionValue());
+                Context::set('discounted_value', $discount->getValueDiscounted());
+            }
         }
         $this->setTemplateFile('cart.html');
 	}
@@ -1094,6 +1099,11 @@ class shopView extends shop {
         Context::set('default_shipping', $cart->getShippingAddress());
         Context::set('extra', $cart->getExtraArray());
         Context::set('cart_products', $products);
+        if ($discount = $cart->getDiscount()) {
+            Context::set('discount', $discount);
+            Context::set('discount_value', $discount->getReductionValue());
+            Context::set('discounted_value', $discount->getValueDiscounted());
+        }
         $this->setTemplateFile('checkout.html');
     }
 

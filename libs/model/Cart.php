@@ -245,10 +245,41 @@ class Cart extends BaseItem
         if ($minOrder = $shopInfo->getMinimumOrder()) {
             // TO DO getPrice() doesn't work without true
             if ($this->getPrice(true) < $minOrder) {
-                throw new Exception("Minimum order amount of $minOrder not met (cart value: {$this->getPrice()})");
+                throw new Exception("Minimum order amount of $minOrder not met");
             }
         }
         return true;
+    }
+
+    /**
+     * @return Discount|null
+     * @throws Exception
+     */
+    public function getDiscount()
+    {
+        require_once __DIR__ . '/../classes/Discount.php';
+        $shop = new ShopInfo($this->module_srl);
+        $cartValue = $this->getTotal();
+        $discountAmount = $shop->getShopDiscountAmount();
+        $discountBeforeVAT = ($shop->getShopDiscountTaxPhase() == 'pre_taxes' ? true : false);
+        $discountMinAmount = $shop->getShopDiscountMinAmount();
+        $discountType = $shop->getShopDiscountType();
+        $vat = $shop->getVAT();
+        $currency = $shop->getCurrencySymbol();
+        if ($discountAmount && $discountType) {
+            if ($discountType == 'fixed_amount') {
+                $discount = new FixedAmountDiscount($cartValue, $discountAmount, $discountMinAmount, $vat, $discountBeforeVAT, $currency);
+            }
+            elseif ($discountType == 'percentage') {
+                $discount = new PercentageDiscount($cartValue, $discountAmount, $discountMinAmount, $vat, $discountBeforeVAT, $currency);
+            }
+            //elseif... add new discount types here after you create the classes
+            else {
+                throw new Exception("Unknown discount type $discountType");
+            }
+            return $discount;
+        }
+        return null;
     }
 
     public function getItemTotal($onlyAvailable=false)

@@ -261,12 +261,28 @@
                     </td>
                 </tr>
                 <!--@end-->
+                <tr cond="$discount">
+                    <td colspan="3">
+                    </td>
+                    <td>{$lang->total}</td>
+                    <td>
+                        {ShopDisplay::priceFormat($cart->getTotal(), $shop->getCurrencySymbol())}
+                    </td>
+                </tr>
+                <tr cond="$discount">
+                    <td colspan="3">
+                    </td>
+                    <td><a href="#" onclick="alert('{$discount->getName()}\n\n{$discount->getDescription()}'); return false">Discount</a></td>
+                    <td>
+                        {ShopDisplay::priceFormat($discount_value, $shop->getCurrencySymbol())}
+                    </td>
+                </tr>
                 <tr style="font-weight: bold;">
                     <td colspan="3">
                     </td>
                     <td>{$lang->grand_total}</td>
                     <td>
-                        {ShopDisplay::priceFormat($cart->getTotal(), $shop->getCurrencySymbol())}
+                        {ShopDisplay::priceFormat(($discount ? $discounted_value : $cart->getTotal()), $shop->getCurrencySymbol())}
                     </td>
                 </tr>
 

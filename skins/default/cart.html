@@ -127,6 +127,28 @@ jQuery(function () {
                     </td>
                 </tr>
 <!--@end-->
+                <tr class="bottom" cond="$discount">
+                    <td></td>
+                    <td>
+                        Total
+                    </td>
+                    <td colspan="2">
+                    </td>
+                    <td colspan=3>
+                        {ShopDisplay::priceFormat($total_price, $shop->getCurrencySymbol())}
+                    </td>
+                </tr>
+                <tr class="bottom" cond="$discount">
+                    <td></td>
+                    <td>
+                        <a href="#" onclick="alert('{$discount->getName()}: {$discount->getDescription()}')">Discount</a>
+                    </td>
+                    <td colspan="2">
+                    </td>
+                    <td colspan=3>
+                        {ShopDisplay::priceFormat($discount_value, $shop->getCurrencySymbol())}
+                    </td>
+                </tr>
                 <tr class="bottom">
                     <td></td>
                     <td>
@@ -135,7 +157,7 @@ jQuery(function () {
                     <td colspan="2">
                     </td>
                     <td>
-                        {ShopDisplay::priceFormat($total_price, $shop->getCurrencySymbol())}
+                        {ShopDisplay::priceFormat(($discount ? $discounted_value : $total_price), $shop->getCurrencySymbol())}
                     </td>
                     <td>
                         <input cond="$cart->countAvailableProducts()" type="submit" value="{$lang->cmd_delete}" name="del_cart_products" id="delete_multiple">
@@ -144,8 +166,7 @@ jQuery(function () {
                         <input type="submit" value="{$lang->cmd_update}" name="upd_cart_products" id="update_multiple">
                     </td>
                 </tr>
-                <!--@if($shop->getShowVAT() == 'Y' && $shop->getVAT() > 0)-->
-                <tr >
+                <tr cond="$shop->getShowVAT() == 'Y' && $shop->getVAT()">
                     <td></td>
                     <td>
                         {$lang->taxes}
@@ -158,7 +179,6 @@ jQuery(function () {
                     <td colspan="2">
                     </td>
                 </tr>
-                <!--@end-->
                 </tbody>
             </table>
 
