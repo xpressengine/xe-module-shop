@@ -17,7 +17,7 @@ class Cart extends BaseItem
         $regdate,
         $last_update;
 
-    protected $addresses;
+    protected $addresses, $productsCache=array();
 
     /** @var CartRepository */
     public $repo;
@@ -156,9 +156,14 @@ class Cart extends BaseItem
      *
      * @return mixed number of items in cart
      */
-    public function count($sumQuantities=false)
+    public function count($sumQuantities=false, $onlyAvailables=false)
     {
         return $this->repo->countCartProducts($this->module_srl, $this->cart_srl, $this->member_srl, $this->session_id, $sumQuantities);
+    }
+
+    public function countAvailableProducts()
+    {
+        return count($this->getAvailableProducts());
     }
 
     public function setProductQuantity($product_srl, $quantity, array $extraParams=array())
@@ -173,49 +178,37 @@ class Cart extends BaseItem
      * @return mixed Cart products
      * @throws Exception
      */
-    public function getProducts($n=null)
+    public function getProducts($n=null, $onlyValidForOrder=false)
     {
         if (!$this->cart_srl) throw new Exception('Cart is not persisted');
+
+        //cache
+        $cacheKey = ($n?$n:"NULL").(string)$onlyValidForOrder;
+        if (isset($this->productsCache[$cacheKey])) return $this->productsCache[$cacheKey];
+        //end cache
+
+        $shopInfo = new ShopInfo($this->module_srl);
+        $checkIfInStock = ($shopInfo->getOutOfStockProducts() == 'Y');
+
         $params = array('cart_srl'=> $this->cart_srl);
         if ($n) $params['list_count'] = $n;
         $output = $this->query('getCartAllProducts', $params, true);
         foreach ($output->data as $i=>&$data) {
             if ($data->product_srl) {
                 $product = new SimpleProduct($data);
+                $product->available = $this->productStillAvailable($product, $checkIfInStock);
+                if (!$product->available && $onlyValidForOrder) {
+                    unset($output->data[$i]);
+                    continue;
+                }
+                $product->cart_product_srl = $data->cart_product_srl;
+                $product->cart_product_title = $data->cart_product_title;
                 $product->quantity = $data->quantity;
                 $data = $product;
             }
             else unset($output->data[$i]);
         }
-        return $output->data;
-    }
-
-    public function getItemTotal()
-    {
-        $output = $this->getProducts();
-        $total = 0;
-        /** @var $product Product */
-        foreach ($output as $product) {
-            $total += $product->price * $product->quantity;
-        }
-        return $total;
-    }
-
-    public function getShippingCost()
-    {
-        $shipping_method = $this->getExtra('shipping_method');
-        if($shipping_method){
-            $shipping_repository = new ShippingRepository();
-            $shipping = $shipping_repository->getShippingMethod($shipping_method);
-            return $shipping->calculateShipping($this, $this->getShippingAddress());
-        } else return 0;
-    }
-
-    public function getTotal()
-    {
-        $itemTotal = $this->getItemTotal();
-        $shippingCost = $this->getShippingCost();
-        return $itemTotal + $shippingCost;
+        return $this->productsCache[$cacheKey] = $output->data;
     }
 
     public function getProductsList(array $args=array())
@@ -239,6 +232,39 @@ class Cart extends BaseItem
             else unset($output->data[$i]);
         }
         return $output;
+    }
+
+    public function getAvailableProducts($n=null)
+    {
+        return $this->getProducts($n, true);
+    }
+
+    public function getItemTotal($onlyAvailable=false)
+    {
+        $output = $onlyAvailable ? $this->getAvailableProducts() : $this->getProducts();
+        $total = 0;
+        /** @var $product Product */
+        foreach ($output as $product) {
+            $total += $product->price * $product->quantity;
+        }
+        return $total;
+    }
+
+    public function getTotal($onlyAvailable=false)
+    {
+        $itemTotal = $this->getItemTotal($onlyAvailable);
+        $shippingCost = $this->getShippingCost();
+        return $itemTotal + $shippingCost;
+    }
+
+    public function getShippingCost()
+    {
+        $shipping_method = $this->getExtra('shipping_method');
+        if($shipping_method){
+            $shipping_repository = new ShippingRepository();
+            $shipping = $shipping_repository->getShippingMethod($shipping_method);
+            return $shipping->calculateShipping($this, $this->getShippingAddress());
+        } else return 0;
     }
 
     public function removeProducts(array $product_srls)

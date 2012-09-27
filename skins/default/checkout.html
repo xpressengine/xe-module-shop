@@ -266,7 +266,7 @@
                     </td>
                     <td>Total</td>
                     <td>
-                        {ShopDisplay::priceFormat($cart->getTotal(), $shop->getCurrencySymbol())}
+                        {ShopDisplay::priceFormat($cart->getTotal(true), $shop->getCurrencySymbol())}
                     </td>
                 </tr>
                 </tbody>

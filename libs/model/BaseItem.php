@@ -75,8 +75,13 @@ abstract class BaseItem
 		{
 			if (property_exists(get_called_class(), $field)) {
 				$this->$field = $value;
+                unset($data[$field]);
 			}
 		}
+        //as for the rest...
+        foreach ($data as $field => $value) {
+            $this->setMeta($field, $value);
+        }
 	}
 
     public function query($name, $params = null, $array = false)

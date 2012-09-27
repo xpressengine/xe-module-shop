@@ -77,7 +77,7 @@ jQuery(function () {
                 <thead>
                     <tr cond="!empty($products)">
                         <th scope="col">
-                            <input type="checkbox" class="inputCheck" onclick="jQuery(this).parents('table').find('input[type=checkbox].boxlist').attr('checked', jQuery(this).is(':checked'))"/>
+                            <input cond="$cart->countAvailableProducts()" type="checkbox" class="inputCheck" onclick="jQuery(this).parents('table').find('input[type=checkbox].boxlist').attr('checked', jQuery(this).is(':checked'))"/>
                         </th>
                         <th scope="col" class="title">Product</th>
                         <th scope="col">{$lang->quantity}</th>
@@ -129,7 +129,7 @@ jQuery(function () {
                         {$total_price}
                     </td>
                     <td>
-                        <input type="submit" value="{$lang->cmd_delete}" name="del_cart_products" id="delete_multiple">
+                        <input cond="$cart->countAvailableProducts()" type="submit" value="{$lang->cmd_delete}" name="del_cart_products" id="delete_multiple">
                     </td>
                     <td>
                         <input type="submit" value="{$lang->cmd_update}" name="upd_cart_products" id="update_multiple">

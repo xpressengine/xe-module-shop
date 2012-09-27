@@ -91,9 +91,12 @@ class Order extends BaseItem
         //set the new links
         $total = 0;
         /** @var $productWithQuantity SimpleProduct */
-        foreach ($cart->getProducts() as $productWithQuantity) {
-            $this->repo->insertOrderProduct($this->order_srl, $productWithQuantity, $productWithQuantity->quantity);
-            $total += $productWithQuantity->quantity * $productWithQuantity->price;
+        $products = $cart->getProducts();
+        foreach ($products as $productWithQuantity) {
+            if ($productWithQuantity->available && $productWithQuantity->product_srl) {
+                $this->repo->insertOrderProduct($this->order_srl, $productWithQuantity, $productWithQuantity->quantity);
+                $total += $productWithQuantity->quantity * $productWithQuantity->price;
+            }
         }
         $this->total = $total;
         if ($calculateTotal) $this->save();

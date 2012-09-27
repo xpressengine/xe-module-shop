@@ -171,7 +171,7 @@ class shopView extends shop {
 
         // Load cart preview (for ajax cart feature in header)
         if ($cart) {
-            $preview_products = $cart->getProducts(3);
+            $preview_products = $cart->getProducts(3, true);
             Context::set('preview_products', $preview_products);
         }
 
@@ -1024,7 +1024,9 @@ class shopView extends shop {
             $total = 0;
             /** @var $product Product */
             foreach ($output->data as $product) {
-                $total += $product->price * $product->quantity;
+                if ($product->available) {
+                    $total += $product->price * $product->quantity;
+                }
             }
             Context::set('products', $output);
             Context::set('total_price', $total);
@@ -1065,7 +1067,9 @@ class shopView extends shop {
     {
         /** @var $cart Cart */
         if (!(($cart = Context::get('cart')) instanceof Cart)) throw new Exception("No cart, you shouldn't be here");
-        if (!$cart->items) {
+
+        $products = $cart->getAvailableProducts();
+        if (empty($products)) {
             throw new Exception('Cart is empty, you have nothing to checkout');
         }
 
@@ -1088,7 +1092,7 @@ class shopView extends shop {
         Context::set('default_billing', $cart->getBillingAddress());
         Context::set('default_shipping', $cart->getShippingAddress());
         Context::set('extra', $cart->getExtraArray());
-        Context::set('cart_products', $cart->getProducts());
+        Context::set('cart_products', $products);
         $this->setTemplateFile('checkout.html');
     }
 
