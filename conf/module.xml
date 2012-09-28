@@ -221,7 +221,7 @@
         <action name="procShopPaymentNotify" type="controller" />
 
         <!-- Extra menu -->
-        <action name="dispShopToolExtraMenuList" type="view" />
+        <action name="dispShopToolPages" type="view" />
         <action name="dispShopToolExtraMenuInsert" type="view" />
         <action name="dispShopToolMenus" type="view" />
         <action name="dispShopToolExtraMenuEdit" type="view" />

@@ -378,7 +378,7 @@
         ),
 		array(
             'dispMenuAdminSiteMap'=>'All menus',
-			'dispShopToolExtraMenuList'=>'All pages',
+			'dispShopToolPages'=>'All pages',
 			'dispShopToolExtraMenuInsert'=>'Add page'
 		),
         array(
@@ -493,12 +493,12 @@
 	$lang->success_upload = 'It is successfully uploaded.';
 	$lang->shop_export_waiting = 'Waiting';
 
-	$lang->menu_name = 'Menu Name';
+	$lang->page_title = 'Page title';
 	$lang->msg_module_count_exceed = 'You cannot add this type of module anymore.';
     $lang->cmd_shop_new_page = 'New Text Page';
     $lang->cdm_shop_new_module_page = 'New Module Page';
 	$lang->msg_limit_shop_extra_mid = 'Only format of alphabets + [alphabets, numbers, and underscore(_)] is allowed.';
-	$lang->about_shop_extra_menu = 'You may add modules from XpressEngine as menu items to your shop.';
+	$lang->about_shop_pages = 'You may add pages to your shop and later include them in one of your menus';
 	$lang->cmd_shop_extra_menu_config = 'Additional Menu';
 	$lang->cmd_shop_new_page = 'New Text Page';
 	$lang->cmd_shop_new_module_page = 'New Module Page';

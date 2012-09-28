@@ -1931,7 +1931,7 @@
 
 			$shopModel->updateMenuItem($menu_srl, $menu_item_srl, $menu_name);
 
-			$returnUrl = getNotEncodedUrl('', 'vid', $this->vid, 'act', 'dispShopToolExtraMenuList');
+			$returnUrl = getNotEncodedUrl('', 'vid', $this->vid, 'act', 'dispShopToolPages');
 			$this->setRedirectUrl($returnUrl);
 		}
 
@@ -1950,6 +1950,7 @@
                 return $output;
             }
 
+            $this->setMessage('success_registed');
             $return_url = getNotEncodedUrl('', 'act', 'dispShopToolMenus', 'mid', $this->mid);
             $this->setRedirectUrl($return_url);
         }
@@ -2112,7 +2113,7 @@
             $shopModel->insertMenuItem($shop_menu_srl, 0, $menu_url, $menu_name);
 
             $this->setMessage('success_registed');
-            $this->setRedirectUrl(getNotEncodedUrl('', 'vid', $this->mid, 'act', 'dispShopToolExtraMenuList'));
+            $this->setRedirectUrl(getNotEncodedUrl('', 'vid', $this->mid, 'act', 'dispShopToolPages'));
         }
 
         /**

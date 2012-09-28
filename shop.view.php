@@ -1464,20 +1464,17 @@ class shopView extends shop {
 	 * Displays all extra menu elements
 	 * @return object
 	 */
-	function dispShopToolExtraMenuList(){
-		/**
-		 * @var shopModel $shopModel
-		 */
-		$shopModel = getModel('shop');
-		$shop_menu_srl = $shopModel->getShopMenuSrl($this->site_srl);
+	function dispShopToolPages(){
 
-		/**
-		 * @var menuAdminModel $menuModel
-		 */
-		$menuModel = getAdminModel('menu');
-		$menu_items = $menuModel->getMenuItems($shop_menu_srl);
-
-		Context::set('menu_list',$menu_items->data);
+        /**
+         * @var moduleModel $oModuleModel
+         */
+        $oModuleModel = getModel('module');
+        $args = new stdClass();
+        $args->site_srl = $this->site_srl;
+        $args->module = 'page';
+        $shop_pages = $oModuleModel->getMidList($args);
+        Context::set('shop_pages', $shop_pages);
 	}
 
     /**
