@@ -377,10 +377,9 @@
             'dispShopToolManageNewsletters'=>'Newsletters',
         ),
 		array(
-            'dispMenuAdminSiteMap'=>'XE Menus',
-			'dispShopToolExtraMenuList'=>'All items',
-			'dispShopToolExtraMenuInsert'=>'Add page item',
-            'dispShopToolMenus'=>'Shop menus',
+            'dispMenuAdminSiteMap'=>'All menus',
+			'dispShopToolExtraMenuList'=>'All pages',
+			'dispShopToolExtraMenuInsert'=>'Add page'
 		),
         array(
             'dispShopToolStatisticsVisitor'=>'Visitor statistics',
@@ -388,6 +387,7 @@
         array(
             'dispShopToolLayoutConfigSkin'=>'Skins',
             'dispShopToolLayoutConfigEdit'=>'HTML&middot;CSS Edit',
+            'dispShopToolMenus'=>'Menus',
         ),
         array(
             'dispShopToolManageAccount'=>'Admin account',
