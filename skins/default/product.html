@@ -2,6 +2,223 @@
 <include target="_sidebar.html" />
 <include target="product_variants_datasource.html" />
 
+<script type="text/javascript">
+    jQuery(document).ready( function() {
+
+        $ = jQuery;
+
+        Gallery = function() {
+
+            this.init();
+
+        }
+
+        $.extend( Gallery.prototype, {
+
+            init: function() {
+
+                initH = 0, initW = 0,
+                mouseX = 0, mouseY = 0,
+                largeImages = new Array(),
+                zoomImages = new Array(),
+                currentView = 1,
+                viewable = 4,
+                zoomRatio = 3,
+                obj = $('#product-images'),
+                main = obj.find('#product-image'),
+                thumbs = obj.find('#thumbnails'),
+                zoom = obj.find('#product-image-zoom'),
+                prev = obj.find('.prev'),
+                next = obj.find('.next'),
+                thumbNr = thumbs.children('img').size(),
+                preloader = obj.find('.preloading'),
+                mainImage = '<img src="{$product->getPrimaryImage()->getThumbnailPath(340, 240)}" />',
+                mainImageH = 0,
+                mainImageW = 0,
+                mainImageOffset = 0,
+                <!--@foreach($product->images as $image)-->
+                largeImages.push('<img src="{$image->getThumbnailPath(340, 240)}" />');
+                zoomImages.push('<img src="{$image->getThumbnailPath(1020, 720)}" />');
+                <!--@end-->
+                for ( i=0; i<=largeImages.length; i++ ) {
+                    if ( largeImages[i] == mainImage ) current = i+1;
+                }
+
+                prev.click($.proxy(this.goToPrev, this));
+                next.click($.proxy(this.goToNext, this));
+
+                this.showCurrentImage();
+                this.initThumbs();
+                this.initZoom();
+
+                $(document).mousemove( function(e) {
+                    mouseX = e.pageX;
+                    mouseY = e.pageY;
+                })
+
+            },
+
+            initThumbs: function() {
+
+                thumbs.children().click(this.showMainImage);
+
+            },
+
+            initZoom: function() {
+
+                zoom.mouseenter( $.proxy(function() {
+
+                    zoom.children().show();
+                    this.initZoomImage();
+
+                },this));
+
+                zoom.mouseleave( function () {
+
+                    var img = zoom.find('img');
+                    img.stop(true, true);
+                    zoom.children().hide();
+                    zoom.off('mousemove');
+
+                });
+
+            },
+
+            initZoomImage: function() {
+
+                var img = zoom.find('img');
+                initH = img.outerHeight();
+                initW = img.outerWidth();
+//                img.height(mainImageH);
+//                img.width(mainImageW);
+//                img.css('top',mainImageOffset.top - zoom.offset().top);
+//                img.css('left',mainImageOffset.left - zoom.offset().left);
+//
+//                img.animate({
+//                        height: initH,
+//                        width: initW
+//                    },{
+//                        duration: 1,
+//                        step: this.updateImagePosition
+//                    }
+//                );
+
+                zoom.mousemove(this.updateImagePosition);
+
+            },
+
+            updateImagePosition: function() {
+
+                localY = mouseY - zoom.offset().top;
+                localX = mouseX - zoom.offset().left;
+                var top = - (zoom.find('img').outerHeight() - zoom.outerHeight()) * localY/zoom.outerHeight();
+                var left = - (zoom.find('img').outerWidth() - zoom.outerWidth()) * localX/zoom.outerWidth();
+
+                zoom.find('img').css('top',top);
+                zoom.find('img').css('left',left);
+
+            },
+
+            goToPrev: function(e) {
+
+                if (e) e.preventDefault();
+
+                if (currentView > 1) {
+                    thumbs.animate({
+                                left: '+=92'
+                            },
+                            300,
+                            'linear',
+                            this.decreaseViewCounter
+                    );
+                }
+
+            },
+
+            goToNext: function(e) {
+
+                if (e) e.preventDefault();
+
+                if (currentView < thumbNr - viewable) {
+                    thumbs.animate({
+                                left: '-=92'
+                            },
+                            300,
+                            'linear',
+                            this.increaseViewCounter
+                    );
+                }
+
+            },
+
+            increaseViewCounter: function() {
+
+                currentView++;
+
+            },
+
+            decreaseViewCounter: function() {
+
+                currentView--;
+
+            },
+
+            hideAllImages: function() {
+
+                main.children().hide();
+
+            },
+
+            showCurrentImage: function() {
+
+                this.hideAllImages();
+                var mainImg = main.children(':nth-child(' + current + ')');
+                mainImg.show();
+                mainImg.one( 'load', function() {
+
+                    $(this).show();
+                    preloader.hide();
+                    mainImageOffset = $(this).offset();
+                    mainImageW = $(this).outerWidth();
+                    mainImageH = $(this).outerHeight();
+
+                }).each( function() {
+
+                    if (this.complete) $(this).trigger('load');
+
+                });
+            },
+
+            showMainImage: function(e) {
+
+                main.html(largeImages[$(this).index()]);
+                zoom.html(zoomImages[$(this).index()]);
+
+                var img = main.find('img');
+                img.hide();
+                preloader.show();
+                img.one( 'load', function() {
+
+                    $(this).show();
+                    preloader.hide();
+                    mainImageOffset = $(this).offset();
+                    mainImageW = $(this).outerWidth();
+                    mainImageH = $(this).outerHeight();
+
+                }).each( function() {
+
+                    if (this.complete) $(this).trigger('load');
+
+                });
+            }
+
+        });
+
+        gallery = new Gallery();
+
+    });
+</script>
+
 <div style="margin-left: 244px;">
     <div class="breadcrumbs">
         <span class="breadcrumbs-title">
@@ -11,13 +228,22 @@
 </div>
 
 <div id="body-content" class="body-two-columns main-content">
+
     <div id="product-images">
         <div id="product-image">
             <img src="{$product->getPrimaryImage()->getThumbnailPath(340, 240)}" />
         </div>
-        <div id="thumbnails">
-            <!-- DO NOT ADD SPACES IN FOREACH BECAUSE IT ADDS SPACES IN TEMPLATE -->
-            <!--@foreach($product->images as $image)--><img src="{$image->getThumbnailPath(74)}" /><!--@end-->
+        <div id="product-image-zoom">
+            <img src="{$product->getPrimaryImage()->getThumbnailPath(1020, 1020)}" />
+        </div>
+        <img class="preloading" src="img/loading.gif" alt="Loading" />
+        <a class="prev" href="#">Prev</a>
+        <a class="next" href="#">Next</a>
+        <div id="thumbnails-container">
+            <div id="thumbnails">
+                <!-- DO NOT ADD SPACES IN FOREACH BECAUSE IT ADDS SPACES IN TEMPLATE -->
+                <!--@foreach($product->images as $image)--><img src="{$image->getThumbnailPath(74)}" /><!--@end-->
+            </div>
         </div>
     </div>
 
@@ -34,9 +260,8 @@
 
     <include target="add_to_cart"/>
 
-
     <div id="description">
-    <p>{$product->description}</p>
+        <p>{$product->description}</p>
     </div>
 
     <div id="additional_info">
@@ -56,9 +281,7 @@
     <!--@end-->
     </div>
 
-
     <a href="{getUrl('vid', $mid, 'act', 'dispShop', 'product_srl', '')}">Go back</a>
 </div>
 
 <include target="_footer.html" />
-
