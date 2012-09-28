@@ -250,12 +250,15 @@ class Cart extends BaseItem
         return true;
     }
 
+    private $discount; //discount short cache
+
     /**
      * @return Discount|null
      * @throws Exception
      */
     public function getDiscount()
     {
+        if ($this->discount) return $this->discount;
         require_once __DIR__ . '/../classes/Discount.php';
         $shop = new ShopInfo($this->module_srl);
         $cartValue = $this->getTotal();
@@ -276,7 +279,7 @@ class Cart extends BaseItem
             else {
                 throw new Exception("Unknown discount type $discountType");
             }
-            return $discount;
+            return $this->discount = $discount;
         }
         return null;
     }

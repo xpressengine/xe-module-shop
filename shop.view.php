@@ -168,6 +168,11 @@ class shopView extends shop {
         $logged_info = Context::get('logged_info');
         $cart = $cartRepo->getCart($this->module_srl, null, $logged_info->member_srl, session_id());
         Context::set('cart', $cart);
+        if ($discount = $cart->getDiscount()) {
+            Context::set('discount', $discount);
+            Context::set('discount_value', $discount->getReductionValue());
+            Context::set('discounted_value', $discount->getValueDiscounted());
+        }
 
         // Load cart preview (for ajax cart feature in header)
         Context::set('cart_available_products_count', $cart ? $cart->countAvailableProducts() : 0);

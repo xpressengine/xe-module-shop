@@ -26,10 +26,14 @@
                         </li>
                         <!--@endforeach-->
                     </ul>
-                    <!--@if($cart_product->price)-->
+                    <!--@if(!empty($preview_products))-->
+                        <p id="cart-discount" class="clearfix" cond="$discount">
+                            <span class="f-left">{$discount->getName()}</span>
+                            <span class="f-right">{ShopDisplay::priceFormat($discount->getReductionValue(), $shop->getCurrencySymbol())}</span>
+                        </p>
                         <p id="cart-costs" class="clearfix">
                             <span class="f-left">{$lang->grand_total}:</span>
-                            <span class="f-right">{ShopDisplay::priceFormat($cart->getTotal(), $shop->getCurrencySymbol())}</span>
+                            <span class="f-right">{ShopDisplay::priceFormat($cart->getTotal(true, true), $shop->getCurrencySymbol())}</span>
                         </p>
                         <p>
                             <span class="f-left"><a href="{getURL('', 'act','dispShopCart')}">{$lang->edit_cart}</a></span>
