@@ -14,7 +14,7 @@
     <!-- contentNavigation -->
     <div class="contentNavigation">
         <ul class="sortDefault">
-            <a href="{getUrl('act','dispShopToolAddCustomer')}">Add a new customer</a>
+            <a href="{getUrl('act','dispShopToolAddCustomer')}">{$lang->add_new_customer}</a>
         </ul>
     </div>
     <!-- /contentNavigation -->
@@ -35,7 +35,7 @@
 
     <!-- Table Data -->
     <fieldset>
-        <legend>Customer Management</legend>
+        <legend>{$lang->customer_management}</legend>
         <form action="" method="post">
             <table border="1" cellspacing="0" summary="{$lang->content_list}" class="tableData">
                 <thead>
@@ -60,7 +60,7 @@
 
                 <tr cond="empty($customers_list)">
                     <td cond="!$search" class="noData" colspan="9"><p>{sprintf($lang->no_customers, getUrl('', 'act', 'dispShopToolAddCustomer'))}</p></td>
-                    <td cond="$search" class="noData" colspan="9"><p>No search results</p></td>
+                    <td cond="$search" class="noData" colspan="9"><p>{$lang->no_search_results}</p></td>
                 </tr>
                 <!--@foreach($customers_list as $no => $customer)-->
                 <tr>

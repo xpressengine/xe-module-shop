@@ -14,7 +14,7 @@
     <!-- contentNavigation -->
     <div class="contentNavigation">
         <ul class="sortDefault">
-            <a href="{getUrl('act','dispShopToolAddAttribute')}">Add a new attribute</a>
+            <a href="{getUrl('act','dispShopToolAddAttribute')}">{$lang->add_new_attribute}</a>
         </ul>
     </div>
     <!-- /contentNavigation -->
@@ -37,7 +37,7 @@
 
     <!-- Table Data -->
     <fieldset>
-        <legend>Attribute Management</legend>
+        <legend>{$lang->attribute_management}</legend>
         <form action="" method="post">
             <table border="1" cellspacing="0" summary="{$lang->content_list}" class="tableData">
                 <thead>
@@ -58,7 +58,7 @@
 
                 <tr cond="empty($attributes_list)">
                     <td cond="!$search" class="noData" colspan="9"><p>{sprintf($lang->no_attribute, getUrl('', 'act', 'dispShopToolAddAttribute'))}</p></td>
-                    <td cond="$search" class="noData" colspan="9"><p>no search results</p></td>
+                    <td cond="$search" class="noData" colspan="9"><p>{$lang->no_search_results}</p></td>
                 </tr>
                 <!--@foreach($attributes_list as $no => $attribute)-->
                 <tr>

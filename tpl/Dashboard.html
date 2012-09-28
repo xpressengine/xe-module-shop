@@ -13,7 +13,7 @@
 <!-- Dashboard Statistic -->
 <div class="section dashboardStatistic">
     <div class="statistic">
-        <h4><span>ALL TIME <em>{date('Y.m.d')}</em></span></h4>
+        <h4><span>{$lang->all_time} <em>{date('Y.m.d')}</em></span></h4>
         <dl class="lifetime_sales">
             <dt>{$lang->lifetime_sales}</dt>
             <dd>{$stat->lifetime_sales} {$shop->getCurrencySymbol()}</dd>
@@ -70,7 +70,7 @@
         <!-- Last 5 orders -->
         <div class="section">
 
-            <h4 class="dashboardH4">Last 5 orders</h4>
+            <h4 class="dashboardH4">{$lang->last_orders}</h4>
             <div class="dashboardWire">
                 <!--@if(count($recent_orders))-->
                 <ul class="lastOrder">
@@ -99,7 +99,7 @@
 
         <!-- Top Customers -->
         <div class="section">
-            <h4 class="dashboardH4">Top 5 customers</h4>
+            <h4 class="dashboardH4">{$lang->top_customers}</h4>
             <div class="dashboardWire">
                 <!--@if(count($top_customers))-->
 
@@ -124,7 +124,7 @@
 
         <!-- Most ordered products -->
         <div class="section">
-            <h4 class="dashboardH4">5 most ordered products</h4>
+            <h4 class="dashboardH4">{$lang->most_ordered_products}</h4>
             <div class="dashboardWire">
                 <!--@if(count($top_products))-->
                 <ul class="topProduct">

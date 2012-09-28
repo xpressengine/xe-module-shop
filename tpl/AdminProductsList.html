@@ -9,7 +9,7 @@
     </ul>
 </div>
 <!--@end-->
-<legend>Product Management</legend>
+<legend>{$lang->product_management}</legend>
 <form action="" method="post">
 <table border="1" cellspacing="0" summary="{$lang->content_list}" class="tableData">
 <thead>
@@ -37,7 +37,7 @@
         <div cond="($search||$filterCategory)&&$productsCount" style="text-align: center; font-weight: bold;">
             <p>No products
                 <span cond="$filterCategory">
-                    in <span cond="$search">in </span> category "<a href="{$filterCategory->getLinkBackend()}" style="color: #EA3F22">{$filterCategory->title}</a>"
+                    in <span cond="$search">in </span> {$lang->category} "<a href="{$filterCategory->getLinkBackend()}" style="color: #EA3F22">{$filterCategory->title}</a>"
                 </span>
                 <span cond="$search">
                      with a {$column?$column:'title'} like *<span style="color: #EA3F22" cond="$search">{$search}</span>*

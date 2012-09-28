@@ -4,7 +4,7 @@
 <!-- Content -->
 <div id="content">
     <div class="dashboardHeader">
-        <h3 class="h3">Manage Invoices</h3>
+        <h3 class="h3">{$lang->manage_invoices}</h3>
     </div>
     <div cond="$XE_VALIDATOR_MESSAGE" class="message {$XE_VALIDATOR_MESSAGE_TYPE}">
         <p>{$XE_VALIDATOR_MESSAGE}</p>
@@ -31,7 +31,7 @@
 
     <!-- Table Data -->
     <fieldset>
-        <legend>Invoices List</legend>
+        <legend>{$lang->invoices_list}</legend>
         <form action="" method="post">
             <table border="1" cellspacing="0" summary="{$lang->content_list}" class="tableData">
                 <thead>
@@ -39,10 +39,10 @@
                     <th scope="col">
                         <input type="checkbox" class="inputCheck" onclick="jQuery('input.boxlist').click()"/>
                     </th>
-                    <th scope="col">Invoice #</th>
-                    <th scope="col">Invoice for order #</th>
-                    <th scope="col" class="title">Comments</th>
-                    <th scope="col">Invoiced on</th>
+                    <th scope="col">{$lang->invoice} #</th>
+                    <th scope="col">{$lang->invoice_for_order} #</th>
+                    <th scope="col" class="title">{$lang->comments}</th>
+                    <th scope="col">{$lang->invoice_on}</th>
                     <th scope="col">&nbsp;</th>
                 </tr>
                 </thead>
@@ -50,8 +50,8 @@
 
                 <tr cond="empty($invoices)">
                     <td class="noData" colspan="9">
-                        <p cond="!$search">No invoices</p>
-                        <p cond="$search">No search results</p>
+                        <p cond="!$search">{$lang->no_invoices}</p>
+                        <p cond="$search">{$lang->no_search_results}</p>
                     </td>
                 </tr>
                 <!--@foreach($invoices as $invoice)-->
@@ -107,9 +107,3 @@
 <!-- Extension -->
 
 <!--#include("_tool_footer.html")-->
-
-<script type="text/javascript">
-    if (!xe.lang) xe.lang = {};
-    xe.lang.msg_confirm_delete_attribute = "{$lang->msg_confirm_delete_attribute}";
-    xe.lang.msg_confirm_delete_attributes = '{$lang->msg_confirm_delete_attributes}';
-</script>

@@ -559,7 +559,33 @@
     $lang->select_configurable_attribute = 'Select configurable attribute';
     $lang->notice = 'Notice';
     $lang->edit_simple_product = 'Edit simple product';
-
-    $lang->header_menu = 'Header menu';
+	$lang->product_management = 'Product Management';
+    $lang->show_hide_associated_products = 'Show / Hide associated products';
+    $lang->all_time = 'ALL TIME';
+    $lang->last_orders = 'Last 5 orders';
+    $lang->top_customers = 'Top 5 customers';
+    $lang->most_ordered_products = '5 most ordered products';
+	$lang->header_menu = 'Header menu';
     $lang->footer_menu = 'Footer menu';
+    $lang->display_name = 'Display name';
+    $lang->is_active = 'Is active';
+    $lang->go_back = 'Go back';
+    $lang->or = 'or';
+    $lang->edit_page = 'Edit page';
+    $lang->import_products_from_zip = 'Import products from zip file';
+
+    $lang->new_invoice_for_order = 'New invoice for Order';
+    $lang->add_new_address = 'Add a new address';
+    $lang->address_management = 'Address Management';
+    $lang->add_new_attribute = 'Add a new attribute';
+    $lang->attribute_management = 'Attribute Management';
+    $lang->no_search_results = 'no search results';
+    $lang->add_new_customer = 'Add a new customer';
+    $lang->customer_management = 'Customer Management';
+    $lang->manage_invoices = 'Manage Invoices';
+    $lang->invoices_list ='Invoices List';
+    $lang->invoice = 'Invoice';
+    $lang->invoice_for_order = 'Invoice for order';
+    $lang->invoice_on = 'Invoiced on';
+    $lang->no_invoices = 'No invoices';
 ?>
