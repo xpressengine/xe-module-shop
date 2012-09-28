@@ -177,8 +177,15 @@ class shopView extends shop {
         }
 
         // Load menu for display on all pages (in header)
-        $shop_menu = $oShopModel->getShopMenu($this->site_srl);
-        Context::set('menu', $shop_menu);
+//        $shop_menu = $oShopModel->getShopMenu($this->site_srl);
+//        Context::set('menu', $shop_menu);
+        $shop = Context::get('shop');
+        $menus = $shop->getMenus();
+        foreach($menus as $menu_key => $menu_srl)
+        {
+            $menu = new ShopMenu($menu_srl);
+            Context::set($menu_key, $menu->getHtml());
+        }
 
         // Load categories for display in search dropdown (header)
         $category_repository = new CategoryRepository();
@@ -1504,6 +1511,18 @@ class shopView extends shop {
 
     }
 
+
+    public function dispShopToolMenus()
+    {
+        $shop = Context::get('shop');
+        $menus = $shop->getMenus();
+        Context::set('menus', $menus);
+
+        $oMenuAdminModel = getAdminModel('menu');
+        $all_site_menus = $oMenuAdminModel->getMenus();
+        Context::set('all_site_menus', $all_site_menus);
+    }
+
 	/**
 	 * Edit menu item
 	 *
@@ -1520,33 +1539,6 @@ class shopView extends shop {
 		$menuModel = getAdminModel('menu');
 		$menu_item = $menuModel->getMenuItemInfo($menu_item_srl);
 		Context::set('menu_item', $menu_item);
-	}
-
-	/**
-	 * Add existing module to the the custom menu
-	 *
-	 * @return Object
-	 */
-	public function dispShopToolExtraMenuModuleInsert(){
-		$oModuleModel = getModel('module');
-
-		// Retrieve just modules of type 'service' out of all installed modules
-		$installed_module_list = $oModuleModel->getModulesXmlInfo();
-		foreach($installed_module_list as $key => $val) {
-			if($val->category != 'service') continue;
-			if(!$val->default_index_act) continue;
-			$service_modules[] = $val;
-		}
-		Context::set('service_modules', $service_modules);
-
-
-        /**
-         * @var adminAdminModel $adminModel
-         */
-        $adminModel = getAdminModel('admin');
-        // Retrieve all sites in XE
-        $site_list = $adminModel->getAllSitesThatHaveModules();
-        Context::set("site_list", $site_list);
 	}
 
 	/**

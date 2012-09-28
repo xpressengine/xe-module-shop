@@ -19,5 +19,6 @@
   <column name="discount_type" type="varchar" size="45"/>
   <column name="discount_amount" type="number" size="20" />
   <column name="discount_tax_phase" type="varchar" size="45" />
+  <column name="menus" type="varchar" size="500" />
   <column name="regdate" type="date" notnull="notnull" />
 </table>

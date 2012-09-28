@@ -1,0 +1,40 @@
+<include target="_tool_header.html" />
+<load target="css/form.css" />
+
+
+<!-- Content -->
+<div id="content">
+    <!-- contentHeader -->
+    <div class="contentHeader">
+        <h3 class="h3">Shop menus</h3>
+    </div>
+
+    <div cond="$XE_VALIDATOR_MESSAGE" class="message {$XE_VALIDATOR_MESSAGE_TYPE}">
+        <p>{$XE_VALIDATOR_MESSAGE}</p>
+    </div>
+    <!-- /contentHeader -->
+
+    <form action="./" method="post">
+        <!--@foreach($menus as $menu_key => $menu_srl)-->
+            <p>
+                <label>{$menu_key}</label>
+                <select name="menus[{$menu_key}]">
+                    <!--@foreach($all_site_menus as $site_menu)-->
+                    <option value="{$site_menu->menu_srl}"
+                            <!--@if($site_menu->menu_srl == $menu_srl)-->
+                                selected="selected"
+                            <!--@end-->
+                            >
+                        {$site_menu->title}
+                    </option>
+                    <!--@end-->
+                </select>
+            </p>
+        <!--@end-->
+    </form>
+
+</div>
+<!-- /Content -->
+
+<include target="_tool_menu.html" />
+<include target="_tool_footer.html" />

@@ -93,6 +93,8 @@
             if($oDB->isIndexExists("shop_payment_methods","unique_name")) return true;
             if($oDB->isIndexExists("shop_shipping_methods","unique_name")) return true;
 
+            if(!$oDB->isColumnExists("shop","menus")) return true;
+
             return false;
         }
 
@@ -265,6 +267,10 @@
             {
                 $oDB->dropIndex("shop_shipping_methods", "unique_name", true);
                 $oDB->addIndex("shop_shipping_methods", "unique_module_srl_name", array('module_srl', 'name'), true);
+            }
+
+            if(!$oDB->isColumnExists("shop","menus")) {
+                $oDB->addColumn('shop',"menus","varchar", 500);
             }
 
            return new Object(0, 'success_updated');

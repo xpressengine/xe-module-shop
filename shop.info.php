@@ -214,6 +214,37 @@
             return $this->get('user_id');
         }
 
+        public function getMenus()
+        {
+            if(!$this->isExists()) return;
+            if(is_array($this->get('menus')))
+            {
+                return $this->get('menus');
+            }
+            else
+            {
+                $menus = unserialize($this->get('menus'));
+                if($menus)
+                    return $menus;
+                return array();
+            }
+        }
+
+        public function getMenu($menu_type)
+        {
+            if(!$this->isExists()) return;
+            $menus = $this->get('menus');
+            if(isset($menus))
+            {
+                if(isset($menus[$menu_type]))
+                {
+                    return $menus[$menu_type];
+                }
+                return null;
+            }
+            return null;
+        }
+
 
         public function isExists() {
             return $this->shop_srl?true:false;

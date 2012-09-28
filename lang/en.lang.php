@@ -377,10 +377,10 @@
             'dispShopToolManageNewsletters'=>'Newsletters',
         ),
 		array(
-            'dispMenuAdminSiteMap'=>'Menus',
+            'dispMenuAdminSiteMap'=>'XE Menus',
 			'dispShopToolExtraMenuList'=>'All items',
 			'dispShopToolExtraMenuInsert'=>'Add page item',
-			'dispShopToolExtraMenuModuleInsert'=>'Add menu item'
+            'dispShopToolMenus'=>'Shop menus',
 		),
         array(
             'dispShopToolStatisticsVisitor'=>'Visitor statistics',

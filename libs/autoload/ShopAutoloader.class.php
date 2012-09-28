@@ -52,6 +52,7 @@ class ShopAutoloader
                         $this->getFile(__DIR__ . "/../../plugins_shipping/$itemClass.php", $itemClass);
                     }
                 }
+                if(in_array($class, array('ShopMenu'))) return;
                 $this->getFile(__DIR__ . "/../repositories/$repoClass.php", $repoClass);
             }
         }

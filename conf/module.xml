@@ -223,7 +223,7 @@
         <!-- Extra menu -->
         <action name="dispShopToolExtraMenuList" type="view" />
         <action name="dispShopToolExtraMenuInsert" type="view" />
-        <action name="dispShopToolExtraMenuModuleInsert" type="view" />
+        <action name="dispShopToolMenus" type="view" />
         <action name="dispShopToolExtraMenuEdit" type="view" />
         <action name="procShopServiceGetModulesByTypeAndSiteSrl" type="controller" standalone="true"/>
         <action name="procShopToolInsertMenuItem" type="controller" standalone="true"/>
