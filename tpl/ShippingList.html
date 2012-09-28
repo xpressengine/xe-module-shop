@@ -34,7 +34,7 @@
 <div id="content">
     <!-- contentHeader -->
     <div class="contentHeader">
-        <h3 class="h3">Shipping</h3>
+        <h3 class="h3">{$lang->shipping}</h3>
     </div>
 
     <div cond="$XE_VALIDATOR_MESSAGE" class="message {$XE_VALIDATOR_MESSAGE_TYPE}">
@@ -48,9 +48,9 @@
                 <th scope="col" width="25px">
                     <input type="checkbox" class="inputCheck" onclick="jQuery('input.boxlist').click()" />
                 </th>
-                <th scope="col" width="35px">Settings</th>
-                <th scope="col">Display name</th>
-                <th scope="col">Active</th>
+                <th scope="col" width="35px">{$lang->settings}</th>
+                <th scope="col">{$lang->display_name}</th>
+                <th scope="col">{$lang->active}</th>
             </tr>
         </thead>
         <tbody>
@@ -62,7 +62,7 @@
                 <td>
                     <span class="btnGray medium">
                         <a href="{getUrl('act', 'dispShopToolEditShipping', 'name', $shipping_method->name)}">
-                            Settings
+                            {$lang->settings}
                         </a>
                     </span>
                 </td>

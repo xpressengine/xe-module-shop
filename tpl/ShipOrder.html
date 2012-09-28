@@ -5,7 +5,7 @@
 <div id="content">
     <!-- contentHeader -->
     <div class="contentHeader postListHeader">
-        <h3 class="h3">New shipment for Order {$order->order_srl}</h3>
+        <h3 class="h3">{$lang->new_shipment_for_order} {$order->order_srl}</h3>
     </div>
     <div cond="$XE_VALIDATOR_MESSAGE" class="message {$XE_VALIDATOR_MESSAGE_TYPE}">
         <p>{$XE_VALIDATOR_MESSAGE}</p>
@@ -99,8 +99,8 @@
                 </table>
 
             </fieldset>
-            <div id="regdate" cond="$order->shipment->regdate">Created at: {zdate($order->shipment->regdate)}</div>
-            <div id="last_update" cond="$order->shipment->last_update">Last update: {zdate($order->shipment->last_update)}</div>
+            <div id="regdate" cond="$order->shipment->regdate">{$lang->created_at}: {zdate($order->shipment->regdate)}</div>
+            <div id="last_update" cond="$order->shipment->last_update">{$lang->last_update}: {zdate($order->shipment->last_update)}</div>
         </div>
     </form>
 

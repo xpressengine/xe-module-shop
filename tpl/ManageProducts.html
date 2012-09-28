@@ -44,7 +44,7 @@
                     });
                 </script>
                 <select name="search_category_srl" id="search_category_srl">
-                    <option>categories</option>
+                    <option>{$lang->categories}</option>
                     <!--@foreach($category_list as $node)-->
 					 {@ $val = $node->category }
                     <option value="{$val->category_srl}" <!--@if($category_srl==$val->category_srl)-->selected="selected"<!--@end-->>

@@ -4,13 +4,13 @@
 <!-- Content -->
 <div id="content">
     <div class="dashboardHeader">
-        <h3 class="h3">Manage Shipments</h3>
+        <h3 class="h3">{$lang->manage_shipments]</h3>
     </div>
     <div cond="$XE_VALIDATOR_MESSAGE" class="message {$XE_VALIDATOR_MESSAGE_TYPE}">
         <p>{$XE_VALIDATOR_MESSAGE}</p>
     </div>
     <div class="contentNavigation" cond="empty($shipments)">
-        No shipments
+        {$lang->no_shipments}
     </div>
 
     <!-- listHeader -->
@@ -37,7 +37,7 @@
 
     <!-- Table Data -->
     <fieldset>
-        <legend>Shipment List</legend>
+        <legend>{$lang->shipment_list}</legend>
         <form action="" method="post">
             <table border="1" cellspacing="0" summary="{$lang->content_list}" class="tableData">
                 <thead>
@@ -45,18 +45,18 @@
                     <th scope="col">
                         <input type="checkbox" class="inputCheck" onclick="jQuery('input.boxlist').click()"/>
                     </th>
-                    <th scope="col">Shipment #</th>
-                    <th scope="col">Shipment for order #</th>
-                    <th scope="col" class="title">Comments</th>
-                    <th scope="col">Package #</th>
-                    <th scope="col">Shipped on</th>
+                    <th scope="col">{$lang->shipment} #</th>
+                    <th scope="col">{$lang->shipment_for_order} #</th>
+                    <th scope="col" class="title">{$lang->comments}</th>
+                    <th scope="col">{$lang->package_number}</th>
+                    <th scope="col">{$lang->shipped_on}</th>
                     <th scope="col">&nbsp;</th>
                 </tr>
                 </thead>
                 <tbody>
 
                 <tr cond="empty($shipments)">
-                    <td class="noData" colspan="9"><p>No shipments</p></td>
+                    <td class="noData" colspan="9"><p>{$lang->no_shipments}</p></td>
                 </tr>
                 <!--@foreach($shipments as $shipment)-->
                 <tr>
@@ -112,9 +112,3 @@
 <!-- Extension -->
 
 <!--#include("_tool_footer.html")-->
-
-<script type="text/javascript">
-    if (!xe.lang) xe.lang = {};
-    xe.lang.msg_confirm_delete_attribute = "{$lang->msg_confirm_delete_attribute}";
-    xe.lang.msg_confirm_delete_attributes = '{$lang->msg_confirm_delete_attributes}';
-</script>

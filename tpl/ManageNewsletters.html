@@ -4,7 +4,7 @@
 <!-- Content -->
 <div id="content">
     <div class="dashboardHeader">
-        <h3 class="h3">Manage Newsletters</h3>
+        <h3 class="h3">{$lang->manage_newsletters]</h3>
     </div>
     <div cond="$XE_VALIDATOR_MESSAGE" class="message {$XE_VALIDATOR_MESSAGE_TYPE}">
         <p>{$XE_VALIDATOR_MESSAGE}</p>
@@ -12,7 +12,7 @@
     <!-- contentNavigation -->
     <div class="contentNavigation" >
         <ul class="sortDefault">
-            <a href="{getUrl('act','dispShopToolSendNewsletter')}">Send a new newsletter</a>
+            <a href="{getUrl('act','dispShopToolSendNewsletter')}">{$lang->send_newsletter}</a>
         </ul>
     </div>
     <!-- /contentNavigation -->
@@ -45,7 +45,7 @@
 
     <!-- Table Data -->
     <fieldset>
-        <legend>Newsletter List</legend>
+        <legend>{$lang->newsletter_list}</legend>
         <form action="" method="post">
             <table border="1" cellspacing="0" summary="{$lang->content_list}" class="tableData">
                 <thead>
@@ -53,11 +53,11 @@
                     <th scope="col">
                         <input type="checkbox" class="inputCheck" onclick="jQuery('input.boxlist').click()"/>
                     </th>
-                    <th scope="col">Newsletter #</th>
-                    <th scope="col" class="title">Newsletter subject</th>
-                    <th scope="col">Sender name</th>
-                    <th scope="col">Sender email</th>
-                    <th scope="col">Sent on</th>
+                    <th scope="col">{$lang->newsletter} #</th>
+                    <th scope="col" class="title">{$lang->newsletter_subject}</th>
+                    <th scope="col">{$lang->sender_name}</th>
+                    <th scope="col">{$lang->sender_email}</th>
+                    <th scope="col">{$lang->sent_on]</th>
                     <th scope="col">&nbsp;</th>
                     <th scope="col">&nbsp;</th>
                     <th scope="col">&nbsp;</th>
@@ -66,7 +66,7 @@
                 <tbody>
 
                 <tr cond="empty($newsletters)">
-                    <td class="noData" colspan="9"><p>No newsletters</p></td>
+                    <td class="noData" colspan="9"><p>{$lang->newsletters}</p></td>
                 </tr>
                 <!--@foreach($newsletters as $newsletter)-->
                 <tr>
