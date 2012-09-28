@@ -1935,7 +1935,26 @@
 			$this->setRedirectUrl($returnUrl);
 		}
 
-		/**
+        /**
+         *
+         */
+        public function procShopToolSaveShopMenus()
+        {
+            $menus = Context::get('menus');
+            $args = new stdClass();
+            $args->module_srl = $this->module_srl;
+            $args->menus = serialize($menus);
+            $output = executeQuery('shop.updateShopInfo', $args);
+            if(!$output->toBool())
+            {
+                return $output;
+            }
+
+            $return_url = getNotEncodedUrl('', 'act', 'dispShopToolMenus', 'mid', $this->mid);
+            $this->setRedirectUrl($return_url);
+        }
+
+        /**
 		 * Sort menu items
 		 *
 		 * Updates list order attribute of each menu item

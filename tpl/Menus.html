@@ -15,10 +15,15 @@
     <!-- /contentHeader -->
 
     <form action="./" method="post">
+        <input type="hidden" name="act" value="procShopToolSaveShopMenus" />
+
         <!--@foreach($menus as $menu_key => $menu_srl)-->
             <p>
-                <label>{$menu_key}</label>
+                <label>
+                    {$menu_lang[$menu_key]}
+                </label>
                 <select name="menus[{$menu_key}]">
+                    <option value=""></option>
                     <!--@foreach($all_site_menus as $site_menu)-->
                     <option value="{$site_menu->menu_srl}"
                             <!--@if($site_menu->menu_srl == $menu_srl)-->
@@ -31,6 +36,10 @@
                 </select>
             </p>
         <!--@end-->
+
+        <p class="submit">
+            <input type="submit" value="Save" />
+        </p>
     </form>
 
 </div>

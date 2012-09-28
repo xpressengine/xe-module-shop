@@ -559,4 +559,7 @@
     $lang->select_configurable_attribute = 'Select configurable attribute';
     $lang->notice = 'Notice';
     $lang->edit_simple_product = 'Edit simple product';
+
+    $lang->header_menu = 'Header menu';
+    $lang->footer_menu = 'Footer menu';
 ?>

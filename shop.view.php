@@ -1512,12 +1512,41 @@ class shopView extends shop {
     }
 
 
+    /**
+     *
+     */
     public function dispShopToolMenus()
     {
+        global $lang;
+
+        // Load menu areas
         $shop = Context::get('shop');
         $menus = $shop->getMenus();
+        if(!$menus)
+        {
+            // Updata database
+            // TODO Remove this after shop release
+            $args = new stdClass();
+            $args->module_srl = $this->module_srl;
+            $args->menus = serialize(array(ShopMenu::MENU_TYPE_HEADER => "", ShopMenu::MENU_TYPE_FOOTER => ""));
+            $output = executeQuery('shop.updateShopInfo', $args);
+            if(!$output->toBool())
+            {
+                return $output;
+            }
+        }
         Context::set('menus', $menus);
 
+        // Load langs for menu areas
+        // Needed because XE template language doesn't support nested braces: {$lang->{$menu_key}}
+        $menu_lang = array();
+        foreach($menus as $menu_key => $menu_srl)
+        {
+            $menu_lang[$menu_key] = $lang->{$menu_key};
+        }
+        Context::set('menu_lang', $menu_lang);
+
+        // Load available menus
         $oMenuAdminModel = getAdminModel('menu');
         $all_site_menus = $oMenuAdminModel->getMenus();
         Context::set('all_site_menus', $all_site_menus);
