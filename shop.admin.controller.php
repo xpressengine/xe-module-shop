@@ -180,8 +180,8 @@
              * Create shop menus: header and footer
              */
             include(_XE_PATH_  . '/modules/shop/libs/model/ShopMenu.php');
-            $header_menu_srl = $oShopModel->makeMenu($site_srl, $domain, 'Header menu');
-            $footer_menu_srl = $oShopModel->makeMenu($site_srl, $domain, 'Footer menu');
+            $header_menu_srl = $oShopModel->makeMenu($site_srl, 'Header menu');
+            $footer_menu_srl = $oShopModel->makeMenu($site_srl, 'Footer menu');
             $menus = array();
             $menus[ShopMenu::MENU_TYPE_HEADER] = $header_menu_srl;
             $menus[ShopMenu::MENU_TYPE_FOOTER] = $footer_menu_srl;

@@ -418,25 +418,6 @@ class shopModel extends shop
     }
 
     // region Menu
-
-	/**
-	 * Get shop menu srl
-	 */
-	public function getShopMenuSrl($site_srl)
-	{
-		/**
-		 * @var menuModel $menuModel
-		 */
-		$menuAdminModel = getAdminModel('menu');
-		$menus = $menuAdminModel->getMenus($site_srl);
-		if(!$menus)
-		{
-			$menu_srl = $this->makeMenu($site_srl, "Shop", "Menu");
-			return $menu_srl;
-		}
-		return $menus[0]->menu_srl;
-	}
-
 	/**
 	 * Insert a menu
 	 *
@@ -445,10 +426,10 @@ class shopModel extends shop
 	 * @param $menu_title
 	 * @return object
 	 */
-	public function makeMenu($site_srl, $title, $menu_title) {
+	public function makeMenu($site_srl, $menu_title) {
 		$args = new stdClass();
 		$args->site_srl = $site_srl;
-		$args->title = $title.' - '.$menu_title;
+		$args->title = $menu_title;
 		$args->menu_srl = getNextSequence();
 		$args->listorder = $args->menu_srl * -1;
 
