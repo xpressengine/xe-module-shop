@@ -2116,31 +2116,78 @@
          *
          * @return Object
          */
-        function procShopToolExtraMenuUpdate(){
+        function procShopToolUpdatePage(){
             $args = Context::getRequestVars();
-            $menu_name = trim(Context::get('menu_name'));
-            $menu_mid= Context::get('menu_mid');
-            if(!$menu_name || !$menu_mid) return new Object(-1,'msg_invalid_request');
+            $module_srl = Context::get('module_srl');
+            $page_title = trim(Context::get('page_title'));
 
-            $oModuleModel = &getModel('module');
-            $oDocumentModel = &getModel('document');
-            $oDocumentController = &getController('document');
-            $module_info = $oModuleModel->getModuleInfoByMid($menu_mid,$this->site_srl);
-            if(!$module_info) return new Object(-1,'msg_invalid_request');
+            if(!$module_srl || !$page_title)
+            {
+                return new Object(-1, 'msg_invalid_request');
+            }
 
-            $buff = trim($module_info->content);
-            $oXmlParser = new XmlParser();
-            $xml_doc = $oXmlParser->parse(trim($buff));
-            $document_srl = $xml_doc->img->attrs->document_srl;
-            $args->document_srl = $document_srl;
+            // Get current module info
+            /**
+             * @var moduleModel $oModuleModel
+             */
+            $oModuleModel = getModel('module');
+            $page_module_info = $oModuleModel->getModuleInfoByModuleSrl($module_srl);
+            if(!$page_module_info)
+            {
+                ShopLogger::log("Error updating page module - getModuleInfoByDocumentSrl $document_srl returned null: ");
+                return new Object(-1, 'fail_to_update');
+            }
+
+            // Get current document srl
+            /**
+             * @var shopModel $shopModel
+             */
+            $shopModel = getModel('shop');
+            $document_srl = $shopModel->getPageDocumentSrl($page_module_info->content);
+
+            // Update document info
+            /**
+             * @var documentModel $oDocumentModel
+             */
+            $oDocumentModel = getModel('document');
             $oDocument = $oDocumentModel->getDocument($document_srl);
+            /**
+             * @var documentController $oDocumentController
+             */
+            $oDocumentController = getController('document');
+            $args->document_srl = $document_srl;
             $args->module_srl = $oDocument->module_srl;
             $args->category_srl = $oDocument->category_srl;
             $output = $oDocumentController->updateDocument($oDocument, $args);
+            if(!$output->toBool())
+            {
+                ShopLogger::log("Error updating page document: " . print_r($args, true) . ' ' . print_r($output));
+                return new Object(-1, 'fail_to_update');
+            }
 
-            $args->name = $menu_name;
-            $args->module_srl = $module_info->module_srl;
-            $output = executeQuery('textyle.updateExtraMenuName',$args);
+            // Update page title
+            if($page_title != $page_module_info->browser_title)
+            {
+                /**
+                 * @var moduleController $oModuleController
+                 */
+                $oModuleController = getController('module');
+                $page_module_info->browser_title = $page_title;
+                $output = $oModuleController->updateModule($page_module_info);
+                if(!$output->toBool())
+                {
+                    ShopLogger::log("Error updating page module: " . print_r($page_module_info, true) . ' ' . print_r($output));
+                    $this->setError($output->getError());
+                    $this->setMessage($output->getMessage());
+                    $error_return_url = Context::get('error_return_url');
+                    $this->setRedirectUrl($error_return_url);
+                    return;
+                }
+            }
+
+            $this->setMessage('success_registed');
+            $return_url = getNotEncodedUrl('', 'act', 'dispShopToolPages');
+            $this->setRedirectUrl($return_url);
         }
 
 

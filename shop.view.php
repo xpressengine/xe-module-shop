@@ -1465,7 +1465,6 @@ class shopView extends shop {
 	 * @return object
 	 */
 	function dispShopToolPages(){
-
         /**
          * @var moduleModel $oModuleModel
          */
@@ -1579,21 +1578,30 @@ class shopView extends shop {
 	 */
 	function dispShopToolInsertPage(){
 		// Check if editing an existing page
-        $document_srl = Context::get('document_srl');
+        //  $document_srl = Context::get('document_srl');
+        $module_srl = Context::get('module_srl');
 
-        if($document_srl){
+        if($module_srl){
             // Editing existing item
             /**
              * @var moduleModel $oModuleModel
              */
             $oModuleModel = getModel('module');
-            $page_module_info = $oModuleModel->getModuleInfoByDocumentSrl($document_srl);
+            $page_module_info = $oModuleModel->getModuleInfoByModuleSrl($module_srl);
             Context::set('page_module_info', $page_module_info);
+
+            /**
+             * @var shopModel $shopModel
+             */
+            $shopModel = getModel('shop');
+            $document_srl = $shopModel->getPageDocumentSrl($page_module_info->content);
         }
 
 		$oDocumentModel = &getModel('document');
+
 		if($document_srl){
 			$oDocument = $oDocumentModel->getDocument($document_srl,FALSE,FALSE);
+            Context::set('document_srl', $document_srl);
 		}else{
 			$document_srl=0;
 			$oDocument = $oDocumentModel->getDocument(0);

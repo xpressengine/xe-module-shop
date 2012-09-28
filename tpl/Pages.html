@@ -35,7 +35,7 @@
 				<td><a href="{getUrl('', 'mid', $shop_page->mid)}" target="_blank">{$shop_page->browser_title}</a></td>
 				<td>{$shop_page->mid}</td>
                 <td>
-                    <a href="{$shop_page->mid . '?act=dispPageAdminContentModify'}" target="_blank">{$lang->edit_page}</a>
+                    <a href="{getUrl('', 'act', 'dispShopToolInsertPage', 'module_srl', $shop_page->module_srl)}">{$lang->edit_page}</a>
                     </td>
 				<td>
 				<button type="button" onclick="alert('TODO Delete page')" class="text">{$lang->cmd_delete}</button>

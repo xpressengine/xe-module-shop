@@ -520,6 +520,18 @@ class shopModel extends shop
 		$menuAdminController = getAdminController('menu');
 		$menuAdminController->makeXmlFile($menu_srl);
 	}
+
+    /**
+     * Get document_srl of document associated with an article page
+     */
+    public function getPageDocumentSrl($page_content)
+    {
+        $buff = trim($page_content);
+        $oXmlParser = new XmlParser();
+        $xml_doc = $oXmlParser->parse(trim($buff));
+        $document_srl = $xml_doc->img->attrs->document_srl;
+        return $document_srl;
+    }
 	// endregion
 
 }

@@ -2,6 +2,10 @@
 
 <!-- Content -->
 <div id="content">
+    <div cond="$XE_VALIDATOR_MESSAGE" class="message {$XE_VALIDATOR_MESSAGE_TYPE}">
+        <p>{$XE_VALIDATOR_MESSAGE}</p>
+    </div>
+
 	<!-- writingHeader -->
 	<div class="contentHeader writingHeader">
 		<h3 class="h3">
@@ -15,8 +19,8 @@
 	<!-- /writingHeader -->
         <!--@if($document_srl)-->
         <form action="" method="post" class="{$editor_skin}">
-            <input type="hidden" name="act" value="procShopToolExtraMenuUpdate" />
-            <input type="hidden" name="document_srl" value="{$document_srl}" />
+            <input type="hidden" name="act" value="procShopToolUpdatePage" />
+            <input type="hidden" name="module_srl" value="{$page_module_info->module_srl}" />
         <!--@else-->
         <form action="" method="post" class="{$editor_skin}">
             <input type="hidden" name="act" value="procShopToolInsertPage" />
