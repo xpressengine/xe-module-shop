@@ -1109,6 +1109,7 @@ class shopView extends shop {
         Context::set('addresses', $cart->getAddresses());
         Context::set('default_billing', $cart->getBillingAddress());
         Context::set('default_shipping', $cart->getShippingAddress());
+        Context::set('needs_new_shipping', $cart->getBillingAddress() != $cart->getShippingAddress());
         Context::set('extra', $cart->getExtraArray());
         Context::set('cart_products', $products);
         if ($discount = $cart->getDiscount()) {

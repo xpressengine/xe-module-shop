@@ -1052,3 +1052,7 @@ li span.close-sign, li span.open-sign {
 .product.deleted {
     background-color: #a8daf8;
 }
+.show_address {
+    font-size: 16px;
+    padding: 20px;
+}
