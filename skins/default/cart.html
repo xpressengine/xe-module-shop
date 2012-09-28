@@ -174,7 +174,7 @@ jQuery(function () {
                     <td colspan="2">
                     </td>
                     <td>
-                        {ShopDisplay::priceFormat($total_price * ($shop->getVAT()/100), $shop->getCurrencySymbol())}
+                        {ShopDisplay::priceFormat($cart->getVAT(true, true), $shop->getCurrencySymbol())}
                     </td>
                     <td colspan="2">
                     </td>

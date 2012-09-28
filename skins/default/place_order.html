@@ -56,7 +56,7 @@
             </tr>
             <!--@end-->
             <!--@if($cart->getShippingCost() !== 0)-->
-            <tr style="font-weight: bold; background-color: #fafad2;">
+            <tr>
                 <td colspan="3">
                 </td>
                 <td>Shipping</td>
@@ -65,25 +65,30 @@
                 </td>
             </tr>
             <!--@end-->
-            <tr style="font-weight: bold; background-color: #9acd32;">
-                <td colspan="3">
-                </td>
+            <tr style="font-weight: bold; background-color: #fafad2;">
+                <td colspan="3"></td>
                 <td>Total</td>
-                <td>
-                    {ShopDisplay::priceFormat($cart->getTotal(), $shop->getCurrencySymbol())}
-                </td>
+                <td colspan=3>{ShopDisplay::priceFormat($cart->getTotal(), $shop->getCurrencySymbol())}</td>
             </tr>
-            <!--@if($shop->getShowVAT() == 'Y' && $shop->getVAT() > 0)-->
-            <tr style="background-color: #9acd32;">
+            <tr cond="$discount">
+                <td colspan="3"></td>
+                <td><a href="#" onclick="alert('{$discount->getName()}:\n\n{$discount->getDescription()}')">Discount</a></td>
+                <td colspan=3>{ShopDisplay::priceFormat($discount_value, $shop->getCurrencySymbol())}</td>
+            </tr>
+            <tr cond="$discount" style="font-weight: bold; background-color: #fafad2;">
+                <td colspan="3"></td>
+                <td>Grand Total</td>
+                <td colspan=3>{ShopDisplay::priceFormat($cart->getTotal(true, true), $shop->getCurrencySymbol())}</td>
+            </tr>
+            <tr cond="$shop->getShowVAT() == 'Y' && $shop->getVAT()" style="background-color: #9acd32">
                 <td colspan="3"></td>
                 <td>
                     {$lang->taxes}
                 </td>
                 <td>
-                    {ShopDisplay::priceFormat($cart->getTotal() * ($shop->getVAT()/100), $shop->getCurrencySymbol())}
+                    {ShopDisplay::priceFormat($cart->getVAT(true, true), $shop->getCurrencySymbol())}
                 </td>
             </tr>
-            <!--@end-->
             </tbody>
         </table>
     </fieldset>

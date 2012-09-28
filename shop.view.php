@@ -1109,6 +1109,7 @@ class shopView extends shop {
 
     public function dispShopPlaceOrder()
     {
+        /** @var $cart Cart  */
         if ((!$cart = Context::get('cart')) || !$cart->items) {
             throw new Exception("No cart, you shouldn't be here");
         }
@@ -1123,7 +1124,7 @@ class shopView extends shop {
         $payment_method_name = $cart->getExtra('payment_method');
 
         // Get payment class
-        $payment_repository = $shopModel->getPaymentMethodRepository();
+        $payment_repository = new PaymentMethodRepository();
         $payment_method = $payment_repository->getPaymentMethod($payment_method_name, $this->module_srl);
 
         $payment_method->onPlaceOrderFormLoad();
@@ -1142,6 +1143,12 @@ class shopView extends shop {
 
         Context::set('extra', $cart->getExtraArray());
         Context::set('cart_products', $cart->getProducts());
+
+        if ($discount = $cart->getDiscount()) {
+            Context::set('discount', $discount);
+            Context::set('discount_value', $discount->getReductionValue());
+            Context::set('discounted_value', $discount->getValueDiscounted());
+        }
 
         $this->setTemplateFile('place_order.html');
     }

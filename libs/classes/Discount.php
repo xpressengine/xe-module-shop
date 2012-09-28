@@ -148,7 +148,7 @@ class PercentageDiscount extends Discount
 
     public function getDescription()
     {
-        return "Your discount is a percent of the total order when you step over {$this->getMinValueForDiscount()}{$this->getCurrency()}";
+        return "{$this->getDiscountValue()}% of your total order gets discounted when you step over {$this->getMinValueForDiscount()}{$this->getCurrency()}";
     }
 
     public function validate()

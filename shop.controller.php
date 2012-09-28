@@ -613,7 +613,7 @@
                 $category_srl = Context::get('search_category_srl');
                 $url = getNotEncodedUrl('', 'act', 'dispShopSearch', 'q', $searchQuery, 'search_category_srl', $category_srl);
             }
-            else $url = getNotEncodedUrl('', 'act', 'dispShop');
+            else $url = getNotEncodedUrl('', 'act', 'dispShopHome');
             $this->setRedirectUrl($url);
         }
 
