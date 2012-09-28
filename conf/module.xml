@@ -229,7 +229,7 @@
         <action name="procShopToolInsertMenuItem" type="controller" standalone="true"/>
         <action name="procShopToolUpdateMenuItem" type="controller" standalone="true"/>
         <action name="procShopToolExtraMenuSort" type="controller" standalone="true"/>
-        <action name="procShopToolExtraMenuDelete" type="controller" standalone="true"/>
+        <action name="procShopToolDeletePage" type="controller" standalone="true"/>
         <action name="procShopToolInsertPage" type="controller" standalone="true"/>
         <action name="procShopToolUpdatePage" type="controller" standalone="true"/>
         <action name="procShopToolSaveShopMenus" type="controller" standalone="true"/>

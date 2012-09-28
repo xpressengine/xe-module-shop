@@ -2002,78 +2002,27 @@
 		/**
 		 * Delete menu item
 		 */
-		public function procShopToolExtraMenuDelete()
+		public function procShopToolDeletePage()
 		{
-			$menu_srl = Context::get('menu_srl');
-			$menu_item_srl = Context::get('menu_item_srl');
-            $is_page_menu_item = Context::get('is_page_menu_item');
+            $page_module_srl = Context::get('module_srl');
 
-			if(!$menu_item_srl
-                || !$menu_srl
-                || !$is_page_menu_item || !in_array($is_page_menu_item, array('Y', 'N')))
+			if(!$page_module_srl)
 			{
 				return new Object(-1, "msg_invalid_request");
 			}
 
-			/**
-			 * @var shopModel $shopModel
-			 */
-			$shopModel = getModel('shop');
-
-            if($is_page_menu_item == 'N')
+            // Delete module - this should also delete associated documents
+            /**
+             * @var moduleController $moduleController
+             */
+            $moduleController = &getController('module');
+            $output = $moduleController->deleteModule($page_module_srl);
+            if(!$output->toBool())
             {
-                $shopModel->deleteMenuItem($menu_srl, $menu_item_srl);
-            }
-            else
-            {
-                // Retrieve info about menu item to be deleted
-                /**
-                 * @var menuAdminModel $menuModel
-                 */
-                $menuModel = getAdminModel('menu');
-                $menu_item = $menuModel->getMenuItemInfo($menu_item_srl);
-                $vid = Context::get('vid');
-                $page_mid = str_replace(array($vid, '/'), '', $menu_item->url);
-
-                // Retrieve module_srl to be deleted
-                /**
-                 * @var moduleModel $moduleModel
-                 */
-                $moduleModel = getModel('module');
-                $page_module_srl_list = $moduleModel->getModuleSrlByMid($page_mid);
-                $page_module_srl = $page_module_srl_list[0];
-
-
-                $db = DB::getInstance();
-                $db->begin();
-
-                // Delete module - this should also delete associated documents
-                /**
-                 * @var moduleController $moduleController
-                 */
-                $moduleController = &getController('module');
-                $output = $moduleController->deleteModule($page_module_srl);
-                if(!$output->toBool())
-                {
-                    $db->rollback();
-                    return $output;
-                }
-
-                // Delete associated menu entry
-                try
-                {
-                    $shopModel->deleteMenuItem($menu_srl, $menu_item_srl);
-                }
-                catch(Exception $e)
-                {
-                    $db->rollback();
-                    return new Object(-1, $e->getMessage());
-                }
-
-                // If everything was succesful, commit the changes
-                $db->commit();
+                return $output;
             }
 
+            $this->setMessage('success_deleted');
 		}
 
         /**

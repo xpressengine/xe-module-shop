@@ -135,11 +135,11 @@ function sortExtraMenu(menu_items){
     exec_xml('shop', 'procShopToolExtraMenuSort', params, function(){}, response_tags);
 }
 
-function deleteExtraMenu(menu_srl, menu_item_srl, is_page_menu_item, confirm_msg){
+function deleteShopPage(module_srl, confirm_msg){
     if(confirm(confirm_msg)){
         var response_tags = new Array('error','message');
-        var params = {'menu_srl':menu_srl, 'menu_item_srl':menu_item_srl, 'is_page_menu_item' : is_page_menu_item}
-        exec_xml('shop', 'procShopToolExtraMenuDelete', params, completeReload, response_tags);
+        var params = {'module_srl':module_srl}
+        exec_xml('shop', 'procShopToolDeletePage', params, completeReload, response_tags);
     }
 }
 

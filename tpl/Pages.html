@@ -38,7 +38,7 @@
                     <a href="{getUrl('', 'act', 'dispShopToolInsertPage', 'module_srl', $shop_page->module_srl)}">{$lang->edit_page}</a>
                     </td>
 				<td>
-				<button type="button" onclick="alert('TODO Delete page')" class="text">{$lang->cmd_delete}</button>
+				<button type="button" onclick="deleteShopPage('{$shop_page->module_srl}', '{$lang->confirm_delete}')" class="text">{$lang->cmd_delete}</button>
 				</td>
 			</tr>
 		<!--@end-->
