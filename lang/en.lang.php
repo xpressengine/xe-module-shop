@@ -21,6 +21,7 @@
     $lang->msg_requried_version = "Shop requires XE core version equal to or greater than %s.";
 
     $lang->title = 'Title';
+    $lang->description = 'Description';
     $lang->about_title = 'Product name/title';
     $lang->about_description= 'Enter description';
     $lang->short_description = 'Short description';
@@ -80,6 +81,7 @@
 	$lang->about_select_associated_products = 'This combinations will be generated into simple products and will be associated with this parent product';
 	$lang->add_associated_products = 'Add associated products';
     $lang->images = 'Images';
+    $lang->image = 'Image';
 	$lang->delete = 'Delete';
 	$lang->upload_files = 'Upload Files';
 	$lang->notice_update_configurable = 'When updating a configurable product the values of associated products will not be affected. You will have to edit them sepparatly.';
@@ -546,4 +548,15 @@
     $lang->manage_associated_products = 'Manage associated products';
     $lang->select_associated_products_combination = 'Select associated products combination';
     $lang->about_adding_associated_products = 'You are adding associated products to the configurable product that has the title <b>%s</b> and sku: <b>%s</b>';
+    $lang->about_editing_associated_products = 'This is an associated simple product for the configurable product with the title: <b>%s</b> and sku:<b>%s</b>';
+    $lang->navigation = 'Navigation';
+    $lang->no_more_variants = 'There are no more product variants';
+    $lang->parent = 'Parent';
+    $lang->parent_title = 'Parent title';
+    $lang->include_in_navigation_menu = 'Include in navigation menu';
+    $lang->add_configurable_product = 'Add configurable product';
+    $lang->edit_configurable_product = 'Edit configurable product';
+    $lang->select_configurable_attribute = 'Select configurable attribute';
+    $lang->notice = 'Notice';
+    $lang->edit_simple_product = 'Edit simple product';
 ?>

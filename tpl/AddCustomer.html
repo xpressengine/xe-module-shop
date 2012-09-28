@@ -106,8 +106,8 @@
                 </table>
 
             </fieldset>
-            <div id="regdate" cond="$customer->regdate">Created at: {zdate($customer->regdate)}</div>
-            <div id="last_login" cond="$customer->last_login">Last login: {zdate($customer->last_login)}</div>
+            <div id="regdate" cond="$customer->regdate">{$lang->created_at}: {zdate($customer->regdate)}</div>
+            <div id="last_login" cond="$customer->last_login">{$lang->last_update}: {zdate($customer->last_login)}</div>
         </div>
     </form>
 </div>

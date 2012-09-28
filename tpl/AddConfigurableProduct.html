@@ -6,9 +6,9 @@
     <!-- contentHeader -->
     <div class="contentHeader postListHeader">
         <!--@if(!$product)-->
-        <h3 class="h3">Add configurable product</h3>
+        <h3 class="h3">{$lang->add_configurable_product}</h3>
         <!--@else-->
-        <h3 class="h3">Edit configurable product</h3>
+        <h3 class="h3">{$lang->edit_configurable_product}</h3>
         <!--@endif-->
     </div>
     <div cond="$XE_VALIDATOR_MESSAGE" class="message {$XE_VALIDATOR_MESSAGE_TYPE}">
@@ -21,7 +21,7 @@
 
         <div class="wOption">
             <fieldset class="visualFieldset">
-                <legend class="visualLabel">Select configurable attribute</legend>
+                <legend class="visualLabel">{$lang->select_configurable_attribute}</legend>
                 <table border="1" cellspacing="0" class="tableData">
                     <tr>
                         <th scope="row">

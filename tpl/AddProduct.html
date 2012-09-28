@@ -8,16 +8,16 @@
     <div class="contentHeader postListHeader">
         <!--@if(!$product->product_srl)-->
             <!--@if($product->isConfigurable())-->
-                <h3 class="h3">Add configurable product</h3>
+                <h3 class="h3">{$lang->add_configurable_product}</h3>
             <!--@else-->
-                <h3 class="h3">Add simple product</h3>
+                <h3 class="h3">{$lang->add_simple_product}</h3>
             <!--@endif-->
         <!--@else-->
             <!--@if($product->isConfigurable())-->
-                <h3 class="h3">Edit configurable product</h3>
-                <p><span>!Notice: {$lang->notice_update_configurable}</span></p>
+                <h3 class="h3">{$lang->edit_configurable_product}</h3>
+                <p><span>!{$lang->notice}: {$lang->notice_update_configurable}</span></p>
             <!--@else-->
-                <h3 class="h3">Edit simple product</h3>
+                <h3 class="h3">{$lang->edit_simple_product}</h3>
             <!--@endif-->
         <!--@endif-->
     </div>
@@ -34,15 +34,15 @@
         <fieldset class="visualFieldset">
             <!--@if(!$product->product_srl)-->
                 <!--@if($product->isConfigurable())-->
-                    <legend class="visualLabel">Add configurable product</legend>
+                    <legend class="visualLabel">{$lang->add_configurable_product}</legend>
                 <!--@else-->
-                    <legend class="visualLabel">Add simple product</legend>
+                    <legend class="visualLabel">{$lang->add_simple_product}</legend>
                 <!--@endif-->
             <!--@else-->
                 <!--@if($product->isConfigurable())-->
-                    <legend class="visualLabel">Edit configurable product</legend>
+                    <legend class="visualLabel">{$lang->edit_configurable_product}</legend>
                 <!--@else-->
-                    <legend class="visualLabel">Edit simple product</legend>
+                    <legend class="visualLabel">{$lang->edit_simple_product}</legend>
                 <!--@endif-->
             <!--@endif-->
 
@@ -75,7 +75,7 @@
             <table border="1" cellspacing="0" class="tableData">
                 <!--@if($product->parent_product_srl)-->
                 <tr>
-                    <span>This is an associated simple product for the configurable product with the title: <b>{$parent_product->title}</b> and sku:<b>{$parent_product->sku}</b></span>
+                    <span>{sprintf($lang->about_editing_associated_products,$parent_product->title,$parent_product->sku)}</span>
                 </tr>
                 <!--@endif-->
                 <tr class="first">
@@ -296,8 +296,8 @@
             </table>
             </form>
         </fieldset>
-        <div id="regdate" cond="$product->regdate">Created at: {zdate($product->regdate)}</div>
-        <div id="last_update" cond="$product->last_update">Last update: {zdate($product->last_update)}</div>
+        <div id="regdate" cond="$product->regdate">{$lang->created_at}: {zdate($product->regdate)}</div>
+        <div id="last_update" cond="$product->last_update">{$lang->last_update}: {zdate($product->last_update)}</div>
     </div>
 
 </div>

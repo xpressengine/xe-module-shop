@@ -11,29 +11,29 @@
 	    <input type="hidden" id="module_srl"  name="module_srl" value="{$category->module_srl}" />
 
 		<p <!--@if($category->parent_srl == 0)-->style="display:none"<!--@endif-->>
- 			<label for="parent_srl">Parent</label>
-			<span id="parent_title">Parent title</span>
+ 			<label for="parent_srl">{$lang->parent}</label>
+			<span id="parent_title">{$lang->parent_title}</span>
 			<input type="hidden" id="parent_srl" name="parent_srl" value="{$category->parent_srl}" />
 			</select>
 		</p>
 
 		<p>
-			<label for="title">Title</label>
+			<label for="title">{$lang->title}</label>
 			<input type="text" id="title" name="title" value="{$category->title}" class="text" />
 		</p>
 
 		<p>
-			<label for="description">Description</label>
+			<label for="description">{$lang->description}</label>
 			<textarea rows="5" cols="10" id="description" name="description" class="iTextarea">{$category->description}</textarea>
 		</p>
 
 		<p>
-			<label for="friendly_url">Friendly URL</label>
+			<label for="friendly_url">{$lang->friendly_url}</label>
 			<input type="text" id="friendly_url" name="friendly_url" value="{$category->friendly_url}" class="text" />
 		</p>
 
 		<p>
-			<label for="file_info">Image</label>
+			<label for="file_info">{$lang->image}</label>
 			<input type="file" id="file_info" name="file_info" />
 			<input type="hidden" id="filename" name="filename" value="{$category->filename}" />
 
@@ -46,7 +46,7 @@
 		</p>
 
 		<p>
-		<label for="include_in_navigation_menu">Include in navigation menu</label>
+		<label for="include_in_navigation_menu">{$lang->include_in_navigation_menu}</label>
 		<input type="checkbox"
 			   id="include_in_navigation_menu"
 			   name="include_in_mavigation_menu"
@@ -62,8 +62,8 @@
 			</span>
 		</p>
 
-		<span id="regdate" cond="$category->regdate">Created at: {$category->regdate}</span>
-		<span id="last_update" cond="$category->last_update">Last update: {$category->last_update}</span>
+		<span id="regdate" cond="$category->regdate">{$lang->created_at}: {$category->regdate}</span>
+		<span id="last_update" cond="$category->last_update">{$lang->last_update}: {$category->last_update}</span>
 	</form>
 <!-- /Content -->
 </div>
