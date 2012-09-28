@@ -129,12 +129,6 @@ function unique(t) {
 	return a;
 }
 
-function sortExtraMenu(menu_items){
-    var response_tags = new Array('error','message');
-    var params = {'menu_items':menu_items.join(',')};
-    exec_xml('shop', 'procShopToolExtraMenuSort', params, function(){}, response_tags);
-}
-
 function deleteShopPage(module_srl, confirm_msg){
     if(confirm(confirm_msg)){
         var response_tags = new Array('error','message');
