@@ -12,10 +12,15 @@
     <div class="breadcrumbs">
         <span class="breadcrumbs-title">Featured products</span>
         <span class="breadcrumbs-options">
-            sort by:
+            <script type="text/javascript">
+                jQuery('.breadcrumbs-options select').live('change', function(){
+                    alert(jQuery(this).find(':selected').val());
+                });
+            </script>
             <select>
-                <option>price</option>
-                <option>rating</option>
+                <option>sort</option>
+                <option value="price">price</option>
+                <option value="rating">rating</option>
             </select>
             <a href="{getUrl('', 'act', 'procShopToggleGridView', 'mode', 'grid')}" class="breadcrumbs-button <!--@if(!$grid_view)-->selected<!--@end-->"><img src="img/grid-icon.png" alt="Grid view" title="Grid view"/></a><a href="{getUrl('', 'act', 'procShopToggleGridView', 'mode', 'list')}" class="breadcrumbs-button <!--@if($grid_view)-->selected<!--@end-->"><img src="img/list-icon.png" alt="List view" title="List view"/></a>
         </span>
