@@ -287,8 +287,19 @@
             executeQuery('member.deleteMemberGroup', $args);
             executeQuery('member.deleteSiteGroup', $args);
             executeQuery('module.deleteLangs', $args);
-            
-        	//clear cache for default mid
+
+            /**
+             * Delete associated menus
+             */
+            $oMenuAdminModel = getAdminModel('menu');
+            $all_site_menus = $oMenuAdminModel->getMenus($oShop->site_srl);
+            $oMenuAdminController = getAdminController('menu');
+            foreach($all_site_menus as $site_menu)
+            {
+                $oMenuAdminController->deleteMenu($site_menu->menu_srl);
+            }
+
+            //clear cache for default mid
             $vid = $site_info->domain;
             $mid = $site_info->mid;
             $oCacheHandler = &CacheHandler::getInstance('object');
