@@ -379,7 +379,7 @@
 		array(
             'dispMenuAdminSiteMap'=>'All menus',
 			'dispShopToolPages'=>'All pages',
-			'dispShopToolExtraMenuInsert'=>'Add page'
+			'dispShopToolInsertPage'=>'Add page'
 		),
         array(
             'dispShopToolStatisticsVisitor'=>'Visitor statistics',

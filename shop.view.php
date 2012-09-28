@@ -1577,22 +1577,21 @@ class shopView extends shop {
 	 *
 	 * @return Object
 	 */
-	function dispShopToolExtraMenuInsert(){
+	function dispShopToolInsertPage(){
 		// Check if editing an existing page
-        $menu_item_srl = Context::get('menu_item_srl');
+        $document_srl = Context::get('document_srl');
 
-        $document_srl = null;
-        if($menu_item_srl){
+        if($document_srl){
             // Editing existing item
-
-            // TODO Retrieve menu info: mid, name
-            // TODO Retrieve page module info: document_srl
-            $menu_item = null;
-            Context::set('menu_item', $menu_item);
+            /**
+             * @var moduleModel $oModuleModel
+             */
+            $oModuleModel = getModel('module');
+            $page_module_info = $oModuleModel->getModuleInfoByDocumentSrl($document_srl);
+            Context::set('page_module_info', $page_module_info);
         }
 
 		$oDocumentModel = &getModel('document');
-
 		if($document_srl){
 			$oDocument = $oDocumentModel->getDocument($document_srl,FALSE,FALSE);
 		}else{

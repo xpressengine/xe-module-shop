@@ -2081,36 +2081,31 @@
          *
          * @return object
          */
-        function procShopToolExtraMenuInsert(){
+        function procShopToolInsertPage(){
+            $page_mid = Context::get('page_mid');
+            $page_title = Context::get('page_title');
+
             $args = Context::getRequestVars();
-            $menu_name = trim(Context::get('menu_name'));
-            $menu_mid = Context::get('url');
 
             $oModuleController = &getController('module');
             $oDocumentController = &getController('document');
 
-            if(!$menu_name || !$menu_mid) return new Object(-1,'msg_invalid_request');
+            if(!$page_mid || !$page_title)
+            {
+                return new Object(-1, 'msg_invalid_request');
+            }
 
             // 1. Insert document
             $output = $oDocumentController->insertDocument($args);
             // 2. Insert page module
             $args->site_srl = $this->site_srl;
-            $args->mid = $menu_mid;
-            $args->browser_title = $menu_name;
+            $args->mid = $page_mid;
+            $args->browser_title = $page_title;
             $args->module = 'page';
             $args->page_type = 'WIDGET';
             $args->content = '<img src="./common/tpl/images/widget_bg.jpg" class="zbxe_widget_output" widget="widgetContent" style="float: left; width: 100%;" body="" document_srl="'.$output->get('document_srl').'" widget_padding_left="0" widget_padding_right="0" widget_padding_top="0" widget_padding_bottom="0"  /> ';
             $output = $oModuleController->insertModule($args);
             if(!$output->toBool()) return $output;
-
-            // 3. Insert menu item
-            /**
-             * @var shopModel $shopModel
-             */
-            $shopModel = getModel('shop');
-            $shop_menu_srl = $shopModel->getShopMenuSrl($this->site_srl);
-            $menu_url = getUrl('', 'mid', $menu_mid);
-            $shopModel->insertMenuItem($shop_menu_srl, 0, $menu_url, $menu_name);
 
             $this->setMessage('success_registed');
             $this->setRedirectUrl(getNotEncodedUrl('', 'vid', $this->mid, 'act', 'dispShopToolPages'));

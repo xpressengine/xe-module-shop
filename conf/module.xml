@@ -222,7 +222,7 @@
 
         <!-- Extra menu -->
         <action name="dispShopToolPages" type="view" />
-        <action name="dispShopToolExtraMenuInsert" type="view" />
+        <action name="dispShopToolInsertPage" type="view" />
         <action name="dispShopToolMenus" type="view" />
         <action name="dispShopToolExtraMenuEdit" type="view" />
         <action name="procShopServiceGetModulesByTypeAndSiteSrl" type="controller" standalone="true"/>
@@ -230,7 +230,7 @@
         <action name="procShopToolUpdateMenuItem" type="controller" standalone="true"/>
         <action name="procShopToolExtraMenuSort" type="controller" standalone="true"/>
         <action name="procShopToolExtraMenuDelete" type="controller" standalone="true"/>
-        <action name="procShopToolExtraMenuInsert" type="controller" standalone="true"/>
+        <action name="procShopToolInsertPage" type="controller" standalone="true"/>
         <action name="procShopToolExtraMenuUpdate" type="controller" standalone="true"/>
         <action name="procShopToolSaveShopMenus" type="controller" standalone="true"/>
 
