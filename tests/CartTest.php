@@ -118,6 +118,40 @@ class CartTest extends Shop_Generic_Tests_DatabaseTestCase
         $this->assertEquals(49.98, $cart->getTotal());
     }
 
+    public function testCartGetProducts_AllAvailable()
+    {
+        $cart_srl = 774;
+        $cart = new Cart($cart_srl);
+
+        $this->assertEquals(2, count($cart->getProducts()));
+    }
+
+    public function testCartGetProducts_AllAvailableWithLimit()
+    {
+        $cart_srl = 774;
+        $cart = new Cart($cart_srl);
+
+        $this->assertEquals(1, count($cart->getProducts(1)));
+    }
+
+    public function testCartGetProducts_Unavailable()
+    {
+        $cart_srl = 774;
+        $deleted_product_srl = 133;
+        $cart = new Cart($cart_srl);
+
+        // Act: delete one product from xe_products but keep it in cart
+        $product_repository = new ProductRepository();
+        $args = new stdClass();
+        $args->product_srl = $deleted_product_srl;
+        $product_repository->deleteProduct($args);
+
+        // Default, onlyAvailable is false, so all products should be returned => 2
+        $this->assertEquals(2, count($cart->getProducts()));
+        // If we activate onlyAvailable, only 1 product should be returned
+        $this->assertEquals(1, count($cart->getProducts(null, true)));
+    }
+
     /**
      * Test cart when a product becomes unavailable (deleted / out of stock)
      * after the user has already added it to the cart
