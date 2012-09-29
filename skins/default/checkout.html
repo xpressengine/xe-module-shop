@@ -243,8 +243,9 @@
                         <th></th>
                         <th></th>
                         <th>Ttile</th>
-                        <th>Quantity</th>
-                        <th>Price</th>
+                        <th>{$lang->quantity}</th>
+                        <th>{$lang->price}</th>
+                        <th>{$lang->subtotal}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -256,11 +257,12 @@
                         <td>{$product->title}</td>
                         <td>{$product->quantity}</td>
                         <td>{ShopDisplay::priceFormat($product->price, $shop->getCurrencySymbol())}</td>
+                        <td>{ShopDisplay::priceFormat($product->price * $product->quantity, $shop->getCurrencySymbol())}</td>
                     </tr>
                 <!--@end-->
                 <!--@if($cart->getShippingCost() !== 0)-->
                 <tr>
-                    <td colspan="3">
+                    <td colspan="4">
                     </td>
                     <td>Shipping</td>
                     <td>
@@ -269,7 +271,7 @@
                 </tr>
                 <!--@end-->
                 <tr cond="$discount">
-                    <td colspan="3">
+                    <td colspan="4">
                     </td>
                     <td>{$lang->total}</td>
                     <td>
@@ -277,7 +279,7 @@
                     </td>
                 </tr>
                 <tr cond="$discount">
-                    <td colspan="3">
+                    <td colspan="4">
                     </td>
                     <td><a href="#" onclick="alert('{$discount->getName()}\n\n{$discount->getDescription()}'); return false">Discount</a></td>
                     <td>
@@ -285,7 +287,7 @@
                     </td>
                 </tr>
                 <tr style="font-weight: bold;">
-                    <td colspan="3">
+                    <td colspan="4">
                     </td>
                     <td>{$lang->grand_total}</td>
                     <td>
@@ -294,7 +296,7 @@
                 </tr>
 
                 <tr cond="$shop->getShowVAT() == 'Y' && $shop->getVAT()">
-                    <td colspan="3"></td>
+                    <td colspan="4"></td>
                     <td>
                         {$lang->taxes}
                     </td>
