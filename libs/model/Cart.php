@@ -261,7 +261,7 @@ class Cart extends BaseItem
         if ($this->discount) return $this->discount;
         require_once __DIR__ . '/../classes/Discount.php';
         $shop = new ShopInfo($this->module_srl);
-        $cartValue = $this->getTotal();
+        $cartValue = $this->getTotalBeforeDiscount();
         $discountAmount = $shop->getShopDiscountAmount();
         $discountBeforeVAT = ($shop->getShopDiscountTaxPhase() == 'pre_taxes' ? true : false);
         $discountMinAmount = $shop->getShopDiscountMinAmount();
@@ -295,17 +295,19 @@ class Cart extends BaseItem
         return $total;
     }
 
-    public function getTotal($onlyAvailable=false, $withDiscount=false)
+    public function getTotalBeforeDiscount($onlyAvailable=false)
     {
-        if ($withDiscount) {
-            if ($discount = $this->getDiscount()) {
-                return $discount->getValueDiscounted();
-            }
+        $total = $this->getItemTotal($onlyAvailable);
+        $total += $this->getShippingCost();
+        return $total;
+    }
+
+    public function getTotal($onlyAvailable=false)
+    {
+        if ($discount = $this->getDiscount()) {
+            return $discount->getValueDiscounted();
         }
-        $itemTotal = $this->getItemTotal($onlyAvailable);
-        $shippingCost = $this->getShippingCost();
-        $result = $itemTotal + $shippingCost;
-        return $result;
+        return $this->getTotalBeforeDiscount($onlyAvailable);
     }
 
     public function getVAT($onlyAvailable=false, $withDiscount=false)
@@ -549,6 +551,11 @@ class Cart extends BaseItem
     public function getTransactionErrorMessage()
     {
         return $this->getExtra('transaction_message');
+    }
+
+    public function getShippingMethodName()
+    {
+        return $this->getExtra('shipping_method');
     }
 
 
