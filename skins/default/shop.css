@@ -210,6 +210,11 @@ input[type="submit"] {
     font-size: 1em;
 }
 
+*:focus, *:active, *:hover {
+    outline:0;
+    outline:none;
+}
+
 a {
     color: #2D5375;
 }
@@ -996,6 +1001,7 @@ li span.close-sign, li span.open-sign {
     margin: 0 6px 0 0;
     padding: 5px;
     float: left;
+    cursor: pointer;
 }
 
 .preloading {
