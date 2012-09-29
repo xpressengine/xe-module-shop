@@ -96,10 +96,10 @@
             <!--@else-->
                 <a href="{getURL('','act','dispMemberLoginForm')}">Login</a>
             <!--@end-->
-            <span>|</span>
-            <!-- Checkout -->
+            <!--@if (isset($cart) && $cart->items) -->
+                <span>|</span>
                 <a href="{getURL('', 'act','dispShopCheckout')}" cond="isset($cart) && $cart->items">Checkout</a>
-            <!-- /Checkout -->
+            <!--@end-->
         </p>
     </div>
 </div>

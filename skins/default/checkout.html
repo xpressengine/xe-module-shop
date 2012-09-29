@@ -30,7 +30,7 @@
                 var blocks = jQuery('#new-address-shipping, #shipping-address-select');
                 blocks.fadeOut();
             }
-        });
+        }).change();
     });
 </script>
 
@@ -145,7 +145,7 @@
                     <select name="shipping[method]" id="shipping_method">
                         <option value=""></option>
                         <!--@foreach($shipping_methods as $value=>$name)-->
-                        <option value="{$value}" <!--@if ($extra['shipping_method'] == $value)-->selected<!--@endif-->>{$name}</option>
+                        <option value="{$value}" selected="selected"|cond="$extra['shipping_method'] == $value">{$name}</option>
                         <!--@endforeach-->
                     </select>
                 </li>
@@ -155,14 +155,14 @@
                     <select style="width: 500px;" id="shipping_address" name="shipping[address]">
                         <option value="new">new address</option>
                         <!--@foreach ($addresses as $key=>$address)-->
-                        <option value="{$address->address_srl}" <!--@if ($default_shipping && $address->address_srl == $default_shipping->address_srl)-->selected<!--@endif-->>{$address}</option>
+                        <option value="{$address->address_srl}" selected="selected"|cond="$default_shipping && $address->address_srl == $default_shipping->address_srl">{$address}</option>
                         <!--@endforeach-->
                     </select>
 
                     <div class="show_address shipping"></div>
                 </li>
 
-                <li id="new-address-shipping" style="display:none"|cond="$default_shipping">
+                <li id="new-address-shipping" style="display:none"|cond="$default_shipping || !$needs_new_shipping">
                 <ul>
                     <li>
                         <input type="hidden" value="{$logged_info->member_srl}" name="new_shipping_address[member_srl]">
