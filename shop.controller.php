@@ -690,7 +690,7 @@
                     $cart->checkout(array(
                         'billing'  => Context::get('billing'),
                         'new_billing_address' => Context::get('new_billing_address'),
-                        'shipping' => $haveShipping ? $shipping : null,
+                        'shipping' => $shipping, // MUST send shipping, otherwise shipping_method is lost
                         'new_shipping_address' => $haveShipping ? Context::get('new_shipping_address') : null,
                         'payment'  => Context::get('payment'),
                     ));

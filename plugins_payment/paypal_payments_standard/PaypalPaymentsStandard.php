@@ -177,76 +177,62 @@ class PaypalPaymentsStandard extends PaymentMethodAbstract
             ShopLogger::log("Received IPN Notification: " . http_build_query($args));
         }
 
-        $paypalAPI = new PaypalPaymentsStandardAPI();
-        $paypal_info = $paypalAPI->decodeArray($args);
-        $decoded_args = array_merge(array('cmd' => '_notify-validate'), $paypal_info);
+        $response = $this->postDataBackToPaypalToValidateSenderIdentity($args);
 
-        $response = $paypalAPI->request($this->gateway_api, $decoded_args);
-
-        if($response == 'VERIFIED')
+        if($response->isVerified())
         {
             ShopLogger::log("Successfully validated IPN data");
 
-            // assign posted variables to local variables
-            $payment_status = $paypal_info['payment_status'];
-            $payment_amount = $paypal_info['mc_gross'];
-            $payment_currency = $paypal_info['mc_currency'];
-            $txn_id = $paypal_info['txn_id'];
-            $txn_type = $paypal_info['txn_type'];
-            $receiver_email = $paypal_info['receiver_email'];
-            $payer_email = $paypal_info['payer_email'];
-            $cart_srl = $paypal_info['custom'];
+            $payment_info = $this->getIPNPaymentInfo($args);
 
-            // If message type is not related to a cart payment, return
-            // There is nothing we will do for the moment; settlements must be done by hand for special situations
-            if($txn_type != 'cart') return;
+            if(!$payment_info->isRelatedToCartPayment())
+                return;
 
             // 2. If the source of the POST is correct, we now need to check that data is also valid
-            // check that txn_id has not been previously processed
-            $orderRepository = new OrderRepository();
-            $order = $orderRepository->getOrderByTransactionId($txn_id);
-            if(!$order)
+            if(!$order = $this->orderCreatedForThisTransaction($payment_info->txn_id))
             {
-                $cart = new Cart($cart_srl);
                 // check that receiver_email is your Primary PayPal email
-                if($receiver_email != $this->business_account)
+                if(!$payment_info->paymentReceiverIsMe($this->business_account))
                 {
-                    ShopLogger::log("Possible fraud - invalid receiver email: " . $receiver_email);
-                    $cart->setExtra("transaction_id", $txn_id);
-                    $cart->setExtra("transaction_message", "There was a problem processing your payment. Your order could not be completed.");
-                    $cart->save();
+                    ShopLogger::log("Possible fraud - invalid receiver email: " . $payment_info->receiver_email);
+                    $this->markTransactionAsFailedInUserCart(
+                        $payment_info->cart_srl,
+                        $payment_info->txn_id,
+                        "There was a problem processing your payment. Your order could not be completed."
+                    );
                     return;
                 }
 
                 // check the payment_status is Completed
-                if($payment_status != 'Completed')
+                if(!$payment_info->paymentIsComplete())
                 {
-                    ShopLogger::log("Payment is not completed. Payment status [" . $payment_status . "] received");
-                    $cart->setExtra("transaction_id", $txn_id);
-                    $cart->setExtra("transaction_message", "Your payment was not completed. Your order was not created.");
-                    $cart->save();
+                    ShopLogger::log("Payment is not completed. Payment status [" . $payment_info->payment_status. "] received");
+                    $this->markTransactionAsFailedInUserCart(
+                        $payment_info->cart_srl,
+                        $payment_info->txn_id,
+                        "Your payment was not completed. Your order was not created."
+                    );
+                    return;
                 }
 
-                if($cart->getTotal() != $payment_amount || $cart->getCurrency() != $payment_currency)
+                $cart = new Cart($payment_info->cart_srl);
+                if(!$payment_info->paymentIsForTheCorrectAmount($cart->getTotal(), $cart->getCurrency()))
                 {
                     ShopLogger::log("Invalid payment. " . PHP_EOL
-                        . "Payment amount [" . $payment_amount . "] instead of " . $cart->getTotal() . PHP_EOL
-                        . "Payment currency [" . $payment_currency . "] instead of " . $cart->getCurrency()
+                        . "Payment amount [" . $payment_info->payment_amount . "] instead of " . $cart->getTotal() . PHP_EOL
+                        . "Payment currency [" . $payment_info->payment_currency . "] instead of " . $cart->getCurrency()
                     );
-                    $cart->setExtra("transaction_id", $txn_id);
-                    $cart->setExtra("transaction_message", "Your payment was invalid. Your order was not created.");
-                    $cart->save();
+                    $this->markTransactionAsFailedInUserCart(
+                        $payment_info->cart_srl,
+                        $payment_info->txn_id,
+                        "Your payment was invalid. Your order was not created."
+                    );
+                    return;
                 }
 
                 // 3. If the source of the POST is correct, we can now use the data to create an order
                 // based on the message received
-                $order = new Order($cart);
-                $order->transaction_id = $txn_id;
-                $order->save();
-                $order->saveCartProducts($cart);
-                $cart->delete();
-                Context::set('cart', null);
-                Context::set('order_srl', $order->order_srl);
+                $this->createNewOrderAndDeleteExistingCart($cart, $payment_info->txn_id);
             }
         }
         else
@@ -254,6 +240,109 @@ class PaypalPaymentsStandard extends PaymentMethodAbstract
             ShopLogger::log("Invalid IPN data received: " . $response);
         }
 
+    }
+
+    /**
+     * Post all reveive data to paypal for it to confirm
+     * it was issued by Paypal and not by someone else
+     */
+    private function postDataBackToPaypalToValidateSenderIdentity($posted_data)
+    {
+        $paypalAPI = new PaypalPaymentsStandardAPI();
+        $paypal_info = $paypalAPI->decodeArray($posted_data);
+        $decoded_args = array_merge(array('cmd' => '_notify-validate'), $paypal_info);
+
+        $response = $paypalAPI->request($this->gateway_api, $decoded_args);
+        return new IPNIdentityValidationResponse($response);
+    }
+
+    /**
+     * Retrieve raw post data and return prettified data
+     */
+    private function getIPNPaymentInfo($posted_data)
+    {
+        $paypalAPI = new PaypalPaymentsStandardAPI();
+        $paypal_info = $paypalAPI->decodeArray($posted_data);
+        return new IPNPaymentInfo($paypal_info);
+    }
+
+    private function markTransactionAsFailedInUserCart($cart_srl, $transaction_id, $error_message)
+    {
+        $cart = new Cart($cart_srl);
+        ShopLogger::log("Possible fraud - invalid receiver email: " . $receiver_email);
+        $cart->setExtra("transaction_id", $txn_id);
+        $cart->setExtra("transaction_message", "There was a problem processing your payment. Your order could not be completed.");
+        $cart->save();
+    }
+}
+
+class IPNPaymentInfo
+{
+    public $payment_status;
+    public $payment_amount;
+    public $payment_currency;
+    public $txn_id;
+    public $txn_type;
+    public $receiver_email;
+    public $payer_email;
+    public $cart_srl;
+
+    public function __construct($paypal_info)
+    {
+        $this->payment_status = $paypal_info['payment_status'];
+        $this->payment_amount = $paypal_info['mc_gross'];
+        $this->payment_currency = $paypal_info['mc_currency'];
+        $this->txn_id = $paypal_info['txn_id'];
+        $this->txn_type = $paypal_info['txn_type'];
+        $this->receiver_email = $paypal_info['receiver_email'];
+        $this->payer_email = $paypal_info['payer_email'];
+        $this->cart_srl = $paypal_info['custom'];
+    }
+
+    /**
+     * The IPN can send notifications related to all kinds of events
+     * like recurring payments, refunds and such
+     *
+     * We only need to answer to notifications related to paying cart products
+     * There is nothing we will do for the rest of the cases at the moment;
+     * settlements must be done by hand for special situations
+     *
+     * @return bool
+     */
+    public function isRelatedToCartPayment()
+    {
+        return $this->txn_type == 'cart';
+    }
+
+    public function paymentReceiverIsMe($my_business_account_email_address)
+    {
+        return $this->receiver_email == $my_business_account_email_address;
+    }
+
+    public function paymentIsComplete()
+    {
+        return $this->payment_status == 'Completed';
+    }
+
+    public function paymentIsForTheCorrectAmount($cart_total_amount, $shop_currency)
+    {
+        return $cart_total_amount == $this->payment_amount
+            && $shop_currency == $this->payment_currency;
+    }
+}
+
+class IPNIdentityValidationResponse
+{
+    public $response;
+
+    public function __construct($response)
+    {
+        $this->response = $response;
+    }
+
+    public function isVerified()
+    {
+        return $this->response == 'VERIFIED';
     }
 }
 
