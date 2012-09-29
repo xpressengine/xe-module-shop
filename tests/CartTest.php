@@ -87,8 +87,7 @@ class CartTest extends Shop_Generic_Tests_DatabaseTestCase
         $cart_srl = 774;
 
         // Configure shop to use discounts
-        $shop_info = new ShopInfo($module_srl);
-        $args = new stdClass(); //Context::gets('discount_min_amount','discount_type','discount_amount','discount_tax_phase');
+        $args = new stdClass();
         $args->module_srl = $module_srl;
         $args->discount_min_amount = 10;
         $args->discount_type = 'fixed_amount';
@@ -117,6 +116,38 @@ class CartTest extends Shop_Generic_Tests_DatabaseTestCase
 
         // 5. Check global total is correct
         $this->assertEquals(49.98, $cart->getTotal());
+    }
+
+    /**
+     * Test cart when a product becomes unavailable (deleted / out of stock)
+     * after the user has already added it to the cart
+     */
+    public function testCartTotal_WithUnavailableProducts()
+    {
+        $module_srl = 107;
+        $cart_srl = 774;
+        $deleted_product_srl = 133;
+
+        // Act: delete one product from xe_products but keep it in cart
+        $product_repository = new ProductRepository();
+        $args = new stdClass();
+        $args->product_srl = $deleted_product_srl;
+        $product_repository->deleteProduct($args);
+
+        $cart = new Cart($cart_srl);
+
+        // Assert
+        // 1. Check that cart has expected products
+        $this->assertEquals(1, count($cart->getProducts(true))); // When $onlyAvailable is true, count just availablel products
+        $this->assertEquals(2, count($cart->getProducts())); // Default, , show all products
+
+        // 3. Check that item total is correct
+        $this->assertEquals(44.98, $cart->getItemTotal()); // Default, count all products
+        $this->assertEquals(29.99, $cart->getItemTotal(true)); // Count just available products
+
+        // 4. Check global total is correct (includes shipping +10)
+        $this->assertEquals(54.98, $cart->getTotal()); // Default, count all products
+        $this->assertEquals(39.99, $cart->getTotal(true)); // Count just available products
     }
 
 }
