@@ -1,11 +1,12 @@
 <?php
 class Order extends BaseItem
 {
-    const ORDER_STATUS_HOLD = "Hold"
-    , ORDER_STATUS_PENDING = "Pending"
-    , ORDER_STATUS_PROCESSING = "Processing"
-    , ORDER_STATUS_COMPLETED = "Completed"
-    , ORDER_STATUS_CANCELED = "Canceled";
+    const
+        ORDER_STATUS_HOLD = "Hold",
+        ORDER_STATUS_PENDING = "Pending",
+        ORDER_STATUS_PROCESSING = "Processing",
+        ORDER_STATUS_COMPLETED = "Completed",
+        ORDER_STATUS_CANCELED = "Canceled";
 
     public
         $order_srl,
@@ -27,7 +28,12 @@ class Order extends BaseItem
         $regdate,
         $invoice,
         $shipment,
-        $transaction_id;
+        $transaction_id,
+        $discount_min_order,
+        $discount_type,
+        $discount_amount,
+        $discount_tax_phase,
+        $currency;
 
     /** @var OrderRepository */
     public $repo;
@@ -42,27 +48,10 @@ class Order extends BaseItem
         if ($data) {
             if($data instanceof Cart)
             {
-                $cart = $data;
-                $this->cart_srl = $cart->cart_srl;
-                $this->module_srl = $cart->module_srl;
-                $this->member_srl = $cart->member_srl;
-                $this->client_name = $cart->getBillingAddress()->firstname . ' ' . $cart->getBillingAddress()->lastname;
-                $this->client_email = $cart->getBillingAddress()->email;
-                $this->client_company = $cart->getBillingAddress()->company;
-                $this->billing_address = (string) $cart->getBillingAddress();
-                $this->shipping_address = (string) $cart->getShippingAddress();
-                $this->payment_method = $cart->getExtra('payment_method');
-                $this->shipping_method = $cart->getExtra('shipping_method');
-                $this->shipping_cost = 0; // TODO Add shipping cost
-                $this->total = $cart->getTotal();
-                $this->vat = 0; // TODO Add VAT
-                $this->order_status = Order::ORDER_STATUS_PENDING; // TODO Add order status
-                $this->ip = $_SERVER['REMOTE_ADDR'];
-
+                $this->loadFromCart($data);
                 parent::__construct();
                 return;
             }
-
             foreach (array('billing_address', 'shipping_address', 'shipping_method', 'payment_method') as $val) {
                 if (!isset($orderData[$val])) {
                     //throw new Exception("Missing $val, can't continue.");
@@ -70,6 +59,33 @@ class Order extends BaseItem
             }
         }
         parent::__construct($data);
+    }
+
+    public function loadFromCart(Cart $cart)
+    {
+        $shopInfo = new ShopInfo($cart->module_srl);
+        $this->cart_srl = $cart->cart_srl;
+        $this->module_srl = $cart->module_srl;
+        $this->member_srl = $cart->member_srl;
+        $this->client_name = $cart->getBillingAddress()->firstname . ' ' . $cart->getBillingAddress()->lastname;
+        $this->client_email = $cart->getBillingAddress()->email;
+        $this->client_company = $cart->getBillingAddress()->company;
+        $this->billing_address = (string) $cart->getBillingAddress();
+        $this->shipping_address = (string) $cart->getShippingAddress();
+        $this->payment_method = $cart->getExtra('payment_method');
+        $this->shipping_method = $cart->getExtra('shipping_method');
+        $this->shipping_cost = $cart->getShippingCost();
+        $this->total = $cart->getTotal(true, true);
+        $this->vat = ($shopInfo->getVAT() ? $shopInfo->getVAT() : 0);
+        $this->order_status = Order::ORDER_STATUS_PENDING;
+        $this->ip = $_SERVER['REMOTE_ADDR'];
+        $this->currency = $shopInfo->getCurrency();
+        if ($discount = $cart->getDiscount()) {
+            $this->discount_min_order = $discount->getMinValueForDiscount();
+            $this->discount_type = $shopInfo->getShopDiscountType();
+            $this->discount_amount = $discount->getReductionValue();
+            $this->discount_tax_phase = $discount->calculateBeforeApplyingVAT() ? 'pre_taxes' : 'post_taxes';
+        }
     }
 
     public function getBillToName()

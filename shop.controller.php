@@ -568,7 +568,7 @@
             $args = Context::gets('discount_min_amount','discount_type','discount_amount','discount_tax_phase');
             $args->module_srl = $this->module_srl;
             if($args->discount_amount >= $args->discount_min_amount){
-                $this->setMessage('Discount amount is biger than discount min amount');
+                $this->setMessage('Discount amount is bigger than discount min amount');
                 $returnUrl = getNotEncodedUrl('', 'act', 'dispShopToolDiscountInfo');
                 $this->setRedirectUrl($returnUrl);
                 return;
@@ -705,7 +705,12 @@
 
                 // Get payment class
                 $payment_repository = new PaymentMethodRepository();
-                $payment_method = $payment_repository->getPaymentMethod($payment_method_name, $this->module_srl);
+                try {
+                    $payment_method = $payment_repository->getPaymentMethod($payment_method_name, $this->module_srl);
+                }
+                catch (Exception $e) {
+                    return new Object(-1, $e->getMessage());
+                }
 
                 $error_message = '';
                 if(!$payment_method->onCheckoutFormSubmit($cart, $error_message))

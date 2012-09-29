@@ -23,16 +23,13 @@ class PaymentMethodRepository extends AbstractPluginRepository
         $args->name = $name;
         $args->module_srl = $module_srl;
 
-        $output = executeQuery('shop.getPaymentMethod',$args);
-        if(!$output->toBool()) {
-            throw new Exception($output->getMessage(), $output->getError());
-        }
+        $output = $this->query('getPaymentMethod', array('name'=>$name, 'module_srl'=>$module_srl));
         return $output->data;
     }
 
     protected function fixPlugin($name, $old_module_srl, $new_module_srl)
     {
-        $this->query('shop.fixPaymentMethod', array('name' => $name, 'module_srl' => $new_module_srl, 'source_module_srl' => $old_module_srl));
+        $this->query('fixPaymentMethod', array('name' => $name, 'module_srl' => $new_module_srl, 'source_module_srl' => $old_module_srl));
     }
 
     protected function updatePluginInfo($payment_method)

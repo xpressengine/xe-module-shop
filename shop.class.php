@@ -80,6 +80,11 @@
             if(!$oDB->isColumnExists("shop_order_products","regdate")) return true;
             if(!$oDB->isColumnExists("shop_order_products","last_update")) return true;
             if(!$oDB->isColumnExists("shop_cart_products","title")) return true;
+            if(!$oDB->isColumnExists("shop_orders","discount_min_order")) return true;
+            if(!$oDB->isColumnExists("shop_orders","discount_type")) return true;
+            if(!$oDB->isColumnExists("shop_orders","discount_amount")) return true;
+            if(!$oDB->isColumnExists("shop_orders","discount_tax_phase")) return true;
+            if(!$oDB->isColumnExists("shop_orders","currency")) return true;
 
             if($oDB->isColumnExists("shop_categories","order")) return true;
             if(!$oDB->isColumnExists("shop_categories","list_order")) return true;
@@ -112,149 +117,151 @@
                 }
             }
 
+            $success = true;
+
             if(!$oDB->isColumnExists("shop_orders","transaction_id")) {
-                $oDB->addColumn('shop_orders',"transaction_id","varchar",128);
+                $success &= $oDB->addColumn('shop_orders',"transaction_id","varchar",128);
             }
 
             if(!$oDB->isColumnExists("shop","currency_symbol")) {
-                $oDB->addColumn('shop',"currency_symbol","varchar",5);
+                $success &= $oDB->addColumn('shop',"currency_symbol","varchar",5);
             }
 
             if(!$oDB->isColumnExists("shop_products","discount_price")) {
-                $oDB->addColumn('shop_products',"discount_price","float",20);
+                $success &= $oDB->addColumn('shop_products',"discount_price","float",20);
             }
 
             if(!$oDB->isColumnExists("shop_products","is_featured")) {
-                $oDB->addColumn('shop_products',"is_featured","char",1);
+                $success &= $oDB->addColumn('shop_products',"is_featured","char",1);
             }
 
             if(!$oDB->isColumnExists("shop","show_VAT")) {
-                $oDB->addColumn('shop',"show_VAT","char",1);
+                $success &= $oDB->addColumn('shop',"show_VAT","char",1);
             }
 
             if(!$oDB->isColumnExists("shop","discount_min_amount")) {
-                $oDB->addColumn('shop',"discount_min_amount","number",20);
+                $success &= $oDB->addColumn('shop',"discount_min_amount","number",20);
             }
 
             if(!$oDB->isColumnExists("shop","discount_type")) {
-                $oDB->addColumn('shop',"discount_type","varchar",40);
+                $success &= $oDB->addColumn('shop',"discount_type","varchar",40);
             }
 
             if(!$oDB->isColumnExists("shop","discount_amount")) {
-                $oDB->addColumn('shop',"discount_amount","number",20);
+                $success &= $oDB->addColumn('shop',"discount_amount","number",20);
             }
 
             if(!$oDB->isColumnExists("shop","discount_tax_phase")) {
-                $oDB->addColumn('shop',"discount_tax_phase","varchar",40);
+                $success &= $oDB->addColumn('shop',"discount_tax_phase","varchar",40);
             }
 
             if(!$oDB->isColumnExists("shop","out_of_stock_products")) {
-                $oDB->addColumn('shop',"out_of_stock_products","char",1);
+                $success &= $oDB->addColumn('shop',"out_of_stock_products","char",1);
             }
 
             if(!$oDB->isColumnExists("shop","minimum_order")) {
-                $oDB->addColumn('shop',"minimum_order","number",20);
+                $success &= $oDB->addColumn('shop',"minimum_order","number",20);
             }
 
             if(!$oDB->isColumnExists("shop_order_products","member_srl")) {
-                $oDB->addColumn('shop_order_products',"member_srl","number",11, null, true);
+                $success &= $oDB->addColumn('shop_order_products',"member_srl","number",11, null, true);
             }
 
             if(!$oDB->isColumnExists("shop_order_products","parent_product_srl")) {
-                $oDB->addColumn('shop_order_products',"parent_product_srl","number", 11);
+                $success &= $oDB->addColumn('shop_order_products',"parent_product_srl","number", 11);
             }
 
             if(!$oDB->isColumnExists("shop_order_products","product_type")) {
-                $oDB->addColumn('shop_order_products',"product_type","varchar", 250, null, true);
+                $success &= $oDB->addColumn('shop_order_products',"product_type","varchar", 250, null, true);
             }
 
             if(!$oDB->isColumnExists("shop_order_products","title")) {
-                $oDB->addColumn('shop_order_products',"title","varchar", 250, null, true);
+                $success &= $oDB->addColumn('shop_order_products',"title","varchar", 250, null, true);
             }
 
             if(!$oDB->isColumnExists("shop_order_products","description")) {
-                $oDB->addColumn('shop_order_products',"description","bigtext");
+                $success &= $oDB->addColumn('shop_order_products',"description","bigtext");
             }
 
             if(!$oDB->isColumnExists("shop_order_products","short_description")) {
-                $oDB->addColumn('shop_order_products',"short_description","varchar", 500);
+                $success &= $oDB->addColumn('shop_order_products',"short_description","varchar", 500);
             }
 
             if(!$oDB->isColumnExists("shop_order_products","sku")) {
-                $oDB->addColumn('shop_order_products',"sku","varchar", 250, null, true);
+                $success &= $oDB->addColumn('shop_order_products',"sku","varchar", 250, null, true);
             }
 
             if(!$oDB->isColumnExists("shop_order_products","weight")) {
-                $oDB->addColumn('shop_order_products',"weight","float", 10);
+                $success &= $oDB->addColumn('shop_order_products',"weight","float", 10);
             }
 
             if(!$oDB->isColumnExists("shop_order_products","status")) {
-                $oDB->addColumn('shop_order_products',"status","varchar", 50);
+                $success &= $oDB->addColumn('shop_order_products',"status","varchar", 50);
             }
 
             if(!$oDB->isColumnExists("shop_order_products","friendly_url")) {
-                $oDB->addColumn('shop_order_products',"friendly_url","varchar", 50);
+                $success &= $oDB->addColumn('shop_order_products',"friendly_url","varchar", 50);
             }
 
             if(!$oDB->isColumnExists("shop_order_products","price")) {
-                $oDB->addColumn('shop_order_products',"price","float", 20, null, true);
+                $success &= $oDB->addColumn('shop_order_products',"price","float", 20, null, true);
             }
 
             if(!$oDB->isColumnExists("shop_order_products","discount_price")) {
-                $oDB->addColumn('shop_order_products',"discount_price","float", 20, null, true);
+                $success &= $oDB->addColumn('shop_order_products',"discount_price","float", 20, null, true);
             }
 
             if(!$oDB->isColumnExists("shop_order_products","qty")) {
-                $oDB->addColumn('shop_order_products',"qty","float", 10);
+                $success &= $oDB->addColumn('shop_order_products',"qty","float", 10);
             }
 
             if(!$oDB->isColumnExists("shop_order_products","in_stock")) {
-                $oDB->addColumn('shop_order_products',"in_stock","char", 1, 'N');
+                $success &= $oDB->addColumn('shop_order_products',"in_stock","char", 1, 'N');
             }
 
             if(!$oDB->isColumnExists("shop_order_products","primary_image_filename")) {
-                $oDB->addColumn('shop_order_products',"primary_image_filename","varchar", 250);
+                $success &= $oDB->addColumn('shop_order_products',"primary_image_filename","varchar", 250);
             }
 
             if(!$oDB->isColumnExists("shop_order_products","related_products")) {
-                $oDB->addColumn('shop_order_products',"related_products","varchar", 500);
+                $success &= $oDB->addColumn('shop_order_products',"related_products","varchar", 500);
             }
 
             if(!$oDB->isColumnExists("shop_cart_products","title")) {
-                $oDB->addColumn('shop_cart_products',"title","varchar", 255);
+                $success &= $oDB->addColumn('shop_cart_products',"title","varchar", 255);
             }
 
             if(!$oDB->isColumnExists("shop_order_products","regdate")) {
-                $oDB->addColumn('shop_order_products',"regdate","date");
+                $success &= $oDB->addColumn('shop_order_products',"regdate","date");
             }
 
             if(!$oDB->isColumnExists("shop_order_products","last_update")) {
-                $oDB->addColumn('shop_order_products',"last_update","date");
+                $success &= $oDB->addColumn('shop_order_products',"last_update","date");
             }
 
             if($oDB->isColumnExists("shop_categories","order")) {
-                $oDB->dropColumn('shop_categories',"order");
+                $success &= $oDB->dropColumn('shop_categories',"order");
             }
 
             if(!$oDB->isColumnExists("shop_categories","list_order")) {
-                $oDB->addColumn('shop_categories',"list_order","number", 11, 0, true);
+                $success &= $oDB->addColumn('shop_categories',"list_order","number", 11, 0, true);
                 executeQuery('shop.fixCategoriesOrder');
             }
 
             if(!$oDB->isColumnExists("shop_addresses","firstname")) {
-                $oDB->addColumn('shop_addresses',"firstname","varchar", 45);
+                $success &= $oDB->addColumn('shop_addresses',"firstname","varchar", 45);
             }
 
             if(!$oDB->isColumnExists("shop_addresses","lastname")) {
-                $oDB->addColumn('shop_addresses',"lastname","varchar", 45);
+                $success &= $oDB->addColumn('shop_addresses',"lastname","varchar", 45);
             }
 
             if(!$oDB->isColumnExists("shop_payment_methods","module_srl")) {
-                $oDB->addColumn('shop_payment_methods',"module_srl","number", 11, 0, true);
+                $success &= $oDB->addColumn('shop_payment_methods',"module_srl","number", 11, 0, true);
             }
 
             if(!$oDB->isColumnExists("shop_shipping_methods","module_srl")) {
-                $oDB->addColumn('shop_shipping_methods',"module_srl","number", 11, 0, true);
+                $success &= $oDB->addColumn('shop_shipping_methods',"module_srl","number", 11, 0, true);
             }
 
             if($oDB->isIndexExists("shop_payment_methods","unique_name"))
@@ -270,10 +277,18 @@
             }
 
             if(!$oDB->isColumnExists("shop","menus")) {
-                $oDB->addColumn('shop',"menus","varchar", 500);
+                $success &= $oDB->addColumn('shop',"menus","varchar", 500);
             }
 
-           return new Object(0, 'success_updated');
+            if (!$oDB->isColumnExists("shop_orders","caca")) $success &= $oDB->addColumn('shop_orders',"discount_min_order","number", 11, 0, true);
+
+            if (!$oDB->isColumnExists("shop_orders","discount_min_order")) $success &= $oDB->addColumn('shop_orders',"discount_min_order","number", 11, 0, true);
+            if (!$oDB->isColumnExists("shop_orders","discount_type")) $success &= $oDB->addColumn('shop_orders',"discount_type","varchar", 45);
+            if (!$oDB->isColumnExists("shop_orders","discount_amount")) $success &= $oDB->addColumn('shop_orders',"discount_amount","number", 11, 0, true);
+            if (!$oDB->isColumnExists("shop_orders","discount_tax_phase")) $success &= $oDB->addColumn('shop_orders',"discount_tax_phase","varchar", 20);
+            if (!$oDB->isColumnExists("shop_orders","currency")) $success &= $oDB->addColumn('shop_orders',"currency","varchar", 10);
+
+            return $success ? new Object(0, 'success_updated') : new Object(-1, 'Error. Double check your update code.');
         }
 
         /**

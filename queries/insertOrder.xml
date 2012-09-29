@@ -20,6 +20,11 @@
         <column name="order_status" var="order_status"/>
         <column name="transaction_id" var="transaction_id" />
         <column name="ip" var="ip"/>
+        <column name="discount_min_order" var="discount_min_order" />
+        <column name="discount_type" var="discount_type" />
+        <column name="discount_amount" var="discount_amount" />
+        <column name="discount_tax_phase" var="discount_tax_phase" />
+        <column name="currency" var="currency" />
         <column name="regdate" var="regdate" default="curdate()"/>
     </columns>
 </query>
