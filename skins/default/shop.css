@@ -177,8 +177,18 @@ body {
     text-align: right;
 }
 
+input, textarea, select {
+    color: #2f2f2f;
+    border-radius: 3px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border: 1px solid #acb9c6;
+    box-shadow: 0 1px 0 0 #e4e8ec, inset 0 -1px 0 #fff;
+    -moz-box-shadow: 0 1px 0 0 #e4e8ec, inset 0 -1px 0 #fff;
+    -webkit-box-shadow: 0 1px 0 0 #e4e8ec, inset 0 -1px 0 #fff;
+}
+
 input[type="text"], textarea {
-    border: 1px solid #bcc1ca;
     border-radius: 2px;
     -moz-border-radius: 2px;
     -webkit-border-radius: 2px;
@@ -186,24 +196,20 @@ input[type="text"], textarea {
 }
 
 select {
-    border: 1px solid #bcc1ca;
-    border-radius: 2px;
-    -moz-border-radius: 2px;
-    -webkit-border-radius: 2px;
     background: #ffffff;
     background: -moz-linear-gradient(top,  #ffffff 0%, #f6f6f6 100%);
     background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#f6f6f6));
     background: -webkit-linear-gradient(top,  #ffffff 0%,#f6f6f6 100%);
     background: -o-linear-gradient(top,  #ffffff 0%,#f6f6f6 100%);
-    background: -ms-linear-gradient(top,  #ffffff 0%,#f6f6f6 100%);
+    background: -ms-linear-gradient(top, z #ffffff 0%,#f6f6f6 100%);
     background: linear-gradient(to bottom,  #ffffff 0%,#f6f6f6 100%);
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#f6f6f6',GradientType=0 );
-    box-shadow: inset 0px -1px 1px 0px #e8e8e8;
-    -moz-box-shadow: inset 0px -1px 1px 0px #e8e8e8;
-    -webkit-box-shadow: inset 0px -1px 1px 0px #e8e8e8;
-    color: #8a9cac;
     padding: 5px;
     height: 28px;
+}
+
+select option {
+    padding: 3px;
 }
 
 input[type="submit"] {
@@ -213,6 +219,50 @@ input[type="submit"] {
 *:focus, *:active, *:hover {
     outline:0;
     outline:none;
+}
+
+button, .button {
+    color: #2a5072;
+    border-radius: 3px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border: 1px solid #acb9c6;
+    box-shadow: 0 1px 0 #e4e8ec;
+    -moz-box-shadow: 0 1px 0 #e4e8ec;
+    -webkit-box-shadow: 0 1px 0 #e4e8ec;
+    box-shadow: 0 1px 0 #e4e8ec;
+    -moz-box-shadow: 0 1px 0 #e4e8ec;
+    -webkit-box-shadow: 0 1px 0 #e4e8ec;
+}
+
+button:hover, .button:hover, button:focus, .button:focus {
+    border: 1px solid #0588c1;
+    color: #fff;
+    text-shadow: 0 -1px 0 #0688c1;
+    -moz-text-shadow: 0 -1px 0 #0688c1;
+    -webkit-text-shadow: 0 -1px 0 #0688c1;
+    background: #27abe5;
+    background: -moz-linear-gradient(top,  #27abe5 0%, #16a3e0 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#27abe5), color-stop(100%,#16a3e0));
+    background: -webkit-linear-gradient(top,  #27abe5 0%,#16a3e0 100%);
+    background: -o-linear-gradient(top,  #27abe5 0%,#16a3e0 100%);
+    background: -ms-linear-gradient(top,  #27abe5 0%,#16a3e0 100%);
+    background: linear-gradient(to bottom,  #27abe5 0%,#16a3e0 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#27abe5', endColorstr='#16a3e0',GradientType=0 );
+}
+
+button:active, .button:active {
+    background: #20b2f1;
+    background: -moz-linear-gradient(top,  #20b2f1 0%, #17a9e8 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#20b2f1), color-stop(100%,#17a9e8));
+    background: -webkit-linear-gradient(top,  #20b2f1 0%,#17a9e8 100%);
+    background: -o-linear-gradient(top,  #20b2f1 0%,#17a9e8 100%);
+    background: -ms-linear-gradient(top,  #20b2f1 0%,#17a9e8 100%);
+    background: linear-gradient(to bottom,  #20b2f1 0%,#17a9e8 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#20b2f1', endColorstr='#17a9e8',GradientType=0 );
+    box-shadow: 0 1px 0 #e4e8ec, inset 0 -1px 0 #4abced;
+    -moz-box-shadow: 0 1px 0 #e4e8ec, inset 0 -1px 0 #4abced;
+    -webkit-box-shadow: 0 1px 0 #e4e8ec, inset 0 -1px 0 #4abced;
 }
 
 a {
@@ -470,6 +520,10 @@ table tbody tr td:last-child {
     position: absolute;
     right: 10px;
     top: 10px;
+    border: 0;
+    box-shadow: none;
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
 }
 
 #header-search select {
@@ -830,6 +884,9 @@ li span.close-sign, li span.open-sign {
     cursor: pointer;
     color: #2D5375;
     border: 0;
+    box-shadow: none;
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
 }
 
 .product-list .price {
