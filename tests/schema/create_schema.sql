@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Gazda: localhost
--- Timp de generare: 25 Sep 2012 la 12:40
+-- Timp de generare: 29 Sep 2012 la 18:40
 -- Versiune server: 5.5.24-0ubuntu0.12.04.1
 -- Versiune PHP: 5.3.10-1ubuntu3.4
 
@@ -1376,7 +1376,7 @@ DROP TABLE IF EXISTS `xe_sequence`;
 CREATE TABLE IF NOT EXISTS `xe_sequence` (
   `seq` bigint(64) NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`seq`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=511 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=775 ;
 
 -- --------------------------------------------------------
 
@@ -1429,6 +1429,8 @@ CREATE TABLE IF NOT EXISTS `xe_shop` (
   `discount_tax_phase` varchar(40) DEFAULT NULL,
   `out_of_stock_products` char(1) DEFAULT NULL,
   `minimum_order` bigint(20) DEFAULT NULL,
+  `show_VAT` char(1) DEFAULT NULL,
+  `menus` varchar(500) DEFAULT NULL,
   PRIMARY KEY (`module_srl`),
   KEY `idx_member_srl` (`member_srl`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
@@ -1457,6 +1459,8 @@ CREATE TABLE IF NOT EXISTS `xe_shop_addresses` (
   `additional_info` text,
   `regdate` varchar(14) DEFAULT NULL,
   `last_update` varchar(14) DEFAULT NULL,
+  `firstname` varchar(45) DEFAULT NULL,
+  `lastname` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`address_srl`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -1527,6 +1531,7 @@ CREATE TABLE IF NOT EXISTS `xe_shop_cart_products` (
   `cart_srl` bigint(11) NOT NULL,
   `product_srl` bigint(11) NOT NULL,
   `quantity` bigint(11) DEFAULT NULL,
+  `title` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`cart_srl`,`product_srl`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -1629,6 +1634,11 @@ CREATE TABLE IF NOT EXISTS `xe_shop_orders` (
   `ip` varchar(255) DEFAULT NULL,
   `regdate` varchar(14) DEFAULT NULL,
   `transaction_id` varchar(128) DEFAULT NULL,
+  `discount_min_order` bigint(11) NOT NULL,
+  `discount_type` varchar(45) DEFAULT NULL,
+  `discount_amount` bigint(11) NOT NULL,
+  `discount_tax_phase` varchar(20) DEFAULT NULL,
+  `currency` varchar(10) DEFAULT NULL,
   PRIMARY KEY (`order_srl`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -1670,6 +1680,13 @@ CREATE TABLE IF NOT EXISTS `xe_shop_order_products` (
 -- Structura de tabel pentru tabelul `xe_shop_payment_gateways`
 --
 
+DROP TABLE IF EXISTS `xe_shop_payment_gateways`;
+-- --------------------------------------------------------
+
+--
+-- Structura de tabel pentru tabelul `xe_shop_payment_methods`
+--
+
 DROP TABLE IF EXISTS `xe_shop_payment_methods`;
 CREATE TABLE IF NOT EXISTS `xe_shop_payment_methods` (
   `id` bigint(3) NOT NULL,
@@ -1677,8 +1694,9 @@ CREATE TABLE IF NOT EXISTS `xe_shop_payment_methods` (
   `display_name` varchar(255) NOT NULL,
   `status` bigint(1) DEFAULT '0',
   `props` text,
+  `module_srl` bigint(11) NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `unique_name` (`name`)
+  UNIQUE KEY `unique_module_srl_name` (`module_srl`,`name`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -1775,6 +1793,24 @@ CREATE TABLE IF NOT EXISTS `xe_shop_shipments` (
   `comments` text,
   `regdate` varchar(14) DEFAULT NULL,
   PRIMARY KEY (`shipment_srl`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Structura de tabel pentru tabelul `xe_shop_shipping_methods`
+--
+
+DROP TABLE IF EXISTS `xe_shop_shipping_methods`;
+CREATE TABLE IF NOT EXISTS `xe_shop_shipping_methods` (
+  `id` bigint(3) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `display_name` varchar(255) NOT NULL,
+  `status` bigint(1) DEFAULT '0',
+  `props` text,
+  `module_srl` bigint(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unique_module_srl_name` (`module_srl`,`name`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
