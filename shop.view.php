@@ -980,6 +980,11 @@ class shopView extends shop {
     public function dispShopMyAccount(){
         $logged_user = Context::get('logged_info');
 
+        if(!isset($logged_user)){
+            $this->setTemplateFile('not_logged.html');
+            return;
+        }
+
         $orderRepository = $this->model->getOrderRepository();
         $logged_user->recent_orders = $orderRepository->getRecentOrders($this->module_info->module_srl,$logged_user->member_srl);
 
@@ -992,6 +997,10 @@ class shopView extends shop {
 
     public function dispShopMyOrders(){
         $logged_user = Context::get('logged_info');
+        if(!isset($logged_user)){
+            $this->setTemplateFile('not_logged.html');
+            return;
+        }
         $orderRepository = $this->model->getOrderRepository();
         $output = $orderRepository->getList($this->module_info->module_srl,$logged_user->member_srl);
         Context::set('orders',$output->data);
@@ -1004,6 +1013,10 @@ class shopView extends shop {
         $addressRepository = $shopModel->getAddressRepository();
 
         $logged_info = Context::get('logged_info');
+        if(!isset($logged_user)){
+            $this->setTemplateFile('not_logged.html');
+            return;
+        }
         $addresses = $addressRepository->getAddresses($logged_info->member_srl);
 
         Context::set('addresses',$addresses);
