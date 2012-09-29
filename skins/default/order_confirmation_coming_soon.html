@@ -1,0 +1,16 @@
+<include target="_header.html"/>
+
+<div id="confirm_order" class="mainContent">
+    <h1>Thank you for your order!</h1>
+
+    <div cond="$XE_VALIDATOR_MESSAGE" class="message {$XE_VALIDATOR_MESSAGE_TYPE}">
+        <p>{$XE_VALIDATOR_MESSAGE}</p>
+    </div>
+
+    Please check your My account section to see if your order was successfully created.
+    If you do not receive any information in 1 hour, please contact the shop support.
+    <a href="{getUrl('', 'act', 'dispShopMyAccount')}">Go see it</a>!;
+
+</div>
+
+<include target="_footer.html"/>

@@ -541,4 +541,16 @@ class Cart extends BaseItem
     }
     //endregion
 
+    public function getTransactionId()
+    {
+        return $this->getExtra('transaction_id');
+    }
+
+    public function getTransactionErrorMessage()
+    {
+        return $this->getExtra('transaction_message');
+    }
+
+
+
 }

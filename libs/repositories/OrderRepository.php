@@ -77,34 +77,6 @@ class OrderRepository extends BaseRepository
         return $this->query('deleteOrders', array('order_srls' => $order_srls));
     }
 
-    /**
-     * Copies Cart properties into a new Order object
-     * @param Cart $cart
-     *
-     * @return Order
-     */
-    public function getOrderFromCart(Cart $cart)
-    {
-        return new Order(array(
-            'cart_srl' => $cart->cart_srl,
-            'module_srl' => $cart->module_srl,
-            'member_srl' => $cart->member_srl,
-            'client_name' => $cart->getExtra('firstname') . ' ' . $cart->getExtra('lastname'),
-            'client_email' => $cart->getExtra('email'),
-            'client_company' => $cart->getExtra('company'),
-            'billing_address' => (string) $cart->getBillingAddress(),
-            'shipping_address' => (string) $cart->getShippingAddress(),
-            'payment_method' => $cart->getExtra('payment_method'),
-            'shipping_method' => $cart->getExtra('shipping_method'),
-            'shipping_cost' => '0', // TODO Add shipping cost
-            'total' => $cart->getTotal(),
-            'vat' => '0', // TODO Add VAT
-            'order_status' => Order::ORDER_STATUS_PENDING, // TODO Add order status
-            'ip' => $_SERVER['REMOTE_ADDR']
-        ));
-    }
-
-
     public function insertOrderProduct($order_srl, SimpleProduct $product, $quantity = 1)
     {
         $params = array(

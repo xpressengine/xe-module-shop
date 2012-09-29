@@ -1,22 +1,46 @@
 <?php
-
+/**
+ * Plugin for doing payments in XE Shop
+ * using Paypal Payments Standard
+ *
+ * https://cms.paypal.com/cms_content/US/en_US/files/developer/PP_WebsitePaymentsStandard_IntegrationGuide.pdf
+ */
 class PaypalPaymentsStandard extends PaymentMethodAbstract
 {
-    const SANDBOX_URL = 'https://www.sandbox.paypal.com/us/cgi-bin/webscr';
+    const SANDBOX_URL = 'https://www.sandbox.paypal.com/cgi-bin/webscr'
+        , LIVE_URL = 'https://www.paypal.com/cgi-bin/webscr';
 
+    /**
+     * Paypal form action
+     *
+     * @return string
+     */
     public function getPaymentFormAction()
     {
-        return self::SANDBOX_URL;
+        return $this->gateway_api;
     }
 
+    /**
+     * Text that will be displayed on the payment form Submit button
+     *
+     * @return string
+     */
     public function getPaymentSubmitButtonText()
     {
         return "Proceed to PayPal.com to pay";
     }
 
+    /**
+     * Used for getting the money from the customer
+     *
+     * Nothing happens here since payment is done on the Paypal website
+     * And the payment confirmation notification comes via IPN
+     *
+     * @param Cart $cart
+     * @param $error_message
+     */
     public function processPayment(Cart $cart, &$error_message)
     {
-        // TODO: Implement processPayment() method.
     }
 
     /**
@@ -26,6 +50,8 @@ class PaypalPaymentsStandard extends PaymentMethodAbstract
      * If an order has not been created, we create it now
      * If payment is complete, we update order status to Processing
      *
+     * If an error occurred, we show it to the user
+     *
      * @param $cart
      * @param $module_srl
      * @throws Exception
@@ -34,53 +60,105 @@ class PaypalPaymentsStandard extends PaymentMethodAbstract
     {
         // Retrieve unique transaction id
         $tx_token = Context::get('tx');
+
+        // If no transaction token was retrieved
+        // or the user did not configure his PDT (Payment Data Transfer) token in backend
+        // do nothing
         if(!$tx_token || !$this->pdt_token)
         {
+            // TODO What do we do in this case?
             return;
         }
 
-        // Check if order has not been created already (from an IPN call, for instance)
-        $orderRepository = new OrderRepository();
-        $order = $orderRepository->getOrderByTransactionId($tx_token);
-        if(!$order)
+        if(!$order = $this->orderCreatedForThisTransaction($tx_token))
         {
-            // Check if transaction was not already processed by IPN and invalid
-            if($cart->getExtra("transaction_id") && $cart->getExtra("transaction_id") == $tx_token)
+            if($this->thisTransactionWasAlreadyProcessedAndWasInvalid($cart, $tx_token))
             {
-                $shopController = getController('shop');
-                $shopController->setMessage($cart->getExtra('transaction_message'), "error");
-                $this->redirect($this->getPlaceOrderPageUrl());
+                $this->redirectUserToOrderUnsuccessfulPageAndShowHimTheErrorMessage($cart->getTransactionErrorMessage());
+                return;
             }
 
             // Retrieve payment info from Paypal
-            $params = array();
-            $params['cmd'] = '_notify-synch';
-            $params['tx'] = $tx_token;
-            $params['at'] = $this->pdt_token;
-
-            $paypalAPI = new PaypalPaymentsStandardAPI();
-            $response = $paypalAPI->request(self::SANDBOX_URL, $params);
-            $response_array = explode("\n", $response);
-            if($response_array[0] == 'SUCCESS')
+            $response = $this->getTransactionInfoFromPDT($tx_token);
+            if($response->requestWasSuccessful())
             {
-                $order = new Order($cart);
-                $order->transaction_id = $tx_token;
-                $order->save(); //obtain srl
-                $order->saveCartProducts($cart);
-                $cart->delete();
-
-                Context::set('order_srl', $order->order_srl);
-                // Override cart, otherwise it would still show up with products
-                Context::set('cart', null);
+                $this->createNewOrderAndDeleteExistingCart($cart, $tx_token);
             }
             else
             {
-                throw new Exception("There was some error from PDT");
+                // We couldn't retrieve transaction info from Paypal
+                ShopLogger::log("PDT request FAIL: " .print_r($response));
+                throw new NetworkErrorException("There was some error from PDT");
             }
         }
+        else
+        {
+            // Order already exists for this transaction, so we'll just display it
+            // skipping any requests to paypal
+            Context::set('order_srl', $order->order_srl);
+            return;
+        }
+    }
+
+    /**
+     * Given a transaction id, checks if an order was created or not for it
+     * (from an IPN call, for instance)
+     *
+     * @return boolean
+     */
+    private function orderCreatedForThisTransaction($transaction_id)
+    {
+        $orderRepository = new OrderRepository();
+        $order = $orderRepository->getOrderByTransactionId($transaction_id);
+        return $order;
+    }
+
+    /**
+     * Checks if a transaction was already processed but was invalid
+     * causing the order not to be created;
+     * Thus, even though there is no order created, we should not parse this again
+     */
+    private function thisTransactionWasAlreadyProcessedAndWasInvalid(Cart $cart, $transaction_id)
+    {
+        return $cart->getTransactionId()
+            && $cart->getTransactionId() == $transaction_id;
+    }
+
+    private function redirectUserToOrderUnsuccessfulPageAndShowHimTheErrorMessage($error_message)
+    {
+        $shopController = getController('shop');
+        $shopController->setMessage($error_message, "error");
+        $this->redirect($this->getPlaceOrderPageUrl());
+    }
+
+    /**
+     * Retrieve payment info from Paypal through
+     * Payment Data Transfer
+     */
+    private function getTransactionInfoFromPDT($tx_token)
+    {
+        $params = array();
+        $params['cmd'] = '_notify-synch';
+        $params['tx'] = $tx_token;
+        $params['at'] = $this->pdt_token;
+
+        $paypalAPI = new PaypalPaymentsStandardAPI();
+        $response = $paypalAPI->request($this->gateway_api, $params);
+        $response_array = explode("\n", $response);
+        return new PDTResponse($response_array);
+    }
+
+    private function createNewOrderAndDeleteExistingCart($cart, $transaction_id)
+    {
+        $order = new Order($cart);
+        $order->transaction_id = $transaction_id;
+        $order->save(); //obtain srl
+        $order->saveCartProducts($cart);
+        $cart->delete();
 
         Context::set('order_srl', $order->order_srl);
-        return;
+        // Override cart, otherwise it would still show up with products
+        Context::set('cart', null);
     }
 
     /**
@@ -103,7 +181,7 @@ class PaypalPaymentsStandard extends PaymentMethodAbstract
         $paypal_info = $paypalAPI->decodeArray($args);
         $decoded_args = array_merge(array('cmd' => '_notify-validate'), $paypal_info);
 
-        $response = $paypalAPI->request(self::SANDBOX_URL, $decoded_args);
+        $response = $paypalAPI->request($this->gateway_api, $decoded_args);
 
         if($response == 'VERIFIED')
         {
@@ -176,6 +254,21 @@ class PaypalPaymentsStandard extends PaymentMethodAbstract
             ShopLogger::log("Invalid IPN data received: " . $response);
         }
 
+    }
+}
+
+class PDTResponse
+{
+    public $response_array = null;
+
+    public function __construct($response_array)
+    {
+        $this->response_array = $response_array;
+    }
+
+    public function requestWasSuccessful()
+    {
+        return $this->response_array[0] == 'SUCCESS';
     }
 }
 

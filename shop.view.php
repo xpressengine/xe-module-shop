@@ -1175,7 +1175,15 @@ class shopView extends shop {
         {
             $payment_repository = new PaymentMethodRepository();
             $payment_method = $payment_repository->getPaymentMethod($payment_method_name, $this->module_srl);
-            $payment_method->onOrderConfirmationPageLoad($cart, $this->module_srl);
+            try
+            {
+                $payment_method->onOrderConfirmationPageLoad($cart, $this->module_srl);
+            }
+            catch(NetworkErrorException $exception)
+            {
+                $this->setTemplateFile("order_confirmation_coming_soon");
+                return;
+            }
         }
 
         $this->setTemplateFile('order_confirmation.html');
