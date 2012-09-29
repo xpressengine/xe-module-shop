@@ -558,6 +558,11 @@ class Cart extends BaseItem
         return $this->getExtra('shipping_method');
     }
 
+    public function getPaymentMethodName()
+    {
+        return $this->getExtra('payment_method');
+    }
+
 
 
 }

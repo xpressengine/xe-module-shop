@@ -118,4 +118,9 @@ class Order extends BaseItem
         if ($calculateTotal) $this->save();
     }
 
+    public function getProducts()
+    {
+        return $this->repo->getOrderItems($this);
+    }
+
 }
