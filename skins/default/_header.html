@@ -22,7 +22,7 @@
                                     {$cart_product->title}
                                 <!--@end-->
                             </p>
-                            <p class="cart-preview-price"><span style="color: #1978AD; font-weight: bold;">{$cart_product->quantity}</span> x {ShopDisplay::priceFormat($cart_product->price, $shop->getCurrencySymbol())}</p>
+                            <p class="cart-preview-price">{$cart_product->quantity} x {ShopDisplay::priceFormat($cart_product->price, $shop->getCurrencySymbol())}</p>
                         </li>
                         <!--@endforeach-->
                     </ul>
