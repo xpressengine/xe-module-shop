@@ -48,6 +48,7 @@
 
     <!-- Pagination -->
     <!--@if($page_navigation)-->
+        <!--@if($page==null)-->{@$page=1;}<!--@end-->
         <div class="pagination" cond="$products && !empty($products)">
             <a href="{getUrl('page','','mid',$mid)}" class="prev">&laquo; {$lang->first_page}</a>
             <!--@while($page_no = $page_navigation->getNextPage())-->
