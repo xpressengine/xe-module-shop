@@ -1576,6 +1576,7 @@
 			$shopModel = $this->model;
 			$repository = $shopModel->getCategoryRepository();
 			$category = $repository->getCategory($category_srl);
+            $category->filename = $category->getThumbnailPath(50);
 
 			$this->add('category', $category);
 		}

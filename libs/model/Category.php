@@ -4,7 +4,7 @@
  *
  * @author Corina Udrescu (dev@xpressengine.org)
  */
-class Category extends BaseItem
+class Category extends BaseItem implements IThumbnailable
 {
 	public $category_srl = 0;
 	public $module_srl;
@@ -114,6 +114,12 @@ class Category extends BaseItem
             }
         }
         return call_user_func_array('getNotEncodedUrl', $params);
+    }
+
+    public function getThumbnailPath($width = 80, $height = 0, $thumbnail_type = '')
+    {
+        $thumbnail = new ShopThumbnail($this->category_srl, $this->filename);
+        return $thumbnail->getThumbnailPath($width, $height, $thumbnail_type);
     }
 
 }
