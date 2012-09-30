@@ -273,11 +273,11 @@ class shopModel extends shop
 	 * Returns an instance of the Image repository
 	 *
 	 * @author Dan Dragan(dev@xpressengine.org)
-	 * @return ImageRepository
+	 * @return ProductImageRepository
 	 */
 	public function getImageRepository()
 	{
-		return new ImageRepository();
+		return new ProductImageRepository();
 	}
 
     /**

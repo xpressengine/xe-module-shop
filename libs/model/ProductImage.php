@@ -1,7 +1,6 @@
 <?php
-class Image extends BaseItem
+class ProductImage extends BaseItem
 {
-
     public
         $image_srl,
         $product_srl,

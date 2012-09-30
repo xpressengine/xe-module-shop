@@ -104,7 +104,7 @@ abstract class Product extends BaseItem
         if($this->primary_image_filename && isset($this->images[$this->primary_image_filename]))
             return $this->images[$this->primary_image_filename];
 
-        return new Image(array(
+        return new ProductImage(array(
                         'image_srl' => $this->product_srl
                         , 'module_srl' => $this->module_srl
                         , 'product_srl' => $this->product_srl

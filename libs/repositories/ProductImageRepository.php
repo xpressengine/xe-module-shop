@@ -5,16 +5,16 @@
  *
  * @author Dan Dragan (dev@xpressengine.org)
  */
-class ImageRepository extends BaseRepository
+class ProductImageRepository extends BaseRepository
 {
 	/**
 	 * Insert a new image; returns the ID of the newly created record
 	 *
 	 * @author Dan Dragan (dev@xpressengine.org)
-	 * @param $image Image
+	 * @param $image ProductImage
 	 * @return int
 	 */
-	public function insertImage(Image &$image)
+	public function insertImage(ProductImage &$image)
 	{
         if ($image->image_srl) throw new Exception('A srl must NOT be specified');
         $image->image_srl = getNextSequence();
@@ -39,10 +39,10 @@ class ImageRepository extends BaseRepository
 	 * Save image to disk
 	 *
 	 * @author Dan Dragan (dev@xpressengine.org)
-	 * @param $image Image
+	 * @param $image ProductImage
 	 * @return boolean
 	 */
-	public function saveImage(Image &$image)
+	public function saveImage(ProductImage &$image)
 	{
 		try{
 			$path = sprintf('./files/attach/images/shop/%d/product-images/%d/', $image->module_srl , $image->product_srl);
@@ -62,7 +62,7 @@ class ImageRepository extends BaseRepository
 	 * Retrieve a Images object from the database by image_srls
 	 * @author Dan Dragan (dev@xpressengine.org)
 	 * @param $image_srls array
-	 * @return Image list
+	 * @return ProductImage list
 	 */
 	public function getImages($image_srls)
 	{
@@ -87,7 +87,7 @@ class ImageRepository extends BaseRepository
 			$args->source_filename = $file['tmp_name'];
 			$args->filename = $file['name'];
 			$args->file_size = $file['size'];
-			$image = new Image($args);
+			$image = new ProductImage($args);
 			$images[] = $image;
 		}
 		return $images;

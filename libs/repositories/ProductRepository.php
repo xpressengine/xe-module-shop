@@ -458,7 +458,7 @@ class ProductRepository extends BaseRepository
 
 		foreach($output->data as $image)
 		{
-			$oImage = new Image($image);
+			$oImage = new ProductImage($image);
 			$product->images[$image->filename] = $oImage;
 		}
 
@@ -768,7 +768,7 @@ class ProductRepository extends BaseRepository
                     if($image == $product->primary_image_filename) $args->is_primary = 'Y';
                     else $args->is_primary = 'N';
                     $args->filename = $image;
-                    $new_image = new Image($args);
+                    $new_image = new ProductImage($args);
                     $product->images[] = $new_image;
                 }
             }
