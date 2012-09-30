@@ -368,7 +368,6 @@ Patrioque conceptam in mea. Est ad ullum ceteros, pro quem accumsan appareat id,
 
 		// Check that other products are not deleted
 		$other_product = $product_repository->getProduct(304);
-		var_dump($other_product);
 		$this->assertNotNull($product_repository->getProduct(304));
 	}
 

@@ -257,10 +257,10 @@ class CategoryTest extends Shop_Generic_Tests_DatabaseTestCase
 
 		$tree = $repository->getCategoriesTree(1001);
 		$flat_tree = $tree->toFlatStructure();
-		foreach($flat_tree as $node)
-		{
-			echo $node->depth . ' ' . $node->category->category_srl . PHP_EOL;
-		}
+//		foreach($flat_tree as $node)
+//		{
+//			echo $node->depth . ' ' . $node->category->category_srl . PHP_EOL;
+//		}
 
 		// Test flat structure
 		$this->assertTrue(is_array($flat_tree));
@@ -331,8 +331,8 @@ class CategoryTest extends Shop_Generic_Tests_DatabaseTestCase
 			// Check that properties were updated
 			$new_category = $repository->getCategory($category->category_srl);
 
-			echo "Expected: " . $category->getIncludeInNavigationMenu() . PHP_EOL;
-			echo "Actual: " . $new_category->getIncludeInNavigationMenu() . PHP_EOL;
+//			echo "Expected: " . $category->getIncludeInNavigationMenu() . PHP_EOL;
+//			echo "Actual: " . $new_category->getIncludeInNavigationMenu() . PHP_EOL;
 
 			$this->assertEquals($category->include_in_navigation_menu
 				, $new_category->include_in_navigation_menu);
