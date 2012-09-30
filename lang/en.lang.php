@@ -616,4 +616,5 @@
     $lang->settings = 'Settings';
     $lang->back_to_orders = 'Back to orders';
     $lang->about_not_logged = 'To access this part of the site you have to be logged in.';
+    $lang->no_description = 'This product has no description';
 ?>

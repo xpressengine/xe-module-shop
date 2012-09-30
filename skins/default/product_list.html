@@ -20,40 +20,72 @@
                     if (option.length) jQuery(this).parents('form').submit();
                 });
             </script>
-            <form action="./">
-                <input name="act" value="procShopSort" type="hidden">
-                <select name="sort">
+            <form action="./"><input name="act" value="procShopSort" type="hidden"><select name="sort">
                     <option>sort</option>
                     <option value="price">price</option>
                     <option value="orders">orders</option>
-                </select>
-            </form>
-            <a href="{getUrl('', 'act', 'procShopToggleGridView', 'mode', 'grid')}" class="breadcrumbs-button <!--@if(!$grid_view)-->selected<!--@end-->"><img src="img/grid-icon.png" alt="Grid view" title="Grid view" /></a>
-            <a href="{getUrl('', 'act', 'procShopToggleGridView', 'mode', 'list')}" class="breadcrumbs-button <!--@if($grid_view)-->selected<!--@end-->"><img src="img/list-icon.png" alt="List view" title="List view" /></a>
+                </select></form><a href="{getUrl('', 'act', 'procShopToggleGridView', 'mode', 'grid')}" class="breadcrumbs-button <!--@if($grid_view)-->selected<!--@end-->"><img src="img/grid-icon.png" alt="Grid view" title="Grid view" /></a><a href="{getUrl('', 'act', 'procShopToggleGridView', 'mode', 'list')}" class="breadcrumbs-button <!--@if(!$grid_view)-->selected<!--@end-->"><img src="img/list-icon.png" alt="List view" title="List view" /></a>
         </span>
     </div>
     <h2 cond="$q && $act == 'dispShopSearch'">Searching for "{$q}"</h2>
-    <div class="product-list clearfix">
+    <div class="product-list clearfix <!--@if(!$grid_view)-->list-view<!--@end-->">
         <div class="product" cond="!$products || empty($products)" style="width: 694px; text-align: center;">
             <h2>{$lang->no_products_categ}</h2>
         </div>
-    <!--@foreach($products as $product)-->
-        <div id="product_{$product->product_srl}" class="product {$product->product_type}">
-            <a href="{getUrl('vid', $mid, 'act', 'dispShopProduct', 'product_srl', $product->product_srl, 'category_srl', $category_srl)}" class="product-link">
-                <span class="product-image-container">
-                    <img src="{$product->getPrimaryImage()->getThumbnailPath(170)}" />
-                </span>
-                <h4>
-                    <!--@if(strlen($product->title)>22)-->
-                        {substr($product->title, 0, 22)}...
+        <!--@if($grid_view)-->
+            <!--@foreach($products as $product)-->
+                <div id="product_{$product->product_srl}" class="product {$product->product_type}">
+                    <a href="{getUrl('vid', $mid, 'act', 'dispShopProduct', 'product_srl', $product->product_srl, 'category_srl', $category_srl)}" class="product-link">
+                        <span class="product-image-container">
+                            <img src="{$product->getPrimaryImage()->getThumbnailPath(170)}" />
+                        </span>
+                        <h4>
+                            <!--@if(strlen($product->title)>22)-->
+                                {substr($product->title, 0, 22)}...
+                            <!--@else-->
+                                {$product->title}
+                            <!--@end-->
+                        </h4>
+                    </a>
+                    <include target="add_to_cart"/>
+                </div>
+            <!--@end-->
+        <!--@else-->
+            <!--@foreach($products as $product)-->
+                <div id="product_{$product->product_srl}" class="product list-view {$product->product_type}">
+                    <a href="{getUrl('vid', $mid, 'act', 'dispShopProduct', 'product_srl', $product->product_srl, 'category_srl', $category_srl)}" class="product-link list-view">
+                        <span class="product-image-container list-view">
+                            <img src="{$product->getPrimaryImage()->getThumbnailPath(130)}" />
+                        </span>
+                    </a>
+                    <h2>{$product->title}</h2>
+                    <div class="f-right product-actions a-right">
+                        <form action="./" method="post" cond="isset($product->available) ? $product->available : $product->isAvailable()">
+                            <input type="hidden" name="act" value="procShopToolCartAddProduct" />
+                            <p>
+                                <span class="quantity"><label>Quantity:</label><input type="text" name="quantity" value="1" /></span>
+                            </p>
+                                <!--@if($product->isSimple())-->
+                                    <input type="hidden" id="product_srl" name="product_srl" value="{$product->product_srl}" />
+                                <!--@elseif($product->isConfigurable())-->
+                                    <include target="product_variants" />
+                                <!--@end-->
+                            <p>
+                                {ShopDisplay::priceFormat($product->price, $shop->getCurrencySymbol())}
+                            </p>
+                            <p>
+                                <input class="add-to-cart" type="submit" value="Add to cart" />
+                            </p>
+                        </form>
+                    </div>
+                    <!--@if($product->description != '')-->
+                        {$product->description}
                     <!--@else-->
-                        {$product->title}
+                        {$lang->no_description}
                     <!--@end-->
-                </h4>
-            </a>
-            <include target="add_to_cart"/>
-        </div>
-    <!--@end-->
+                </div>
+            <!--@end-->
+        <!--@end-->
     </div>
 
     <!-- Pagination -->

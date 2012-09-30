@@ -293,7 +293,7 @@ h1 {
 h2 {
     font-weight: normal;
     font-size: 1.333em;
-    margin: 2.500em 0 1.250em;
+    margin: 2.500em 0 1.500em;
     color: #2d5375;
 }
 
@@ -676,7 +676,7 @@ table tbody tr td:last-child {
     margin: 0 0 10px;
 }
 
-.main-content p, .main-content h1, .main-content h2, .main-content h3 {
+.main-content p, .main-content h1, .main-content h2, .main-content h3, .product.list-view {
     line-height: 1.5em;
 }
 
@@ -847,6 +847,10 @@ li span.close-sign, li span.open-sign {
     -webkit-border-radius: 3px;
 }
 
+.product-list .product.list-view {
+    width: 694px;
+}
+
 .product .produc-variants {
     color: #595959;
 }
@@ -871,6 +875,22 @@ li span.close-sign, li span.open-sign {
     display: block;
     display: table-cell;
     vertical-align: middle;
+}
+
+.product-list .product-link .product-image-container.list-view {
+    border: 1px solid #cacaca;
+    width: 130px;
+    height: 130px;
+    float: left;
+    margin: 0 10px 10px 0;
+}
+
+.product .product-actions {
+    width: 140px;
+}
+
+.product h2 {
+    margin: 1em 0 !important;
 }
 
 .product-list .product-link h4 {
@@ -962,6 +982,10 @@ li span.close-sign, li span.open-sign {
     position: absolute;
     right: 0;
     right: 0;
+}
+
+.breadcrumbs-options form {
+    display: inline;
 }
 
 .breadcrumbs-options select {
