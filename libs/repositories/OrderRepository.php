@@ -155,7 +155,7 @@ class OrderRepository extends BaseRepository
         $args->order_srl = $order->order_srl;
         $output = $this->query('getOrderItems',$args,true);
         foreach($output->data as $item){
-            $product = $productRepository->getProduct($item->product_srl);
+            $product = new SimpleProduct($item);
             $product->ordered_qty = $item->quantity;
             $ordered_items[] = $product;
         }
