@@ -50,6 +50,7 @@
                 if (!$oModuleModel->getTrigger($trigger[0], $trigger[1], $trigger[2], $trigger[3], $trigger[4])) return true;
             }
 
+            if(!$oDB->isColumnExists("shop_cart_products","price")) return true;
             if(!$oDB->isColumnExists("shop_orders","transaction_id")) return true;
             if(!$oDB->isColumnExists("shop","currency_symbol")) return true;
             if(!$oDB->isColumnExists("shop_products","discount_price")) return true;
@@ -171,6 +172,10 @@
 
             if(!$oDB->isColumnExists("shop_order_products","product_type")) {
                 $oDB->addColumn('shop_order_products',"product_type","varchar", 250, null, true);
+            }
+
+            if(!$oDB->isColumnExists("shop_cart_products","price")) {
+                $oDB->addColumn('shop_cart_products',"price","number", 11);
             }
 
             if(!$oDB->isColumnExists("shop_order_products","title")) {

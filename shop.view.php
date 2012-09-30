@@ -205,6 +205,7 @@ class shopView extends shop {
 	 **/
 	public function dispShopToolDashboard(){
 		$oCounterModel = getModel('counter');
+        /** @var $oShopModel shopModel */
 		$oShopModel = getModel('shop');
 
         //get visitor graph details
@@ -849,19 +850,20 @@ class shopView extends shop {
         // Products list
         $this->loadShopCategoryTree();
         $product_repository = $this->model->getProductRepository();
+
+        if (isset($_SESSION['grid_view'])) Context::set('grid_view', $_SESSION['grid_view']);
+        if (isset($_SESSION['sort'])) Context::set('sort', $_SESSION['sort']);
+
         try {
             $args = new stdClass();
             $args->module_srl = $this->module_srl;
             $args->status = 'enabled';
-            if($this->shop->getOutOfStockProducts() == 'N') $args->in_stock = Y ;
+            if ($this->shop->getOutOfStockProducts() == 'N') $args->in_stock = 'Y';
             $output = $product_repository->getFeaturedProducts($args, TRUE, TRUE);
             Context::set('products', $output->products);
 
             $datasourceJS = $this->getAssociatedProductsAttributesAsJavascriptArray($output->products);
             Context::set('datasourceJS', $datasourceJS);
-
-            if (isset($_SESSION['grid_view'])) Context::set('grid_view', $_SESSION['grid_view']);
-            if (isset($_SESSION['sort'])) Context::set('sort', $_SESSION['sort']);
 
             $this->setTemplateFile('index.html');
         }
@@ -878,29 +880,30 @@ class shopView extends shop {
         $this->loadShopCategoryTree();
 
 		// Products list
-		$product_repository = $this->model->getProductRepository();
-		try{
+		$productRepo = new ProductRepository();
+
+        if (isset($_SESSION['grid_view'])) Context::set('grid_view', $_SESSION['grid_view']);
+        if (isset($_SESSION['sort'])) Context::set('sort', $_SESSION['sort']);
+
+        try {
 			$args = new stdClass();
 			$args->module_srl = $this->module_srl;
             $args->list_count = 9;
             $args->status = 'enabled';
-            if($this->shop->getOutOfStockProducts() == 'N') $args->in_stock = Y ;
+            if($this->shop->getOutOfStockProducts() == 'N') $args->in_stock = 'Y';
 			$page = Context::get('page');
 			if($page) $args->page = $page;
 			$category_srl = Context::get('category_srl');
 			if($category_srl) $args->category_srls = array($category_srl);
 
             $args->status = 'enabled';
-            if($this->shop->getOutOfStockProducts() == 'N') $args->in_stock = Y ;
-			$output = $product_repository->getProductList($args, TRUE, TRUE);
+            if($this->shop->getOutOfStockProducts() == 'N') $args->in_stock = 'Y';
+			$output = $productRepo->getProductList($args, TRUE, TRUE);
 			Context::set('products', $output->products);
 			Context::set('page_navigation', $output->page_navigation);
 
 			$datasourceJS = $this->getAssociatedProductsAttributesAsJavascriptArray($output->products);
 			Context::set('datasourceJS', $datasourceJS);
-
-            if (isset($_SESSION['grid_view'])) Context::set('grid_view', $_SESSION['grid_view']);
-            if (isset($_SESSION['sort'])) Context::set('sort', $_SESSION['sort']);
 
             $this->setTemplateFile("product_list.html");
 		}

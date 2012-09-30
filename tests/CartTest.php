@@ -170,10 +170,12 @@ class CartTest extends Shop_Generic_Tests_DatabaseTestCase
 
         // Assert
         // 1. Check that cart has expected products
-        $this->assertEquals(1, count($cart->getProducts(true))); // When $onlyAvailable is true, count just availablel products
+        $this->assertEquals(1, count($cart->getProducts(null, true))); // When $onlyAvailable is true, count just availablel products
         $this->assertEquals(2, count($cart->getProducts())); // Default, , show all products
 
         // 3. Check that item total is correct
+        // 29.99+14.99
+        //TODO: continue adding price to deleted products, then make the correct calculus
         $this->assertEquals(44.98, $cart->getItemTotal()); // Default, count all products
         $this->assertEquals(29.99, $cart->getItemTotal(true)); // Count just available products
 

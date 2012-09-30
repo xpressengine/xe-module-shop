@@ -500,7 +500,8 @@ class ProductRepository extends BaseRepository
 	 * @throws Exception
 	 * @return stdClass $output
 	 */
-    public function getProductList($args, $loadAttributes = FALSE, $loadImages = FALSE){
+    public function getProductList($args, $loadAttributes = FALSE, $loadImages = FALSE, $orderBy=null)
+    {
         if (!isset($args->module_srl)) throw new Exception("Missing arguments for get product list : please provide [module_srl]");
 		if (!$args->page) $args->page = 1;
         $query = ($args->category_srls && !empty($args->category_srls) ? 'getProductListByCategory' : 'getProductList');

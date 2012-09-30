@@ -1,9 +1,15 @@
 <query id="getProductListByCategory" action="select">
     <tables>
         <table name="shop_products" alias="p" />
+        <table name="shop_order_products" alias="op" type="left join">
+            <conditions>
+                <condition operation="equal" column="op.product_srl" default="p.product_srl"/>
+            </conditions>
+        </table>
     </tables>
     <columns>
         <column name="p.*" />
+        <column name="count(distinct op.order_srl)" alias="orders" />
     </columns>
     <conditions>
         <condition operation="equal" column="p.module_srl" var="module_srl" notnull="notnull" />
@@ -22,10 +28,13 @@
             </columns>
             <conditions>
                 <condition operation="in" column="pc.category_srl" var="category_srls" />
-                <condition operation="null" column="parent_product_srl" pipe="and" />
+                <condition operation="null" column="p.parent_product_srl" pipe="and" />
             </conditions>
         </query>
     </conditions>
+    <groups>
+        <group column="p.product_srl" />
+    </groups>
     <navigation>
         <index var="product_srl" default="product_srl" order="order_type" />
         <list_count var="list_count" default="10" />

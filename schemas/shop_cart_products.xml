@@ -3,4 +3,5 @@
     <column name="product_srl" type="number" size="11" notnull="notnull" primary_key="primary_key" />
     <column name="quantity" type="number" size="11" />
     <column name="title" type="varchar" size="255" />
+    <column name="price" type="float" size="20" notnull="notnull" />
 </table>

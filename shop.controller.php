@@ -907,15 +907,21 @@
         {
             $cartRepository = new CartRepository();
             if ($product_srl = Context::get('product_srl')) {
-                $productsRepo = $this->model->getProductRepository();
-                if ($product = $productsRepo->getProduct($product_srl)) {
+                $productsRepo = new ProductRepository();
+                if ($product = $productsRepo->getProduct($product_srl))
+                {
                     if (!($product instanceof SimpleProduct)) {
                         return new Object(-1, 'msg_invalid_request');
                     }
                     $logged_info = Context::get('logged_info');
                     $cart = $cartRepository->getCart($this->module_info->module_srl, null, $logged_info->member_srl, session_id(), true);
                     $quantity = (is_numeric(Context::get('quantity')) && Context::get('quantity') > 0 ? Context::get('quantity') : 1);
-                    $cart->addProduct($product, $quantity);
+                    try {
+                        $cart->addProduct($product, $quantity);
+                    }
+                    catch (Exception $e) {
+                        return new Object(-1, $e->getMessage());
+                    }
                 }
                 else return new Object(-1, 'msg_invalid_request');
             }

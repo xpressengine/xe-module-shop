@@ -7,5 +7,6 @@
         <column name="product_srl" var="product_srl" filter="number" notnull="notnull"/>
         <column name="quantity" var="quantity" default="1" />
         <column name="title" var="title" size="255" />
+        <column name="price" var="price" filter="number" />
     </columns>
 </query>

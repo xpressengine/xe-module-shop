@@ -17,7 +17,7 @@ class Cart extends BaseItem
         $regdate,
         $last_update;
 
-    protected $addresses, $productsCache=array();
+    protected $addresses;
 
     /** @var CartRepository */
     public $repo;
@@ -61,7 +61,7 @@ class Cart extends BaseItem
             //if I have it update my quantity
             if ($have) $this->repo->updateCartProduct($this->cart_srl, $cp->product_srl, $cp->quantity + $cp2->quantity);
             //else add it
-            else $this->repo->insertCartProduct($this->cart_srl, $cp->product_srl, $cp->quantity);
+            else $this->repo->insertCartProduct($this->cart_srl, $cp->product_srl, $cp->quantity, array('title'=>$cp->title, 'price'=>$cp->price));
         }
         //count again
         $this->setExtra('price', $this->getPrice(true));
@@ -95,7 +95,7 @@ class Cart extends BaseItem
         }
 
         if (!$this->productStillAvailable($product)) {
-            throw new Exception('Product is not available anymore, cannot add it to cart.');
+            throw new Exception('Product is no longer available, cannot add it to cart.');
         }
 
         if ($cp = $this->getCartProduct($product)) {
@@ -104,7 +104,7 @@ class Cart extends BaseItem
         }
         else {
             $cartProductQuantity = $quantity;
-            $return = $this->repo->insertCartProduct($this->cart_srl, $product->product_srl, $cartProductQuantity, array('title' => $product->title));
+            $return = $this->repo->insertCartProduct($this->cart_srl, $product->product_srl, $cartProductQuantity, array('title' => $product->title, 'price'=>$product->price));
         }
         $this->setExtra('price', $this->getPrice(true));
         $this->items = $this->count(true, true);
@@ -158,6 +158,17 @@ class Cart extends BaseItem
      */
     public function count($sumQuantities=false, $onlyAvailables=false)
     {
+        if ($onlyAvailables) {
+            $products = $this->getProducts(null, $onlyAvailables);
+            if (!$sumQuantities) return count($products);
+            else {
+                $count = 0;
+                foreach ($products as $product) {
+                    $count += $product->quantity;
+                }
+                return $count;
+            }
+        }
         return $this->repo->countCartProducts($this->module_srl, $this->cart_srl, $this->member_srl, $this->session_id, $sumQuantities);
     }
 
@@ -174,6 +185,7 @@ class Cart extends BaseItem
 
     /**
      * @param null $n number of products to return
+     * @param false $onlyAvailables wether or not to return only available products
      *
      * @return mixed Cart products
      * @throws Exception
@@ -181,26 +193,37 @@ class Cart extends BaseItem
     public function getProducts($n=null, $onlyAvailables=false)
     {
         if (!$this->cart_srl) throw new Exception('Cart is not persisted');
-        $cacheKey = ($n?$n:"NULL").(string) $onlyAvailables;
-        if (isset($this->productsCache[$cacheKey])) $products = $this->productsCache[$cacheKey];
-        else {
+        //an entity-unique cache key for the current method and parameters combination
+        $cacheKey = 'getProducts|' . ($n?$n:"_").(string)($onlyAvailables?'av':'all');
+        if (!$products = $this->cache[$cacheKey]) {
+            $products = array();
             $shopInfo = new ShopInfo($this->module_srl);
             $checkIfInStock = ($shopInfo->getOutOfStockProducts() == 'Y');
-            $params = array('cart_srl'=> $this->cart_srl);
+            $params = array('cart_srl'=>$this->cart_srl);
             if ($n) $params['list_count'] = $n;
             $output = $this->query('getCartAllProducts', $params, true);
-            foreach ($output->data as $i=>&$data) {
-                if ($onlyAvailables) unset($output->data[$i]);
-                else {
-                    $product = new SimpleProduct($data);
-                    $product->cart_product_srl = $data->cart_product_srl;
-                    $product->cart_product_title = $data->cart_product_title;
-                    $product->quantity = $data->quantity;
-                    $product->available = ($product->product_srl ? $product->isAvailable($checkIfInStock) : false);
-                    $data = $product;
+            $stds = $output->data;
+            foreach ($stds as $i=>$data) {
+                $product = new SimpleProduct($data);
+                $product->cart_product_srl = $data->cart_product_srl;
+                $product->cart_product_title = $data->cart_product_title;
+                $product->quantity = $data->quantity;
+                if ($product->isPersisted()) {
+                    $available = $product->isAvailable($checkIfInStock);
+                    if ($onlyAvailables && !$available) continue;
+                    $product->available = $available;
                 }
+                else {
+                    $product->available = false;
+                    if ($onlyAvailables) continue;
+                }
+                $products[$i] = $product;
             }
-            $products = $this->productsCache[$cacheKey] = $output->data;
+            $this->cache[$cacheKey] = $products;
+        }
+        //if limit did not work:
+        if ($n && $n < count($products)) {
+            return array_slice($products, 0, $n);
         }
         return $products;
     }
@@ -293,12 +316,12 @@ class Cart extends BaseItem
         return $total;
     }
 
-    public function getTotal($onlyAvailable=false)
+    public function getTotal($onlyAvailables=false)
     {
         if ($discount = $this->getDiscount()) {
             return $discount->getValueDiscounted();
         }
-        return $this->getTotalBeforeDiscount($onlyAvailable);
+        return $this->getTotalBeforeDiscount($onlyAvailables);
     }
 
     public function getVAT($onlyAvailable=false, $withDiscount=false)

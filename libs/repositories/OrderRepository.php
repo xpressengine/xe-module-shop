@@ -28,7 +28,8 @@ class OrderRepository extends BaseRepository
         return $orders;
     }
 
-    public function getMostOrderedProducts($module_srl){
+    public function getMostOrderedProducts($module_srl)
+    {
         $params = array('module_srl'=> $module_srl);
         $output = $this->query('getMostOrderedProducts', $params, true);
         foreach ($output->data as $data) {
@@ -40,7 +41,8 @@ class OrderRepository extends BaseRepository
         return $products;
     }
 
-    public function getTopCustomers($module_srl){
+    public function getTopCustomers($module_srl)
+    {
         $params = array('module_srl'=> $module_srl);
         $output = $this->query('getTopCustomers', $params, true);
 

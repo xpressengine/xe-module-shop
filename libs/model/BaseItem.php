@@ -3,6 +3,8 @@ abstract class BaseItem
 {
     /** @var BaseRepository */
     public $repo;
+    /** @var ShopCache */
+    public $cache;
 
     protected $meta = array();
 
@@ -53,6 +55,7 @@ abstract class BaseItem
             else throw new Exception("No such {$this->repo->entity} srl $data");
         }
 
+        $this->cache = new ShopCache();
     }
 
     public function copy(BaseItem $o)
