@@ -211,6 +211,7 @@ class ProductRepository extends BaseRepository
 	 */
 	public function deleteProduct($args)
 	{
+        if (is_array($args)) $args = (object) $args;
 		if(!isset($args->product_srl)) {
             throw new Exception("Missing arguments for Product delete: please provide [product_srl] or [module_srl]");
         }

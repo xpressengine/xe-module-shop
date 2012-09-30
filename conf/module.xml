@@ -109,7 +109,7 @@
     </permissions>
     <actions>
         <!-- Shop frontend -->
-        <action name="dispShop" type="view" />
+        <action name="dispShop" type="view" /
         <action name="dispShopHome" type="view" index="true" />
         <action name="dispShopProduct" type="view" />
         <action name="dispShopProfile" type="view" />
@@ -133,6 +133,7 @@
         <action name="procShopUnsignToNewsletter" type="controller" />
         <action name="procShopSearch" type="controller"/>
         <action name="procShopRenewOrder" type="controller"/>
+        <action name="procShopSort" type="controller"/>
 
         <!-- Shop backend -->
         <action name="dispShopToolLogin" type="view" />

@@ -163,7 +163,7 @@ class Cart extends BaseItem
 
     public function countAvailableProducts()
     {
-        return count($this->getAvailableProducts());
+        return count($this->getProducts(null, true));
     }
 
     public function setProductQuantity($product_srl, $quantity, array $extraParams=array())
@@ -181,8 +181,7 @@ class Cart extends BaseItem
     public function getProducts($n=null, $onlyAvailables=false)
     {
         if (!$this->cart_srl) throw new Exception('Cart is not persisted');
-
-        $cacheKey = ($n?$n:"NULL").(string)$onlyAvailables;
+        $cacheKey = ($n?$n:"NULL").(string) $onlyAvailables;
         if (isset($this->productsCache[$cacheKey])) $products = $this->productsCache[$cacheKey];
         else {
             $shopInfo = new ShopInfo($this->module_srl);
@@ -191,19 +190,15 @@ class Cart extends BaseItem
             if ($n) $params['list_count'] = $n;
             $output = $this->query('getCartAllProducts', $params, true);
             foreach ($output->data as $i=>&$data) {
-                if ($data->product_srl) {
+                if ($onlyAvailables) unset($output->data[$i]);
+                else {
                     $product = new SimpleProduct($data);
-                    $product->available = $this->productStillAvailable($product, $checkIfInStock);
-                    if (!$product->available && $onlyAvailables) {
-                        unset($output->data[$i]);
-                        continue;
-                    }
                     $product->cart_product_srl = $data->cart_product_srl;
                     $product->cart_product_title = $data->cart_product_title;
                     $product->quantity = $data->quantity;
+                    $product->available = ($product->product_srl ? $product->isAvailable($checkIfInStock) : false);
                     $data = $product;
                 }
-                else unset($output->data[$i]);
             }
             $products = $this->productsCache[$cacheKey] = $output->data;
         }
@@ -233,11 +228,6 @@ class Cart extends BaseItem
         return $output;
     }
 
-    public function getAvailableProducts($n=null)
-    {
-        return $this->getProducts($n, true);
-    }
-
     public function check()
     {
         $shopInfo = new ShopInfo($this->module_srl);
@@ -261,7 +251,7 @@ class Cart extends BaseItem
         if ($this->discount) return $this->discount;
         require_once __DIR__ . '/../classes/Discount.php';
         $shop = new ShopInfo($this->module_srl);
-        $cartValue = $this->getTotalBeforeDiscount();
+        $cartValue = $this->getTotalBeforeDiscount(true);
         $discountAmount = $shop->getShopDiscountAmount();
         $discountBeforeVAT = ($shop->getShopDiscountTaxPhase() == 'pre_taxes' ? true : false);
         $discountMinAmount = $shop->getShopDiscountMinAmount();
@@ -284,9 +274,9 @@ class Cart extends BaseItem
         return null;
     }
 
-    public function getItemTotal($onlyAvailable=false)
+    public function getItemTotal($onlyAvailables=false)
     {
-        $output = $onlyAvailable ? $this->getAvailableProducts() : $this->getProducts();
+        $output = $this->getProducts(null, $onlyAvailables);
         $total = 0;
         /** @var $product Product */
         foreach ($output as $product) {
@@ -295,9 +285,10 @@ class Cart extends BaseItem
         return $total;
     }
 
-    public function getTotalBeforeDiscount($onlyAvailable=false)
+
+    public function getTotalBeforeDiscount($onlyAvailables=false)
     {
-        $total = $this->getItemTotal($onlyAvailable);
+        $total = $this->getItemTotal($onlyAvailables);
         $total += $this->getShippingCost();
         return $total;
     }

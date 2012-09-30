@@ -1099,7 +1099,7 @@ class shopView extends shop {
         /** @var $cart Cart */
         if (!(($cart = Context::get('cart')) instanceof Cart)) throw new Exception("No cart, you shouldn't be here");
 
-        $products = $cart->getAvailableProducts();
+        $products = $cart->getProducts(null, true);
         if (empty($products)) {
             throw new Exception('Cart is empty, you have nothing to checkout');
         }

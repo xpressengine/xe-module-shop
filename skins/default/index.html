@@ -19,7 +19,7 @@
                 });
             </script>
             <form action="./">
-                <!--<input name="act" value="procShopSort" type="hidden">-->
+                <input name="act" value="procShopSort" type="hidden">
                 <select name="sort">
                     <option>sort</option>
                     <option value="price" selected="selected"|cond="$sort=='price'">price</option>
@@ -30,6 +30,7 @@
             <a href="{getUrl('', 'act', 'procShopToggleGridView', 'mode', 'list')}" class="breadcrumbs-button <!--@if($grid_view)-->selected<!--@end-->"><img src="img/list-icon.png" alt="List view" title="List view"/></a>
         </span>
     </div>
+    <h2>{$grid_view?'da':'nu'} | {$sort}</h2>
     <h2 cond="$q && $act == 'dispShopSearch'">Searching for "{$q}"</h2>
     <h2 cond="!$products || empty($products)">No products</h2>
     <div class="product-list clearfix">

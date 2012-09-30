@@ -46,6 +46,16 @@
             $this->setRedirectUrlIfNoReferer(getNotEncodedUrl('', 'act', 'dispShopHome'));
         }
 
+        public function procShopToggleGridView()
+        {
+            $mode = Context::get('mode');
+            if ($mode == 'grid') $sess = true;
+            elseif ($mode == 'list') $sess = false;
+            else throw new Exception("Invalid setting $mode");
+            $_SESSION['grid_view'] = $sess;
+            $this->setRedirectUrlIfNoReferer(getNotEncodedUrl('', 'act', 'dispShopHome'));
+        }
+
         public function procShopLogin($user_id = null, $password = null, $keep_signed = null) {
             $oMemberController = getController('member');
 
@@ -81,16 +91,6 @@
 			$vid = Context::get('vid');
 			$returnUrl = Context::get('success_return_url') ? Context::get('success_return_url') : getNotEncodedUrl('', 'act', 'dispShopToolDashboard', 'vid', $vid);
 			$this->setRedirectUrl($returnUrl);
-        }
-
-        public function procShopToggleGridView()
-        {
-            $mode = Context::get('mode');
-            if ($mode == 'grid') $sess = true;
-            elseif ($mode == 'list') $sess = false;
-            else throw new Exception("Invalid setting $mode");
-            $_SESSION['grid_view'] = $sess;
-            $this->setRedirectUrlIfNoReferer(getNotEncodedUrl('', 'act', 'dispShopHome'));
         }
 
         public function procShopSignToNewsletter(){
