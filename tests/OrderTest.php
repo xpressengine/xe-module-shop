@@ -1,10 +1,9 @@
 <?php
     require_once "lib/Shop_Generic_Tests.class.php";
     require dirname(__FILE__) . '/lib/Bootstrap.php';
-    require_once dirname(__FILE__) . '/../libs/repositories/CartRepository.php';
     require_once dirname(__FILE__) . '/../shop.info.php';
 
-class CartTest extends Shop_Generic_Tests_DatabaseTestCase
+class OrderTest extends Shop_Generic_Tests_DatabaseTestCase
 {
     /**
      * @return PHPUnit_Extensions_Database_DataSet_IDataSet
