@@ -248,7 +248,7 @@ Patrioque conceptam in mea. Est ad ullum ceteros, pro quem accumsan appareat id,
 
 		foreach($products as $product)
 		{
-			$this->assertEquals(0, $product->parent_product_srl);
+            $this->assertNull($product->parent_product_srl);
 
 			if($product->isConfigurable())
 			{
@@ -289,7 +289,7 @@ Patrioque conceptam in mea. Est ad ullum ceteros, pro quem accumsan appareat id,
 
 		foreach($products as $product)
 		{
-			$this->assertEquals(0, $product->parent_product_srl);
+			$this->assertNull($product->parent_product_srl);
 
 			$this->assertTrue($product->isConfigurable());
 			$this->assertTrue(is_a($product, 'ConfigurableProduct'));

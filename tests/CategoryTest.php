@@ -359,7 +359,7 @@ class CategoryTest extends Shop_Generic_Tests_DatabaseTestCase
 		$category_repository = $shopModel->getCategoryRepository();
 		$category = $category_repository->getCategory(1000);
 
-		$this->assertEquals(0, $category->product_count);
+		$this->assertNull($category->product_count);
 
 		// Add new product
 		$product_repository = $shopModel->getProductRepository();
@@ -400,7 +400,7 @@ class CategoryTest extends Shop_Generic_Tests_DatabaseTestCase
 		$category_repository = $shopModel->getCategoryRepository();
 		$category = $category_repository->getCategory(1000);
 
-		$this->assertEquals(0, $category->product_count);
+		$this->assertNull($category->product_count);
 
 		// Add new product
 		$product_repository = $shopModel->getProductRepository();
