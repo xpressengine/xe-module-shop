@@ -516,6 +516,7 @@ table tbody tr td:last-child {
 #header {
     border-bottom: 1px solid #bec9d4;
     padding: 20px 0;
+    background: #fff;
 }
 
 #header p {
@@ -1150,6 +1151,7 @@ li span.close-sign, li span.open-sign {
     height: auto !important;
     height: 100%;
     margin: 0 auto -261px; /* the bottom margin is the negative value of the footer's height */
+    background: #DBE6F1;
 }
 
 .footer {

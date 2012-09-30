@@ -1,26 +1,21 @@
-<!--
-    Shop layout page
--->
 <include target="_header.html" />
 
-<include target="_sidebar.html" />
-
-<!--@if($shop_mode == 'module')-->
-    {$content}
-<!--@else-->
-    <!--@if(__DEBUG__)-->
-    This is the default layout / template file.
-    <br />
-
-    You should really set a custom
-    template file for your view using $this->setTemplateFile("someFile.html").
-
-    <br />
-    Good luck!
+<div id="body-content" class="main-content clearfix">
+    <!--@if($shop_mode == 'module')-->
+        {$content}
     <!--@else-->
-    Ooops! We can't find the page you're looking for. Try going to the <a href="{getUrl('', 'vid', $mid)}">Hompepage</a>!.
+        <!--@if(__DEBUG__)-->
+        This is the default layout / template file.
+        <br />
+
+        You should really set a custom
+        template file for your view using $this->setTemplateFile("someFile.html").
+
+        <br />
+        Good luck!
+        <!--@else-->
+        Ooops! We can't find the page you're looking for. Try going to the <a href="{getUrl('', 'vid', $mid)}">Hompepage</a>!.
+        <!--@end-->
     <!--@end-->
-<!--@end-->
-
-
+</div>
 <include target="_footer.html"/>
