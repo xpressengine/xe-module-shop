@@ -849,7 +849,7 @@ class shopView extends shop {
         // Products list
         $this->loadShopCategoryTree();
         $product_repository = $this->model->getProductRepository();
-        try{
+        try {
             $args = new stdClass();
             $args->module_srl = $this->module_srl;
             $args->status = 'enabled';
@@ -860,10 +860,12 @@ class shopView extends shop {
             $datasourceJS = $this->getAssociatedProductsAttributesAsJavascriptArray($output->products);
             Context::set('datasourceJS', $datasourceJS);
 
+            if (isset($_SESSION['grid_view'])) Context::set('grid_view', $_SESSION['grid_view']);
+            if (isset($_SESSION['sort'])) Context::set('sort', $_SESSION['sort']);
+
             $this->setTemplateFile('index.html');
         }
-        catch(Exception $e)
-        {
+        catch(Exception $e) {
             return new Object(-1, $e->getMessage());
         }
     }
@@ -897,10 +899,12 @@ class shopView extends shop {
 			$datasourceJS = $this->getAssociatedProductsAttributesAsJavascriptArray($output->products);
 			Context::set('datasourceJS', $datasourceJS);
 
+            if (isset($_SESSION['grid_view'])) Context::set('grid_view', $_SESSION['grid_view']);
+            if (isset($_SESSION['sort'])) Context::set('sort', $_SESSION['sort']);
+
             $this->setTemplateFile("product_list.html");
 		}
-		catch(Exception $e)
-		{
+		catch(Exception $e) {
 			return new Object(-1, $e->getMessage());
 		}
 	}
