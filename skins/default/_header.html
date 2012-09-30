@@ -17,7 +17,7 @@
                     <ul id="cart-products" cond="count($preview_products) != 0">
                         <!--@foreach($preview_products as $i=>$cart_product)-->
                         <li id="cart-product-{$cart_product->product_srl}" class="clearfix">
-                            <img src="{$cart_product->getPrimaryImage()->getThumbnailPath(50)}" alt="" title=""/>
+                            <p class="cart-product-image"><img src="{$cart_product->getPrimaryImage()->getThumbnailPath(50)}" alt="" title=""/></p>
                             <p class="cart-preview-title">
                                 <!--@if(strlen($cart_product->title)>42)-->
                                     {substr($cart_product->title,0,42)}...
