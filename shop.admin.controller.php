@@ -179,6 +179,7 @@
             /**
              * Create shop menus: header and footer
              */
+            // 1. Create menus
             include(_XE_PATH_  . '/modules/shop/libs/model/ShopMenu.php');
             $header_menu_srl = $oShopModel->makeMenu($site_srl, 'Header menu');
             $footer_menu_srl = $oShopModel->makeMenu($site_srl, 'Footer menu');
@@ -191,6 +192,20 @@
             $output = executeQuery('shop.updateShopInfo',$args);
             if(!$output->toBool()) return $output;
 
+            // 2. Create pages
+            // Header menu
+            $oShopModel->insertPage($site_srl, 'about_us', 'About us', array('content' => 'Write a bit about yourself here - let the customers get to know you and your shop'));
+
+            // Footer menu
+            $oShopModel->insertPage($site_srl, 'privacy_policy', 'Privacy policy', array('content' => 'Please enter your Privacy policy here'));
+            $oShopModel->insertPage($site_srl, 'terms_and_conditions', 'Terms and conditions', array('content' => 'Please enter your Terms and conditions here'));
+            $oShopModel->insertPage($site_srl, 'contact_us', 'Contact us', array('content' => 'Write your contact information here'));
+
+            // 3. Add pages to menus
+            $oShopModel->insertMenuItem($header_menu_srl, 0, 'about_us', 'About us');
+            $oShopModel->insertMenuItem($footer_menu_srl, 0, 'privacy_policy', 'Privacy policy');
+            $oShopModel->insertMenuItem($footer_menu_srl, 0, 'terms_and_conditions', 'Terms and conditions');
+            $oShopModel->insertMenuItem($footer_menu_srl, 0, 'contact_us', 'Contact us');
 
             $output = new Object();
             $output->add('module_srl',$module_srl);

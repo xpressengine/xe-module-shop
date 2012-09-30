@@ -502,6 +502,30 @@ class shopModel extends shop
 		$menuAdminController->makeXmlFile($menu_srl);
 	}
 
+    public function insertPage($site_srl, $mid, $title, $document_args)
+    {
+        $oModuleController = &getController('module');
+        $oDocumentController = &getController('document');
+
+        // 1. Insert document
+        if(is_array($document_args))
+        {
+            $document_args = (object)$document_args;
+        }
+        $output = $oDocumentController->insertDocument($document_args);
+
+        // 2. Insert page module
+        $page_args = new stdClass();
+        $page_args->site_srl = $site_srl;
+        $page_args->mid = $mid;
+        $page_args->browser_title = $title;
+        $page_args->module = 'page';
+        $page_args->page_type = 'WIDGET';
+        $page_args->content = '<img src="./common/tpl/images/widget_bg.jpg" class="zbxe_widget_output" widget="widgetContent" style="float: left; width: 100%;" body="" document_srl="'.$output->get('document_srl').'" widget_padding_left="0" widget_padding_right="0" widget_padding_top="0" widget_padding_bottom="0"  /> ';
+        $output = $oModuleController->insertModule($page_args);
+        if(!$output->toBool()) return $output;
+    }
+
     /**
      * Get document_srl of document associated with an article page
      */
