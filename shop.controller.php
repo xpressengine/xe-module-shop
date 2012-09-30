@@ -37,6 +37,15 @@
             Context::set('shop',$this->shop);
         }
 
+        public function procShopSort()
+        {
+            if (!in_array($sort = Context::get('sort'), array('price', 'orders'))) {
+                throw new Exception('Invalid sorting required');
+            }
+            $_SESSION['sort'] = $sort;
+            $this->setRedirectUrlIfNoReferer(getNotEncodedUrl('', 'act', 'dispShopHome'));
+        }
+
         public function procShopLogin($user_id = null, $password = null, $keep_signed = null) {
             $oMemberController = getController('member');
 

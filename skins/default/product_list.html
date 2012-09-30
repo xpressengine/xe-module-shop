@@ -14,11 +14,20 @@
             <include target="breadcrumbs.html" />
         </span>
         <span class="breadcrumbs-options">
-            <select>
-                <option>sort</option>
-                <option value="price">price</option>
-                <option value="rating">rating</option>
-            </select>
+            <script type="text/javascript">
+                jQuery('.breadcrumbs-options select').live('change', function(){
+                    var option = jQuery('option:not(:first):selected', this);
+                    if (option.length) jQuery(this).parents('form').submit();
+                });
+            </script>
+            <form action="./">
+                <input name="act" value="procShopSort" type="hidden">
+                <select name="sort">
+                    <option>sort</option>
+                    <option value="price">price</option>
+                    <option value="orders">orders</option>
+                </select>
+            </form>
             <a href="{getUrl('', 'act', 'procShopToggleGridView', 'mode', 'grid')}" class="breadcrumbs-button <!--@if(!$grid_view)-->selected<!--@end-->"><img src="img/grid-icon.png" alt="Grid view" title="Grid view" /></a><a href="{getUrl('', 'act', 'procShopToggleGridView', 'mode', 'list')}" class="breadcrumbs-button <!--@if($grid_view)-->selected<!--@end-->"><img src="img/list-icon.png" alt="List view" title="List view" /></a>
         </span>
     </div>
