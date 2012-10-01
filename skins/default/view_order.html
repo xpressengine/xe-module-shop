@@ -4,7 +4,7 @@
 <include target="_header.html" />
 <include target="_my_account_sidebar.html" />
 
-<div id="my_account" class="mainContent">
+<div id="my_account" class="main-content">
     <div id="MyAccountInfo">
         <h1>Order # : {$order->order_srl}</h1>
         <a title="This will fill your cart with the products existing on this order so you can buy them again" href="{getUrl('','act','procShopRenewOrder','order_srl',$order->order_srl)}">Renew </a>
