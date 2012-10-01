@@ -1532,6 +1532,7 @@ CREATE TABLE IF NOT EXISTS `xe_shop_cart_products` (
   `product_srl` bigint(11) NOT NULL,
   `quantity` bigint(11) DEFAULT NULL,
   `title` varchar(255) DEFAULT NULL,
+  `price` float(8, 4) DEFAULT NULL,
   PRIMARY KEY (`cart_srl`,`product_srl`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 

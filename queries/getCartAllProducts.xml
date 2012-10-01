@@ -17,6 +17,7 @@
         <column name="cp.quantity" alias="quantity" />
         <column name="cp.product_srl" alias="cart_product_srl" />
         <column name="cp.title" alias="cart_product_title" />
+        <column name="cp.price" alias="cart_product_price" />
     </columns>
     <conditions>
         <condition operation="equal" column="c.cart_srl" var="cart_srl" notnull="notnull" />

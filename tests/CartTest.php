@@ -16,8 +16,8 @@ class CartTest extends Shop_Generic_Tests_DatabaseTestCase
                 array('cart_srl' => '774','module_srl' => '107','member_srl' => '4','session_id' => 'u1d0efs24bm05no5s2tgjspvo6','billing_address_srl' => '253','shipping_address_srl' => '253','items' => '2','extra' => '{"price":44.979999542236,"shipping_method":"flat_rate_shipping","payment_method":"cash_on_delivery"}','regdate' => '20120929183309','last_update' => '20120929183309')
             ),
             'xe_shop_cart_products' => array(
-                array('cart_srl' => '774','product_srl' => '133','quantity' => '1','title' => 'Cutie depozitare diferite modele'),
-                array('cart_srl' => '774','product_srl' => '130','quantity' => '1','title' => 'Cutie din lemn')
+                array('cart_srl' => '774','product_srl' => '133','quantity' => '1','title' => 'Cutie depozitare diferite modele', 'price'=>14.99),
+                array('cart_srl' => '774','product_srl' => '130','quantity' => '1','title' => 'Cutie din lemn', 'price'=>29.99)
             ),
             'xe_shop_products' => array(
                 array('product_srl' => '130','member_srl' => '4','module_srl' => '107','parent_product_srl' => NULL,'product_type' => 'simple','title' => 'Cutie din lemn','description' => 'Bam boo magazinul on-line de cadouri si decoratiuni va recomanda aceasta cutie din lemn cu un design clasic, avand 6 compartimente poate indeplinii mai multe roluri in casa si viata dvs.','short_description' => 'Bam boo magazinul on-line de cadouri si decoratiuni va recomanda aceasta cutie din lemn cu un design clasic, avand 6 compartimente poate indeplinii mai multe roluri in casa si viata dvs.','sku' => 'MOL9505','weight' => '0','status' => 'enabled','friendly_url' => 'MOL9505','price' => '29.99','qty' => '10','in_stock' => 'Y','primary_image_filename' => 'MOL9505_5784.jpg','related_products' => NULL,'regdate' => '20120904144739','last_update' => '20120923191329','discount_price' => '0','is_featured' => 'Y'),
@@ -174,8 +174,6 @@ class CartTest extends Shop_Generic_Tests_DatabaseTestCase
         $this->assertEquals(2, count($cart->getProducts())); // Default, , show all products
 
         // 3. Check that item total is correct
-        // 29.99+14.99
-        //TODO: continue adding price to deleted products, then make the correct calculus
         $this->assertEquals(44.98, $cart->getItemTotal()); // Default, count all products
         $this->assertEquals(29.99, $cart->getItemTotal(true)); // Count just available products
 

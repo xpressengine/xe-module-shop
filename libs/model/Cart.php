@@ -207,6 +207,7 @@ class Cart extends BaseItem
                 $product = new SimpleProduct($data);
                 $product->cart_product_srl = $data->cart_product_srl;
                 $product->cart_product_title = $data->cart_product_title;
+                $product->cart_product_price = $data->cart_product_price;
                 $product->quantity = $data->quantity;
                 if ($product->isPersisted()) {
                     $available = $product->isAvailable($checkIfInStock);
@@ -303,7 +304,8 @@ class Cart extends BaseItem
         $total = 0;
         /** @var $product Product */
         foreach ($output as $product) {
-            $total += $product->price * $product->quantity;
+            $price = ($product->price ? $product->price : $product->cart_product_price);
+            $total += $price * $product->quantity;
         }
         return $total;
     }

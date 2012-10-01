@@ -175,7 +175,7 @@
             }
 
             if(!$oDB->isColumnExists("shop_cart_products","price")) {
-                $oDB->addColumn('shop_cart_products',"price","number", 11);
+                $oDB->addColumn('shop_cart_products',"price","float", 20);
             }
 
             if(!$oDB->isColumnExists("shop_order_products","title")) {
