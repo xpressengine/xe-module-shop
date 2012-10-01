@@ -267,6 +267,8 @@ class Cart extends BaseItem
     private $discount; //discount short cache
 
     /**
+     * @param null $forceDiscountType Forces a specific discount type
+     *
      * @return Discount|null
      * @throws Exception
      */
@@ -318,9 +320,9 @@ class Cart extends BaseItem
         return $total;
     }
 
-    public function getTotal($onlyAvailables=false)
+    public function getTotal($onlyAvailables=false, $ignoreDiscount=false)
     {
-        if ($discount = $this->getDiscount()) {
+        if (!$ignoreDiscount && $discount = $this->getDiscount()) {
             return $discount->getValueDiscounted();
         }
         return $this->getTotalBeforeDiscount($onlyAvailables);
