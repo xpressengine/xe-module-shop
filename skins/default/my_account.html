@@ -6,8 +6,7 @@
 
 <div id="body-content" class="body-two-columns main-content">
     <h1>My Dashboard</h1>
-
-    <p>{$lang->hello} <b>{$logged_user->user_name}</b></p>
+    <p>{$lang->hello} <!--@if($logged_user->is_site_admin)--><b>{$logged_user->nick_name}</b><!--@else-->{$logged_user->user_name}<!--@end--></p>
     <p>{$lang->my_account_info_text}</p>
 
     <h2>{$lang->recent_orders}</h2>
