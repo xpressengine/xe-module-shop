@@ -1056,7 +1056,7 @@ class shopView extends shop {
         $addressRepository = $shopModel->getAddressRepository();
 
         $logged_info = Context::get('logged_info');
-        if(!isset($logged_user)){
+        if(!isset($logged_info)){
             $this->setTemplateFile('not_logged.html');
             return;
         }
