@@ -153,7 +153,7 @@ class PercentageDiscount extends Discount
 
     public function validate()
     {
-        if ($this->getDiscountValue() > 99.9 || $this->getDiscountValue() <= 0.1 ) {
+        if ($this->getDiscountValue() > 99.9 || $this->getDiscountValue() < 0.1 ) {
             throw new Exception('Discount value should be between 1 and 99');
         }
     }
