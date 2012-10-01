@@ -2,7 +2,7 @@
 /**
  * @author Florin Ercus (dev@xpressengine.org)
  */
-class Cart extends BaseItem
+class Cart extends BaseItem implements IProductItemsContainer
 {
 
     public
@@ -204,19 +204,10 @@ class Cart extends BaseItem
             $output = $this->query('getCartAllProducts', $params, true);
             $stds = $output->data;
             foreach ($stds as $i=>$data) {
-                $product = new SimpleProduct($data);
-                $product->cart_product_srl = $data->cart_product_srl;
-                $product->cart_product_title = $data->cart_product_title;
-                $product->cart_product_price = $data->cart_product_price;
-                $product->quantity = $data->quantity;
-                if ($product->isPersisted()) {
-                    $available = $product->isAvailable($checkIfInStock);
-                    if ($onlyAvailables && !$available) continue;
-                    $product->available = $available;
-                }
-                else {
-                    $product->available = false;
-                    if ($onlyAvailables) continue;
+                $product = new CartProduct($data);
+                if(!$product->isAvailable($checkIfInStock) && $onlyAvailables)
+                {
+                    continue;
                 }
                 $products[$i] = $product;
             }
@@ -285,10 +276,10 @@ class Cart extends BaseItem
         $vat = $shop->getVAT();
         $currency = $shop->getCurrencySymbol();
         if ($discountAmount && $discountType && $discountMinAmount <= $cartValue) {
-            if ($discountType == 'fixed_amount') {
+            if ($discountType == Discount::DISCOUNT_TYPE_FIXED_AMOUNT) {
                 $discount = new FixedAmountDiscount($cartValue, $discountAmount, $discountMinAmount, $vat, $discountBeforeVAT, $currency);
             }
-            elseif ($discountType == 'percentage') {
+            elseif ($discountType == Discount::DISCOUNT_TYPE_PERCENTAGE) {
                 $discount = new PercentageDiscount($cartValue, $discountAmount, $discountMinAmount, $vat, $discountBeforeVAT, $currency);
             }
             //elseif... add new discount types here after you create the classes
@@ -581,6 +572,27 @@ class Cart extends BaseItem
         return $this->getExtra('payment_method');
     }
 
+    /**
+     * Discount name
+     */
+    public function getDiscountName()
+    {
+        $this->getDiscount()->getName();
+    }
 
+    /**
+     * Discount description
+     */
+    public function getDiscountDescription()
+    {
+        $this->getDiscount()->getDescription();
+    }
 
+    /**
+     * Discount amount
+     */
+    public function getDiscountAmount()
+    {
+        $this->getDiscount()->getReductionValue();
+    }
 }

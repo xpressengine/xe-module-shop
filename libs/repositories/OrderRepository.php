@@ -79,12 +79,12 @@ class OrderRepository extends BaseRepository
         return $this->query('deleteOrders', array('order_srls' => $order_srls));
     }
 
-    public function insertOrderProduct($order_srl, SimpleProduct $product, $quantity = 1)
+    public function insertOrderProduct($order_srl, CartProduct $product)
     {
         $params = array(
             'order_srl' => $order_srl,
             'product_srl' => $product->product_srl,
-            'quantity' => $quantity,
+            'quantity' => $product->quantity,
             'member_srl' => $product->member_srl,
             'parent_product_srl' => $product->parent_product_srl,
             'product_type' => $product->product_srl,
@@ -157,8 +157,7 @@ class OrderRepository extends BaseRepository
         $args->order_srl = $order->order_srl;
         $output = $this->query('getOrderItems',$args,true);
         foreach($output->data as $item){
-            $product = new SimpleProduct($item);
-            $product->ordered_qty = $item->quantity;
+            $product = new OrderProduct($item);
             $ordered_items[] = $product;
         }
         return $ordered_items;

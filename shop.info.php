@@ -255,5 +255,9 @@
             return getUrl('','mid',$this->getMid());
         }
 
+        public function showVAT()
+        {
+            return $this->getShowVAT() == 'Y' && $this->getVAT() > 0;
+        }
    }
 ?>

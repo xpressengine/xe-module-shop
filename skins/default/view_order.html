@@ -37,48 +37,9 @@
         </fieldset>
         <fieldset>
             <h4 class="h4">{$lang->items_ordered}</h4>
-            <table border="1" cellspacing="0" summary="{$lang->items_ordered}" class="tableData">
-                <thead>
-                <tr cond="!empty($ordered_items)">
-                    <th scope="col" class="title">{$lang->title}</th>
-                    <th scope="col">{$lang->sku}</th>
-                    <th scope="col">{$lang->price}</th>
-                    <th scope="col">{$lang->qty}</th>
-                    <th scope="col">{$lang->subtotal}</th>
-                </tr>
-                </thead>
-                <tbody>
 
-                <!--@foreach($ordered_items as $no => $item)-->
-                <tr>
-                    <td class="title">{$item->title}</td>
-                    <td class="small">{$item->sku}</td>
-                    <td class="small">{ShopDisplay::priceFormat($item->price, $shop->getCurrencySymbol())}</td>
-                    <td class="small">{$item->ordered_qty}</td>
-                    <td class="small">{ShopDisplay::priceFormat($item->price * $item->ordered_qty, $shop->getCurrencySymbol())}</td>
-                </tr>
-                <!--@end-->
-                <tfoot>
-                <tr>
-                    <td colspan="3"></td>
-                    <td><b>{$lang->grand_total}</b></td>
-                    <td>{ShopDisplay::priceFormat($order->total, $shop->getCurrencySymbol())}</td>
-                </tr>
-                <!--@if($shop->getShowVAT() == 'Y' && $shop->getVAT() > 0)-->
-                <tr >
-                    <td colspan="3"></td>
-                    <td>
-                        {$lang->taxes}
-                    </td>
-                    <td>
-                        {ShopDisplay::priceFormat($order->total * ($shop->getVAT()/100), $shop->getCurrencySymbol())}
-                    </td>
-                </tr>
-                <!--@end-->
-                </tfoot>
-
-                </tbody>
-            </table>
+            {@ $product_container = $order; }
+            <include target="product_items.html" />
         </fieldset>
     </div>
 </div>

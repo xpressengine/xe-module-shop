@@ -2,6 +2,9 @@
 // florin, 9/27/12 3:45 PM 
 abstract class Discount
 {
+    const DISCOUNT_TYPE_FIXED_AMOUNT = 'fixed_amount',
+        DISCOUNT_TYPE_PERCENTAGE = 'percentage';
+
     private $value, $discountValue, $minValueForDiscount, $VATPercent, $calculateBeforeApplyingVAT, $currency;
 
     abstract public function getName();

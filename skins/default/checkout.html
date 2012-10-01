@@ -235,77 +235,10 @@
         </fieldset>
 
         <fieldset id="review">
-            <legend>Order review</legend>
+            <legend>Review your order</legend>
 
-            <table>
-                <thead>
-                    <tr>
-                        <th></th>
-                        <th></th>
-                        <th>Ttile</th>
-                        <th>{$lang->quantity}</th>
-                        <th>{$lang->price}</th>
-                        <th>{$lang->subtotal}</th>
-                    </tr>
-                </thead>
-                <tbody>
-                {@ $i = 0 }
-                <!--@foreach($cart_products as $product)-->
-                    <tr>
-                        <td>{@ ++$i;}{$i}</td>
-                        <td><img src="{$product->getPrimaryImage()->getThumbnailPath(50)}" /></td>
-                        <td>{$product->title}</td>
-                        <td>{$product->quantity}</td>
-                        <td>{ShopDisplay::priceFormat($product->price, $shop->getCurrencySymbol())}</td>
-                        <td>{ShopDisplay::priceFormat($product->price * $product->quantity, $shop->getCurrencySymbol())}</td>
-                    </tr>
-                <!--@end-->
-                <!--@if($cart->getShippingCost() !== 0)-->
-                <tr>
-                    <td colspan="4">
-                    </td>
-                    <td>Shipping</td>
-                    <td>
-                        {ShopDisplay::priceFormat($cart->getShippingCost(), $shop->getCurrencySymbol())}
-                    </td>
-                </tr>
-                <!--@end-->
-                <tr cond="$discount">
-                    <td colspan="4">
-                    </td>
-                    <td>{$lang->total}</td>
-                    <td>
-                        {ShopDisplay::priceFormat($cart->getTotal(), $shop->getCurrencySymbol())}
-                    </td>
-                </tr>
-                <tr cond="$discount">
-                    <td colspan="4">
-                    </td>
-                    <td><a href="#" onclick="alert('{$discount->getName()}\n\n{$discount->getDescription()}'); return false">Discount</a></td>
-                    <td>
-                        {ShopDisplay::priceFormat($discount_value, $shop->getCurrencySymbol())}
-                    </td>
-                </tr>
-                <tr style="font-weight: bold;">
-                    <td colspan="4">
-                    </td>
-                    <td>{$lang->grand_total}</td>
-                    <td>
-                        {ShopDisplay::priceFormat(($discount ? $discounted_value : $cart->getTotal()), $shop->getCurrencySymbol())}
-                    </td>
-                </tr>
-
-                <tr cond="$shop->getShowVAT() == 'Y' && $shop->getVAT()">
-                    <td colspan="4"></td>
-                    <td>
-                        {$lang->taxes}
-                    </td>
-                    <td>
-                        {ShopDisplay::priceFormat($cart->getVAT(true, true), $shop->getCurrencySymbol())}
-                    </td>
-                </tr>
-                </tbody>
-            </table>
+            {@ $product_container = $cart; }
+            <include target="product_items" />
         </fieldset>
 
         <p><input type="submit" value="Continue">(You can review this order before it's final)</p>

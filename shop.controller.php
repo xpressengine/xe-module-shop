@@ -644,7 +644,7 @@
             $cart = $cartRepository->getCart($this->module_info->module_srl,null,$logged_info->member_srl, session_id(), true);
             $cartRepository->deleteCartProducts($cart->cart_srl);
             foreach($order_items as $item){
-                $cart->addProduct($item,$item->ordered_qty);
+                $cart->addProduct($item,$item->quantity);
             }
             $this->setMessage("Ordered renewed");
             $returnUrl = getNotEncodedUrl('', 'act', 'dispShopCart');

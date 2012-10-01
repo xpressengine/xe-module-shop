@@ -1,5 +1,6 @@
 <?php
-class Order extends BaseItem
+
+class Order extends BaseItem implements IProductItemsContainer
 {
     const
         ORDER_STATUS_HOLD = "Hold",
@@ -106,12 +107,12 @@ class Order extends BaseItem
         $this->repo->deleteOrderProducts($this->order_srl);
         //set the new links
         $total = 0;
-        /** @var $productWithQuantity SimpleProduct */
-        $products = $cart->getProducts();
-        foreach ($products as $productWithQuantity) {
-            if ($productWithQuantity->available && $productWithQuantity->product_srl) {
-                $this->repo->insertOrderProduct($this->order_srl, $productWithQuantity, $productWithQuantity->quantity);
-                $total += $productWithQuantity->quantity * $productWithQuantity->price;
+        /** @var $cart_product SimpleProduct */
+        $cart_products = $cart->getProducts();
+        foreach ($cart_products as $cart_product) {
+            if ($cart_product->available && $cart_product->product_srl) {
+                $this->repo->insertOrderProduct($this->order_srl, $cart_product);
+                $total += $cart_product->quantity * $cart_product->price;
             }
         }
         $this->total = $total;
@@ -123,4 +124,65 @@ class Order extends BaseItem
         return $this->repo->getOrderItems($this);
     }
 
+    public function getShippingCost()
+    {
+        return $this->shipping_cost;
+    }
+
+    public function getTotalBeforeDiscount()
+    {
+        return $this->total - $this->discount_amount;
+    }
+
+    public function getTotal()
+    {
+        return $this->total;
+    }
+
+    public function getVAT()
+    {
+        return $this->vat;
+    }
+
+    /**
+     * Returns discount object - used for calculating discounts
+     * We return dummy objects, since we just want name and description
+     */
+    private function getDiscount()
+    {
+        switch ($this->discount_type)
+        {
+            case Discount::DISCOUNT_TYPE_FIXED_AMOUNT:
+                return new FixedAmountDiscount(2, 1);
+            case Discount::DISCOUNT_TYPE_PERCENTAGE:
+                return new PercentageDiscount(2, 1);
+            return null;
+        }
+    }
+
+    /**
+     * Discount name
+     */
+    public function getDiscountName()
+    {
+        $discount = $this->getDiscount();
+        return $discount ? $discount->getName() : '';
+    }
+
+    /**
+     * Discount description
+     */
+    public function getDiscountDescription()
+    {
+        $discount = $this->getDiscount();
+        return $discount ? $discount->getDescription() : '';
+    }
+
+    /**
+     * Discount amount
+     */
+    public function getDiscountAmount()
+    {
+        return $this->discount_amount;
+    }
 }
