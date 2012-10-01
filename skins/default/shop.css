@@ -505,8 +505,19 @@ table tbody tr td:last-child {
     float: left;
 }
 
-#header-socials, #header-socials a {
+#header-menu, #header-menu a {
     color: #13a0df;
+}
+
+#header-menu ul {
+    padding: 0;
+    margin: 10px 0;
+    list-style-type: none;
+}
+
+#header-menu ul li {
+    float: left;
+    margin: 0 10px 0 0;
 }
 
 .header-separator {
@@ -1188,6 +1199,32 @@ li span.close-sign, li span.open-sign {
 .footer-box p {
     font-size: 1.083em;
 }
+
+#footer-menu ul {
+    padding: 0;
+    margin: 10px 0;
+    list-style-type: none;
+}
+
+#footer-menu ul li:last-of-type {
+
+}
+
+#footer-menu ul li {
+    float: left;
+    margin: 0 10px 0 0;
+}
+
+#footer-menu ul li:after {
+    content: '|';
+    margin: 0 0 0 10px;
+}
+
+#footer-menu ul li:last-child:after {
+    content: '';
+    margin: 0 0 0 10px;
+}
+
 
 /* MEMBER MODULE HACK */
 .xm {

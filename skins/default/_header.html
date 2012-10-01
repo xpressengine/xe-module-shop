@@ -3,9 +3,9 @@
 
 <div id="upper-header">
     <div class="layout-centered clearfix">
-        <p id="header-socials" class="f-left">
-            Follow us on <a href="">Twitter</a>, <a href="">Facebook</a> and <a href="">Google Plus</a>
-        </p>
+        <div id="header-menu" class="f-left">
+            {$header_menu}
+        </div>
         <div class="f-right cart">
             <span>
                 <span id="cart-button">
@@ -19,8 +19,8 @@
                         <li id="cart-product-{$cart_product->product_srl}" class="clearfix">
                             <p class="cart-product-image"><img src="{$cart_product->getPrimaryImage()->getThumbnailPath(50)}" alt="" title=""/></p>
                             <p class="cart-preview-title">
-                                <!--@if(strlen($cart_product->title)>42)-->
-                                    {substr($cart_product->title,0,42)}...
+                                <!--@if(strlen($cart_product->title)>40)-->
+                                    {substr($cart_product->title,0,40)}...
                                 <!--@else-->
                                     {$cart_product->title}
                                 <!--@end-->
