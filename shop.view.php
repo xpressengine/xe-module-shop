@@ -858,10 +858,11 @@ class shopView extends shop {
             $args = new stdClass();
             $args->module_srl = $this->module_srl;
             $args->status = 'enabled';
+            $args->list_count = 9;
             if ($this->shop->getOutOfStockProducts() == 'N') $args->in_stock = 'Y';
             $output = $product_repository->getFeaturedProducts($args, TRUE, TRUE);
             Context::set('products', $output->products);
-
+            //Context::set('page_navigation', $output->page_navigation);
             $datasourceJS = $this->getAssociatedProductsAttributesAsJavascriptArray($output->products);
             Context::set('datasourceJS', $datasourceJS);
 
@@ -898,6 +899,13 @@ class shopView extends shop {
 
             $args->status = 'enabled';
             if($this->shop->getOutOfStockProducts() == 'N') $args->in_stock = 'Y';
+            if($_SESSION['sort'] == 'price_asc'){
+                $args->index = 'price';
+                $args->order_type = 'asc';
+            }elseif($_SESSION['sort'] == 'price_desc'){
+                $args->index = 'price';
+                $args->order_type = 'desc';
+            }
 			$output = $productRepo->getProductList($args, TRUE, TRUE);
 			Context::set('products', $output->products);
 			Context::set('page_navigation', $output->page_navigation);
@@ -923,7 +931,7 @@ class shopView extends shop {
         $tree_config = new HtmlCategoryTreeConfig();
         $tree_config->linkCategoryName = TRUE;
         $tree_config->openCloseSign = TRUE;
-        $tree_config->linkGetUrlParams = array('vid', $this->mid, 'act', 'dispShop');
+        $tree_config->linkGetUrlParams = array('vid', $this->mid, 'act', 'dispShop','page','');
         $tree_config->selected = $selected_categories;
         if($category_srl) $tree_config->selected[] = $category_srl;
         $HTML_tree = $tree->toHTML($tree_config);

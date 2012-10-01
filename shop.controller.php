@@ -39,11 +39,12 @@
 
         public function procShopSort()
         {
-            if (!in_array($sort = Context::get('sort'), array('price', 'orders'))) {
+            if (!in_array($sort = Context::get('sort'), array('price_asc', 'price_desc'))) {
                 throw new Exception('Invalid sorting required');
             }
             $_SESSION['sort'] = $sort;
-            $this->setRedirectUrlIfNoReferer(getNotEncodedUrl('', 'act', 'dispShopHome'));
+            $category_srl = Context::get('category_srl');
+            $this->setRedirectUrl(getNotEncodedUrl('','act', 'dispShop','category_srl',$category_srl));
         }
 
         public function procShopToggleGridView()

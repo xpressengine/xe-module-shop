@@ -14,14 +14,15 @@
         <span class="breadcrumbs-options">
             <script type="text/javascript">
                 jQuery('.breadcrumbs-options select').live('change', function(){
-                    var option = jQuery('option:not(:first):selected', this);
+                    var option = jQuery('option:selected', this);
                     if (option.length) jQuery(this).parents('form').submit();
                 });
             </script>
-            <form action="./"><input name="act" value="procShopSort" type="hidden"><select name="sort">
-                    <option>sort</option>
-                    <option value="price" selected="selected"|cond="$sort=='price'">price</option>
-                    <option value="orders" selected="selected"|cond="$sort=='orders'">orders</option>
+            <form action="./"><input name="act" value="procShopSort" type="hidden">
+                <label for="sort">{$lang->sort_by}</label>
+                <select name="sort" id="sort">
+                    <option value="price_asc" selected="selected"|cond="$sort=='price_asc'">price (asc)</option>
+                    <option value="price_desc" selected="selected"|cond="$sort=='price_desc'">price (desc)</option>
                 </select></form><a href="{getUrl('', 'act', 'procShopToggleGridView', 'mode', 'grid')}" class="breadcrumbs-button <!--@if($grid_view)-->selected<!--@end-->"><img src="img/grid-icon.png" alt="Grid view" title="Grid view" /></a><a href="{getUrl('', 'act', 'procShopToggleGridView', 'mode', 'list')}" class="breadcrumbs-button <!--@if(!$grid_view)-->selected<!--@end-->"><img src="img/list-icon.png" alt="List view" title="List view" /></a>
         </span>
     </div>
