@@ -1,4 +1,4 @@
-<div class="product-list clearfix">
+<div class="product-list clearfix" xmlns="http://www.w3.org/1999/html">
     <!--@if($grid_view)-->
     <!--@foreach($products as $product)-->
     <div id="product_{$product->product_srl}" class="product {$product->product_type}">
@@ -21,11 +21,11 @@
     <!--@foreach($products as $product)-->
     <div id="product_{$product->product_srl}" class="product list-view {$product->product_type}">
         <a href="{getUrl('vid', $mid, 'act', 'dispShopProduct', 'product_srl', $product->product_srl, 'category_srl', $category_srl)}" class="product-link list-view">
-                            <span class="product-image-container list-view">
-                                <img src="{$product->getPrimaryImage()->getThumbnailPath(130)}" />
-                            </span>
+            <span class="product-image-container list-view">
+                <img src="{$product->getPrimaryImage()->getThumbnailPath(130)}" />
+            </span>
         </a>
-        <h2>{$product->title}</h2>
+        <h2><a href="{getUrl('vid', $mid, 'act', 'dispShopProduct', 'product_srl', $product->product_srl, 'category_srl', $category_srl)}">{$product->title}</a></h2>
         <div class="f-right product-actions a-right">
             <form action="./" method="post" cond="isset($product->available) ? $product->available : $product->isAvailable()">
                 <input type="hidden" name="act" value="procShopToolCartAddProduct" />
