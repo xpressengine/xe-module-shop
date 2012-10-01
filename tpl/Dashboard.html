@@ -10,6 +10,23 @@
 </div>
 <!-- /Dashboard Header -->
 
+<!--@if($addTables || $needUpdate)-->
+<div class="message update">
+    <h2 cond="$needUpdate && $addTables">{$lang->need_update_and_table}</h2>
+    <h2 cond="$needUpdate && !$addTables">{$lang->need_update}</h2>
+    <h2 cond="!$needUpdate && $addTables">{$lang->need_table}</h2>
+    <ul>
+        <!--@foreach($module_list AS $key => $value)-->
+        <!--@if($value->need_install)-->
+        <li style="margin:0 0 4px 0;">{$value->module} - <span class="btn"><button type="button" onclick="doInstallModule('{$value->module}')">{$lang->cmd_create_db_table}</button></span></li>
+        <!--@else if($value->need_update)-->
+        <li style="margin:0 0 4px 0;">{$value->module} - <span class="btn"><button type="button" onclick="doUpdateModule('{$value->module}')">{$lang->cmd_module_update}</button></span></li>
+        <!--@end-->
+        <!--@end-->
+    </ul>
+</div>
+<!--@end-->
+
 <!-- Dashboard Statistic -->
 <div class="section dashboardStatistic">
     <div class="statistic">

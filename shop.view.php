@@ -302,6 +302,34 @@ class shopView extends shop {
         Context::set('recent_orders',$recent_orders);
         Context::set('top_products',$top_products);
         Context::set('top_customers',$top_customers);
+
+        /**
+         * Notify user if he needs to update shop
+         */
+        // Get list of modules
+        $oModuleModel = &getModel('module');
+        $module_list = $oModuleModel->getModuleList();
+        if(is_array($module_list))
+        {
+            $needUpdate = false;
+            $addTables = false;
+            foreach($module_list AS $key=>$value)
+            {
+                if($value->module !== 'shop') continue;
+                if($value->need_install)
+                {
+                    $addTables = true;
+                }
+                if($value->need_update)
+                {
+                    $needUpdate = true;
+                }
+            }
+        }
+        Context::set('module_list', $module_list);
+        Context::set('addTables', $addTables);
+        Context::set('needUpdate', $needUpdate);
+
 	}
 
     /**

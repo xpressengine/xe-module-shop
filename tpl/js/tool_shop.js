@@ -724,3 +724,16 @@ function checkOrUncheckParents(clicked_category_checkbox, root_ul_id)
         parent = parent.parent();
     }
 }
+
+// For upgrading the module directly from shop admin
+function doUpdateModule(module) {
+    var params = new Array();
+    params['module_name'] = module;
+    exec_xml('install','procInstallAdminUpdate',params, completeInstallModule);
+    showWaitingFogLayer();
+}
+
+function completeInstallModule(ret_obj) {
+    alert(ret_obj['message']);
+    location.reload();
+}
