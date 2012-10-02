@@ -285,8 +285,6 @@
                 $oDB->addColumn('shop',"menus","varchar", 500);
             }
 
-            if (!$oDB->isColumnExists("shop_orders","caca")) $oDB->addColumn('shop_orders',"discount_min_order","number", 11, 0, true);
-
             if (!$oDB->isColumnExists("shop_orders","discount_min_order")) $oDB->addColumn('shop_orders',"discount_min_order","number", 11, 0, true);
             if (!$oDB->isColumnExists("shop_orders","discount_type")) $oDB->addColumn('shop_orders',"discount_type","varchar", 45);
             if (!$oDB->isColumnExists("shop_orders","discount_amount")) $oDB->addColumn('shop_orders',"discount_amount","number", 11, 0, true);

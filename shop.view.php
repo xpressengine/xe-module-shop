@@ -1573,9 +1573,7 @@ class shopView extends shop {
     /**
      * Change shop discount configuration from backend
      */
-    public function dispShopToolDiscountInfo(){
-
-    }
+    public function dispShopToolDiscountInfo(){}
 
 
     /**

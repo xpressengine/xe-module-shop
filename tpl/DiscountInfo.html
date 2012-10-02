@@ -47,12 +47,23 @@
                             <span id="amount_descriptor">{$shop->getCurrencySymbol()}</span>
                             <p>{$lang->about_discount_amount}</p>
                             <script type="text/javascript">
-                                jQuery('#discount_type').live('change', function(){
-                                    var val = jQuery(this).children('option:selected').val();
-                                    if (val == 'fixed_amount') var descriptor = '{$shop->getCurrencySymbol()}';
-                                    else if (val == 'percentage') descriptor = '%';
-                                    jQuery('#amount_descriptor').text(descriptor);
-                                }).change();
+                                jQuery(function(){
+                                    if (jQuery('#discount_type > option:selected').val() == 'fixed_amount') {
+                                        jQuery('#tax-phase:visible').hide();
+                                    }
+                                    jQuery('#discount_type').live('change', function(){
+                                        var val = jQuery(this).children('option:selected').val();
+                                        if (val == 'fixed_amount') {
+                                            var descriptor = '{$shop->getCurrencySymbol()}';
+                                            jQuery('#tax-phase:visible').fadeOut('fast');
+                                        }
+                                        else if (val == 'percentage') {
+                                            descriptor = '%';
+                                            jQuery('#tax-phase:hidden').fadeIn('fast');
+                                        }
+                                        jQuery('#amount_descriptor').text(descriptor);
+                                    }).change();
+                                });
                             </script>
                             <style type="text/css">
                                 #amount_descriptor {
@@ -64,7 +75,7 @@
                             </style>
                         </td>
                     </tr>
-                    <tr>
+                    <tr id="tax-phase">
                         <th scope="row"><label for="discount_tax_phase">{$lang->discount_tax_phase}</label></th>
                         <td>
                             <select name="discount_tax_phase" id="discount_tax_phase">

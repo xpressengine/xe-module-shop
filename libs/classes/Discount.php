@@ -3,7 +3,9 @@
 abstract class Discount
 {
     const DISCOUNT_TYPE_FIXED_AMOUNT = 'fixed_amount',
-        DISCOUNT_TYPE_PERCENTAGE = 'percentage';
+        DISCOUNT_TYPE_PERCENTAGE = 'percentage',
+        PHASE_BEFORE_VAT = 'pre_taxes',
+        PHASE_AFTER_VAT = 'post_taxes';
 
     private $value, $discountAmount, $minValueForDiscount, $VATPercent, $calculateBeforeApplyingVAT, $currency;
 
@@ -84,7 +86,13 @@ abstract class Discount
 
     public function setCalculateBeforeVAT($calculateBeforeApplyingVAT)
     {
-        $this->calculateBeforeApplyingVAT = $calculateBeforeApplyingVAT;
+        if (in_array($calculateBeforeApplyingVAT, array(self::PHASE_AFTER_VAT, self::PHASE_BEFORE_VAT))) {
+            $this->calculateBeforeApplyingVAT = self::PHASE_AFTER_VAT ? false : true;
+        }
+        elseif (is_bool($calculateBeforeApplyingVAT)) {
+            $this->calculateBeforeApplyingVAT = $calculateBeforeApplyingVAT;
+        }
+        else throw new Exception('Invalid setting');
         return $this;
     }
     public function calculateBeforeApplyingVAT()
