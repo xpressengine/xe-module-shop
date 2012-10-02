@@ -213,7 +213,7 @@
             }
 
             if(!$oDB->isColumnExists("shop_order_products","discount_price")) {
-                $oDB->addColumn('shop_order_products',"discount_price","float", 20, null, true);
+                $oDB->addColumn('shop_order_products',"discount_price","float", 20);
             }
 
             if(!$oDB->isColumnExists("shop_order_products","qty")) {
