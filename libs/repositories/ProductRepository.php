@@ -215,10 +215,10 @@ class ProductRepository extends BaseRepository
 		if(!isset($args->product_srl)) {
             throw new Exception("Missing arguments for Product delete: please provide [product_srl] or [module_srl]");
         }
+        $product = $this->getProduct($args->product_srl);
 		$this->query('deleteProduct',$args);
 
-		if ($args->product_type == 'simple') $product = new SimpleProduct($args);
-        else $product = new ConfigurableProduct($args);
+
 
         if ($product->product_type == 'configurable') $this->deleteAssociatedProducts($product);
 		$this->deleteProductCategories($product);
@@ -239,11 +239,22 @@ class ProductRepository extends BaseRepository
         if(!isset($args->product_srls)) {
             throw new Exception("Missing arguments for Products delete: please provide [product_srls]");
         }
-
+        foreach($args->product_srls as $product_srl){
+            $products[] = $this->getProduct($product_srl);
+        }
 		$this->query('deleteProducts',$args);
 		$args->parent_product_srls = $args->product_srls;
 		$this->query('deleteAssociatedProducts',$args);
 		$this->query('deleteProductCategories',$args);
+        foreach($products as $product){
+            if(isset($product->categories)){
+                foreach($product->categories as $category){
+                    $args->category_srl = $category;
+                    $this->updateProductCategoryCount($args);
+                }
+            }
+
+        }
 		$this->query('deleteProductAttributes',$args);
 		$this->query('deleteProductImages',$args);
 
@@ -268,7 +279,13 @@ class ProductRepository extends BaseRepository
         $args->product_srls[] = $product->product_srl;
         $output = executeQuery('shop.deleteProductCategories',$args);
         if (!$output->toBool()) throw new Exception($output->getMessage(), $output->getError());
-
+        $args->module_srl = $product->module_srl;
+        if(isset($product->categories)){
+            foreach($product->categories as $category){
+                $args->category_srl = $category;
+                $this->updateProductCategoryCount($args);
+            }
+        }
         return TRUE;
     }
 
