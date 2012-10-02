@@ -150,7 +150,7 @@ class CategoryRepository extends BaseRepository
 		{
 			$output = $this->query('shop.getCategories', $args, true);
 		}
-		catch(DBQueryException $e)
+		catch(DbQueryException $e)
 		{
 			$output = new stdClass();
 			$output->data = array();

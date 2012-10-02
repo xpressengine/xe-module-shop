@@ -205,7 +205,7 @@ class Cart extends BaseItem implements IProductItemsContainer
 			{
 				$output = $this->query('getCartAllProducts', $params, true);
 			}
-			catch(DBQueryException $e)
+			catch(DbQueryException $e)
 			{
 				return array();
 			}

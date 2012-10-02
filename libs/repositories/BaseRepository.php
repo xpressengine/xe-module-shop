@@ -39,7 +39,7 @@ abstract class BaseRepository
     {
         if (!is_object($output)) throw new Exception('A valid query output is expected here');
         if (!$output->toBool()) {
-            throw new DBQueryException($output->getMessage(), $output->getError());
+            throw new DbQueryException($output->getMessage(), $output->getError());
         }
         return $output;
     }

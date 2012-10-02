@@ -34,7 +34,7 @@ class OrderRepository extends BaseRepository
 		try
 		{
 			$output = $this->query('getMostOrderedProducts', $params, true);
-		}catch (DBQueryException $e)
+		}catch (DbQueryException $e)
 		{
 			$output = new stdClass();
 			$output->data = array();
