@@ -578,7 +578,7 @@
             $args = Context::gets('discount_min_amount','discount_type','discount_amount','discount_tax_phase');
             $args->module_srl = $this->module_srl;
             if($args->discount_amount >= $args->discount_min_amount){
-                $this->setMessage('Discount amount is bigger than discount min amount');
+                $this->setMessage("Discount amount ($args->discount_amount) is bigger than discount min amount ($args->discount_min_amount)");
                 $returnUrl = getNotEncodedUrl('', 'act', 'dispShopToolDiscountInfo');
                 $this->setRedirectUrl($returnUrl);
                 return;

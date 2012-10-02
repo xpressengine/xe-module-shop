@@ -404,7 +404,7 @@
     $lang->discount_type = 'Discount type';
     $lang->about_discount_type = 'Fixed amount or percentage from order total';
     $lang->discount_amount = 'Discount amount';
-    $lang->about_discount_amount = 'Enter discount amount';
+    $lang->about_discount_amount = 'Enter discount amount or set it to 0 to disable the whole discount.';
     $lang->discount_tax_phase = 'When to apply the discount by tax';
     $lang->about_discount_tax_phase = 'Pre or post taxes';
     $lang->fixed_amount = 'fixed amount';
