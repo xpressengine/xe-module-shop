@@ -197,10 +197,10 @@ class CartTest extends Shop_Generic_Tests_DatabaseTestCase
 		$this->assertEquals(44.98, $cart->getTotalBeforeDiscount());
 
 		// 5. Check total before discount is correct
-		$this->assertEquals(41.33662, $cart->getTotalAfterDiscount());
+		$this->assertEquals(41.33662, $cart->getTotalAfterDiscount(),'', 0.01);
 
 		// 6. Check global total is correct
-		$this->assertEquals(51.33662, $cart->getTotal());
+		$this->assertEquals(51.33662, $cart->getTotal(),'', 0.01);
 	}
 
     public function testCartGetProducts_AllAvailable()
@@ -263,8 +263,8 @@ class CartTest extends Shop_Generic_Tests_DatabaseTestCase
         $this->assertEquals(29.99, $cart->getItemTotal(true)); // Count just available products
 
         // 4. Check global total is correct (includes shipping +10)
-        $this->assertEquals(54.98, $cart->getTotal(false, true)); // Default, count all products
-        $this->assertEquals(39.99, $cart->getTotal(true, true)); // Count just available products
+        $this->assertEquals(54.98, $cart->getTotal(false, true), '', 0.01); // Default, count all products
+        $this->assertEquals(39.99, $cart->getTotal(true, true), '', 0.01); // Count just available products
     }
 
 	public function testDiscountPercentageBeforeVAT()
