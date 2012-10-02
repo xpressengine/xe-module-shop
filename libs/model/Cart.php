@@ -586,7 +586,7 @@ class Cart extends BaseItem implements IProductItemsContainer
     public function getDiscountName()
     {
 		$discount = $this->getDiscount();
-		return $discount ? $discount->getName() : '';
+		return $discount ? $discount->getName() : null;
     }
 
     /**
@@ -595,7 +595,7 @@ class Cart extends BaseItem implements IProductItemsContainer
     public function getDiscountDescription()
     {
 		$discount = $this->getDiscount();
-        return $discount ? $discount->getDescription() : '';
+        return $discount ? $discount->getDescription() : null;
     }
 
     /**
