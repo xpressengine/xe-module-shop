@@ -329,7 +329,7 @@ class Cart extends BaseItem implements IProductItemsContainer
         return $total;
     }
 
-    public function getTotal($onlyAvailables=false, $ignoreDiscount=false)
+    public function getTotal($onlyAvailables=false)
     {
 		$total = $this->getTotalAfterDiscount($onlyAvailables);
 		$total += $this->getShippingCost();

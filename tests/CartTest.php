@@ -27,7 +27,7 @@ class CartTest extends Shop_Generic_Tests_DatabaseTestCase
                 array('id' => '768','name' => 'flat_rate_shipping','display_name' => 'Flat Rate Shipping','status' => '1','props' => 'O:8:"stdClass":2:{s:4:"type";s:9:"per_order";s:5:"price";s:2:"10";}','module_srl' => '107')
             ),
             'xe_shop' => array(
-                array('module_srl' => '107','member_srl' => '4','shop_title' => '','shop_content' => '','profile_content' => '','input_email' => 'R','input_website' => 'R','timezone' => '+0300','currency' => 'EUR','VAT' => 19,'telephone' => NULL,'address' => NULL,'regdate' => '20120831171133','currency_symbol' => '€','discount_min_amount' => 20,'discount_type' => 'percentage','discount_amount' => '60','discount_tax_phase' => 'pre_taxes','out_of_stock_products' => 'Y','minimum_order' => NULL,'show_VAT' => NULL,'menus' => 'a:2:{s:11:"header_menu";s:3:"108";s:11:"footer_menu";s:3:"393";}')
+                array('module_srl' => '107','member_srl' => '4','shop_title' => '','shop_content' => '','profile_content' => '','input_email' => 'R','input_website' => 'R','timezone' => '+0300','currency' => 'EUR','VAT' => 19,'telephone' => NULL,'address' => NULL,'regdate' => '20120831171133','currency_symbol' => '€','discount_min_amount' => null,'discount_type' => null,'discount_amount' => null,'discount_tax_phase' => 'pre_taxes','out_of_stock_products' => 'Y','minimum_order' => NULL,'show_VAT' => NULL,'menus' => 'a:2:{s:11:"header_menu";s:3:"108";s:11:"footer_menu";s:3:"393";}')
             ),
             'xe_sites' => array(
                 array('site_srl' => '106','index_module_srl' => '107','domain' => 'shop','default_language' => 'en','regdate' => '20120831171133')
@@ -267,42 +267,34 @@ class CartTest extends Shop_Generic_Tests_DatabaseTestCase
         $this->assertEquals(39.99, $cart->getTotal(true, true)); // Count just available products
     }
 
-    public function testCartDiscount()
-    {
-        $cart = new Cart(774);
+	public function testDiscountPercentageBeforeVAT()
+	{
+		$discount = new PercentageDiscount(100, 40, 99, 20, true);
 
-        $discount = $cart->getDiscount('percentage');
-        $this->assertInstanceOf('PercentageDiscount', $discount, 'Wrong class');
+		$this->assertEquals(80, $discount->getValueWithoutVAT(), 'Wrong VAT');
+		$this->assertEquals(32, $discount->getReductionValue(), 'Wrong reduction at discount before VAT');
+		$this->assertEquals($discount->getTotalValue() - $discount->getReductionValue(), $discount->getValueDiscounted(), 'Wrong discounted value');
+	}
 
-        $this->assertEquals($cart->getTotalBeforeDiscount(true), $discount->getTotalValue(), 'Discount initial value does not match');
+	public function testDiscountPercentageAfterVAT()
+	{
+		$discount = new PercentageDiscount(100, 40, 99, 20, false);
 
-        $discount->setTotalValue(100);
-        $discount->setVATPercent(20);
+		$this->assertEquals(40, $discount->getReductionValue(), 'Wrong reduction at discount after VAT');
+		$this->assertEquals($discount->getTotalValue() - $discount->getReductionValue(),$discount->getValueDiscounted(), 'Wrong reduction discounted value');
+	}
 
-        $this->assertEquals($discount->getValueWithoutVAT(), 80, 'Wrong VAT');
+	public function testDiscountFixedAmount()
+	{
+		$discount = new FixedAmountDiscount(1000, 200, 999, 20, true);
 
-        $discount->setDiscountAmount(40);
-        $discount->setCalculateBeforeVAT(true);
+		$discount->setCalculateBeforeVAT(true);
+		$this->assertEquals(200, $discount->getReductionValue());
+		$this->assertEquals(800, $discount->getValueDiscounted());
 
-        $this->assertEquals($discount->getReductionValue(), 40, 'Wrong reduction at discount before VAT');
-        $this->assertEquals($discount->getValueDiscounted(), $discount->getTotalValue() - $discount->getReductionValue(), 'Wrong discounted value');
-
-        $discount->setCalculateBeforeVAT(false);
-
-        $this->assertEquals($discount->getReductionValue(), 32, 'Wrong reduction at discount after VAT');
-        $this->assertEquals($discount->getValueDiscounted(), $discount->getTotalValue() - $discount->getReductionValue(), 'Wrong reduction discounted value');
-
-        /*
-         * FIX amount
-         */
-        $discount = new FixedAmountDiscount(1000, 200, 999, 20, true, $cart->getCurrency());
-        $discount->setCalculateBeforeVAT(true);
-        $this->assertEquals(200, $discount->getReductionValue());
-        $this->assertEquals(800, $discount->getValueDiscounted());
-        $discount->setCalculateBeforeVAT(false);
-        $this->assertEquals(200, $discount->getReductionValue());
-        $this->assertEquals(800, $discount->getValueDiscounted());
-        return;
-    }
+		$discount->setCalculateBeforeVAT(false);
+		$this->assertEquals(200, $discount->getReductionValue());
+		$this->assertEquals(800, $discount->getValueDiscounted());
+	}
 
 }

@@ -76,7 +76,7 @@ class Order extends BaseItem implements IProductItemsContainer
         $this->payment_method = $cart->getExtra('payment_method');
         $this->shipping_method = $cart->getExtra('shipping_method');
         $this->shipping_cost = $cart->getShippingCost();
-        $this->total = $cart->getTotal(true, true);
+        $this->total = $cart->getTotal(true);
         $this->vat = ($shopInfo->getVAT() ? $shopInfo->getVAT() : 0);
         $this->order_status = Order::ORDER_STATUS_PENDING;
         $this->ip = $_SERVER['REMOTE_ADDR'];
@@ -99,24 +99,20 @@ class Order extends BaseItem implements IProductItemsContainer
         return reset(explode(',',$this->shipping_address));
     }
 
-    public function saveCartProducts(Cart $cart, $calculateTotal=true)
+    public function saveCartProducts(Cart $cart)
     {
         if (!$this->order_srl) throw new Exception('Order not persisted');
         if (!$cart->cart_srl) throw new Exception('Cart not persisted');
         //remove all already existing links
         $this->repo->deleteOrderProducts($this->order_srl);
         //set the new links
-        $total = 0;
         /** @var $cart_product SimpleProduct */
         $cart_products = $cart->getProducts();
         foreach ($cart_products as $cart_product) {
             if ($cart_product->available && $cart_product->product_srl) {
                 $this->repo->insertOrderProduct($this->order_srl, $cart_product);
-                $total += $cart_product->quantity * $cart_product->price;
             }
         }
-        $this->total = $total;
-        if ($calculateTotal) $this->save();
     }
 
     public function getProducts()
