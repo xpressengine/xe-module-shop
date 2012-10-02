@@ -27,6 +27,16 @@ class PaypalExpressCheckout extends PaymentMethodAbstract
             $item->quantity = $product->quantity;
             $items[] = $item;
         }
+
+		if($cart->getDiscountAmount() > 0)
+		{
+			$item = new stdClass();
+			$item->name = 'Discount';
+			$item->description = $cart->getDiscountName();
+			$item->amount = -1 * $cart->getDiscountAmount();
+			$item->quantity = 1;
+			$items[] = $item;
+		}
         return $items;
     }
 
@@ -48,7 +58,7 @@ class PaypalExpressCheckout extends PaymentMethodAbstract
 
         $paypalAPI->setExpressCheckout(
             $items
-            , ShopDisplay::numberFormat($cart->getItemTotal())
+            , ShopDisplay::numberFormat($cart->getItemTotal() - $cart->getDiscountAmount())
             , 0
             , ShopDisplay::numberFormat($cart->getShippingCost())
             , ShopDisplay::numberFormat($cart->getTotal())

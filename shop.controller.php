@@ -893,10 +893,17 @@
                 return new Object(-1, $error_message);
             }
 
-            $order = new Order($cart);
-            $order->save(); //obtain srl
-            $order->saveCartProducts($cart);
-            $cart->delete();
+			try
+			{
+				$order = new Order($cart);
+				$order->save(); //obtain srl
+				$order->saveCartProducts($cart);
+				$cart->delete();
+			}
+			catch(Exception $e)
+			{
+				return new Object(-1, 'msg_error_occured');
+			}
 
             $this->setRedirectUrl(getNotEncodedUrl('', 'act', 'dispShopOrderConfirmation', 'order_srl', $order->order_srl));
         }
