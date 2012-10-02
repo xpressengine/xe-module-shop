@@ -2159,5 +2159,39 @@
         }
 
         // endregion
+
+		// moduleHandler.init after
+		public function triggerDeleteOldLogs()
+		{
+			if(__DEBUG__)
+			{
+				FileHandler::removeFile(ShopLogger::LOG_FILE_PATH);
+				FileHandler::removeFile(ShopLogger::XE_CORE_DEBUG_MESSAGE_PATH);
+				FileHandler::removeFile(ShopLogger::XE_CORE_DEBUG_DB_QUERY_PATH);
+			}
+		}
+
+		// display after
+		public function triggerDisplayLogMessages()
+		{
+			if(__DEBUG__)
+			{
+				// Load XE Shop errors
+				$shop_log_messages = FileHandler::readFile(ShopLogger::LOG_FILE_PATH);
+				Context::set('shop_log_messages', $shop_log_messages);
+
+				// Load XE Core query log
+				$debug_messages = FileHandler::readFile(ShopLogger::XE_CORE_DEBUG_MESSAGE_PATH);
+				Context::set('debug_messages', $debug_messages);
+
+				// Load DB Query log
+				$debug_db_query = FileHandler::readFile(ShopLogger::XE_CORE_DEBUG_DB_QUERY_PATH);
+				Context::set('debug_db_query', $debug_db_query);
+
+				$oTemplateHandler = TemplateHandler::getInstance();
+				$view_logs = $oTemplateHandler->compile(_XE_PATH_ . '/modules/shop/tpl', 'log_viewer.html');
+				print $view_logs;
+			}
+		}
     }
 ?>
