@@ -2165,6 +2165,9 @@
 		{
 			if(__DEBUG__)
 			{
+				FileHandler::writeFile(ShopLogger::LOG_FILE_PATH . '.bk', FileHandler::readFile(ShopLogger::LOG_FILE_PATH), 'a');
+				FileHandler::writeFile(ShopLogger::XE_CORE_DEBUG_MESSAGE_PATH . '.bk', FileHandler::readFile(ShopLogger::XE_CORE_DEBUG_MESSAGE_PATH), 'a');
+				FileHandler::writeFile(ShopLogger::XE_CORE_DEBUG_DB_QUERY_PATH . '.bk', FileHandler::readFile(ShopLogger::XE_CORE_DEBUG_DB_QUERY_PATH), 'a');
 				FileHandler::removeFile(ShopLogger::LOG_FILE_PATH);
 				FileHandler::removeFile(ShopLogger::XE_CORE_DEBUG_MESSAGE_PATH);
 				FileHandler::removeFile(ShopLogger::XE_CORE_DEBUG_DB_QUERY_PATH);
