@@ -585,7 +585,8 @@ class Cart extends BaseItem implements IProductItemsContainer
      */
     public function getDiscountName()
     {
-        $this->getDiscount()->getName();
+		$discount = $this->getDiscount();
+		return $discount ? $discount->getName() : '';
     }
 
     /**
@@ -593,7 +594,8 @@ class Cart extends BaseItem implements IProductItemsContainer
      */
     public function getDiscountDescription()
     {
-        $this->getDiscount()->getDescription();
+		$discount = $this->getDiscount();
+        return $discount ? $discount->getDescription() : '';
     }
 
     /**
@@ -601,6 +603,7 @@ class Cart extends BaseItem implements IProductItemsContainer
      */
     public function getDiscountAmount()
     {
-        $this->getDiscount()->getReductionValue();
+		$discount = $this->getDiscount();
+        return $discount ? $discount->getReductionValue() : null;
     }
 }
