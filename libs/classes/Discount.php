@@ -5,64 +5,66 @@ abstract class Discount
     const DISCOUNT_TYPE_FIXED_AMOUNT = 'fixed_amount',
         DISCOUNT_TYPE_PERCENTAGE = 'percentage';
 
-    private $value, $discountValue, $minValueForDiscount, $VATPercent, $calculateBeforeApplyingVAT, $currency;
+    private $value, $discountAmount, $minValueForDiscount, $VATPercent, $calculateBeforeApplyingVAT, $currency;
 
     abstract public function getName();
     abstract public function getDescription();
     abstract protected function validate($value, $discountValue);
     abstract protected function calculate($value, $discountValue);
 
-    public function __construct($value, $discountValue, $minValueForDiscount=null, $VATPercent=0, $calculateBeforeApplyingVAT=false, $currency=null)
+    public function __construct($totalValue, $discountValue, $minValueForDiscount=null, $VATPercent=0, $calculateBeforeApplyingVAT=false, $currency=null)
     {
         $this
-            ->setValue($value)
-            ->setDiscountValue($discountValue)
+            ->setTotalValue($totalValue)
+            ->setDiscountAmount($discountValue)
             ->setMinValueForDiscount($minValueForDiscount)
             ->setVATPercent($VATPercent)
             ->setCalculateBeforeVAT($calculateBeforeApplyingVAT)
             ->setCurrency($currency)
-            ->validate($this->getValue(), $this->getDiscountValue());
+            ->validate($this->getTotalValue(), $this->getDiscountAmount());
     }
 
     public function getValueDiscounted()
     {
-        if ($this->getMinValueForDiscount() > $this->getValue()) {
-            return $this->getValue();
+        if ($this->getMinValueForDiscount() > $this->getTotalValue()) {
+            return $this->getTotalValue();
         }
-        return $this->getValue() - $this->getReductionValue();
+        return $this->getTotalValue() - $this->getReductionValue();
     }
 
-    public function getReductionValue($flag=false)
+    public function getReductionValue()
     {
-        if ($this->getMinValueForDiscount() > $this->getValue()) {
-            return 0;
-        }
-        $value = ($this->calculateBeforeApplyingVAT() ?  $this->getValueWithoutVAT() : $this->getValue());
-        return $this->calculate($value, $this->getDiscountValue());
+        $minValueForDiscount = $this->getMinValueForDiscount();
+        $totalValue = $this->getTotalValue();
+        $calculateBeforeApplyingVAT = $this->calculateBeforeApplyingVAT();
+        $valueWithoutVAT = $this->getValueWithoutVAT();
+        $discountAmount = $this->getDiscountAmount();
+        if ($minValueForDiscount > $totalValue) return 0;
+        return $this->calculate(( $calculateBeforeApplyingVAT ? $totalValue : $valueWithoutVAT ), $discountAmount);
     }
 
     public function getValueWithoutVAT()
     {
-        return $this->getValue() - $this->getVATPercent() / 100 * $this->getValue();
+        return $this->getTotalValue() - $this->getVATPercent() / 100 * $this->getTotalValue();
     }
 
     //region Getters/setters
-    public function setDiscountValue($amount)
+    public function setDiscountAmount($amount)
     {
-        $this->discountValue = $amount;
+        $this->discountAmount = $amount;
         return $this;
     }
-    public function getDiscountValue()
+    public function getDiscountAmount()
     {
-        return $this->discountValue;
+        return $this->discountAmount;
     }
 
-    public function setValue($value)
+    public function setTotalValue($value)
     {
         $this->value = $value;
         return $this;
     }
-    public function getValue()
+    public function getTotalValue()
     {
         return $this->value;
     }
@@ -124,13 +126,13 @@ class FixedAmountDiscount extends Discount
 
     public function getDescription()
     {
-        return "You get {$this->getDiscountValue()}{$this->getCurrency()} discount when your cart value steps over {$this->getMinValueForDiscount()}{$this->getCurrency()}";
+        return "You get {$this->getDiscountAmount()}{$this->getCurrency()} discount when your cart value steps over {$this->getMinValueForDiscount()}{$this->getCurrency()}";
     }
 
     protected function validate($value, $discountValue)
     {
         if ($value < $discountValue) {
-            throw new Exception("{$this->getValue()} should be bigger than the fix amount discount value {$this->getDiscountValue()}");
+            throw new Exception("{$this->getTotalValue()} should be bigger than the fix amount discount value {$this->getDiscountAmount()}");
         }
     }
 
@@ -151,7 +153,7 @@ class PercentageDiscount extends Discount
 
     public function getDescription()
     {
-        return "{$this->getDiscountValue()}% of your total order gets discounted when you step over {$this->getMinValueForDiscount()}{$this->getCurrency()}";
+        return "{$this->getDiscountAmount()}% of your total order gets discounted when you step over {$this->getMinValueForDiscount()}{$this->getCurrency()}";
     }
 
     protected function validate($value, $discountValue)
