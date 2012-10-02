@@ -201,7 +201,15 @@ class Cart extends BaseItem implements IProductItemsContainer
             $checkIfInStock = ($shopInfo->getOutOfStockProducts() == 'Y');
             $params = array('cart_srl'=>$this->cart_srl);
             if ($n) $params['list_count'] = $n;
-            $output = $this->query('getCartAllProducts', $params, true);
+			try
+			{
+				$output = $this->query('getCartAllProducts', $params, true);
+			}
+			catch(DBQueryException $e)
+			{
+				return array();
+			}
+
             $stds = $output->data;
             foreach ($stds as $i=>$data) {
                 $product = new CartProduct($data);

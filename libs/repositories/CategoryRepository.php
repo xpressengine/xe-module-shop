@@ -146,10 +146,14 @@ class CategoryRepository extends BaseRepository
 		$args->module_srl = $module_srl;
 
 		// Retrieve categories from database
-		$output = executeQueryArray('shop.getCategories', $args);
-		if(!$output->toBool())
+		try
 		{
-			throw new Exception($output->getMessage(), $output->getError());
+			$output = $this->query('shop.getCategories', $args, true);
+		}
+		catch(DBQueryException $e)
+		{
+			$output = new stdClass();
+			$output->data = array();
 		}
 
 		// Arrange hierarchically

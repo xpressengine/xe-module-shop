@@ -31,7 +31,16 @@ class OrderRepository extends BaseRepository
     public function getMostOrderedProducts($module_srl)
     {
         $params = array('module_srl'=> $module_srl);
-        $output = $this->query('getMostOrderedProducts', $params, true);
+		try
+		{
+			$output = $this->query('getMostOrderedProducts', $params, true);
+		}catch (DBQueryException $e)
+		{
+			$output = new stdClass();
+			$output->data = array();
+		}
+
+
         foreach ($output->data as $data) {
             if($data->product_type == 'simple') $product = new SimpleProduct((array) $data);
             elseif($data->product_type == 'configurable') $product = new ConfigurableProduct((array) $data);
