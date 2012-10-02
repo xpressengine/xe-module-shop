@@ -81,7 +81,7 @@ class CartTest extends Shop_Generic_Tests_DatabaseTestCase
         $this->assertEquals(54.98, $cart->getTotal(false, true));
     }
 
-    public function testCartTotal_WithShippingAndDiscount()
+    public function testCartTotal_WithShippingAndDiscountFixedAmount()
     {
         $module_srl = 107;
         $cart_srl = 774;
@@ -92,7 +92,6 @@ class CartTest extends Shop_Generic_Tests_DatabaseTestCase
         $args->discount_min_amount = 10;
         $args->discount_type = 'fixed_amount';
         $args->discount_amount = 5;
-        $args->discount_tax_phase = 'post_taxes';
         $output = executeQuery('shop.updateDiscountInfo',$args);
         if(!$output->toBool())
         {
@@ -112,11 +111,97 @@ class CartTest extends Shop_Generic_Tests_DatabaseTestCase
         $this->assertEquals(44.98, $cart->getItemTotal());
 
         // 4. Check total before discount is correct
-        $this->assertEquals(54.98, $cart->getTotalBeforeDiscount());
+        $this->assertEquals(44.98, $cart->getTotalBeforeDiscount());
 
-        // 5. Check global total is correct
+		// 5. Check total before discount is correct
+		$this->assertEquals(39.98, $cart->getTotalAfterDiscount());
+
+        // 6. Check global total is correct
         $this->assertEquals(49.98, $cart->getTotal());
     }
+
+	public function testCartTotal_WithShippingAndDiscountPercentagePostTax()
+	{
+		$module_srl = 107;
+		$cart_srl = 774;
+
+		// Configure shop to use discounts
+		$args = new stdClass();
+		$args->module_srl = $module_srl;
+		$args->discount_min_amount = 5;
+		$args->discount_type = Discount::DISCOUNT_TYPE_PERCENTAGE;
+		$args->discount_amount = 10;
+		$args->discount_tax_phase = Discount::PHASE_AFTER_VAT;
+
+		$output = executeQuery('shop.updateDiscountInfo',$args);
+		if(!$output->toBool())
+		{
+			throw new Exception($output->getMessage());
+		}
+
+		$cart = new Cart($cart_srl);
+
+		// 1. Check that cart has expected products
+		$this->assertEquals(2, count($cart->getProducts()));
+
+		// 2. Check that shipping method is set and shipping cost is correct
+		$this->assertEquals('flat_rate_shipping', $cart->getShippingMethodName());
+		$this->assertEquals(10, $cart->getShippingCost());
+
+		// 3. Check that item total is correct
+		$this->assertEquals(44.98, $cart->getItemTotal());
+
+		// 4. Check total before discount is correct
+		$this->assertEquals(44.98, $cart->getTotalBeforeDiscount());
+
+		// 5. Check total before discount is correct
+		$this->assertEquals(40.482, $cart->getTotalAfterDiscount());
+
+		// 6. Check global total is correct
+		$this->assertEquals(50.482, $cart->getTotal());
+	}
+
+
+	public function testCartTotal_WithShippingAndDiscountPercentagePreTax()
+	{
+		$module_srl = 107;
+		$cart_srl = 774;
+
+		// Configure shop to use discounts
+		$args = new stdClass();
+		$args->module_srl = $module_srl;
+		$args->discount_min_amount = 5;
+		$args->discount_type = Discount::DISCOUNT_TYPE_PERCENTAGE;
+		$args->discount_amount = 10;
+		$args->discount_tax_phase = Discount::PHASE_BEFORE_VAT;
+
+		$output = executeQuery('shop.updateDiscountInfo',$args);
+		if(!$output->toBool())
+		{
+			throw new Exception($output->getMessage());
+		}
+
+		$cart = new Cart($cart_srl);
+
+		// 1. Check that cart has expected products
+		$this->assertEquals(2, count($cart->getProducts()));
+
+		// 2. Check that shipping method is set and shipping cost is correct
+		$this->assertEquals('flat_rate_shipping', $cart->getShippingMethodName());
+		$this->assertEquals(10, $cart->getShippingCost());
+
+		// 3. Check that item total is correct
+		$this->assertEquals(44.98, $cart->getItemTotal());
+
+		// 4. Check total before discount is correct
+		$this->assertEquals(44.98, $cart->getTotalBeforeDiscount());
+
+		// 5. Check total before discount is correct
+		$this->assertEquals(41.33662, $cart->getTotalAfterDiscount());
+
+		// 6. Check global total is correct
+		$this->assertEquals(51.33662, $cart->getTotal());
+	}
 
     public function testCartGetProducts_AllAvailable()
     {

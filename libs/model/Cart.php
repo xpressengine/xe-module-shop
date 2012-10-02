@@ -311,20 +311,29 @@ class Cart extends BaseItem implements IProductItemsContainer
         return $total;
     }
 
+	public function getTotalAfterDiscount($onlyAvailable=false)
+	{
+		$total = $this->getTotalBeforeDiscount($onlyAvailable);
+		$discount = $this->getDiscount();
+		if($discount)
+		{
+			$total -= $discount->getReductionValue();
+		}
+		return $total;
+	}
+
 
     public function getTotalBeforeDiscount($onlyAvailables=false)
     {
         $total = $this->getItemTotal($onlyAvailables);
-        $total += $this->getShippingCost();
         return $total;
     }
 
     public function getTotal($onlyAvailables=false, $ignoreDiscount=false)
     {
-        if (!$ignoreDiscount && $discount = $this->getDiscount()) {
-            return $discount->getValueDiscounted();
-        }
-        return $this->getTotalBeforeDiscount($onlyAvailables);
+		$total = $this->getTotalAfterDiscount($onlyAvailables);
+		$total += $this->getShippingCost();
+        return $total;
     }
 
     public function getVAT($onlyAvailable=false, $withDiscount=false)

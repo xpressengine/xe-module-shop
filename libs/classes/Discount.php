@@ -42,7 +42,7 @@ abstract class Discount
         $valueWithoutVAT = $this->getValueWithoutVAT();
         $discountAmount = $this->getDiscountAmount();
         if ($minValueForDiscount > $totalValue) return 0;
-        return $this->calculate(( $calculateBeforeApplyingVAT ? $totalValue : $valueWithoutVAT ), $discountAmount);
+        return $this->calculate(( $calculateBeforeApplyingVAT == false ? $totalValue : $valueWithoutVAT ), $discountAmount);
     }
 
     public function getValueWithoutVAT()
@@ -86,7 +86,7 @@ abstract class Discount
 
     public function setCalculateBeforeVAT($calculateBeforeApplyingVAT)
     {
-        if (in_array($calculateBeforeApplyingVAT, array(self::PHASE_AFTER_VAT, self::PHASE_BEFORE_VAT))) {
+        if ($calculateBeforeApplyingVAT === self::PHASE_AFTER_VAT || $calculateBeforeApplyingVAT === self::PHASE_BEFORE_VAT) {
             $this->calculateBeforeApplyingVAT = self::PHASE_AFTER_VAT ? false : true;
         }
         elseif (is_bool($calculateBeforeApplyingVAT)) {
