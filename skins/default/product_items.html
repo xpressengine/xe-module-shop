@@ -34,16 +34,6 @@
         <!-- // Products -->
     </tbody>
     <tfoot>
-        <!-- Shipping cost -->
-        <tr>
-            <td colspan="4"></td>
-            <td>Shipping</td>
-            <td>
-                {ShopDisplay::priceFormat($product_container->getShippingCost(), $shop->getCurrencySymbol())}
-            </td>
-        </tr>
-        <!-- // Shipping cost -->
-
         <!-- Total before discount -->
         <tr>
             <td colspan="4"></td>
@@ -60,10 +50,20 @@
             </td>
             <td><a href="#" onclick="alert('{$product_container->getDiscountName()}\n\n{$product_container->getDiscountDescription()}'); return false">Discount</a></td>
             <td>
-                {ShopDisplay::priceFormat($product_container->getDiscountAmount(), $shop->getCurrencySymbol())}
+                {ShopDisplay::priceFormat(-1 * $product_container->getDiscountAmount(), $shop->getCurrencySymbol())}
             </td>
         </tr>
         <!-- // Discount -->
+
+        <!-- Shipping cost -->
+        <tr>
+            <td colspan="4"></td>
+            <td>Shipping</td>
+            <td>
+                {ShopDisplay::priceFormat($product_container->getShippingCost(), $shop->getCurrencySymbol())}
+            </td>
+        </tr>
+        <!-- // Shipping cost -->
 
         <!-- Grand total -->
         <tr style="font-weight: bold;">
