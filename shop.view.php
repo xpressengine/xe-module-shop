@@ -817,7 +817,9 @@ class shopView extends shop {
 		$attributeRepository = $shopModel->getAttributeRepository();
 		$configurable_attributes = $attributeRepository->getAttributes(array_keys($product->configurable_attributes));
 		if(count($product->configurable_attributes) == 1){
-			$values_combinations = explode('|',$configurable_attributes->values);
+            foreach($configurable_attributes as $conf_att){
+                $values_combinations = $conf_att->values;
+            }
             $config_atts[$configurable_attributes->attribute_srl] = $configurable_attributes;
             unset($configurable_attributes);
             $configurable_attributes = $config_atts;
