@@ -10,7 +10,7 @@ class CartProduct extends BaseItem implements IProductItem
 
     public function __construct($data)
     {
-        $this->product = new SimpleProduct($data);
+        $this->setProduct(new SimpleProduct($data));
         $this->cart_product_srl = $data->cart_product_srl;
         $this->cart_product_title = $data->cart_product_title;
         $this->cart_product_price = $data->cart_product_price;
@@ -19,9 +19,24 @@ class CartProduct extends BaseItem implements IProductItem
         parent::__construct();
     }
 
+
     public function getRepo()
     {
         return "CartRepository";
+    }
+
+    public function setProduct(SimpleProduct $product)
+    {
+        $this->product = $product;
+        return $this;
+    }
+
+    /**
+     * @return SimpleProduct
+     */
+    public function getProduct()
+    {
+        return $this->product;
     }
 
     public function __get($property)

@@ -34,14 +34,14 @@ class Cart extends BaseItem implements IProductItemsContainer
         $this->query('deleteCartProducts', array('cart_srl'=> $this->cart_srl));
     }
 
-    public function merge(Cart $cart)
+    public function merge(Cart $cart, $withDelete=true)
     {
         if (!$cart->cart_srl || !$this->cart_srl) throw new Exception('Missing srl(s) for carts merge');
         if ($cart->cart_srl == $this->cart_srl) {
             throw new Exception('Cannot merge with same cart');
         }
         $this->copyProductLinksFrom($cart);
-        $cart->delete();
+        if ($withDelete) $cart->delete();
     }
 
     public function copyProductLinksFrom(Cart $cart)
@@ -58,10 +58,12 @@ class Cart extends BaseItem implements IProductItemsContainer
                     break;
                 }
             }
-            //if I have it update my quantity
-            if ($have) $this->repo->updateCartProduct($this->cart_srl, $cp->product_srl, $cp->quantity + $cp2->quantity);
-            //else add it
-            else $this->repo->insertCartProduct($this->cart_srl, $cp->product_srl, $cp->quantity, array('title'=>$cp->title, 'price'=>$cp->price));
+            if ($have) { //if I have it update my quantity
+                $this->repo->updateCartProduct($this->cart_srl, $cp->product_srl, $cp->quantity + $cp2->quantity);
+            }
+            else { //else add it
+                $this->repo->insertCartProduct($this->cart_srl, $cp->product_srl, $cp->quantity, array('title'=>$cp->title, 'price'=>$cp->price));
+            }
         }
         //count again
         $this->setExtra('price', $this->getPrice(true));
@@ -134,6 +136,11 @@ class Cart extends BaseItem implements IProductItemsContainer
         return $this->getCartProduct($product) ? true : false;
     }
 
+    /**
+     * @param $product
+     *
+     * @return null|CartProduct
+     */
     public function getCartProduct($product)
     {
         return $this->repo->getCartProduct($this->cart_srl, $product);
@@ -169,7 +176,7 @@ class Cart extends BaseItem implements IProductItemsContainer
                 return $count;
             }
         }
-        return $this->repo->countCartProducts($this->module_srl, $this->cart_srl, $this->member_srl, $this->session_id, $sumQuantities);
+        return $this->repo->countCartProducts($this, $sumQuantities);
     }
 
     public function countAvailableProducts()
@@ -190,34 +197,29 @@ class Cart extends BaseItem implements IProductItemsContainer
      * @return mixed Cart products
      * @throws Exception
      */
-    public function getProducts($n=null, $onlyAvailables=false)
+    public function getProducts($n=null, $onlyAvailables=false, $ignoreCache=false)
     {
         if (!$this->cart_srl) throw new Exception('Cart is not persisted');
         //an entity-unique cache key for the current method and parameters combination
         $cacheKey = 'getProducts|' . ($n?$n:"_").(string)($onlyAvailables?'av':'all');
-        if (!$products = $this->cache[$cacheKey]) {
+        if ($ignoreCache || !$products = $this->cache[$cacheKey]) {
             $products = array();
             $shopInfo = new ShopInfo($this->module_srl);
             $checkIfInStock = ($shopInfo->getOutOfStockProducts() == 'Y');
             $params = array('cart_srl'=>$this->cart_srl);
             if ($n) $params['list_count'] = $n;
-			try
-			{
-				$output = $this->query('getCartAllProducts', $params, true);
-			}
-			catch(DbQueryException $e)
-			{
-				return array();
-			}
-
+            $output = $this->query('getCartAllProducts', $params, true);
             $stds = $output->data;
             foreach ($stds as $i=>$data) {
-                $product = new CartProduct($data);
-                if(!$product->isAvailable($checkIfInStock) && $onlyAvailables)
-                {
-                    continue;
+                $cartProduct = new CartProduct($data);
+                $simpleProduct = $cartProduct->getProduct();
+                if ($simpleProduct->isPersisted()) {
+                    if(!$simpleProduct->isAvailable($checkIfInStock) && $onlyAvailables) continue;
                 }
-                $products[$i] = $product;
+                else {
+                    if ($onlyAvailables || !$cartProduct->cart_product_srl) continue;
+                }
+                $products[$i] = $cartProduct;
             }
             $this->cache[$cacheKey] = $products;
         }
@@ -226,6 +228,11 @@ class Cart extends BaseItem implements IProductItemsContainer
             return array_slice($products, 0, $n);
         }
         return $products;
+    }
+
+    public function emptyCart()
+    {
+        $this->repo->deleteCartProducts($this->cart_srl);
     }
 
     public function getProductsList(array $args=array())

@@ -13,7 +13,8 @@ class CartTest extends Shop_Generic_Tests_DatabaseTestCase
     {
         return new Shop_DbUnit_ArrayDataSet(array(
             'xe_shop_cart' => array(
-                array('cart_srl' => '774','module_srl' => '107','member_srl' => '4','session_id' => 'u1d0efs24bm05no5s2tgjspvo6','billing_address_srl' => '253','shipping_address_srl' => '253','items' => '2','extra' => '{"price":44.979999542236,"shipping_method":"flat_rate_shipping","payment_method":"cash_on_delivery"}','regdate' => '20120929183309','last_update' => '20120929183309')
+                array('cart_srl' => '774','module_srl' => '107','member_srl' => '4','session_id' => 'session1','billing_address_srl' => '253','shipping_address_srl' => '253','items' => '2','extra' => '{"price":44.979999542236,"shipping_method":"flat_rate_shipping","payment_method":"cash_on_delivery"}','regdate' => '20120929183309','last_update' => '20120929183309'),
+                array('cart_srl' => '14','module_srl' => '107','member_srl' => '','session_id' => 'anonSession','billing_address_srl' => '','shipping_address_srl' => '','items' => '0','regdate' => '20120929183309','last_update' => '20120929183309')
             ),
             'xe_shop_cart_products' => array(
                 array('cart_srl' => '774','product_srl' => '133','quantity' => '1','title' => 'Cutie depozitare diferite modele', 'price'=>14.99),
@@ -21,7 +22,8 @@ class CartTest extends Shop_Generic_Tests_DatabaseTestCase
             ),
             'xe_shop_products' => array(
                 array('product_srl' => '130','member_srl' => '4','module_srl' => '107','parent_product_srl' => NULL,'product_type' => 'simple','title' => 'Cutie din lemn','description' => 'Bam boo magazinul on-line de cadouri si decoratiuni va recomanda aceasta cutie din lemn cu un design clasic, avand 6 compartimente poate indeplinii mai multe roluri in casa si viata dvs.','short_description' => 'Bam boo magazinul on-line de cadouri si decoratiuni va recomanda aceasta cutie din lemn cu un design clasic, avand 6 compartimente poate indeplinii mai multe roluri in casa si viata dvs.','sku' => 'MOL9505','weight' => '0','status' => 'enabled','friendly_url' => 'MOL9505','price' => '29.99','qty' => '10','in_stock' => 'Y','primary_image_filename' => 'MOL9505_5784.jpg','related_products' => NULL,'regdate' => '20120904144739','last_update' => '20120923191329','discount_price' => '0','is_featured' => 'Y'),
-                array('product_srl' => '133','member_srl' => '4','module_srl' => '107','parent_product_srl' => NULL,'product_type' => 'simple','title' => 'Cutie depozitare diferite modele','description' => 'Bam boo, magazinul on-line de decoratiuni si cadouri, va prezinta noua gama de cutii de depozitare din metal in 3 modele simpatice, foarte utile in casa dvs.','short_description' => 'Bam boo, magazinul on-line de decoratiuni si cadouri, va prezinta noua gama de cutii de depozitare din metal in 3 modele simpatice, foarte utile in casa dvs.','sku' => 'NRUOMY742C','weight' => '0','status' => 'enabled','friendly_url' => 'NRUOMY742C','price' => '14.99','qty' => '10','in_stock' => 'Y','primary_image_filename' => 'turta-dulce.jpg','related_products' => NULL,'regdate' => '20120904144841','last_update' => '20120926171804','discount_price' => '0','is_featured' => 'Y')
+                array('product_srl' => '133','member_srl' => '4','module_srl' => '107','parent_product_srl' => NULL,'product_type' => 'simple','title' => 'Cutie depozitare diferite modele','description' => 'Bam boo, magazinul on-line de decoratiuni si cadouri, va prezinta noua gama de cutii de depozitare din metal in 3 modele simpatice, foarte utile in casa dvs.','short_description' => 'Bam boo, magazinul on-line de decoratiuni si cadouri, va prezinta noua gama de cutii de depozitare din metal in 3 modele simpatice, foarte utile in casa dvs.','sku' => 'NRUOMY742C','weight' => '0','status' => 'enabled','friendly_url' => 'NRUOMY742C','price' => '14.99','qty' => '10','in_stock' => 'Y','primary_image_filename' => 'turta-dulce.jpg','related_products' => NULL,'regdate' => '20120904144841','last_update' => '20120926171804','discount_price' => '0','is_featured' => 'Y'),
+                array('product_srl' => '132','member_srl' => '4','module_srl' => '107','parent_product_srl' => NULL,'product_type' => 'simple','title' => 'Cutie neferoasa','description' => 'Pe vremuri se facea si-n Romana','short_description' => 'Pe vremuri','sku' => 'KVZOMY742C','weight' => '15','status' => 'enabled','friendly_url' => 'sasasasasa','price' => '19.4','qty' => '15','in_stock' => 'Y','primary_image_filename' => 'turta-dulce2.jpg','related_products' => NULL,'regdate' => '20120904144841','last_update' => '20120926171804','discount_price' => '16','is_featured' => 'Y')
             ),
             'xe_shop_shipping_methods' => array(
                 array('id' => '768','name' => 'flat_rate_shipping','display_name' => 'Flat Rate Shipping','status' => '1','props' => 'O:8:"stdClass":2:{s:4:"type";s:9:"per_order";s:5:"price";s:2:"10";}','module_srl' => '107')
@@ -308,5 +310,50 @@ class CartTest extends Shop_Generic_Tests_DatabaseTestCase
 
 		$this->assertEquals(0, count($cart->getProducts()));
 	}
+
+    public function testDeleteProduct()
+    {
+        $cart = new Cart(774);
+        $cart->removeProducts(array(133));
+        $this->assertEquals(1, $cart->count(), "Count failed after delete");
+        $this->assertFalse($cart->hasProduct(133), 'Cart_product still exists after delete');
+    }
+
+    public function testAddProduct()
+    {
+        $cart = new Cart(774);
+        $pRepo = new ProductRepository();
+        $product1 = $pRepo->getProduct(130);
+        $product2 = $pRepo->getProduct(133);
+        $cart->removeProducts(array(130, 133));
+        $this->assertEquals(0, $cart->count(), "Delete didn't work");
+        $cart->addProduct($product1);
+        $this->assertEquals(1, $cart->count(), "Adding product 1 failed");
+        $this->assertEquals($cart->count(), count($cart->getProducts()), "?");
+        $cart->addProduct($product2, 1405);
+        $this->assertEquals(2, $cart->count(), "Adding product 2 failed");
+        //getProducts should ignore its internal cache, so we tell it to.
+        $this->assertEquals($cart->count(), count($cart->getProducts(null, null, true)), "?");
+    }
+
+    public function testCartChange()
+    {
+        $cRepo = new CartRepository();
+        $pRepo = new ProductRepository();
+        $anonCart = $cRepo->getCart(107, null, null, 'anonSession');
+        $userCart = $cRepo->getCart(107, null, 4);
+        $userCart->emptyCart();
+        $anonCart->emptyCart();
+        $products = array(
+            1 => $pRepo->getProduct(130),
+            2 => $pRepo->getProduct(133),
+            3 => $pRepo->getProduct(132)
+        )
+        ;
+        $userCart->addProduct($products[1], 2);
+        $anonCart->addProduct($products[1], 13);
+        $userCart->merge($anonCart, false);
+        $this->assertEquals(15, $userCart->getCartProduct(130)->quantity, "Wrong quantity");
+    }
 
 }

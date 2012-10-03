@@ -87,8 +87,8 @@
             if(!$oDB->isColumnExists("shop_orders","discount_type")) return true;
             if(!$oDB->isColumnExists("shop_orders","discount_amount")) return true;
             if(!$oDB->isColumnExists("shop_orders","discount_tax_phase")) return true;
-            if(!$oDB->isColumnExists("shop_orders","discount_reduction_value")) return true;
             if(!$oDB->isColumnExists("shop_orders","currency")) return true;
+            if(!$oDB->isColumnExists("shop_orders","discount_reduction_value")) return true;
 
             if($oDB->isColumnExists("shop_categories","order")) return true;
             if(!$oDB->isColumnExists("shop_categories","list_order")) return true;
