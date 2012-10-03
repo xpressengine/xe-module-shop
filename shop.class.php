@@ -87,6 +87,7 @@
             if(!$oDB->isColumnExists("shop_orders","discount_type")) return true;
             if(!$oDB->isColumnExists("shop_orders","discount_amount")) return true;
             if(!$oDB->isColumnExists("shop_orders","discount_tax_phase")) return true;
+            if(!$oDB->isColumnExists("shop_orders","discount_reduction_value")) return true;
             if(!$oDB->isColumnExists("shop_orders","currency")) return true;
 
             if($oDB->isColumnExists("shop_categories","order")) return true;
@@ -291,6 +292,7 @@
             if (!$oDB->isColumnExists("shop_orders","discount_type")) $oDB->addColumn('shop_orders',"discount_type","varchar", 45);
             if (!$oDB->isColumnExists("shop_orders","discount_amount")) $oDB->addColumn('shop_orders',"discount_amount","float", 20);
             if (!$oDB->isColumnExists("shop_orders","discount_tax_phase")) $oDB->addColumn('shop_orders',"discount_tax_phase","varchar", 20);
+            if (!$oDB->isColumnExists("shop_orders","discount_reduction_value")) $oDB->addColumn('shop_orders',"discount_reduction_value","float", 20);
             if (!$oDB->isColumnExists("shop_orders","currency")) $oDB->addColumn('shop_orders',"currency","varchar", 10);
 
 			if (!$oDB->isColumnExists("shop_orders","total"))

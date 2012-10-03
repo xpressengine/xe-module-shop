@@ -1639,6 +1639,7 @@ CREATE TABLE IF NOT EXISTS `xe_shop_orders` (
   `discount_type` varchar(45) DEFAULT NULL,
   `discount_amount` bigint(11) DEFAULT NULL,
   `discount_tax_phase` varchar(20) DEFAULT NULL,
+  `discount_reduction_value` float(20) DEFAULT NULL,
   `currency` varchar(10) DEFAULT NULL,
   PRIMARY KEY (`order_srl`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;

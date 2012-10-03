@@ -34,6 +34,7 @@ class Order extends BaseItem implements IProductItemsContainer
         $discount_type,
         $discount_amount,
         $discount_tax_phase,
+        $discount_reduction_value,
         $currency;
 
     /** @var OrderRepository */
@@ -86,6 +87,7 @@ class Order extends BaseItem implements IProductItemsContainer
             $this->discount_type = $shopInfo->getShopDiscountType();
             $this->discount_amount = $discount->getReductionValue();
             $this->discount_tax_phase = $discount->calculateBeforeApplyingVAT() ? 'pre_taxes' : 'post_taxes';
+            $this->discount_reduction_value = $discount->getReductionValue();
         }
     }
 
