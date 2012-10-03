@@ -926,27 +926,34 @@
          */
         public function procShopToolCartAddProduct()
         {
+			$product_srl = Context::get('product_srl');
+			if(!$product_srl)
+			{
+				return new Object(-1, 'msg_select_product_variant');
+			}
+
             $cartRepository = new CartRepository();
-            if ($product_srl = Context::get('product_srl')) {
-                $productsRepo = new ProductRepository();
-                if ($product = $productsRepo->getProduct($product_srl))
-                {
-                    if (!($product instanceof SimpleProduct)) {
-                        return new Object(-1, 'msg_invalid_request');
-                    }
-                    $logged_info = Context::get('logged_info');
-                    $cart = $cartRepository->getCart($this->module_info->module_srl, null, $logged_info->member_srl, session_id(), true);
-                    $quantity = (is_numeric(Context::get('quantity')) && Context::get('quantity') > 0 ? Context::get('quantity') : 1);
-                    try {
-                        $cart->addProduct($product, $quantity);
-                    }
-                    catch (Exception $e) {
-                        return new Object(-1, $e->getMessage());
-                    }
-                }
-                else return new Object(-1, 'msg_invalid_request');
-            }
-            else return new Object(-1, 'msg_invalid_request');
+			$productsRepo = new ProductRepository();
+			if ($product = $productsRepo->getProduct($product_srl))
+			{
+				if (!($product instanceof SimpleProduct)) {
+					return new Object(-1, 'msg_select_product_variant');
+				}
+				$logged_info = Context::get('logged_info');
+				$cart = $cartRepository->getCart($this->module_info->module_srl, null, $logged_info->member_srl, session_id(), true);
+				$quantity = (is_numeric(Context::get('quantity')) && Context::get('quantity') > 0 ? Context::get('quantity') : 1);
+				try {
+					$cart->addProduct($product, $quantity);
+				}
+				catch (Exception $e) {
+					return new Object(-1, $e->getMessage());
+				}
+			}
+			else
+			{
+				return new Object(-1, 'msg_invalid_request');
+			}
+
             $shop = $this->model->getShop($this->module_srl);
             $this->setRedirectUrlIfNoReferer(getSiteUrl($shop->domain));
         }
