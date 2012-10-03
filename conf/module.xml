@@ -232,7 +232,7 @@
         <action name="procShopToolSaveShopMenus" type="controller" standalone="true"/>
 
         <!-- Shipping -->
-        <action name="dispShopToolShippingList" type="view" />
+        <action name="dispShopToolManageShippingMethods" type="view" />
         <action name="dispShopToolEditShipping" type="view" />
         <action name="procShopToolShippingUpdate" type="controller" />
         <action name="procShopServiceActivateShippingMethod" type="controller" />

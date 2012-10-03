@@ -11,6 +11,7 @@ abstract class AbstractPlugin extends BaseItem
     public $display_name;  /// Display name
     public $name; /// Unique name = folder name
     public $status = 0;
+	public $is_default = 0;
     public $properties;
 
     public function __construct()
@@ -72,6 +73,16 @@ abstract class AbstractPlugin extends BaseItem
         return $this->status ? true : false;
     }
 
+	/**
+	 * Check if plugin is marked as default
+	 *
+	 * @return bool
+	 */
+	public function isDefault()
+	{
+		return $this->is_default ? true : false;
+	}
+
     /**
      * All custom plugin properties different than name, status etc. will
      * be saved ina generic array
@@ -105,4 +116,12 @@ abstract class AbstractPlugin extends BaseItem
         $reflector = new ReflectionClass(get_class($this));
         return dirname($reflector->getFileName());
     }
+
+	/**
+	 * Set current plugin as default
+	 */
+	public function makeDefault()
+	{
+		$this->repo->setDefault($this->name, $this->module_srl);
+	}
 }

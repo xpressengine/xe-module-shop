@@ -393,7 +393,7 @@
             'dispShopToolManageAccount'=>'Admin account',
             'dispShopToolConfigInfo'=>'Shop Configuration',
             'dispShopToolDiscountInfo'=>'Shop Discount',
-            'dispShopToolShippingList'=>'Shipping methods',
+            'dispShopToolManageShippingMethods'=>'Shipping methods',
             'dispShopToolManagePaymentMethods'=>'Payment methods'
         )
     );

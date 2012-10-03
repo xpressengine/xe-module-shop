@@ -2136,7 +2136,7 @@
 
             $vid = Context::get('vid');
             $mid = Context::get('mid');
-            $this->setRedirectUrl(getNotEncodedUrl('', 'vid', $vid, 'mid', $mid, 'act', 'dispShopToolShippingList'));
+            $this->setRedirectUrl(getNotEncodedUrl('', 'vid', $vid, 'mid', $mid, 'act', 'dispShopToolManageShippingMethods'));
         }
 
         public function procShopServiceActivateShippingMethod()

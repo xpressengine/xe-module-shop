@@ -163,4 +163,13 @@ class PaymentMethodRepository extends AbstractPluginRepository
         $this->sanitizePlugins($module_srl);
     }
 
+	protected function updatePluginsAllButThis($is_default, $name, $module_srl)
+	{
+		$args = new stdClass();
+		$args->except_name = $name;
+		$args->module_srl = $module_srl;
+		$args->is_default = 0;
+		$this->query('shop.updatePaymentMethods', $args);
+	}
+
 }

@@ -1671,7 +1671,7 @@ class shopView extends shop {
 	// endregion
 
     // region Shipping
-    public function dispShopToolShippingList()
+    public function dispShopToolManageShippingMethods()
     {
         /**
          * @var shopModel $shopModel

@@ -12,6 +12,7 @@ abstract class AbstractPluginRepository extends BaseRepository
     abstract protected function getAllPluginsInDatabase($module_srl);
     abstract protected function getAllActivePluginsInDatabase($module_srl);
     abstract protected function fixPlugin($name, $old_module_srl, $new_module_srl);
+	abstract protected function updatePluginsAllButThis($is_default, $name, $module_srl);
 
     protected function getPluginInstanceByName($plugin_name, $module_srl)
     {
@@ -181,6 +182,17 @@ abstract class AbstractPluginRepository extends BaseRepository
     {
         $this->deletePluginInfo($name, $module_srl);
     }
+
+	public function setDefault($name, $module_srl)
+	{
+		// Update all other plugins with is_default = 0
+		$this->updatePluginsAllButThis(0, $name, $module_srl);
+
+		// Set this plugin is_default = 1
+		$plugin = $this->getPlugin($name, $module_srl);
+		$plugin->is_default = 1;
+		$this->updatePlugin($plugin);
+	}
 
     /**
      * Deletes plugins from DB if they do not have a folder with a corresponding name
