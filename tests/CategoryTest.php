@@ -505,7 +505,7 @@ class CategoryTest extends Shop_Generic_Tests_DatabaseTestCase
 			$this->assertEquals(1, $category->product_count);
 			// Check that count was increased
 			$category = $category_repository->getCategory(1008);
-			$this->assertEquals(0, $category->product_count);
+			$this->isNull($category->product_count);
 
 			// Delete product
 			$args = new stdClass();
