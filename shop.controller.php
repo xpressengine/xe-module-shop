@@ -1692,6 +1692,41 @@
 
         }
 
+		public function procShopToolSetPaymentMethodAsDefault()
+		{
+			$name = Context::get('name');
+			if(!$name)
+			{
+				return new Object(-1, 'msg_invalid_request');
+			}
+
+			$payment_repository = new PaymentMethodRepository();
+			try
+			{
+				$payment_repository->setDefault($name, $this->module_srl);
+				$this->setMessage('success_registed');
+			}
+			catch(ArgumentException $e)
+			{
+				$this->setError(-1);
+				$this->setMessage($e->getMessage());
+			}
+			catch(DbQueryException $e)
+			{
+				$this->setError(-1);
+				$this->setMessage('db_query_failed');
+			}
+			catch(Exception $e)
+			{
+				$this->setError(-1);
+				$this->setMessage('fail_to_update');
+			}
+
+			$vid = Context::get('vid');
+			$returnUrl = getNotEncodedUrl('', 'vid', $vid, 'act', 'dispShopToolManagePaymentMethods');
+			$this->setRedirectUrl($returnUrl);
+		}
+
         /**
          * Deletes the payment plugins folder and database entry
          *
@@ -2138,6 +2173,81 @@
             $mid = Context::get('mid');
             $this->setRedirectUrl(getNotEncodedUrl('', 'vid', $vid, 'mid', $mid, 'act', 'dispShopToolManageShippingMethods'));
         }
+
+		private function updateShippingMethodStatus($status)
+		{
+			$name = Context::get('name');
+			if(!isset($name))
+			{
+				return new Object(-1, 'msg_invalid_request');
+			}
+
+			$shipping_repository = new ShippingMethodRepository();
+			$shipping_method = $shipping_repository->getShippingMethod($name, $this->module_srl);
+			$shipping_method->status = $status;
+
+			try
+			{
+				$shipping_repository->updateShippingMethod($shipping_method);
+			}
+			catch(Exception $e)
+			{
+				$this->setError(-1);
+				$this->setMessage('msg_invalid_request');
+			}
+
+			$this->setMessage('Shipping method successfully updated!');
+
+			$vid = Context::get('vid');
+			$mid = Context::get('mid');
+			$this->setRedirectUrl(getNotEncodedUrl('', 'vid', $vid, 'mid', $mid, 'act', 'dispShopToolManageShippingMethods'));
+		}
+
+
+		public function procShopTollActivateShippingMethod()
+		{
+			$this->updateShippingMethodStatus(1);
+		}
+
+		public function procShopTollDeactivateShippingMethod()
+		{
+			$this->updateShippingMethodStatus(0);
+		}
+
+		public function procShopToolSetShippingMethodAsDefault()
+		{
+			$name = Context::get('name');
+			if(!$name)
+			{
+				return new Object(-1, 'msg_invalid_request');
+			}
+
+			$shipping_repository = new ShippingMethodRepository();
+			try
+			{
+				$shipping_repository->setDefault($name, $this->module_srl);
+				$this->setMessage('success_registed');
+			}
+			catch(ArgumentException $e)
+			{
+				$this->setError(-1);
+				$this->setMessage($e->getMessage());
+			}
+			catch(DbQueryException $e)
+			{
+				$this->setError(-1);
+				$this->setMessage('db_query_failed');
+			}
+			catch(Exception $e)
+			{
+				$this->setError(-1);
+				$this->setMessage('fail_to_update');
+			}
+
+			$vid = Context::get('vid');
+			$returnUrl = getNotEncodedUrl('', 'vid', $vid, 'act', 'dispShopToolManageShippingMethods');
+			$this->setRedirectUrl($returnUrl);
+		}
 
         public function procShopServiceActivateShippingMethod()
         {

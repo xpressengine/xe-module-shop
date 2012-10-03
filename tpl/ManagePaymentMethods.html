@@ -1,28 +1,5 @@
 <!--#include("_tool_header.html")-->
 
-<script type="text/javascript">
-
-    /**
-     * We iterate through all the active gateways settings
-     * links and make the settings collapsible.
-     */
-    jQuery(document).ready(function($){
-
-        $('.pg').each(function(){
-
-            $(this).click(function(e) {
-
-                e.preventDefault();
-                $(this).closest('td').next('td').children('.pgSettings').toggle('fast');
-
-            })
-
-        })
-
-    });
-
-</script>
-
 <div id="content">
 
     <div class="dashboardHeader">
@@ -36,50 +13,51 @@
     <table class="tableData">
         <thead>
             <tr>
-                <th scope="col">
-                    <input type="checkbox" class="inputCheck" onclick="jQuery('input.boxlist').click()" />
-                </th>
-                <th scope="col">{$lang->gateway_settings}</th>
-                <th scope="col" class="title">{$lang->name}</th>
-                <th scope="col" class="center">{$lang->status}</th>
-                <th scope="col">{$lang->cmd_delete}</th>
+                <th scope="col">{$lang->settings}</th>
+                <th scope="col">{$lang->name}</th>
+                <th scope="col">{$lang->status}</th>
+                <th scope="col">{$lang->default}</th>
+                <th scope="col">{$lang->actions}</th>
             </tr>
         </thead>
         <tbody>
-        <!--@if(count((array)$payment_methods))-->
-            <!--@foreach($payment_methods as $payment_method)-->
-                <tr>
-                    <td>
-                        <input type="checkbox" name="payment_method_srl" value="" class="inputCheck boxlist" />
-                    </td>
-                    <td>
-                        <span class="btnGray medium">
-                            <a href="{getUrl('act','dispShopToolEditPaymentMethod','name',$payment_method->name)}">
-                                {$lang->gateway_settings}
-                            </a>
-                        </span>
-                    </td>
-                    <td>
-                        {$payment_method->display_name}
-                        <div class="pgSettings">
-
-                        </div>
-                    </td>
-                    <td>
-                        <!--@if($payment_method->status)-->
-                            <a href="{getUrl('act','procUpdateShopDeactivatePaymentMethod','name',$payment_method->name)}">{$lang->deactivate}</a>
-                        <!--@else-->
-                            <a href="{getUrl('act','procUpdateShopActivatePaymentMethod','name',$payment_method->name)}">{$lang->activate}</a>
-                        <!--@end-->
-                    </td>
-                    <td>
-                        <a href="{getUrl('act','procUpdateShopDeletePaymentMethod','name',$payment_method->name)}">{$lang->cmd_delete}</a>
-                    </td>
-                </tr>
-            <!--@end-->
-        <!--@else-->
+        <!--@foreach($payment_methods as $payment_method)-->
             <tr>
-                <td colspan="4">{$lang->no_gateways}</td>
+                <td>
+                    <span class="btnGray medium">
+                        <a href="{getUrl('act','dispShopToolEditPaymentMethod','name',$payment_method->name)}">
+                            {$lang->settings}
+                        </a>
+                    </span>
+                </td>
+
+                <td>
+                    {$payment_method->getDisplayName()}
+                </td>
+
+                <td>
+                    <!--@if($payment_method->isActive())-->
+                        <img src="img/check.png" alt="Active" />
+                    <!--@end-->
+                </td>
+
+                <td>
+                    <!--@if($payment_method->isDefault())-->
+                        <img src="img/check.png" alt="Selected as default" />
+                    <!--@end-->
+                </td>
+
+                <td>
+                    <!--@if($payment_method->isActive())-->
+                        <a href="{getUrl('act','procUpdateShopDeactivatePaymentMethod','name',$payment_method->name)}">{$lang->deactivate}</a>
+                    <!--@else-->
+                        <a href="{getUrl('act','procUpdateShopActivatePaymentMethod','name',$payment_method->name)}">{$lang->activate}</a>
+                    <!--@end-->
+                    <!--@if($payment_method->isActive() && !$payment_method->isDefault())-->
+                        &nbsp;|&nbsp;
+                        <a href="{getUrl('act','procShopToolSetPaymentMethodAsDefault','name',$payment_method->name)}">{$lang->set_as_default}</a>
+                    <!--@end-->
+                </td>
             </tr>
         <!--@end-->
         </tbody>

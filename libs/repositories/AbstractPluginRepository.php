@@ -185,11 +185,20 @@ abstract class AbstractPluginRepository extends BaseRepository
 
 	public function setDefault($name, $module_srl)
 	{
+		if(!isset($name) || !isset($module_srl))
+		{
+			return new ArgumentException("You must provide name and module_srl for making a plugin default.");
+		}
+		$plugin = $this->getPlugin($name, $module_srl);
+		if(!$plugin->isActive())
+		{
+			return new ArgumentException("It is not allowed to set as default an inactive plugin");
+		}
+
 		// Update all other plugins with is_default = 0
 		$this->updatePluginsAllButThis(0, $name, $module_srl);
 
 		// Set this plugin is_default = 1
-		$plugin = $this->getPlugin($name, $module_srl);
 		$plugin->is_default = 1;
 		$this->updatePlugin($plugin);
 	}

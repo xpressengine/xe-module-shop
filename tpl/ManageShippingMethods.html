@@ -1,35 +1,5 @@
 <include target="_tool_header.html" />
 
-<script type="text/javascript">
-    jQuery(document).ready(function($){
-        $("form.activateShippingMethod input[type='checkbox'][name='status']").change(function(){
-            if($(this).is(':checked'))
-            {
-                $status = '1';
-            }
-            else
-            {
-                $status = '0';
-            }
-            $name = $(this).prev("input").val();
-
-            $.exec_json('shop.procShopServiceActivateShippingMethod'
-                    , { name : $name, status : $status}
-                    , function(data){
-                        if(data.error != 0)
-                        {
-                            alert("Error " + data.message);
-                            return;
-                        }
-
-                        alert(data.message);
-                    }
-            );
-
-        });
-    });
-</script>
-
 <!-- Content -->
 <div id="content">
     <!-- contentHeader -->
@@ -45,20 +15,16 @@
     <table class="tableData">
         <thead>
             <tr>
-                <th scope="col" width="25px">
-                    <input type="checkbox" class="inputCheck" onclick="jQuery('input.boxlist').click()" />
-                </th>
-                <th scope="col" width="35px">{$lang->settings}</th>
-                <th scope="col">{$lang->display_name}</th>
-                <th scope="col">{$lang->active}</th>
+                <th scope="col">{$lang->settings}</th>
+                <th scope="col">{$lang->name}</th>
+                <th scope="col">{$lang->status}</th>
+                <th scope="col">{$lang->default}</th>
+                <th scope="col">{$lang->actions}</th>
             </tr>
         </thead>
         <tbody>
         <!--@foreach($shipping_methods as $shipping_method)-->
             <tr>
-                <td>
-                    <input type="checkbox" class="inputCheck boxlist" />
-                </td>
                 <td>
                     <span class="btnGray medium">
                         <a href="{getUrl('act', 'dispShopToolEditShipping', 'name', $shipping_method->name)}">
@@ -66,13 +32,34 @@
                         </a>
                     </span>
                 </td>
-                <td>{$shipping_method->getDisplayName()}</td>
-                <td>
-                    <form action="./" method="post" class="activateShippingMethod">
-                        <input type="hidden" name="name" value="{$shipping_method->name}" />
 
-                        <input type="checkbox" name="status" <!--@if($shipping_method->isActive())-->checked<!--@end--> />
-                    </form>
+                <td>
+                    {$shipping_method->getDisplayName()}
+                </td>
+
+
+                <td>
+                    <!--@if($shipping_method->isActive())-->
+                    <img src="img/check.png" alt="Active" />
+                    <!--@end-->
+                </td>
+
+                <td>
+                    <!--@if($shipping_method->isDefault())-->
+                    <img src="img/check.png" alt="Selected as default" />
+                    <!--@end-->
+                </td>
+
+                <td>
+                    <!--@if($shipping_method->isActive())-->
+                    <a href="{getUrl('act','procShopTollDeactivateShippingMethod','name',$shipping_method->name)}">{$lang->deactivate}</a>
+                    <!--@else-->
+                    <a href="{getUrl('act','procShopTollActivateShippingMethod','name',$shipping_method->name)}">{$lang->activate}</a>
+                    <!--@end-->
+                    <!--@if($shipping_method->isActive() && !$shipping_method->isDefault())-->
+                    &nbsp;|&nbsp;
+                    <a href="{getUrl('act','procShopToolSetShippingMethodAsDefault','name',$shipping_method->name)}">{$lang->set_as_default}</a>
+                    <!--@end-->
                 </td>
             </tr>
         <!--@end-->

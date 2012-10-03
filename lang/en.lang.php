@@ -620,4 +620,8 @@
     $lang->sort_by = 'Sort by';
     $lang->products_in_shop = 'product(s) in shop';
     $lang->products_matched_criteria = 'product(s) matched your criteria';
+
+	$lang->default = 'Default';
+	$lang->set_as_default = 'Set as default';
+	$lang->db_query_failed = 'The database query failed - please check if you have updated you module with the latest changes.'
 ?>

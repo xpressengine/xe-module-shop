@@ -154,6 +154,7 @@
             $payment_repository = new PaymentMethodRepository();
             $payment_method = $payment_repository->installPaymentMethod('cash_on_delivery', $module_srl);
             $payment_method->status = 1;
+			$payment_method->is_default = 1;
             $payment_repository->updatePaymentMethod($payment_method);
 
             /**
@@ -164,6 +165,7 @@
             $shipping_method->type = 'per_order';
             $shipping_method->price = '10';
             $shipping_method->status = 1;
+			$shipping_method->is_default = 1;
             $shipping_repository->updatePlugin($shipping_method);
 
             /**

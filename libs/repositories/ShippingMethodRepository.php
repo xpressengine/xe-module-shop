@@ -91,6 +91,6 @@ class ShippingMethodRepository extends AbstractPluginRepository
 		$args->except_name = $name;
 		$args->module_srl = $module_srl;
 		$args->is_default = 0;
-		$this->query('shop.updateShppingMethods', $args);
+		$this->query('shop.updateShippingMethods', $args);
 	}
 }

@@ -8,5 +8,6 @@
         <column name="name" var="name" notnull="notnull" />
         <column name="display_name" var="display_name" filter="varchar" />
         <column name="status" var="status" filter="number" />
+        <column name="is_default" var="is_default" filter="number" />
     </columns>
 </query>
