@@ -27,7 +27,7 @@ class CartTest extends Shop_Generic_Tests_DatabaseTestCase
                 array('id' => '768','name' => 'flat_rate_shipping','display_name' => 'Flat Rate Shipping','status' => '1','props' => 'O:8:"stdClass":2:{s:4:"type";s:9:"per_order";s:5:"price";s:2:"10";}','module_srl' => '107')
             ),
             'xe_shop' => array(
-                array('module_srl' => '107','member_srl' => '4','shop_title' => '','shop_content' => '','profile_content' => '','input_email' => 'R','input_website' => 'R','timezone' => '+0300','currency' => 'EUR','VAT' => 19,'telephone' => NULL,'address' => NULL,'regdate' => '20120831171133','currency_symbol' => '€','discount_min_amount' => null,'discount_type' => null,'discount_amount' => null,'discount_tax_phase' => 'pre_taxes','out_of_stock_products' => 'Y','minimum_order' => NULL,'show_VAT' => NULL,'menus' => 'a:2:{s:11:"header_menu";s:3:"108";s:11:"footer_menu";s:3:"393";}')
+                array('module_srl' => '107','member_srl' => '4','shop_title' => '','shop_content' => '','profile_content' => '','input_email' => 'R','input_website' => 'R','timezone' => '+0300','currency' => 'EUR','VAT' => 19,'telephone' => NULL,'address' => NULL,'regdate' => '20120831171133','currency_symbol' => '€','discount_min_amount' => NULL,'discount_type' => NULL,'discount_amount' => NULL,'discount_tax_phase' => 'pre_taxes','out_of_stock_products' => 'Y','minimum_order' => NULL,'show_VAT' => NULL,'menus' => 'a:2:{s:11:"header_menu";s:3:"108";s:11:"footer_menu";s:3:"393";}')
             ),
             'xe_sites' => array(
                 array('site_srl' => '106','index_module_srl' => '107','domain' => 'shop','default_language' => 'en','regdate' => '20120831171133')
@@ -47,10 +47,10 @@ class CartTest extends Shop_Generic_Tests_DatabaseTestCase
     {
         $cart = new Cart(array(
             'module_srl'    => 307,
-            'member_srl'    => null,
+            'member_srl'    => NULL,
             'guest_srl'     => 14,
-            'session_id'    => null,
-            'items'         => null,
+            'session_id'    => NULL,
+            'items'         => NULL,
             'regdate'       => '20100424171420',
             'last_update'   => '20100424192420'
         ));
@@ -78,7 +78,7 @@ class CartTest extends Shop_Generic_Tests_DatabaseTestCase
         $this->assertEquals(44.98, $cart->getItemTotal());
 
         // 4. Check global total is correct
-        $this->assertEquals(54.98, $cart->getTotal(false, true));
+        $this->assertEquals(54.98, $cart->getTotal(FALSE, TRUE));
     }
 
     public function testCartTotal_WithShippingAndDiscountFixedAmount()
@@ -230,7 +230,7 @@ class CartTest extends Shop_Generic_Tests_DatabaseTestCase
         $product_repository->deleteProduct(array('product_srl'=>$deleted_product_srl));
 
         // If we activate onlyAvailable, only 1 product should be returned
-        $this->assertEquals(1, count($cart->getProducts(null, true)));
+        $this->assertEquals(1, count($cart->getProducts(NULL, TRUE)));
         // Default, onlyAvailable is false, so all products should be returned => 2
         $this->assertEquals(2, count($cart->getProducts()));
     }
@@ -255,21 +255,21 @@ class CartTest extends Shop_Generic_Tests_DatabaseTestCase
 
         // Assert
         // 1. Check that cart has expected products
-        $this->assertEquals(1, count($cart->getProducts(null, true))); // When $onlyAvailable is true, count just availablel products
+        $this->assertEquals(1, count($cart->getProducts(NULL, TRUE))); // When $onlyAvailable is true, count just availablel products
         $this->assertEquals(2, count($cart->getProducts())); // Default, , show all products
 
         // 3. Check that item total is correct
         $this->assertEquals(44.98, $cart->getItemTotal()); // Default, count all products
-        $this->assertEquals(29.99, $cart->getItemTotal(true)); // Count just available products
+        $this->assertEquals(29.99, $cart->getItemTotal(TRUE)); // Count just available products
 
         // 4. Check global total is correct (includes shipping +10)
-        $this->assertEquals(54.98, $cart->getTotal(false, true), '', 0.01); // Default, count all products
-        $this->assertEquals(39.99, $cart->getTotal(true, true), '', 0.01); // Count just available products
+        $this->assertEquals(54.98, $cart->getTotal(FALSE, TRUE), '', 0.01); // Default, count all products
+        $this->assertEquals(39.99, $cart->getTotal(TRUE, TRUE), '', 0.01); // Count just available products
     }
 
 	public function testDiscountPercentageBeforeVAT()
 	{
-		$discount = new PercentageDiscount(100, 40, 99, 20, true);
+		$discount = new PercentageDiscount(100, 40, 99, 20, TRUE);
 
 		$this->assertEquals(80, $discount->getValueWithoutVAT(), 'Wrong VAT');
 		$this->assertEquals(32, $discount->getReductionValue(), 'Wrong reduction at discount before VAT');
@@ -278,7 +278,7 @@ class CartTest extends Shop_Generic_Tests_DatabaseTestCase
 
 	public function testDiscountPercentageAfterVAT()
 	{
-		$discount = new PercentageDiscount(100, 40, 99, 20, false);
+		$discount = new PercentageDiscount(100, 40, 99, 20, FALSE);
 
 		$this->assertEquals(40, $discount->getReductionValue(), 'Wrong reduction at discount after VAT');
 		$this->assertEquals($discount->getTotalValue() - $discount->getReductionValue(),$discount->getValueDiscounted(), 'Wrong reduction discounted value');
@@ -286,15 +286,27 @@ class CartTest extends Shop_Generic_Tests_DatabaseTestCase
 
 	public function testDiscountFixedAmount()
 	{
-		$discount = new FixedAmountDiscount(1000, 200, 999, 20, true);
+		$discount = new FixedAmountDiscount(1000, 200, 999, 20, TRUE);
 
-		$discount->setCalculateBeforeVAT(true);
+		$discount->setCalculateBeforeVAT(TRUE);
 		$this->assertEquals(200, $discount->getReductionValue());
 		$this->assertEquals(800, $discount->getValueDiscounted());
 
-		$discount->setCalculateBeforeVAT(false);
+		$discount->setCalculateBeforeVAT(FALSE);
 		$this->assertEquals(200, $discount->getReductionValue());
 		$this->assertEquals(800, $discount->getValueDiscounted());
+	}
+
+	/**
+	 * Test that an empty cart has 0 products
+	 */
+	public function testEmptyCart()
+	{
+		$cart = new Cart();
+		$cart->module_srl = 123;
+		$cart->save();
+
+		$this->assertEquals(0, count($cart->getProducts()));
 	}
 
 }
