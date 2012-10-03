@@ -2184,7 +2184,7 @@
 		// display after
 		public function triggerDisplayLogMessages()
 		{
-			if(__DEBUG__)
+			if(__DEBUG__ && !in_array(Context::getResponseMethod(), array('XMLRPC')))
 			{
 				// Load XE Shop errors
 				$shop_log_messages = FileHandler::readFile(ShopLogger::LOG_FILE_PATH);
