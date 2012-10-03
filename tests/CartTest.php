@@ -14,7 +14,7 @@ class CartTest extends Shop_Generic_Tests_DatabaseTestCase
         return new Shop_DbUnit_ArrayDataSet(array(
             'xe_shop_cart' => array(
                 array('cart_srl' => '774','module_srl' => '107','member_srl' => '4','session_id' => 'session1','billing_address_srl' => '253','shipping_address_srl' => '253','items' => '2','extra' => '{"price":44.979999542236,"shipping_method":"flat_rate_shipping","payment_method":"cash_on_delivery"}','regdate' => '20120929183309','last_update' => '20120929183309'),
-                array('cart_srl' => '14','module_srl' => '107','member_srl' => '','session_id' => 'anonSession','billing_address_srl' => '','shipping_address_srl' => '','items' => '0','regdate' => '20120929183309','last_update' => '20120929183309')
+                array('cart_srl' => '14','module_srl' => '107','member_srl' => null,'session_id' => 'anonSession','billing_address_srl' => null,'shipping_address_srl' => null,'items' => '0','regdate' => '20120929183309','last_update' => '20120929183309')
             ),
             'xe_shop_cart_products' => array(
                 array('cart_srl' => '774','product_srl' => '133','quantity' => '1','title' => 'Cutie depozitare diferite modele', 'price'=>14.99),
