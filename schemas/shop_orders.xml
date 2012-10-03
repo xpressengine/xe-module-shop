@@ -16,9 +16,9 @@
     <column name="order_status" type="varchar" size="255"/>
     <column name="transaction_id" type="varchar" size="128" />
     <column name="ip" type="varchar" size="255"/>
-    <column name="discount_min_order" type="number" size="11"/>
+    <column name="discount_min_order" type="float" size="20"/>
     <column name="discount_type" type="varchar" size="45"/>
-    <column name="discount_amount" type="number" size="11"/>
+    <column name="discount_amount" type="float" size="20"/>
     <column name="discount_tax_phase" type="varchar" size="45"/>
     <column name="currency" type="varchar" size="10"/>
     <column name="regdate" type="date" />

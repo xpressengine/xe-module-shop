@@ -103,7 +103,7 @@
 
             if(!$oDB->isColumnExists("shop","menus")) return true;
 
-			if($oDB->isColumnExists("shop_orders","total")) return true;
+			if(!$oDB->isColumnExists("shop_orders","total")) return true;
 
             return false;
         }
@@ -143,7 +143,7 @@
             }
 
             if(!$oDB->isColumnExists("shop","discount_min_amount")) {
-                $oDB->addColumn('shop',"discount_min_amount","number",20);
+                $oDB->addColumn('shop',"discount_min_amount","float",20);
             }
 
             if(!$oDB->isColumnExists("shop","discount_type")) {
@@ -151,7 +151,7 @@
             }
 
             if(!$oDB->isColumnExists("shop","discount_amount")) {
-                $oDB->addColumn('shop',"discount_amount","number",20);
+                $oDB->addColumn('shop',"discount_amount","float",20);
             }
 
             if(!$oDB->isColumnExists("shop","discount_tax_phase")) {
@@ -163,7 +163,7 @@
             }
 
             if(!$oDB->isColumnExists("shop","minimum_order")) {
-                $oDB->addColumn('shop',"minimum_order","number",20);
+                $oDB->addColumn('shop',"minimum_order","float",20);
             }
 
             if(!$oDB->isColumnExists("shop_order_products","member_srl")) {
@@ -287,15 +287,14 @@
                 $oDB->addColumn('shop',"menus","varchar", 500);
             }
 
-            if (!$oDB->isColumnExists("shop_orders","discount_min_order")) $oDB->addColumn('shop_orders',"discount_min_order","number", 11, 0);
+            if (!$oDB->isColumnExists("shop_orders","discount_min_order")) $oDB->addColumn('shop_orders',"discount_min_order","float", 20);
             if (!$oDB->isColumnExists("shop_orders","discount_type")) $oDB->addColumn('shop_orders',"discount_type","varchar", 45);
-            if (!$oDB->isColumnExists("shop_orders","discount_amount")) $oDB->addColumn('shop_orders',"discount_amount","number", 11, 0);
+            if (!$oDB->isColumnExists("shop_orders","discount_amount")) $oDB->addColumn('shop_orders',"discount_amount","float", 20);
             if (!$oDB->isColumnExists("shop_orders","discount_tax_phase")) $oDB->addColumn('shop_orders',"discount_tax_phase","varchar", 20);
             if (!$oDB->isColumnExists("shop_orders","currency")) $oDB->addColumn('shop_orders',"currency","varchar", 10);
 
-			if ($oDB->isColumnExists("shop_orders","total"))
+			if (!$oDB->isColumnExists("shop_orders","total"))
 			{
-				$oDB->dropColumn('shop_orders',"total");
 				$oDB->addColumn('shop_orders',"total","float", 20, 0 , true);
 			}
 
