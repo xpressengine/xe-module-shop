@@ -60,11 +60,11 @@
     </fieldset>
     <fieldset>
         <h4 class="h4">{$lang->payment_info}</h4>
-        <p>{$lang->payment_method_used} <b>{$order->payment_method}</b></p>
+        <p>{$lang->payment_method_used} <b>{ucwords(str_replace('_', ' ', $order->payment_method))}</b></p>
     </fieldset>
     <fieldset>
         <h4 class="h4">{$lang->shipping_info}</h4>
-        <p>{$lang->shipping_method_used} <b>{$order->shipping_method}</b></p>
+        <p>{$lang->shipping_method_used} <b>{ucwords(str_replace('_', ' ', $order->shipping_method))}</b></p>
     </fieldset>
     <fieldset>
         <h4 class="h4">{$lang->items_ordered}</h4>

@@ -45,7 +45,9 @@
 
     <h2>{$lang->account_info}</h2>
     <a href="{getUrl('','act','dispMemberModifyInfo')}">{$lang->edit}</a>
-    <p>{$lang->name}: <b>{$logged_user->user_name}</b></p>
+    <!--@if(!$logged_user->is_site_admin)-->
+        <p>{$lang->name}: <b>{$logged_user->user_name}</b></p>
+    <!--@end-->
     <p>{$lang->nick_name}: <b>{$logged_user->nick_name}</b></p>
     <p>{$lang->email}: <b>{$logged_user->email_address}</b></p>
     <a href="{getUrl('','act','dispMemberModifyPassword')}">{$lang->change_password}</a>
