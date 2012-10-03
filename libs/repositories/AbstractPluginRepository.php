@@ -208,6 +208,10 @@ abstract class AbstractPluginRepository extends BaseRepository
 		$args = new stdClass();
 		$args->is_default = 1;
 		$plugin_info = $this->getAllPluginsInDatabase($module_srl, $args);
+		if(!$plugin_info)
+		{
+			return null;
+		}
 		return $this->getPluginInstanceFromProperties($plugin_info[0]);
 	}
 

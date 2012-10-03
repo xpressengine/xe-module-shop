@@ -56,7 +56,7 @@
         <!-- // Discount -->
 
         <!-- Shipping cost -->
-        <tr>
+        <tr cond="$cart->getShippingMethodName()">
             <td colspan="4"></td>
             <td>Shipping</td>
             <td>

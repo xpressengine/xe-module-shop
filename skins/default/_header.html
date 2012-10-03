@@ -53,7 +53,7 @@
                         <!-- // Discount -->
 
                         <!-- Shipping -->
-                        <p class="clearfix">
+                        <p class="clearfix" cond="$cart->getShippingMethodName()">
                             <span class="f-left">{$lang->shipping}:</span>
                             <span class="f-right">{ShopDisplay::priceFormat($cart_preview->getShippingCost(), $shop->getCurrencySymbol())}</span>
                         </p>
