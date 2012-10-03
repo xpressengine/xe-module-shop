@@ -166,24 +166,15 @@ class shopView extends shop {
         // Load cart for display on all pages (in header)
         $cartRepo = new CartRepository();
         $logged_info = Context::get('logged_info');
-        $cart = $cartRepo->getCart($this->module_srl, null, $logged_info->member_srl, session_id());
+		// If cart doesn't exist, create new one
+        $cart = $cartRepo->getCart($this->module_srl, NULL, $logged_info->member_srl, session_id(), TRUE);
         Context::set('cart', $cart);
-        if ($cart && $discount = $cart->getDiscount()) {
-            Context::set('discount', $discount);
-            Context::set('discount_value', $discount->getReductionValue());
-            Context::set('discounted_value', $discount->getValueDiscounted());
-        }
 
         // Load cart preview (for ajax cart feature in header)
-        Context::set('cart_available_products_count', $cart ? $cart->countAvailableProducts() : 0);
-        if ($cart) {
-            $preview_products = $cart->getProducts(3, true);
-            Context::set('preview_products', $preview_products);
-        }
+		$cart_preview = new CartPreview($cart, 3);
+		Context::set('cart_preview', $cart_preview);
 
         // Load menu for display on all pages (in header)
-//        $shop_menu = $oShopModel->getShopMenu($this->site_srl);
-//        Context::set('menu', $shop_menu);
         $shop = Context::get('shop');
         $menus = $shop->getMenus();
         foreach($menus as $menu_key => $menu_srl)

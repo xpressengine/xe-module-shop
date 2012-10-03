@@ -6,37 +6,62 @@
         <div id="header-menu" class="f-left">
             {$header_menu}
         </div>
+        <!-- Cart preview -->
         <div class="f-right cart">
             <span>
                 <span id="cart-button">
-                    <span>{$cart_available_products_count}</span>
+                    <span>{$cart_preview->getCartProductsCount()}</span>
                     {$lang->your_cart}
                     <img src="img/arrow_dropdown.png" alt="" title=""/>
                 </span>
                 <span id="cart-details">
-                    <ul id="cart-products" cond="count($preview_products) != 0">
-                        <!--@foreach($preview_products as $i=>$cart_product)-->
-                        <li id="cart-product-{$cart_product->product_srl}" class="clearfix">
-                            <p class="cart-product-image"><img src="{$cart_product->getThumbnailPath(50)}" alt="" title=""/></p>
-                            <p class="cart-preview-title">
-                                <!--@if(strlen($cart_product->title)>40)-->
-                                    {substr($cart_product->title,0,40)}...
-                                <!--@else-->
-                                    {$cart_product->title}
-                                <!--@end-->
-                            </p>
-                            <p class="cart-preview-price">{$cart_product->quantity} x {ShopDisplay::priceFormat($cart_product->price, $shop->getCurrencySymbol())}</p>
-                        </li>
-                        <!--@endforeach-->
-                    </ul>
-                    <!--@if(!empty($preview_products))-->
-                        <p id="cart-discount" class="clearfix" cond="$discount">
-                            <span class="f-left" title="{$discount->getName()}: {$discount->getDescription()}">{$discount->getName()}</span>
-                            <span class="f-right">{ShopDisplay::priceFormat($discount->getReductionValue(), $shop->getCurrencySymbol())}</span>
+                    <!--@if($cart_preview->hasProducts())-->
+                        <ul id="cart-products">
+                            {@ $cart_preview_products = $cart_preview->getProducts() }
+                            <!--@foreach($cart_preview_products as $i => $cart_product)-->
+                                <li id="cart-product-{$cart_product->product_srl}" class="clearfix">
+                                    <p class="cart-product-image"><img src="{$cart_product->getThumbnailPath(50)}" alt="" title=""/></p>
+                                    <p class="cart-preview-title">
+                                        <!--@if(strlen($cart_product->title)>40)-->
+                                            {substr($cart_product->title,0,40)}...
+                                        <!--@else-->
+                                            {$cart_product->title}
+                                        <!--@end-->
+                                    </p>
+                                    <p class="cart-preview-price">{$cart_product->quantity} x {ShopDisplay::priceFormat($cart_product->price, $shop->getCurrencySymbol())}</p>
+                                </li>
+                            <!--@endforeach-->
+                        </ul>
+
+                        <!-- See more products (if preview does not show all products) -->
+                        <p class="clearfix" cond="$cart_preview->hasMoreProducts()">
+                            <span class="f-right"><a href="{getURL('', 'act','dispShopCart')}">... and {$cart_preview->getNumberOfProductsNotDisplayed()} more product(s)</a></span>
                         </p>
+
+                        <!-- Total before discount -->
+                        <p class="clearfix">
+                            <span class="f-left">{$lang->total}<span cond="$shop->showVAT()"> (including {$shop->getVAT()}% VAT)</span>:</span>
+                            <span class="f-right">{ShopDisplay::priceFormat($cart_preview->getTotalBeforeDiscount(), $shop->getCurrencySymbol())}</span>
+                        </p>
+                        <!-- // Total before discount -->
+
+                        <!-- Discount -->
+                        <p id="cart-discount" class="clearfix" cond="$cart_preview->getDiscountAmount()">
+                            <span class="f-left" title="{$cart_preview->getDiscountName()}: {$cart_preview->getDiscountDescription()}">{$cart_preview->getDiscountName()}</span>
+                            <span class="f-right">{ShopDisplay::priceFormat($cart_preview->getDiscountAmount(), $shop->getCurrencySymbol())}</span>
+                        </p>
+                        <!-- // Discount -->
+
+                        <!-- Shipping -->
+                        <p class="clearfix">
+                            <span class="f-left">{$lang->shipping}:</span>
+                            <span class="f-right">{ShopDisplay::priceFormat($cart_preview->getShippingCost(), $shop->getCurrencySymbol())}</span>
+                        </p>
+                        <!-- // Shipping -->
+
                         <p id="cart-costs" class="clearfix">
-                            <span class="f-left">{$lang->total}<span cond="$shop->getShowVAT() == 'Y' && $shop->getVAT()"> (without {$shop->getVAT()}% VAT)</span>:</span>
-                            <span class="f-right">{ShopDisplay::priceFormat($cart->getTotal(true, true), $shop->getCurrencySymbol())}</span>
+                            <span class="f-left">{$lang->grand_total}<span cond="$shop->showVAT()"></span>:</span>
+                            <span class="f-right">{ShopDisplay::priceFormat($cart_preview->getTotal(), $shop->getCurrencySymbol())}</span>
                         </p>
                         <p>
                             <span class="f-left"><a href="{getURL('', 'act','dispShopCart')}">{$lang->edit_cart}</a></span>
@@ -53,6 +78,7 @@
                 </span>
             </span>
         </div>
+        <!-- // Cart preview -->
         <p class="f-right header-separator">
             <select onchange="langSelect()" id="languages">
                 <option value="{$lang_type}">{$lang_supported[$lang_type]}</option>
