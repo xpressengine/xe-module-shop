@@ -129,11 +129,11 @@
         <div id="shipping">
             <h2 class="underline">Shipping</h2>
             <p>
-                <label for="shipping_method">method</label>
+                <label for="shipping_method">Shipping method</label>
                 <select name="shipping[method]" id="shipping_method">
                     <option value=""></option>
                     <!--@foreach($shipping_methods as $value=>$name)-->
-                    <option value="{$value}" selected="selected"|cond="$extra['shipping_method'] == $value">{$name}</option>
+                    <option value="{$value}" selected="selected"|cond="$cart->getShippingMethodName() == $value">{$name}</option>
                     <!--@endforeach-->
                 </select>
             </p>
@@ -209,7 +209,7 @@
             <!--@foreach($payment_methods as $payment_method)-->
             <p>
                 <input type="radio" id="payment_{$payment_method->name}" name="payment[method]" value="{$payment_method->name}"
-                <!--@if($payment_method->name == $extra['payment_method'])-->
+                <!--@if($payment_method->name == $cart->getPaymentMethodName())-->
                 checked
                 <!--@end-->
                 >

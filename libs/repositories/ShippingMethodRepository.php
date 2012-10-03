@@ -75,14 +75,19 @@ class ShippingMethodRepository extends AbstractPluginRepository
         $this->query('shop.deleteShippingMethod', array('name' => $name, 'module_srl' => $module_srl));
     }
 
-    protected function getAllPluginsInDatabase($module_srl)
+    protected function getAllPluginsInDatabase($module_srl, $args)
     {
-        $this->query('shop.getShippingMethods', array('module_srl' => $module_srl), TRUE);
+		if(!$args) $args = new stdClass();
+		$args->module_srl = $module_srl;
+
+        $output = $this->query('shop.getShippingMethods', $args, TRUE);
+		return $output->data;
     }
 
     protected function getAllActivePluginsInDatabase($module_srl)
     {
-        $this->query('shop.getShippingMethods', array('status' => 1, 'module_srl' => $module_srl), TRUE);
+        $output = $this->query('shop.getShippingMethods', array('status' => 1, 'module_srl' => $module_srl), TRUE);
+		return $output->data;
     }
 
 	protected function updatePluginsAllButThis($is_default, $name, $module_srl)

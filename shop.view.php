@@ -1183,7 +1183,7 @@ class shopView extends shop {
         $shopModel = getModel('shop');
 
         // Get selected payment method name
-        $payment_method_name = $cart->getExtra('payment_method');
+        $payment_method_name = $cart->getPaymentMethodName();
 
         // Get payment class
         $payment_repository = new PaymentMethodRepository();
@@ -1198,7 +1198,7 @@ class shopView extends shop {
         Context::set('billing_address', $cart->getBillingAddress());
         Context::set('shipping_address', $cart->getShippingAddress());
 
-        $shipping_method_name = $cart->getExtra('shipping_method');
+        $shipping_method_name = $cart->getShippingMethodName();
         $shipping_repository = new ShippingMethodRepository();
         $shipping_method = $shipping_repository->getShippingMethod($shipping_method_name, $this->module_srl);
         Context::set('shipping_method', $shipping_method->getDisplayName());

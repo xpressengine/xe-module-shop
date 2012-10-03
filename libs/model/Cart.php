@@ -351,7 +351,7 @@ class Cart extends BaseItem implements IProductItemsContainer
 
     public function getShippingCost()
     {
-        $shipping_method = $this->getExtra('shipping_method');
+        $shipping_method = $this->getShippingMethodName();
         if($shipping_method){
             $shipping_repository = new ShippingMethodRepository();
             $shipping = $shipping_repository->getShippingMethod($shipping_method, $this->module_srl);
@@ -588,12 +588,28 @@ class Cart extends BaseItem implements IProductItemsContainer
 
     public function getShippingMethodName()
     {
-        return $this->getExtra('shipping_method');
+        $shipping_method = $this->getExtra('shipping_method');
+		if($shipping_method)
+		{
+			return $shipping_method;
+		}
+
+		$shipping_repository = new ShippingMethodRepository();
+		$default_shipping = $shipping_repository->getDefault($this->module_srl);
+		return $default_shipping->name;
     }
 
     public function getPaymentMethodName()
     {
-        return $this->getExtra('payment_method');
+        $payment_method = $this->getExtra('payment_method');
+		if($payment_method)
+		{
+			return $payment_method;
+		}
+
+		$payment_repository = new PaymentMethodRepository();
+		$default_payment = $payment_repository->getDefault($this->module_srl);
+		return $default_payment->name;
     }
 
     /**
@@ -601,7 +617,8 @@ class Cart extends BaseItem implements IProductItemsContainer
      */
     public function getDiscountName()
     {
-		$discount = $this->getDiscount();
+		$discount = $this->getDiscount
+		();
 		return $discount ? $discount->getName() : null;
     }
 

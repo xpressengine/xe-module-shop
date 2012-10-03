@@ -9,7 +9,7 @@ abstract class AbstractPluginRepository extends BaseRepository
     abstract protected function updatePluginInfo($plugin);
     abstract protected function insertPluginInfo(AbstractPlugin $plugin);
     abstract protected function deletePluginInfo($name, $module_srl);
-    abstract protected function getAllPluginsInDatabase($module_srl);
+    abstract protected function getAllPluginsInDatabase($module_srl, $args);
     abstract protected function getAllActivePluginsInDatabase($module_srl);
     abstract protected function fixPlugin($name, $old_module_srl, $new_module_srl);
 	abstract protected function updatePluginsAllButThis($is_default, $name, $module_srl);
@@ -203,11 +203,19 @@ abstract class AbstractPluginRepository extends BaseRepository
 		$this->updatePlugin($plugin);
 	}
 
+	public function getDefault($module_srl)
+	{
+		$args = new stdClass();
+		$args->is_default = 1;
+		$plugin_info = $this->getAllPluginsInDatabase($module_srl, $args);
+		return $this->getPluginInstanceFromProperties($plugin_info[0]);
+	}
+
     /**
      * Deletes plugins from DB if they do not have a folder with a corresponding name
      */
     public function sanitizePlugins($module_srl) {
-        $pgByDatabase = $this->getAllPluginsInDatabase($module_srl);
+        $pgByDatabase = $this->getAllPluginsInDatabase($module_srl, null);
         $pgByFolders = $this->getPluginsByFolder();
 
         foreach ($pgByDatabase as $obj) {

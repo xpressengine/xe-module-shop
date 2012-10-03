@@ -74,8 +74,8 @@ class Order extends BaseItem implements IProductItemsContainer
         $this->client_company = $cart->getBillingAddress()->company;
         $this->billing_address = (string) $cart->getBillingAddress();
         $this->shipping_address = (string) $cart->getShippingAddress();
-        $this->payment_method = $cart->getExtra('payment_method');
-        $this->shipping_method = $cart->getExtra('shipping_method');
+        $this->payment_method = $cart->getPaymentMethodName();
+        $this->shipping_method = $cart->getShippingMethodName();
         $this->shipping_cost = $cart->getShippingCost();
         $this->total = $cart->getTotal(true);
         $this->vat = ($shopInfo->getVAT() ? $shopInfo->getVAT() : 0);

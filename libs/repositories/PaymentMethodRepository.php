@@ -63,9 +63,9 @@ class PaymentMethodRepository extends AbstractPluginRepository
         return $output->data;
     }
 
-    protected function getAllPluginsInDatabase($module_srl)
+    protected function getAllPluginsInDatabase($module_srl, $args)
     {
-        $args = new stdClass();
+        if(!$args) $args = new stdClass();
         $args->module_srl = $module_srl;
         $output = executeQueryArray('shop.getPaymentMethods', $args);
 
