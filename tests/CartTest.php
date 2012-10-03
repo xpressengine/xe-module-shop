@@ -42,7 +42,7 @@ class CartTest extends Shop_Generic_Tests_DatabaseTestCase
 
     public function testFirstCount()
     {
-        $this->assertEquals(1, $this->getConnection()->getRowCount('xe_shop_cart'), "First count");
+        $this->assertEquals(2, $this->getConnection()->getRowCount('xe_shop_cart'), "First count");
     }
 
     public function testAddCart()
@@ -59,7 +59,7 @@ class CartTest extends Shop_Generic_Tests_DatabaseTestCase
 
         $cart_repository = new CartRepository();
         $cart_repository->insertCart($cart);
-        $this->assertEquals(2, $this->getConnection()->getRowCount('xe_shop_cart'), "Insert failed");
+        $this->assertEquals(3, $this->getConnection()->getRowCount('xe_shop_cart'), "Insert failed");
     }
 
     public function testCartTotal_WithShipping()
@@ -325,7 +325,7 @@ class CartTest extends Shop_Generic_Tests_DatabaseTestCase
         $pRepo = new ProductRepository();
         $product1 = $pRepo->getProduct(130);
         $product2 = $pRepo->getProduct(133);
-        $cart->removeProducts(array(130, 133));
+        $cart->emptyCart();
         $this->assertEquals(0, $cart->count(), "Delete didn't work");
         $cart->addProduct($product1);
         $this->assertEquals(1, $cart->count(), "Adding product 1 failed");
@@ -348,12 +348,22 @@ class CartTest extends Shop_Generic_Tests_DatabaseTestCase
             1 => $pRepo->getProduct(130),
             2 => $pRepo->getProduct(133),
             3 => $pRepo->getProduct(132)
-        )
-        ;
+        );
         $userCart->addProduct($products[1], 2);
         $anonCart->addProduct($products[1], 13);
         $userCart->merge($anonCart, false);
         $this->assertEquals(15, $userCart->getCartProduct(130)->quantity, "Wrong quantity");
+    }
+
+    public function testCount()
+    {
+        $cRepo = new CartRepository();
+        $pRepo = new ProductRepository();
+        $cart = $cRepo->getCart(null, 14);
+        $cart->emptyCart();
+        $cart->addProduct($pRepo->getProduct(130));
+        $cart->addProduct($pRepo->getProduct(132));
+        $this->assertEquals(2, $cart->count());
     }
 
 }
