@@ -275,6 +275,11 @@ class ProductRepository extends BaseRepository
      */
     public function deleteProductCategories(Product &$product)
     {
+		$old_product = new SimpleProduct();
+		$old_product->product_srl = $product->product_srl;
+		$old_product->module_srl = $product->module_srl;
+		$this->getProductCategories($old_product);
+
 		$args = new stdClass();
         $args->product_srls[] = $product->product_srl;
         $output = executeQuery('shop.deleteProductCategories',$args);
@@ -286,6 +291,12 @@ class ProductRepository extends BaseRepository
                 $this->updateProductCategoryCount($args);
             }
         }
+		if(isset($old_product->categories)){
+			foreach($old_product->categories as $category){
+				$args->category_srl = $category;
+				$this->updateProductCategoryCount($args);
+			}
+		}
         return TRUE;
     }
 
