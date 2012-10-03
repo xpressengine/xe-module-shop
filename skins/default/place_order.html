@@ -11,32 +11,23 @@
 
     Payment will be made when you click Submit.
 
-    <fieldset>
-        <legend>Billing info</legend>
-        <p>{$billing_address}</p>
-    </fieldset>
 
-    <fieldset>
-        <legend>Shipping method</legend>
-        <p>{$shipping_method}</p>
-    </fieldset>
+    <h2>Billing info</h2>
+    <p>{$billing_address}</p>
 
-    <fieldset>
-        <legend>Shipping info</legend>
-        <p>{$shipping_address}</p>
-    </fieldset>
+    <h2>Shipping method</h2>
+    <p>{$shipping_method}</p>
 
-    <fieldset>
-        <legend>Payment method</legend>
-        <p>{$payment_method->getDisplayName()}</p>
-    </fieldset>
+    <h2>Shipping info</h2>
+    <p>{$shipping_address}</p>
 
-    <fieldset>
-        <legend>Products</legend>
+    <h2>Payment method</h2>
+    <p>{$payment_method->getDisplayName()}</p>
 
-        {@ $product_container = $cart; }
-        <include target="product_items" />
-    </fieldset>
+    <h2>Products</h2>
+
+    {@ $product_container = $cart; }
+    <include target="product_items" />
 
     <form action="{$payment_method->getPaymentFormAction()}" method="post">
         <input type="hidden" name="act" value="procShopPlaceOrder" />
