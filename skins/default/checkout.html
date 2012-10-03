@@ -38,8 +38,8 @@
         <p>{$XE_VALIDATOR_MESSAGE}</p>
     </div>
 
-    <form action="./" method="post" id="big">
-        <input type="hidden" id="act" name="act" value="procShopToolCheckout"/>
+    <form action="./" method="post" id="login_form">
+        <input type="hidden" name="act" value="procShopToolLogin"/>
 
         <div id="login" cond="!$is_logged">
             <h2 class="underline">Already a customer</h2>
@@ -50,11 +50,17 @@
                 </p>
                 <p>
                     <label for="login_pass">Pass</label>
-                    <input type="text" name="login[pass]" id="login_pass">
+                    <input type="password" name="login[pass]" id="login_pass">
+                </p>
+                <p>
+                    <input type="submit" id="login_button" value="Login" style="margin-left: 232px">
                 </p>
             </ul>
         </div>
+    </form>
 
+    <form action="./" method="post" id="big">
+        <input type="hidden" id="act" name="act" value="procShopToolCheckout"/>
         <div id="billing">
 
             <h2 class="underline">Billing</h2>

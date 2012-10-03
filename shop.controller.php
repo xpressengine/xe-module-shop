@@ -674,24 +674,37 @@
         /*
          * @author Florin Ercus (dev@xpressengine.org)
          */
+        public function procShopToolLogin()
+        {
+            $this->setRedirectUrl(getNotEncodedUrl('', 'act', 'dispShopCheckout'));
+            $login = Context::get('login');
+            if ($user = $login['user']) {
+                try {
+                    if (Context::get('is_logged')) throw new Exception('Already logged in, this should not happen');
+                    if (!$pass = $login['pass']) throw new Exception('No password');
+                    /** @var $oMemberController memberController */
+                    $oMemberController = getController('member');
+                    return $oMemberController->procMemberLogin($user, $pass);
+                }
+                catch (Exception $e) {
+                    return new Object(-1, $e->getMessage());
+                }
+            }
+            else return new Object(-1, 'Username / password?');
+        }
+
+        /*
+         * @author Florin Ercus (dev@xpressengine.org)
+         */
         public function procShopToolCheckout()
         {
             $cartRepo = new CartRepository();
             $logged_info = Context::get('logged_info');
 
             //get or create cart:
-            if ($cart = $cartRepo->getCart($this->module_info->module_srl, null, $logged_info->member_srl, session_id(), true)) {
+            if ($cart = $cartRepo->getCart($this->module_info->module_srl, null, $logged_info->member_srl, session_id(), true))
+            {
 
-                $login = Context::get('login');
-                if ($user = $login['user']) {
-                    if (Context::get('is_logged')) throw new Exception('Already logged in, this should not happen');
-                    if (!$pass = $login['pass']) throw new Exception('No password');
-                    /** @var $oMemberController memberController */
-                    $oMemberController = getController('member');
-                    $result = $oMemberController->procMemberLogin($user, $pass);
-                    $this->setRedirectUrl(getNotEncodedUrl('', 'act', 'dispShopCheckout'));
-                    return $result;
-                }
                 $haveShipping = (Context::get('different_shipping') == 'yes');
                 $shipping = Context::get('shipping');
                 if (!$haveShipping) unset($shipping['address_srl']);
