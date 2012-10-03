@@ -618,6 +618,7 @@
     $lang->about_not_logged = 'To access this part of the site you have to be logged in.';
     $lang->no_description = 'This product has no description';
     $lang->sort_by = 'Sort by';
+    $lang->checkout = 'Checkout';
     $lang->products_in_shop = 'product(s) in shop';
     $lang->products_matched_criteria = 'product(s) matched your criteria';
 

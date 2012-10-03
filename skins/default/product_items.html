@@ -5,14 +5,14 @@
   //    - $shop => of type ShopInfo, object containing info about currency, vat and discount global settings
 }
 <!--@if($product_container instanceof IProductItemsContainer && $shop instanceof ShopInfo)-->
-<table border="0" cellspacing="0" cellpadding="0" class="dataTable">
+<table border="0" cellspacing="0" cellpadding="0">
     <thead>
         <tr>
-            <th></th>
-            <th colspan="2">{$lang->title}</th>
-            <th>{$lang->quantity}</th>
-            <th>{$lang->price}</th>
-            <th>{$lang->subtotal}</th>
+            <th class="a-center">No.</th>
+            <th class="a-left" colspan="2">{$lang->title}</th>
+            <th class="a-center">{$lang->quantity}</th>
+            <th width="10%" class="a-center">{$lang->price}</th>
+            <th width="10%" class="a-center">{$lang->subtotal}</th>
         </tr>
     </thead>
     <tbody>
@@ -22,12 +22,12 @@
         <!--@foreach($product_items as $product)-->
             <!--@if($product instanceof IProductItem)-->
             <tr>
-                <td>{@ ++$i;}{$i}</td>
+                <td class="a-center">{@ ++$i;}{$i}</td>
                 <td><p><img src="{$product->getThumbnailPath(70)}" /></p></td>
                 <td>{$product->getTitle()}</td>
-                <td>{$product->getQuantity()}</td>
-                <td>{ShopDisplay::priceFormat($product->getPrice(), $shop->getCurrencySymbol())}</td>
-                <td>{ShopDisplay::priceFormat($product->getPrice() * $product->getQuantity(), $shop->getCurrencySymbol())}</td>
+                <td class="a-center">{$product->getQuantity()}</td>
+                <td class="a-center">{ShopDisplay::priceFormat($product->getPrice(), $shop->getCurrencySymbol())}</td>
+                <td class="a-center">{ShopDisplay::priceFormat($product->getPrice() * $product->getQuantity(), $shop->getCurrencySymbol())}</td>
             </tr>
             <!--@end-->
         <!--@end-->

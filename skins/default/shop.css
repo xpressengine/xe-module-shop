@@ -202,7 +202,7 @@ input[type="text"], textarea {
     border-radius: 2px;
     -moz-border-radius: 2px;
     -webkit-border-radius: 2px;
-    padding: 3px;
+    padding: 6px;
 }
 
 select {
@@ -231,7 +231,7 @@ input[type="submit"] {
     outline:none;
 }
 
-button, .button {
+button, .button, input[type="submit"] {
     color: #2a5072;
     border-radius: 3px;
     -moz-border-radius: 3px;
@@ -243,9 +243,11 @@ button, .button {
     box-shadow: 0 1px 0 #e4e8ec;
     -moz-box-shadow: 0 1px 0 #e4e8ec;
     -webkit-box-shadow: 0 1px 0 #e4e8ec;
+    font-size: 1.167em;
+    padding: 5px 10px;
 }
 
-button:hover, .button:hover, button:focus, .button:focus {
+button:hover, .button:hover, button:focus, .button:focus, input[type="submit"]:focus, input[type="submit"]:hover {
     border: 1px solid #0588c1;
     color: #fff;
     text-shadow: 0 -1px 0 #0688c1;
@@ -261,7 +263,7 @@ button:hover, .button:hover, button:focus, .button:focus {
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#27abe5', endColorstr='#16a3e0',GradientType=0 );
 }
 
-button:active, .button:active {
+button:active, .button:active, input[type="submit"]:active {
     background: #20b2f1;
     background: -moz-linear-gradient(top,  #20b2f1 0%, #17a9e8 100%);
     background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#20b2f1), color-stop(100%,#17a9e8));
@@ -286,14 +288,14 @@ a {
 h1 {
     font-weight: normal;
     font-size: 1.500em;
-    margin: 1.250em 0 2.500em;
+    margin: 1.250em 0;
     color: #2d5375;
 }
 
 h2 {
     font-weight: normal;
     font-size: 1.333em;
-    margin: 2.500em 0 1.500em;
+    margin: 1.500em 0;
     color: #2d5375;
 }
 
@@ -355,8 +357,9 @@ table td.no-data {
     text-align: center;
 }
 
-table tbody tr td {
+table tr td {
     border-bottom: 1px solid #bec9d4;
+    padding: 10px;
 }
 
 table tbody tr td:first-child {
@@ -365,6 +368,10 @@ table tbody tr td:first-child {
 
 table tbody tr td:last-child {
     border-right: 1px solid #bec9d4;
+}
+
+.underline {
+    border-bottom: 1px solid #e8e8e8;
 }
 
 /* START CLEARFIX */
@@ -690,6 +697,10 @@ table tbody tr td:last-child {
 
 .main-content p, .main-content h1, .main-content h2, .main-content h3, .product.list-view {
     line-height: 1.5em;
+}
+
+.main-content p * {
+    vertical-align: middle;
 }
 
 .body-left-panel {
@@ -1271,10 +1282,26 @@ li span.close-sign, li span.open-sign {
 .not-available {
     background-color: #fbdfca;
 }
+
 .product.deleted {
     background-color: #a8daf8;
 }
-.show_address {
-    font-size: 16px;
-    padding: 20px;
+
+/**
+ * Checkout page styles
+ * @author Daniel Ionescu
+*/
+#checkout ul {
+    padding: 0;
+    margin: 10px;
+    list-style-type: none;
+}
+
+#checkout p label {
+    width: 25%;
+    display: inline-block;
+}
+
+#checkout p input[type="text"], #checkout p textarea {
+    width: 40%;
 }
