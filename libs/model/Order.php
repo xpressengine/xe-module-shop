@@ -183,4 +183,63 @@ class Order extends BaseItem implements IProductItemsContainer
     {
         return $this->discount_amount;
     }
+
+	/**
+	 * Send email to user notifying him of the newly created order
+	 */
+	public static function sendNewOrderEmails($order_srl)
+	{
+		$repo = new OrderRepository();
+		$order = $repo->getOrderBySrl($order_srl);
+
+		$shop = new ShopInfo($order->module_srl);
+
+		global $lang;
+
+		// 1. Send email to customer
+		$email_subject = sprintf($lang->order_email_subject
+				, $shop->getShopTitle()
+				, ShopDisplay::priceFormat($order->total, $shop->getCurrencySymbol())
+			);
+
+		Context::set('email_order', $order);
+		$oTemplateHandler = TemplateHandler::getInstance();
+		$order_content = $oTemplateHandler->compile('./modules/shop/tpl', 'order_email.html');
+		$email_content = sprintf($lang->order_email_content
+		    	, $order->client_name
+				, getFullSiteUrl('', 'act', 'dispShopViewOrder', 'order_srl', $order->order_srl)
+				, $order->order_srl
+				, $order_content
+			);
+
+		$oMail = new Mail();
+		$oMail->setTitle($email_subject);
+		$oMail->setContent($email_content);
+		$oMail->setSender($shop->getShopTitle(), $shop->getShopEmail());
+		$oMail->setReceiptor(false, $order->client_email);
+		$oMail->send();
+
+		// 2. Send email to shop administrator
+		$admin_email_subject = sprintf($lang->admin_order_email_subject
+			, $order->client_name
+			, ShopDisplay::priceFormat($order->total, $shop->getCurrencySymbol())
+		);
+
+		Context::set('email_order', $order);
+		$oTemplateHandler = TemplateHandler::getInstance();
+		$order_content = $oTemplateHandler->compile('./modules/shop/tpl', 'order_email.html');
+
+		$admin_email_content = sprintf($lang->admin_order_email_content
+			, getFullSiteUrl('', 'act', 'dispShopToolViewOrder', 'order_srl', $order->order_srl)
+			, $order->order_srl
+			, $order_content
+		);
+
+		$oMail = new Mail();
+		$oMail->setTitle($admin_email_subject);
+		$oMail->setContent($admin_email_content);
+		$oMail->setSender($shop->getShopTitle(), $shop->getShopEmail());
+		$oMail->setReceiptor(false, $shop->getEmail());
+		$oMail->send();
+	}
 }

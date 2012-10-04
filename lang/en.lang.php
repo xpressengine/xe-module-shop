@@ -627,4 +627,32 @@
 	$lang->db_query_failed = 'The database query failed - please check if you have updated you module with the latest changes.';
     $lang->additional_addresses = 'Additional addresses';
 	$lang->msg_select_product_variant = 'Please select type of product that you want - the one you tried to add has a few options for you too choose.';
+
+	/* Lang for new order email */
+	$lang->shop_email = 'Shop email';
+	$lang->about_shop_email = 'All email notifications will be sent from this address';
+
+    $lang->order_email_subject = 'Order receipt from %s (%s)';
+    $lang->order_email_content = '
+	    <p>Hello %s,</p>
+
+	    <p>Thank you for your purchase! Here is your order receipt.</p>
+
+	    <p><b>How do I check on this order?</b></p>
+	    <p>
+	    	<a href="%s">Get up to date information about order #%s</a>
+	    </p>
+
+		%s
+    ';
+
+	$lang->admin_order_email_subject = 'A new order was made by %s (%s)';
+	$lang->admin_order_email_content = '
+	    <p>
+	        <a href="%s">Go to order %s</a> in admin.
+	    </p>
+
+		%s
+	';
+
 ?>

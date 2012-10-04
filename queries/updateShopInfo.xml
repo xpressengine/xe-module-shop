@@ -5,6 +5,7 @@
 	<columns>
 		<column name="shop_content" var="shop_content" default="" />
         <column name="shop_title" var="shop_title" default="" />
+        <column name="shop_email" var="shop_email" default="" />
 		<column name="timezone" var="timezone" />
         <column name="telephone" var="telephone" />
         <column name="address" var="address" />

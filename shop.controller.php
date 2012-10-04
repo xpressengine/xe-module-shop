@@ -533,7 +533,7 @@
             $oModuleModel = &getModel('module');
             $oShopModel = &getModel('shop');
 
-            $args = Context::gets('shop_title','shop_content','timezone','telephone','address','currency','VAT','show_VAT','out_of_stock_products','minimum_order');
+            $args = Context::gets('shop_title','shop_content','shop_email','timezone','telephone','address','currency','VAT','show_VAT','out_of_stock_products','minimum_order');
             $args->module_srl = $this->module_srl;
             $currencies = require_once(_XE_PATH_.'modules/shop/shop.currencies.php');
             $args->currency_symbol = $currencies[$args->currency]['symbol'];
@@ -911,6 +911,7 @@
 				$order = new Order($cart);
 				$order->save(); //obtain srl
 				$order->saveCartProducts($cart);
+				Order::sendNewOrderEmails($order->order_srl);
 				$cart->delete();
 			}
 			catch(Exception $e)

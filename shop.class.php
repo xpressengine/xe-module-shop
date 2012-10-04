@@ -109,6 +109,8 @@
 			if(!$oDB->isColumnExists("shop_payment_methods","is_default")) return true;
 			if(!$oDB->isColumnExists("shop_shipping_methods","is_default")) return true;
 
+			if(!$oDB->isColumnExists("shop","shop_email")) return true;
+
             return false;
         }
 
@@ -309,6 +311,10 @@
 			}
 			if(!$oDB->isColumnExists("shop_shipping_methods","is_default")) {
 				$oDB->addColumn('shop_shipping_methods',"is_default","number", 1, 0);
+			}
+
+			if(!$oDB->isColumnExists("shop","shop_email")) {
+				$oDB->addColumn('shop',"shop_email","varchar", 250, '', true);
 			}
 
             return new Object(0, 'success_updated');

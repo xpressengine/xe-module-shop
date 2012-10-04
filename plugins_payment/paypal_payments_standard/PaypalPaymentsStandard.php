@@ -154,6 +154,7 @@ class PaypalPaymentsStandard extends PaymentMethodAbstract
         $order->transaction_id = $transaction_id;
         $order->save(); //obtain srl
         $order->saveCartProducts($cart);
+		Order::sendNewOrderEmails($order->order_srl);
         $cart->delete();
 
         Context::set('order_srl', $order->order_srl);
