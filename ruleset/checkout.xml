@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ruleset version="1.5.0">
+    <customrules>
+        <rule name = "phone" type = "regex" test = "/^[0-9]*$/i"/>
+        <rule name = "name" type="regex" test="/^[A-Za-z][a-zA-Z- ]*$/i"/>
+        <rule name = "postal_code" type="regex" test="/^[A-Za-z][a-zA-Z-]*$/i"/>
+        <rule name = "yesno" type="regex" test="/^yes|no$/i"/>
+    </customrules>
+    <fields>
+        <field name="billing[address]" required="true" rule="alpha_number" />
+        <field name="new_billing_address[firstname]" required="true" rule="name" />
+        <field name="new_billing_address[lastname]" required="true" rule="name" />
+        <field name="new_billing_address[email]" required="true" rule="email" />
+        <field name="new_billing_address[company]" required="false" rule="name" />
+        <field name="new_billing_address[telephone]" required="true" rule="phone" />
+        <field name="new_billing_address[fax]" required="false" rule="phone" />
+        <field name="new_billing_address[address]" required="true" />
+        <field name="new_billing_address[additional_info]" required="false" />
+        <field name="new_billing_address[city]" required="false" rule="name" />
+        <field name="new_billing_address[region]" required="false" rule="name" />
+        <field name="new_billing_address[postal_code]" required="false" rule="postal_code" />
+        <field name="new_billing_address[country]" required="false" rule="name" />
+
+        <field name="different_shipping" required="false" rule="yesno" />
+
+        <field name="shipping[address]" required="false" rule="alpha_number" />
+        <field name="new_shipping_address[firstname]" required="false" rule="name" />
+        <field name="new_shipping_address[lastname]" required="false" rule="name" />
+        <field name="new_shipping_address[email]" required="false" rule="email" />
+        <field name="new_shipping_address[company]" required="false" rule="name" />
+        <field name="new_shipping_address[telephone]" required="false" rule="phone" />
+        <field name="new_shipping_address[fax]" required="false" rule="phone" />
+        <field name="new_shipping_address[address]" required="false" />
+        <field name="new_shipping_address[additional_info]" required="false" />
+        <field name="new_shipping_address[city]" required="false" rule="name" />
+        <field name="new_shipping_address[region]" required="false" rule="name" />
+        <field name="new_shipping_address[postal_code]" required="false" rule="postal_code" />
+        <field name="new_shipping_address[country]" required="false" rule="name" />
+    </fields>
+</ruleset>

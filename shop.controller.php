@@ -674,7 +674,7 @@
         /*
          * @author Florin Ercus (dev@xpressengine.org)
          */
-        public function procShopToolLogin()
+        public function procShopCheckoutLogin()
         {
             $this->setRedirectUrl(getNotEncodedUrl('', 'act', 'dispShopCheckout'));
             $login = Context::get('login');

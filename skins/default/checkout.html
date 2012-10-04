@@ -38,8 +38,8 @@
         <p>{$XE_VALIDATOR_MESSAGE}</p>
     </div>
 
-    <form action="./" method="post" id="login_form">
-        <input type="hidden" name="act" value="procShopToolLogin"/>
+    <form action="./" method="post" id="login_form" ruleset="checkout_login">
+        <input type="hidden" name="act" value="procShopCheckoutLogin"/>
 
         <div id="login" cond="!$is_logged">
             <h2 class="underline">Already a customer?</h2>

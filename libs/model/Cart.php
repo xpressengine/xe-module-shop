@@ -303,7 +303,7 @@ class Cart extends BaseItem implements IProductItemsContainer
     {
         $output = $this->getProducts(null, $onlyAvailables);
         $total = 0;
-        /** @var $product Product */
+        /** @var $product CartProduct */
         foreach ($output as $product) {
             $price = ($product->price ? $product->price : $product->cart_product_price);
             $total += $price * $product->quantity;
