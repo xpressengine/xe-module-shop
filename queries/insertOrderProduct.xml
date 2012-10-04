@@ -21,6 +21,7 @@
         <column name="qty" var="qty" />
         <column name="in_stock" var="in_stock" />
         <column name="primary_image_filename" var="primary_image_filename" />
+        <column name="content_filename" var="content_filename" />
         <column name="related_products" var="related_products" />
         <column name="regdate" var="regdate" />
         <column name="last_update" var="last_update" />

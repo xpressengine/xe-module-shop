@@ -9,6 +9,8 @@
         <!--@if(!$product->product_srl)-->
             <!--@if($product->isConfigurable())-->
                 <h3 class="h3">{$lang->add_configurable_product}</h3>
+            <!--@else if ($product->isDownloadable())-->
+                <h3 class="h3">{$lang->add_downloadable_product}</h3>
             <!--@else-->
                 <h3 class="h3">{$lang->add_simple_product}</h3>
             <!--@endif-->
@@ -16,6 +18,8 @@
             <!--@if($product->isConfigurable())-->
                 <h3 class="h3">{$lang->edit_configurable_product}</h3>
                 <p><span>!{$lang->notice}: {$lang->notice_update_configurable}</span></p>
+            <!--@else if ($product->isDownloadable())-->
+                <h3 class="h3">{$lang->edit_downloadable_product}</h3>
             <!--@else-->
                 <h3 class="h3">{$lang->edit_simple_product}</h3>
             <!--@endif-->
@@ -35,12 +39,16 @@
             <!--@if(!$product->product_srl)-->
                 <!--@if($product->isConfigurable())-->
                     <legend class="visualLabel">{$lang->add_configurable_product}</legend>
+                <!--@else if ($product->isDownloadable())-->
+                    <legend class="visualLabel">{$lang->add_downloadable_product}</legend>
                 <!--@else-->
                     <legend class="visualLabel">{$lang->add_simple_product}</legend>
                 <!--@endif-->
             <!--@else-->
                 <!--@if($product->isConfigurable())-->
                     <legend class="visualLabel">{$lang->edit_configurable_product}</legend>
+                <!--@else if ($product->isDownloadable())-->
+                    <legend class="visualLabel">{$lang->edit_downloadable_product}</legend>
                 <!--@else-->
                     <legend class="visualLabel">{$lang->edit_simple_product}</legend>
                 <!--@endif-->
@@ -68,6 +76,8 @@
                         <!--@end-->
                     <!--@end-->
                 <!--@end-->
+            <!--@else if ($product->isDownloadable())-->
+            <input type="hidden" name="product_type" value="downloadable" />
             <!--@else-->
             <input type="hidden" name="product_type" value="simple" />
             <!--@endif-->
@@ -135,7 +145,20 @@
                         </div>
                     </td>
                 </tr>
+                <!--@if ($product->isDownloadable())-->
                 <tr>
+                    <th scope="row">
+                        <label>{$lang->upload_content}</label>
+                    </th>
+                    <td class="title">
+                        <div class="fItem">
+                            <label class="iLabel" for="contentToUpload">{$lang->about_content_to_upload}</label>
+                            <input name="contentToUpload" id="contentToUpload" type="file"/>
+                        </div>
+                    </td>
+                </tr>
+                <!--@endif-->
+                 <tr>
                     <th scope="row">
                         <label for="sku">{$lang->sku}</label>
                     </th>
@@ -146,6 +169,7 @@
                         </div>
                     </td>
                 </tr>
+                <!--@if (!$product->isDownloadable())-->
                 <tr>
                     <th scope="row">
                         <label for="weight">{$lang->weight}</label>
@@ -157,6 +181,9 @@
                         </div>
                     </td>
                 </tr>
+                <!--@else-->
+                <input type="hidden" name="weight" value="0" />
+                <!--@endif-->
                 <tr>
                     <th scope="row">
                         <label for="status">{$lang->status}</label>
@@ -206,7 +233,7 @@
                     </td>
                 </tr>
                 <!--@endif-->
-                <!--@if(!$product->isConfigurable())-->
+                <!--@if(!$product->isConfigurable() && !$product->isDownloadable())-->
                 <tr>
                     <th scope="row">
                         <label for="qty">{$lang->qty}</label>
@@ -219,6 +246,7 @@
                     </td>
                 </tr>
                 <!--@endif-->
+                <!--@if (!$product->isDownloadable())-->
                 <tr>
                     <th scope="row">
                         <label for="in_stock">{$lang->in_stock}</label>
@@ -232,6 +260,9 @@
                         </div>
                     </td>
                 </tr>
+                <!--@else-->
+                <input type="hidden" name="in_stock" value="Y" />
+                <!--@endif-->
                 <tr>
                     <th scope="row">
                         <label for="is_featured">{$lang->is_featured}</label>

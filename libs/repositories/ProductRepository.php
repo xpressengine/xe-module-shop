@@ -6,6 +6,9 @@
  */
 class ProductRepository extends BaseRepository
 {
+
+    const PRODUCT_CONTENT_PATH = './files/attach/contents/shop/%d/product-contents/%d/';
+
 	/**
 	 * Insert a new Product  returns the ID of the newly created record
 	 *
@@ -933,7 +936,7 @@ class ProductRepository extends BaseRepository
 		return TRUE;
 	}
 
-	/**
+    /**
 	 * Set new primary image for product in case of deletion
 	 *
 	 * @author Dan Dragan (dev@xpressengine.org)
@@ -964,4 +967,21 @@ class ProductRepository extends BaseRepository
 		}
 		return TRUE;
 	}
+
+    public function saveContent($product, &$contentToUpload)
+    {
+        try{
+            $path = sprintf(ProductRepository::PRODUCT_CONTENT_PATH, $product->module_srl , $product->product_srl);
+            $filename = sprintf('%s%s', $path, $contentToUpload['name']);
+            FileHandler::copyFile($contentToUpload['tmp_name'], $filename);
+        }
+        catch(Exception $e)
+        {
+            return new Object(-1, $e->getMessage());
+        }
+
+        return TRUE;;
+
+    }
+
 }

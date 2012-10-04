@@ -55,6 +55,7 @@
             if(!$oDB->isColumnExists("shop","currency_symbol")) return true;
             if(!$oDB->isColumnExists("shop_products","discount_price")) return true;
             if(!$oDB->isColumnExists("shop_products","is_featured")) return true;
+            if(!$oDB->isColumnExists("shop_products","content_filename")) return true;
             if(!$oDB->isColumnExists("shop","discount_min_amount")) return true;
             if(!$oDB->isColumnExists("shop","discount_type")) return true;
             if(!$oDB->isColumnExists("shop","discount_amount")) return true;
@@ -77,6 +78,7 @@
             if(!$oDB->isColumnExists("shop_order_products","qty")) return true;
             if(!$oDB->isColumnExists("shop_order_products","in_stock")) return true;
             if(!$oDB->isColumnExists("shop_order_products","primary_image_filename")) return true;
+            if(!$oDB->isColumnExists("shop_order_products","content_filename")) return true;
             if(!$oDB->isColumnExists("shop_order_products","related_products")) return true;
             if(!$oDB->isColumnExists("shop_order_products","regdate")) return true;
             if(!$oDB->isColumnExists("shop_order_products","last_update")) return true;
@@ -132,6 +134,10 @@
 
             if(!$oDB->isColumnExists("shop_products","is_featured")) {
                 $oDB->addColumn('shop_products',"is_featured","char",1);
+            }
+
+            if(!$oDB->isColumnExists("shop_products","content_filename")) {
+                $oDB->addColumn('shop_products',"content_filename","varchar",250);
             }
 
             if(!$oDB->isColumnExists("shop","show_VAT")) {
@@ -224,6 +230,10 @@
 
             if(!$oDB->isColumnExists("shop_order_products","primary_image_filename")) {
                 $oDB->addColumn('shop_order_products',"primary_image_filename","varchar", 250);
+            }
+
+            if(!$oDB->isColumnExists("shop_order_products","content_filename")) {
+                $oDB->addColumn('shop_order_products',"content_filename","varchar", 250);
             }
 
             if(!$oDB->isColumnExists("shop_order_products","related_products")) {

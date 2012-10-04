@@ -17,6 +17,7 @@
   <column name="in_stock" type="char" size="1" default="N" />
   <column name="is_featured" type="char" size="1" default="N" />
   <column name="primary_image_filename" type="varchar" size="250" />
+  <column name="content_filename" type="varchar" size="250" />
   <column name="related_products" type="varchar" size="500" />
   <column name="regdate" type="date" />
   <column name="last_update" type="date" />

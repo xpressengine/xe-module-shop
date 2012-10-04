@@ -31,6 +31,7 @@ abstract class Product extends BaseItem
 	public $images = array();
 	public $primary_image;
 	public $primary_image_filename;
+    public $content_filename;
 
 
 	/**
@@ -98,6 +99,16 @@ abstract class Product extends BaseItem
 	{
 		return $this->product_type == 'configurable';
 	}
+
+    /**
+     * Checks if product is downloadable
+     *
+     * @return boolean
+     */
+    public function isDownloadable()
+    {
+        return 'downloadable' == $this->product_type;
+    }
 
     public function getPrimaryImage()
     {
@@ -167,6 +178,24 @@ class ConfigurableProduct extends Product
 		parent::__construct($args);
 		$this->product_type = 'configurable';
 	}
+
+    public function getRepo()
+    {
+        return 'ProductRepository';
+    }
+}
+
+/**
+ * Model class for configurable product
+ */
+class DownloadableProduct extends Product
+{
+
+    public function __construct($args = null)
+    {
+        parent::__construct($args);
+        $this->product_type = 'downloadable';
+    }
 
     public function getRepo()
     {

@@ -248,6 +248,12 @@
 			{
 				$product = new SimpleProduct($args);
 			}
+            elseif ('downloadable' == $args->product_type)
+            {
+                unset($args->weight);
+                $args->content_filename = $args->contentToUpload['name'];
+                $product = new DownloadableProduct($args);
+            }
 			else
 			{
 				$product = new ConfigurableProduct($args);
@@ -263,6 +269,12 @@
 						$this->setMessage("Saved simple product successfull");
 						$returnUrl = getNotEncodedUrl('', 'act', 'dispShopToolManageProducts');
 					}
+                    elseif ($product->isDownloadable())
+                    {
+                        $productRepository->saveContent($product, $args->contentToUpload);
+                        $this->setMessage("Saved downloadable product successfully");
+                        $returnUrl = getNotEncodedUrl('', 'act', 'dispShopToolManageProducts');
+                    }
 					else
 					{
 						$this->setMessage("Saved configurable product successfull");
@@ -277,12 +289,16 @@
 					{
 						$this->setMessage("Updated simple product successfull");
 					}
+                    elseif ($product->isDownloadable())
+                    {
+                        $this->setMessage("Updated downloadable product successfully");
+                    }
 					else
 					{
 						$this->setMessage("Updated configurable product successfull");
 					}
 
-					if($product->isSimple() && $product->parent_product_srl)
+					if(($product->isSimple() || $product->isDownloadable()) && $product->parent_product_srl)
 					{
 						$returnUrl = getNotEncodedUrl('', 'act', 'dispShopToolEditProduct', 'product_srl', $product->parent_product_srl);
 					}
