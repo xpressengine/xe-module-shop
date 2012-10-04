@@ -2,17 +2,24 @@
 <form action="./" method="post" cond="isset($product->available) ? $product->available : $product->isAvailable()">
     <input type="hidden" name="act" value="procShopToolCartAddProduct" />
     <div class="clearfix">
+        <!--@if($product->isSimple())-->
+        <p class="f-left quantity">
+            <label>Quantity:</label><input type="text" name="quantity" value="1" />
+        </p>
+        <!--@end-->
         <p class="f-right">
-            <span class="quantity"><label>Quantity:</label><input type="text" name="quantity" value="1" /></span>
+            <span class="discount-price">{$product->discount_price}</span>
+            <span class="price">{ShopDisplay::priceFormat($product->price, $shop->getCurrencySymbol())}</span>
         </p>
         <!--@if($product->isSimple())-->
             <input type="hidden" id="product_srl" name="product_srl" value="{$product->product_srl}" />
-        <!--@elseif($product->isConfigurable())-->
-            <include target="product_variants" />
         <!--@end-->
     </div>
-    <p class="buy">
-        <input class="add-to-cart" type="submit" value="Add to cart" />
-        <span class="price">{ShopDisplay::priceFormat($product->price, $shop->getCurrencySymbol())}</span>
+    <p class="buy clearfix">
+        <!--@if($product->isSimple())-->
+            <input class="add-to-cart" type="submit" value="Add to cart" />
+        <!--@elseif($product->isConfigurable())-->
+            <a href="{getUrl('vid', $mid, 'act', 'dispShopProduct', 'product_srl', $product->product_srl, 'category_srl', $category_srl)}" class="button">Customize this product</a>
+        <!--@end-->
     </p>
 </form>
