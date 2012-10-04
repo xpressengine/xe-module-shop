@@ -80,9 +80,9 @@ class CartProduct extends BaseItem implements IProductItem
     /**
      * Price
      */
-    public function getPrice()
+    public function getPrice($discounted = true)
     {
-        return $this->product ? $this->product->price : $this->cart_product_price;
+        return $this->product ? $this->product->getPrice($discounted) : $this->cart_product_price;
     }
 
     function getThumbnailPath($width = 80, $height = 0, $thumbnail_type = '')

@@ -17,6 +17,10 @@ class ProductRepository extends BaseRepository
 	{
 		$product->product_srl = getNextSequence();
 
+        if($product->discount_price >= $product->price){
+            throw new Exception("Discount price is bigger than normal price");
+        }
+
 		$output = executeQuery('shop.insertProduct', $product);
 		if(!$output->toBool())
 		{
@@ -837,7 +841,10 @@ class ProductRepository extends BaseRepository
 	 */
 	public function updateProduct(Product $product)
 	{
-		$output = executeQuery('shop.updateProduct', $product);
+        if($product->discount_price >= $product->price){
+            throw new Exception("Discount price is bigger than normal price");
+        }
+        $output = executeQuery('shop.updateProduct', $product);
 		if(!$output->toBool())
 		{
 			throw new Exception($output->getMessage(), $output->getError());

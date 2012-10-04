@@ -112,6 +112,11 @@ abstract class Product extends BaseItem
                         ));
     }
 
+    public function getPrice($discounted = true){
+        if($discounted && $this->discount_price > 0) return $this->discount_price;
+        else return $this->price;
+    }
+
     public function isInStock()
     {
         if($this->qty > 0) return true;

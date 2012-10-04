@@ -129,7 +129,7 @@ class Order extends BaseItem implements IProductItemsContainer
 
     public function getTotalBeforeDiscount()
     {
-        return $this->total - $this->discount_amount;
+        return $this->total + $this->discount_amount - $this->shipping_cost;
     }
 
     public function getTotal()
@@ -139,7 +139,7 @@ class Order extends BaseItem implements IProductItemsContainer
 
     public function getVAT()
     {
-        return $this->vat;
+        return $this->vat /100 * $this->total;
     }
 
     /**

@@ -106,7 +106,7 @@ class Cart extends BaseItem implements IProductItemsContainer
         }
         else {
             $cartProductQuantity = $quantity;
-            $return = $this->repo->insertCartProduct($this->cart_srl, $product->product_srl, $cartProductQuantity, array('title' => $product->title, 'price'=>$product->price));
+            $return = $this->repo->insertCartProduct($this->cart_srl, $product->product_srl, $cartProductQuantity, array('title' => $product->title, 'price'=>$product->getPrice()));
         }
         $this->setExtra('price', $this->getPrice(true));
         $this->items = $this->count(true, true);
