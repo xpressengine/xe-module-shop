@@ -139,7 +139,7 @@ class Order extends BaseItem implements IProductItemsContainer
 
     public function getVAT()
     {
-        return $this->vat /100 * $this->total;
+        return $this->vat /100 * ($this->total - $this->shipping_cost);
     }
 
     /**
@@ -151,9 +151,9 @@ class Order extends BaseItem implements IProductItemsContainer
         switch ($this->discount_type)
         {
             case Discount::DISCOUNT_TYPE_FIXED_AMOUNT:
-                return new FixedAmountDiscount(2, 1);
+                return new FixedAmountDiscount($this->getTotal(), $this->discount_amount,$this->discount_min_order);
             case Discount::DISCOUNT_TYPE_PERCENTAGE:
-                return new PercentageDiscount(2, 1);
+                return new PercentageDiscount($this->getTotal(), $this->discount_amount,$this->discount_min_order);
             return null;
         }
     }

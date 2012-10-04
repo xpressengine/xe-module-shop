@@ -864,8 +864,22 @@
             $args->order_srl = $order_srl;
             $args->module_srl = $order->module_srl;
             $shipment = new Shipment($args);
-            if(!isset($shipment->shipment_srl)) $insert=true;
-            $shipment->save();
+            $shipment->order = $order;
+            if(!isset($shipment->shipment_srl)) $insert = true;
+            try{
+                if($insert) {
+                    $productsEmptyStocks = $shipment->checkAndUpdateStocks();
+                    $product_srls = array();
+                    foreach($productsEmptyStocks as $product){
+                        $products_srls[] = $product->product_srl;
+                    }
+                    $products_srls = implode(', ',$product_srls);
+                }
+                $shipment->save();
+            }
+            catch(Exception $e) {
+                return new Object(-1, $e->getMessage());
+            }
             if($shipment->shipment_srl){
                 if(isset($order->invoice)) $order->order_status = Order::ORDER_STATUS_COMPLETED;
                 else $order->order_status = Order::ORDER_STATUS_PROCESSING;
@@ -876,7 +890,7 @@
                     return new Object(-1, $e->getMessage());
                 }
                 if($insert){
-                    $this->setMessage("Shipment has been created");
+                    $this->setMessage("Shipment has been created. " . (isset($products_srls) ? "Stock empty for products: $products_srls":''));
                     $return_url = getNotEncodedUrl('', 'act','dispShopToolViewOrder','order_srl',$order_srl);
                     $this->setRedirectUrl($return_url);
                 } else {
@@ -911,12 +925,13 @@
 				$order = new Order($cart);
 				$order->save(); //obtain srl
 				$order->saveCartProducts($cart);
-				Order::sendNewOrderEmails($order->order_srl);
+				//TODO resolve mail warnings
+                @Order::sendNewOrderEmails($order->order_srl);
 				$cart->delete();
 			}
 			catch(Exception $e)
 			{
-				return new Object(-1, 'msg_error_occured');
+				return new Object(-1, $e->getMessage());
 			}
 
             $this->setRedirectUrl(getNotEncodedUrl('', 'act', 'dispShopOrderConfirmation', 'order_srl', $order->order_srl));
@@ -927,34 +942,27 @@
          */
         public function procShopToolCartAddProduct()
         {
-			$product_srl = Context::get('product_srl');
-			if(!$product_srl)
-			{
-				return new Object(-1, 'msg_select_product_variant');
-			}
-
             $cartRepository = new CartRepository();
-			$productsRepo = new ProductRepository();
-			if ($product = $productsRepo->getProduct($product_srl))
-			{
-				if (!($product instanceof SimpleProduct)) {
-					return new Object(-1, 'msg_select_product_variant');
-				}
-				$logged_info = Context::get('logged_info');
-				$cart = $cartRepository->getCart($this->module_info->module_srl, null, $logged_info->member_srl, session_id(), true);
-				$quantity = (is_numeric(Context::get('quantity')) && Context::get('quantity') > 0 ? Context::get('quantity') : 1);
-				try {
-					$cart->addProduct($product, $quantity);
-				}
-				catch (Exception $e) {
-					return new Object(-1, $e->getMessage());
-				}
-			}
-			else
-			{
-				return new Object(-1, 'msg_invalid_request');
-			}
-
+            if ($product_srl = Context::get('product_srl')) {
+                $productsRepo = new ProductRepository();
+                if ($product = $productsRepo->getProduct($product_srl))
+                {
+                    if (!($product instanceof SimpleProduct)) {
+                        return new Object(-1, 'msg_invalid_request');
+                    }
+                    $logged_info = Context::get('logged_info');
+                    $cart = $cartRepository->getCart($this->module_info->module_srl, null, $logged_info->member_srl, session_id(), true);
+                    $quantity = (is_numeric(Context::get('quantity')) && Context::get('quantity') > 0 ? Context::get('quantity') : 1);
+                    try {
+                        $cart->addProduct($product, $quantity);
+                    }
+                    catch (Exception $e) {
+                        return new Object(-1, $e->getMessage());
+                    }
+                }
+                else return new Object(-1, 'msg_invalid_request');
+            }
+            else return new Object(-1, 'msg_invalid_request');
             $shop = $this->model->getShop($this->module_srl);
             $this->setRedirectUrlIfNoReferer(getSiteUrl($shop->domain));
         }
@@ -2315,7 +2323,7 @@
 		// display after
 		public function triggerDisplayLogMessages()
 		{
-			if(__DEBUG__ && !in_array(Context::getResponseMethod(), array('XMLRPC', 'JSON')))
+			if(__DEBUG__ && !in_array(Context::getResponseMethod(), array('XMLRPC')))
 			{
 				// Load XE Shop errors
 				$shop_log_messages = FileHandler::readFile(ShopLogger::LOG_FILE_PATH);

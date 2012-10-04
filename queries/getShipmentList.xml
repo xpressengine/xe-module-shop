@@ -9,7 +9,7 @@
         <condition operation="equal" column="module_srl" var="module_srl" notnull="notnull"/>
     </conditions>
     <navigation>
-        <index var="shipment_srl" default="shipment_srl" order="shipment_type" />
+        <index var="shipment_srl" default="shipment_srl" order="order_type" />
         <list_count var="list_count" default="10" />
         <page_count var="page_count" default="10" />
         <page var="page" default="1" />

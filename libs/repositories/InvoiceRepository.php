@@ -23,7 +23,7 @@ class InvoiceRepository extends BaseRepository
 
     public function getList($module_srl, array $extraParams=array())
     {
-        $params = array('module_srl'=> $module_srl);
+        $params = array('module_srl'=> $module_srl, 'order_type' => 'desc');
         $params = array_merge($params, $extraParams);
         return $this->query('getInvoiceList', $params, 'Invoice');
     }
