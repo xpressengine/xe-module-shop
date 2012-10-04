@@ -1083,20 +1083,7 @@ class shopView extends shop {
         /** @var $cart Cart */
         if ($cart = Context::get('cart')) {
             $output = $cart->getProductsList(array('page' => Context::get('page')));
-            $total = 0;
-            /** @var $product Product */
-            foreach ($output->data as $product) {
-                if ($product->available) {
-                    $total += $product->price * $product->quantity;
-                }
-            }
-            Context::set('products', $output);
-            Context::set('total_price', $total);
-            if ($discount = $cart->getDiscount()) {
-                Context::set('discount', $discount);
-                Context::set('discount_value', $discount->getReductionValue());
-                Context::set('discounted_value', $discount->getValueDiscounted());
-            }
+            Context::set('products_output', $output);
         }
         $this->setTemplateFile('cart.html');
 	}

@@ -239,18 +239,11 @@ class Cart extends BaseItem implements IProductItemsContainer
     {
         if (!$this->cart_srl) throw new Exception('Cart is not persisted');
 
-        $shopInfo = new ShopInfo($this->module_srl);
-        $checkIfInStock = ($shopInfo->getOutOfStockProducts() == 'Y');
-
         $output = $this->query('getCartProductsList', array_merge(array('cart_srl'=>$this->cart_srl), $args), true);
         foreach ($output->data as $i=>&$data) {
             //if ($data->product_srl is missing) then product was deleted by shop admin
             if ($data->cart_product_srl) {
-                $product = new SimpleProduct($data);
-                $product->quantity = $data->quantity;
-                $product->available = ( $data->product_srl ? $this->productStillAvailable($product, $checkIfInStock) : false );
-                $product->cart_product_srl = $data->cart_product_srl;
-                $product->cart_product_title = $data->cart_product_title;
+                $product = new CartProduct($data);
                 $data = $product;
             }
             else unset($output->data[$i]);

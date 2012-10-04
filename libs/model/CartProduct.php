@@ -56,7 +56,7 @@ class CartProduct extends BaseItem implements IProductItem
         {
             return $this->product->$property;
         }
-        return null;
+        return NULL;
     }
 
     /**
@@ -97,11 +97,14 @@ class CartProduct extends BaseItem implements IProductItem
      * @param bool $checkIfInStock
      * @return bool
      */
-    public function isAvailable($checkIfInStock = true)
+    public function isAvailable()
     {
+		$shopInfo = new ShopInfo($this->product->module_srl);
+		$checkIfInStock = ($shopInfo->getOutOfStockProducts() == 'Y');
+
         if ($this->product->isPersisted()) {
             return $this->product->isAvailable($checkIfInStock);
         }
-        return false;
+        return FALSE;
     }
 }

@@ -67,15 +67,15 @@ jQuery(function () {
     <div class="listHeader" cond="$cart->items">
         <p class="info">
             <!--@if($search_keyword)-->{sprintf($lang->search_result_count,$page_navigation->total_count)}
-            <!--@else-->{sprintf($lang->total_result_count,$products->total_count)}<!--@end-->
+            <!--@else-->{sprintf($lang->total_result_count,$products_output->total_count)}<!--@end-->
         </p>
     </div>
 
-    <fieldset cond="!empty($products->data)">
+    <fieldset cond="!empty($products_output->data)">
         <form action="" method="post">
             <table border="0" cellspacing="0" summary="{$lang->content_list}" class="tableData">
                 <thead>
-                    <tr cond="!empty($products)">
+                    <tr cond="!empty($products_output)">
                         <th scope="col">
                             <input cond="$cart->countAvailableProducts()" type="checkbox" class="inputCheck" onclick="jQuery(this).parents('table').find('input[type=checkbox].boxlist').attr('checked', jQuery(this).is(':checked'))"/>
                         </th>
@@ -89,13 +89,13 @@ jQuery(function () {
                 </thead>
                 <tbody>
 
-<!--@foreach($products->data as $no => $product)-->
+<!--@foreach($products_output->data as $no => $product)-->
                 <tr cond="$product->product_srl" class="product{!$product->available ? ' not-available' : ''}" data-price="{$product->price}">
                     <td>
                         <input type="checkbox" name="product_srls[]" value="{$product->product_srl}" class="inputCheck boxlist" cond="$product->product_srl" />
                     </td>
                     <td class="title">
-                        <img src="{$product->getPrimaryImage()->getThumbnailPath(50)}" alt="" title=""/>
+                        <img src="{$product->getThumbnailPath(50)}" alt="" title=""/>
                         <a href="{getUrl('act','dispShopProduct','product_srl',$product->product_srl)}">{$product->title}</a>
                     </td>
 <!--@if ($product->available)-->
@@ -127,67 +127,77 @@ jQuery(function () {
                     </td>
                 </tr>
 <!--@end-->
-                <tr class="bottom" cond="$discount">
-                    <td></td>
-                    <td>
-                        Total
-                    </td>
-                    <td colspan="2">
-                    </td>
-                    <td colspan=3>
-                        {ShopDisplay::priceFormat($total_price, $shop->getCurrencySymbol())}
-                    </td>
-                </tr>
-                <tr class="bottom" cond="$discount">
-                    <td></td>
-                    <td>
-                        <a href="#" onclick="alert('{$discount->getName()}:\n\n{$discount->getDescription()}')">Discount</a>
-                    </td>
-                    <td colspan="2">
-                    </td>
-                    <td colspan=3>
-                        {ShopDisplay::priceFormat($discount_value, $shop->getCurrencySymbol())}
-                    </td>
-                </tr>
-                <tr class="bottom">
-                    <td></td>
-                    <td>
-                        {$lang->grand_total}
-                    </td>
-                    <td colspan="2">
-                    </td>
-                    <td>
-                        {ShopDisplay::priceFormat(($discount ? $discounted_value : $total_price), $shop->getCurrencySymbol())}
-                    </td>
-                    <td>
-                        <input cond="$cart->countAvailableProducts()" type="submit" value="{$lang->cmd_delete}" name="del_cart_products" id="delete_multiple">
-                    </td>
-                    <td>
-                        <input type="submit" value="{$lang->cmd_update}" name="upd_cart_products" id="update_multiple">
-                    </td>
-                </tr>
-                <tr cond="$shop->getShowVAT() == 'Y' && $shop->getVAT()">
-                    <td></td>
-                    <td>
-                        {$lang->taxes}
-                    </td>
-                    <td colspan="2">
-                    </td>
-                    <td>
-                        {ShopDisplay::priceFormat($cart->getVAT(true, true), $shop->getCurrencySymbol())}
-                    </td>
-                    <td colspan="2">
-                    </td>
-                </tr>
-                </tbody>
+        </tbody>
+        <tfoot>
+        <!-- Total before discount -->
+        <tr>
+            <td colspan="3"></td>
+            <td>{$lang->total}</td>
+            <td>
+                {ShopDisplay::priceFormat($cart->getTotalBeforeDiscount(), $shop->getCurrencySymbol())}
+            </td>
+            <td colspan="2"></td>
+        </tr>
+        <!-- // Total before discount -->
+
+        <!-- Discount -->
+        <tr cond="$cart->getDiscountAmount()">
+            <td colspan="3">
+            </td>
+            <td><a href="#" onclick="alert('{$cart->getDiscountName()}\n\n{$cart->getDiscountDescription()}'); return false">Discount</a></td>
+            <td>
+                {ShopDisplay::priceFormat(-1 * $cart->getDiscountAmount(), $shop->getCurrencySymbol())}
+            </td>
+            <td colspan="2"></td>
+        </tr>
+        <!-- // Discount -->
+
+        <!-- Total after discount -->
+        <tr cond="$cart->getDiscountAmount()">
+            <td colspan="3"></td>
+            <td>{$lang->total} after discount</td>
+            <td>
+                {ShopDisplay::priceFormat($cart->getTotalAfterDiscount(), $shop->getCurrencySymbol())}
+            </td>
+            <td colspan="2"></td>
+        </tr>
+        <!-- // Total after discount -->
+
+        <!-- VAT -->
+        <tr cond="$shop->showVAT()">
+            <td colspan="3"></td>
+            <td>
+                {$lang->taxes}
+            </td>
+            <td>
+                {ShopDisplay::priceFormat($cart->getVAT(), $shop->getCurrencySymbol())}
+            </td>
+            <td colspan="2"></td>
+        </tr>
+        <!-- // VAT -->
+
+        <!-- Update cart -->
+        <tr>
+            <td colspan="3"></td>
+            <td>
+                <input cond="$cart->countAvailableProducts()" type="submit" value="{$lang->cmd_delete}" name="del_cart_products" id="delete_multiple">
+            </td>
+            <td>
+                <input type="submit" value="{$lang->cmd_update}" name="upd_cart_products" id="update_multiple">
+            </td>
+            <td colspan="2"></td>
+        </tr>
+        <!-- // Update cart -->
+
+    </tfoot>
             </table>
 
-            <div class="listFooter" cond="!empty($products->data)">
+            <div class="listFooter" cond="!empty($products_output->data)">
 
-                <div class="pagination" cond="$products->page_navigation->total_page > 1">
+                <div class="pagination" cond="$products_output->page_navigation->total_page > 1">
                     <a href="{getUrl('page','','mid',$mid)}" class="prev"><span>{$lang->first_page}</span></a>
 
-            <!--@while ($page_no = $products->page_navigation->getNextPage())-->
+            <!--@while ($page_no = $products_output->page_navigation->getNextPage())-->
                 <!--@if ($page == $page_no)-->
                     <strong>{$page_no}</strong>
                 <!--@else-->
@@ -195,7 +205,7 @@ jQuery(function () {
                 <!--@end-->
             <!--@end-->
 
-                    <a href="{getUrl('page',$products->page_navigation->last_page,'module_srl','')}" class="next"><span>{$lang->last_page}</span></a>
+                    <a href="{getUrl('page',$products_output->page_navigation->last_page,'module_srl','')}" class="next"><span>{$lang->last_page}</span></a>
                 </div>
 
             </div>
