@@ -353,6 +353,9 @@ class ProductRepository extends BaseRepository
 		if($output->data->product_type == 'simple') {
 			$product = new SimpleProduct($output->data);
 		}
+        else if ($output->data->product_type == 'downloadable'){
+            $product = new DownloadableProduct($output->data);
+        }
 		else {
 			$product = new ConfigurableProduct($output->data);
 			// Get associated products
@@ -516,8 +519,12 @@ class ProductRepository extends BaseRepository
 				$product = new SimpleProduct($row);
 				if ($loadAttributes) $this->getProductAttributes($product);
                 if($loadImages) $this->getProductImages($product);
-			}
-			else {
+			} elseif ($row->product_type == 'downloadable') {
+                $product = new DownloadableProduct($row);
+                if ($loadAttributes) $this->getProductAttributes($product);
+                if($loadImages) $this->getProductImages($product);
+            }
+            else {
 				$product = new ConfigurableProduct($row);
 				if ($loadAttributes) $this->getProductAttributes($product);
                 if($loadImages) $this->getProductImages($product);
@@ -564,6 +571,10 @@ class ProductRepository extends BaseRepository
         foreach ($output->data as $product) {
             if ($product->product_type == 'simple') {
                 $product_object = new SimpleProduct($product);
+                if($loadAttributes) $this->getProductAttributes($product_object);
+                if($loadImages) $this->getProductImages($product_object);
+            }elseif ($product->product_type == 'downloadable') {
+                $product_object = new DownloadableProduct($product);
                 if($loadAttributes) $this->getProductAttributes($product_object);
                 if($loadImages) $this->getProductImages($product_object);
             }
@@ -780,6 +791,8 @@ class ProductRepository extends BaseRepository
 
             if($product->product_type == 'simple') {
                 $prod = new SimpleProduct($product);
+            }elseif($product->product_type == 'downloadable') {
+                $prod = new DownloadableProduct($product);
             }
             elseif($product->product_type == 'configurable') {
                 $product->configurable_attributes = explode('+',$product->configurable_attributes);

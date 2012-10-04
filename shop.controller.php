@@ -231,6 +231,7 @@
             $shopModel = $this->model;
             $productRepository = $shopModel->getProductRepository();
 			$imageRepository = $shopModel->getImageRepository();
+            global $lang;
 
             $args = Context::getRequestVars();
 			if(is_array($args->filesToUpload)) $args->images = $imageRepository->createImagesUploadedFiles($args->filesToUpload);
@@ -266,18 +267,18 @@
                     $product_srl = $productRepository->insertProduct($product);
 					if($product->isSimple())
 					{
-						$this->setMessage("Saved simple product successfull");
+						$this->setMessage($lang->simple_product_saved_successfully);
 						$returnUrl = getNotEncodedUrl('', 'act', 'dispShopToolManageProducts');
 					}
                     elseif ($product->isDownloadable())
                     {
                         $productRepository->saveContent($product, $args->contentToUpload);
-                        $this->setMessage("Saved downloadable product successfully");
+                        $this->setMessage($lang->downloadable_product_saved_successfully);
                         $returnUrl = getNotEncodedUrl('', 'act', 'dispShopToolManageProducts');
                     }
 					else
 					{
-						$this->setMessage("Saved configurable product successfull");
+						$this->setMessage($lang->configurable_product_saved_successfully);
 						$returnUrl = getNotEncodedUrl('', 'act', 'dispShopToolAddAssociatedProducts','product_srl',$product->product_srl);
 					}
                 }
@@ -287,15 +288,15 @@
                     $productRepository->updateProduct($product);
 					if($product->isSimple())
 					{
-						$this->setMessage("Updated simple product successfull");
+						$this->setMessage($lang->simple_product_updated_successfully);
 					}
                     elseif ($product->isDownloadable())
                     {
-                        $this->setMessage("Updated downloadable product successfully");
+                        $this->setMessage($lang->downloadable_product_updated_successfully);
                     }
 					else
 					{
-						$this->setMessage("Updated configurable product successfull");
+						$this->setMessage($lang->configurable_product_updated_successfully);
 					}
 
 					if(($product->isSimple() || $product->isDownloadable()) && $product->parent_product_srl)

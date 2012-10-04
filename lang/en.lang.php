@@ -622,5 +622,10 @@
     $lang->add_downloadable_product = 'Add downloadable product';
     $lang->edit_downloadable_product = 'Edit downloadable product';
     $lang->upload_content = "Upload content";
-    // $lang->about_content_to_upload = "Product's content";
+    $lang->simple_product_saved_successfully = "Saved simple product successfully";
+    $lang->downloadable_product_saved_successfully = "Saved downloadable product successfully";
+    $lang->configurable_product_saved_successfully = "Saved configurable product successfully";
+    $lang->simple_product_updated_successfully = "Updated simple product successfull";
+    $lang->downloadable_product_updated_successfully = "Updated downloadable product successfull";
+    $lang->configurable_product_updated_successfully = "Updated configurable product successfull";
 ?>
