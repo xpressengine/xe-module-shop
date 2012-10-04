@@ -69,7 +69,7 @@ class PaypalExpressCheckout extends PaymentMethodAbstract
         if(!$paypalAPI->success)
         {
             $error_message = $paypalAPI->error_message;
-            return false;
+            return FALSE;
         }
         else
         {
@@ -121,14 +121,26 @@ class PaypalExpressCheckout extends PaymentMethodAbstract
         if(!$paypalAPI->success)
         {
             $error_message = $paypalAPI->error_message;
-            return false;
+            return FALSE;
         }
         else
         {
             Context::set('payment_status', $paypalAPI->payment_status);
-            return true;
+            return TRUE;
         }
     }
+
+	/**
+	 * Make sure all mandatory fields are set
+	 */
+	public function isConfigured()
+	{
+		if(isset($this->api_username)
+			&& isset($this->api_password)
+			&& isset($this->signature))
+			return true;
+		return false;
+	}
 }
 
 class PaypalExpressCheckoutAPI extends PaymentAPIAbstract

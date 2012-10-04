@@ -136,7 +136,11 @@ abstract class AbstractPluginRepository extends BaseRepository
         {
             try
             {
-                $active_plugins[] = $this->getPluginInstanceFromProperties($data);
+				$plugin_instance = $this->getPluginInstanceFromProperties($data);
+				if($plugin_instance->isConfigured())
+				{
+					$active_plugins[] = $this->getPluginInstanceFromProperties($data);
+				}
             }
             catch(Exception $e)
             {

@@ -159,7 +159,7 @@ class PaypalPaymentsStandard extends PaymentMethodAbstract
 
         Context::set('order_srl', $order->order_srl);
         // Override cart, otherwise it would still show up with products
-        Context::set('cart', null);
+        Context::set('cart', NULL);
     }
 
     /**
@@ -275,6 +275,15 @@ class PaypalPaymentsStandard extends PaymentMethodAbstract
         $cart->setExtra("transaction_message", "There was a problem processing your payment. Your order could not be completed.");
         $cart->save();
     }
+
+	/**
+	 * Make sure all mandatory fields are set
+	 */
+	public function isConfigured()
+	{
+		if(!isset($this->business_email) || !isset($this->pdt_token) || !isset($this->gateway_api)) return false;
+		return true;
+	}
 }
 
 class IPNPaymentInfo

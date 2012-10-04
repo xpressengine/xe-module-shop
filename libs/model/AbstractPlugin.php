@@ -6,13 +6,20 @@
  */
 abstract class AbstractPlugin extends BaseItem
 {
-    public $id = null;
+    public $id = NULL;
     public $module_srl = 0;
     public $display_name;  /// Display name
     public $name; /// Unique name = folder name
     public $status = 0;
 	public $is_default = 0;
     public $properties;
+
+	/**
+	 * Checks is custom plugin parameters are set and valid;
+	 * If no validation is needed, just return true;
+	 * @return mixed
+	 */
+	public abstract function isConfigured();
 
     public function __construct()
     {
@@ -70,7 +77,7 @@ abstract class AbstractPlugin extends BaseItem
      */
     public function isActive()
     {
-        return $this->status ? true : false;
+        return $this->status ? TRUE : FALSE;
     }
 
 	/**
@@ -80,7 +87,7 @@ abstract class AbstractPlugin extends BaseItem
 	 */
 	public function isDefault()
 	{
-		return $this->is_default ? true : false;
+		return $this->is_default ? TRUE : FALSE;
 	}
 
     /**
@@ -105,6 +112,17 @@ abstract class AbstractPlugin extends BaseItem
     {
         return $this->properties->$name;
     }
+
+	/**
+	 * Properties
+	 *
+	 * @param $name
+	 * @return mixed
+	 */
+	public function __isset($name)
+	{
+		return isset($this->properties->$name);
+	}
 
     /**
      * Returns the current plugin directory

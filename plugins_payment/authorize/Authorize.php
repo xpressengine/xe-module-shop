@@ -37,15 +37,15 @@ class Authorize extends PaymentMethodAbstract
 
         if(!$cc_number)
         {
-            $error_message = "Please enter you credit card number"; return false;
+            $error_message = "Please enter you credit card number"; return FALSE;
         }
         if(!$cc_exp_month || !$cc_exp_year)
         {
-            $error_message = "Please enter you credit card expiration date"; return false;
+            $error_message = "Please enter you credit card expiration date"; return FALSE;
         }
         if(!$cc_cvv)
         {
-            $error_message = "Please enter you credit card verification number"; return false;
+            $error_message = "Please enter you credit card verification number"; return FALSE;
         }
 
         $cc_number = str_replace(array(' ', '-'), '', $cc_number);
@@ -62,7 +62,7 @@ class Authorize extends PaymentMethodAbstract
 
 
 
-        return true;
+        return TRUE;
     }
 
     public function authorizePayment(Cart $cart)
@@ -131,12 +131,22 @@ class Authorize extends PaymentMethodAbstract
 
             // echo "<h1>Success! The test credit card has been charged!</h1>";
             // echo "Transaction ID: " . $response->transaction_id;
-            return true;
+            return TRUE;
         } else {
             $error_message = $response->error_message;
-            return false;
+            return FALSE;
         }
     }
+
+	/**
+	 * Make sure all mandatory fields are set
+	 */
+	public function isConfigured()
+	{
+		if(!isset($this->api_login_id) && !isset($this->transaction_key) && !isset($this->gateway_api))
+			return false;
+		return true;
+	}
 }
 
 ?>

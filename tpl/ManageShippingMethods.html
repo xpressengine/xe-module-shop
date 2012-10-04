@@ -37,10 +37,13 @@
                     {$shipping_method->getDisplayName()}
                 </td>
 
-
                 <td>
                     <!--@if($shipping_method->isActive())-->
-                    <img src="img/check.png" alt="Active" />
+                        <!--@if($shipping_method->isConfigured())-->
+                            <img src="img/check.png" alt="Active" />
+                        <!--@else-->
+                            <img src="img/cross.png" alt="Needs configuration" /> (Settings missing)
+                        <!--@end-->
                     <!--@end-->
                 </td>
 
