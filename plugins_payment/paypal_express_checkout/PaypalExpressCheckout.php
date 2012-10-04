@@ -2,7 +2,8 @@
 
 class PaypalExpressCheckout extends PaymentMethodAbstract
 {
-    const PAYPAL_WEB_SANDBOX = 'https://www.sandbox.paypal.com/webscr';
+    const SANDBOX_URL = 'https://www.sandbox.paypal.com/webscr'
+		, LIVE_URL = 'https://www.paypal.com/webscr';
 
     public function getSelectPaymentHtml()
     {
@@ -45,7 +46,8 @@ class PaypalExpressCheckout extends PaymentMethodAbstract
         $success_url = $this->getPlaceOrderPageUrl();
         $cancel_url = $this->getCheckoutPageUrl();
 
-        $paypalAPI = new PaypalExpressCheckoutAPI($this->api_username
+        $paypalAPI = new PaypalExpressCheckoutAPI( $this->gateway_api == PaypalExpressCheckout::LIVE_URL
+			, $this->api_username
             , $this->api_password
             , $this->signature
         );
@@ -74,7 +76,7 @@ class PaypalExpressCheckout extends PaymentMethodAbstract
         else
         {
             // Redirect to PayPal login
-            $this->redirect(self::PAYPAL_WEB_SANDBOX
+            $this->redirect($this->gateway_api
                             . '?cmd=_express-checkout'
                             . '&token=' . $paypalAPI->token);
         }
@@ -84,7 +86,8 @@ class PaypalExpressCheckout extends PaymentMethodAbstract
     public function onPlaceOrderFormLoad()
     {
         $token = Context::get('token');
-        $paypalAPI = new PaypalExpressCheckoutAPI($this->api_username
+        $paypalAPI = new PaypalExpressCheckoutAPI($this->gateway_api == PaypalExpressCheckout::LIVE_URL
+			, $this->api_username
             , $this->api_password
             , $this->signature
         );
@@ -97,7 +100,8 @@ class PaypalExpressCheckout extends PaymentMethodAbstract
         $payer_id = Context::get('payer_id');
         $token = Context::get('token');
 
-        $paypalAPI = new PaypalExpressCheckoutAPI($this->api_username
+        $paypalAPI = new PaypalExpressCheckoutAPI($this->gateway_api == PaypalExpressCheckout::LIVE_URL
+			, $this->api_username
             , $this->api_password
             , $this->signature
         );
@@ -137,6 +141,7 @@ class PaypalExpressCheckout extends PaymentMethodAbstract
 	{
 		if(isset($this->api_username)
 			&& isset($this->api_password)
+			&& isset($this->gateway_api)
 			&& isset($this->signature))
 			return true;
 		return false;
@@ -145,15 +150,26 @@ class PaypalExpressCheckout extends PaymentMethodAbstract
 
 class PaypalExpressCheckoutAPI extends PaymentAPIAbstract
 {
-    const SANDBOX_API_URL = 'https://api-3t.sandbox.paypal.com/nvp';
+    const SANDBOX_API_URL = 'https://api-3t.sandbox.paypal.com/nvp'
+		, LIVE_API_URL = 'https://api-3t.paypal.com/nvp';
+
+	private $gateway_api = null;
 
     private $setup = array(
         'VERSION' => '94'
     );
     private $data = array();
 
-    public function __construct($api_username, $api_password, $signature)
+    public function __construct($is_live, $api_username, $api_password, $signature)
     {
+		if($is_live)
+		{
+			$this->gateway_api = PaypalExpressCheckoutAPI::LIVE_API_URL;
+		}
+		else
+		{
+			$this->gateway_api = PaypalExpressCheckoutAPI::SANDBOX_API_URL;
+		}
         $this->setup['USER'] = $api_username;
         $this->setup['PWD'] = $api_password;
         $this->setup['SIGNATURE'] = $signature;
@@ -227,7 +243,7 @@ class PaypalExpressCheckoutAPI extends PaymentAPIAbstract
         $this->data['RETURNURL'] = $success_url;
         $this->data['CANCELURL'] = $cancel_url;
 
-        $response = $this->request(self::SANDBOX_API_URL, array_merge($this->setup, $this->data));
+        $response = $this->request($this->gateway_api, array_merge($this->setup, $this->data));
 
         unset($this->data);
         $this->data = array();
@@ -251,7 +267,7 @@ class PaypalExpressCheckoutAPI extends PaymentAPIAbstract
         $this->data['METHOD'] = 'GetExpressCheckoutDetails';
         $this->data['TOKEN'] = $token;
 
-        $response = $this->request(self::SANDBOX_API_URL, array_merge($this->setup, $this->data));
+        $response = $this->request($this->gateway_api, array_merge($this->setup, $this->data));
 
         unset($this->data);
         $this->data = array();
@@ -287,7 +303,7 @@ class PaypalExpressCheckoutAPI extends PaymentAPIAbstract
         $this->addCurrency($currency);
         $this->addPaymentAction();
 
-        $response = $this->request(self::SANDBOX_API_URL, array_merge($this->setup, $this->data));
+        $response = $this->request($this->gateway_api, array_merge($this->setup, $this->data));
 
         unset($this->data);
         $this->data = array();
