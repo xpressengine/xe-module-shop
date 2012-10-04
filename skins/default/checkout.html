@@ -31,7 +31,7 @@
     });
 </script>
 
-<div id="checkout" class="main-content" cond="isset($cart) && $cart->items">
+<div id="checkout" class="main-content form" cond="isset($cart) && $cart->items">
     <h1 class="underline">{$lang->checkout}</h1>
 
     <div cond="$XE_VALIDATOR_MESSAGE" class="message {$XE_VALIDATOR_MESSAGE_TYPE}">

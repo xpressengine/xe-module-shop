@@ -146,10 +146,10 @@ img{border:0}
  * @author: Daniel Ionescu
  */
 body {
-    margin: 0;
-    padding : 0;
     font-family: Arial, Helvetica, sans;
     font-size: .750em;
+    margin: 0;
+    padding : 0;
     color: #000;
     width : 100%;
     height : 100%;
@@ -188,6 +188,7 @@ body, html {
 }
 
 input, textarea, select {
+    font-family: Arial, Helvetica, sans;
     color: #2f2f2f;
     border-radius: 3px;
     -moz-border-radius: 3px;
@@ -245,6 +246,15 @@ button, .button, input[type="submit"] {
     -webkit-box-shadow: 0 1px 0 #e4e8ec;
     font-size: 1.167em;
     padding: 5px 10px;
+    text-decoration: none;
+    background: #ffffff;
+    background: -moz-linear-gradient(top,  #ffffff 0%, #f6f6f6 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#f6f6f6));
+    background: -webkit-linear-gradient(top,  #ffffff 0%,#f6f6f6 100%);
+    background: -o-linear-gradient(top,  #ffffff 0%,#f6f6f6 100%);
+    background: -ms-linear-gradient(top,  #ffffff 0%,#f6f6f6 100%);
+    background: linear-gradient(to bottom,  #ffffff 0%,#f6f6f6 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#f6f6f6',GradientType=0 );
 }
 
 button:hover, .button:hover, button:focus, .button:focus, input[type="submit"]:focus, input[type="submit"]:hover {
@@ -305,6 +315,7 @@ h2 a {
 
 
 table {
+    font-family: Arial, Helvetica, sans;
     width: 100%;
 }
 
@@ -609,6 +620,10 @@ table tbody tr td:last-child {
     line-height: 40px;
     border: 1px solid #bec9d4;
     font-size: 1.167em;
+}
+
+.inside-content {
+    margin: 10px 0 !important;
 }
 
 .pagination a.number {
@@ -1258,7 +1273,7 @@ li span.close-sign, li span.open-sign {
 
 .xm .h1 {
     font-size: 1.500em;
-    border: 0;
+    border-bottom: 1px solid #e8e8e8;
 }
 
 .xm .table table {
@@ -1279,6 +1294,10 @@ li span.close-sign, li span.open-sign {
     border: 0;
 }
 
+.xm input[type="submit"] {
+    padding: 0 8px;
+}
+
 .not-available {
     background-color: #fbdfca;
 }
@@ -1291,17 +1310,17 @@ li span.close-sign, li span.open-sign {
  * Checkout page styles
  * @author Daniel Ionescu
 */
-#checkout ul {
+.form ul {
     padding: 0;
     margin: 10px;
     list-style-type: none;
 }
 
-#checkout p label {
+.form p label {
     width: 25%;
     display: inline-block;
 }
 
-#checkout p input[type="text"], #checkout p textarea {
+.form p input[type="text"], .form p textarea {
     width: 40%;
 }

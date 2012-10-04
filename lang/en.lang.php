@@ -625,6 +625,6 @@
 	$lang->default = 'Default';
 	$lang->set_as_default = 'Set as default';
 	$lang->db_query_failed = 'The database query failed - please check if you have updated you module with the latest changes.';
-
+    $lang->additional_addresses = 'Additional addresses';
 	$lang->msg_select_product_variant = 'Please select type of product that you want - the one you tried to add has a few options for you too choose.';
 ?>
