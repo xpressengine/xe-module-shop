@@ -36,9 +36,6 @@
             <table border="1" cellspacing="0" summary="{$lang->content_list}" class="tableData">
                 <thead>
                 <tr>
-                    <th scope="col">
-                        <input type="checkbox" class="inputCheck" onclick="jQuery('input.boxlist').click()"/>
-                    </th>
                     <th scope="col">{$lang->invoice} #</th>
                     <th scope="col">{$lang->invoice_for_order} #</th>
                     <th scope="col" class="title">{$lang->comments}</th>
@@ -56,9 +53,6 @@
                 </tr>
                 <!--@foreach($invoices as $invoice)-->
                 <tr>
-                    <td>
-                        <input type="checkbox" name="invoice_srl" value="{$invoice->invoice_srl}" class="inputCheck boxlist"/>
-                    </td>
                     <td class="small">{$invoice->invoice_srl}</td>
                     <td class="small">{$invoice->order_srl}</td>
                     <td class="title">{$invoice->comments}</td>

@@ -42,9 +42,6 @@
             <table border="1" cellspacing="0" summary="{$lang->content_list}" class="tableData">
                 <thead>
                 <tr cond="!empty($shipments)">
-                    <th scope="col">
-                        <input type="checkbox" class="inputCheck" onclick="jQuery('input.boxlist').click()"/>
-                    </th>
                     <th scope="col">{$lang->shipment} #</th>
                     <th scope="col">{$lang->shipment_for_order} #</th>
                     <th scope="col" class="title">{$lang->comments}</th>
@@ -60,9 +57,6 @@
                 </tr>
                 <!--@foreach($shipments as $shipment)-->
                 <tr>
-                    <td>
-                        <input type="checkbox" name="shipment_srl" value="{$shipment->shipment_srl}" class="inputCheck boxlist"/>
-                    </td>
                     <td class="small">{$shipment->shipment_srl}</td>
                     <td class="small">{$shipment->order_srl}</td>
                     <td class="title">{$shipment->comments}</td>
