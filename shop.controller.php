@@ -2334,5 +2334,43 @@
 				print $view_logs;
 			}
 		}
+
+		/**
+		 * Send email to new users
+		 */
+		public function triggerSendSignUpEmail($member_args)
+		{
+			$site_module_info = Context::get('site_module_info');
+			$module_srl = $site_module_info->index_module_srl;
+
+			$shop = new ShopInfo($module_srl);
+
+			// Don't send anything if sender and receiver email addresses are missing
+			if(!$shop->getEmail() || !$member_args->email_address)
+			{
+				ShopLogger::log("Failed to send welcome email to user. Member email is not set." . print_r($member_args, true));
+				return;
+			}
+
+			global $lang;
+			$email_subject = sprintf($lang->new_member_email_subject
+				, $shop->getShopTitle()
+			);
+
+			$email_content = sprintf($lang->new_member_email_content
+				, getFullSiteUrl('', 'act', 'dispShopHome')
+				, $shop->getShopTitle()
+				, getFullSiteUrl('', 'act', 'dispShopMyAccount')
+				, getFullSiteUrl('', 'act', 'dispShopHome')
+				, $shop->getShopTitle()
+			);
+
+			$oMail = new Mail();
+			$oMail->setTitle($email_subject);
+			$oMail->setContent($email_content);
+			$oMail->setSender($shop->getShopTitle(), $shop->getShopEmail());
+			$oMail->setReceiptor(false, $member_args->email_address);
+			$oMail->send();
+		}
     }
 ?>

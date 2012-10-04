@@ -655,4 +655,17 @@
 		%s
 	';
 
+	$lang->new_member_email_subject = 'Welcome to %s';
+
+	$lang->new_member_email_content = '
+	    <h1>Welcome to <a href="%s">%s</a>!</h1>
+
+	    <p>You have successfully set up your account. </p>
+
+	    <p>You can login to your account and see your past orders at this address:</p>
+	    <p><a href="%s">My account</a></p>
+
+	    <p>Thank your for choosing <a href="%s">%s</a>!</p>
+	';
+
 ?>

@@ -184,34 +184,39 @@ class Order extends BaseItem implements IProductItemsContainer
         return $this->discount_amount;
     }
 
-	/**
-	 * Send email to user notifying him of the newly created order
-	 */
-	public static function sendNewOrderEmails($order_srl)
+	private static function sendNewOrderMailToCustomer($shop, $order)
 	{
-		$repo = new OrderRepository();
-		$order = $repo->getOrderBySrl($order_srl);
-
-		$shop = new ShopInfo($order->module_srl);
+		// Don't send anything if customer email is not configured
+		if(!$order->client_email)
+		{
+			ShopLogger::log("Failed to send order email for order #$order->order_srl; Customer email is not set.");
+			return;
+		}
 
 		global $lang;
 
 		// 1. Send email to customer
 		$email_subject = sprintf($lang->order_email_subject
-				, $shop->getShopTitle()
-				, ShopDisplay::priceFormat($order->total, $shop->getCurrencySymbol())
-			);
+			, $shop->getShopTitle()
+			, ShopDisplay::priceFormat($order->total, $shop->getCurrencySymbol())
+		);
 
 		Context::set('email_order', $order);
 		$oTemplateHandler = TemplateHandler::getInstance();
 		$order_content = $oTemplateHandler->compile('./modules/shop/tpl', 'order_email.html');
 		$email_content = sprintf($lang->order_email_content
-		    	, $order->client_name
-				, getFullSiteUrl('', 'act', 'dispShopViewOrder', 'order_srl', $order->order_srl)
-				, $order->order_srl
-				, $order_content
-			);
+			, $order->client_name
+			, getFullSiteUrl('', 'act', 'dispShopViewOrder', 'order_srl', $order->order_srl)
+			, $order->order_srl
+			, $order_content
+		);
 
+		// Don't send anything if client email is not configured
+		if(!$order->client_email)
+		{
+			ShopLogger::log("Failed to send order email to customer for order #$order->order_srl; Shop email is not configured");
+			return;
+		}
 		$oMail = new Mail();
 		$oMail->setTitle($email_subject);
 		$oMail->setContent($email_content);
@@ -219,7 +224,19 @@ class Order extends BaseItem implements IProductItemsContainer
 		$oMail->setReceiptor(false, $order->client_email);
 		$oMail->send();
 
-		// 2. Send email to shop administrator
+	}
+
+	private static function sendNewOrderMailToAdministrator($shop, $order)
+	{
+		// Don't send anything if admin email is not configured
+		if(!$shop->getEmail())
+		{
+			ShopLogger::log("Failed to send order email to admin for order #$order->order_srl; Admin email is not configured");
+			return;
+		}
+
+		global $lang;
+
 		$admin_email_subject = sprintf($lang->admin_order_email_subject
 			, $order->client_name
 			, ShopDisplay::priceFormat($order->total, $shop->getCurrencySymbol())
@@ -241,5 +258,26 @@ class Order extends BaseItem implements IProductItemsContainer
 		$oMail->setSender($shop->getShopTitle(), $shop->getShopEmail());
 		$oMail->setReceiptor(false, $shop->getEmail());
 		$oMail->send();
+	}
+
+	/**
+	 * Send email to user notifying him of the newly created order
+	 */
+	public static function sendNewOrderEmails($order_srl)
+	{
+		$repo = new OrderRepository();
+		$order = $repo->getOrderBySrl($order_srl);
+
+		$shop = new ShopInfo($order->module_srl);
+
+		// Don't send anything if shop email is not configured
+		if(!$shop->getShopEmail())
+		{
+			ShopLogger::log("Failed to send order email for order #$order->order_srl; Shop email is not configured");
+			return;
+		}
+
+		self::sendNewOrderMailToCustomer($shop, $order);
+		self::sendNewOrderMailToAdministrator($shop, $order);
 	}
 }

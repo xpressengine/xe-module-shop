@@ -26,7 +26,8 @@
             array('member.doLogin', 'shop', 'controller', 'triggerLoginBefore', 'before'),
             array('member.doLogin', 'shop', 'controller', 'triggerLoginAfter', 'after'),
 			array('moduleHandler.init', 'shop', 'controller', 'triggerDeleteOldLogs', 'after'),
-			array('display', 'shop', 'controller', 'triggerDisplayLogMessages', 'after')
+			array('display', 'shop', 'controller', 'triggerDisplayLogMessages', 'after'),
+			array('member.insertMember', 'shop', 'controller', 'triggerSendSignUpEmail', 'after')
         );
 
         /**
