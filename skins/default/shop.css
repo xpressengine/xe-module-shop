@@ -305,7 +305,7 @@ h1 {
 h2 {
     font-weight: normal;
     font-size: 1.333em;
-    margin: 1.500em 0;
+    margin: 2em 0 .5em;
     color: #2d5375;
 }
 
@@ -313,6 +313,11 @@ h2 a {
     text-decoration: none;
 }
 
+h3 {
+    margin: 1em 0;
+    font-size: 1em;
+    color: #2D5375;
+}
 
 table {
     font-family: Arial, Helvetica, sans;
@@ -886,7 +891,9 @@ li span.close-sign, li span.open-sign {
 }
 
 .product-list .product:hover {
-    box-shadow: 0 0 10px #2d5375;
+    box-shadow: 0 0 5px 2px #2d5375;
+    -moz-box-shadow: 0 0 5px 2px #2d5375;
+    -webkit-box-shadow: 0 0 5px 2px #2d5375;
 }
 
 .product-list .product.list-view {
@@ -957,7 +964,7 @@ li span.close-sign, li span.open-sign {
     margin: 5px 0;
 }
 
-.product-list .quantity input {
+.product-list .quantity input, .main-content .quantity input {
     text-align: center;
     width: 24px;
     margin: 0 0 0 5px;
@@ -982,7 +989,7 @@ li span.close-sign, li span.open-sign {
 
 .product-list .price {
     font-size: 1.167em;
-    color: #000;
+    color: #2D5375;
     font-weight: bold;
 }
 
@@ -1128,20 +1135,66 @@ li span.close-sign, li span.open-sign {
 }
 
 /**
- * Product Stage
+ * Product Page
  * @author: Daniel Ionescu
  */
+#product-page {
+    float: left;
+}
 
 #product-images {
-    float: left;
+    margin: 0 10px 10px 0;
     position: relative;
+    background: #fff;
+    float: left;
+}
+
+#product-images .prev {
+    display: block;
+    height: 62px;
+    float: left;
+    padding: 5px 5px 5px 4px;
+    margin-right: 6px;
+    border-radius: 0;
+    -moz-border-radius: 0;
+    -webkit-border-radius: 0;
+}
+
+#product-images .prev span {
+    background: url('img/arrows.png') 0 -9px no-repeat;
+    display: block;
+    width: 5px;
+    height: 9px;
+    margin: 26px 0;
+}
+
+#product-images .prev:hover span {
+    background: url('img/arrows.png') 0 -9px no-repeat;
+}
+
+#product-images .next {
+    display: block;
+    height: 62px;
+    float: right;
+    padding: 5px 4px 5px 5px;
+    border-radius: 0;
+    -moz-border-radius: 0;
+    -webkit-border-radius: 0;
+}
+
+#product-images .next span {
+    background: url('img/arrows.png') 0 0 no-repeat;
+    display: block;
+    width: 5px;
+    height: 9px;
+    margin: 26px 0;
 }
 
 #product-image {
     width: 340px;
     height: 240px;
     overflow: hidden;
-    margin: 10px 10px 5px 0;
+    margin: 10px 0 5px;
     border: 1px solid #cacaca;
     padding: 10px;
     text-align: center;
@@ -1176,7 +1229,7 @@ li span.close-sign, li span.open-sign {
 #thumbnails-container {
     overflow: hidden;
     height: 86px;
-    width: 368px;
+    width: 320px;
 }
 
 #thumbnails {
@@ -1184,12 +1237,21 @@ li span.close-sign, li span.open-sign {
     width: 5000px;
 }
 
-#thumbnails img {
+#thumbnails span.cont {
     border: 1px solid #cacaca;
+    text-align: center;
     margin: 0 6px 0 0;
-    padding: 5px;
-    float: left;
     cursor: pointer;
+    display: table;
+    width: 63px;
+    height: 63px;
+    float: left;
+    padding: 5px;
+}
+
+#thumbnails span span {
+    display: table-cell;
+    vertical-align: middle;
 }
 
 .preloading {
@@ -1198,6 +1260,29 @@ li span.close-sign, li span.open-sign {
     left: 46%;
     top: 34%;
 }
+
+.socials {
+    padding: 0 0 10px 0;
+    margin: 10px 0 0 0;
+}
+
+.socials>* {
+    margin: 0 5px 0 0;
+}
+
+.red {
+    color: red;
+}
+
+.green {
+    color: green;
+}
+
+.product-stock {
+    line-height: 2.3em !important;
+    margin: 10px 0;
+}
+
 
 /**
  * Footer Styles
