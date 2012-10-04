@@ -13,7 +13,7 @@
   <column name="friendly_url" type="varchar" size="50" />
   <column name="price" type="float" size="20" notnull="notnull" />
   <column name="discount_price" type="float" size="20" />
-  <column name="qty" type="float" size="10" />
+  <column name="qty" type="number" size="10" />
   <column name="in_stock" type="char" size="1" default="N" />
   <column name="is_featured" type="char" size="1" default="N" />
   <column name="primary_image_filename" type="varchar" size="250" />
