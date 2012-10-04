@@ -339,7 +339,7 @@ class Cart extends BaseItem implements IProductItemsContainer
     public function getVAT($onlyAvailable=false, $withDiscount=false)
     {
         $shop = new ShopInfo($this->module_srl);
-        return $shop->getVAT() / 100 * $this->getTotal($onlyAvailable, $withDiscount);
+        return $shop->getVAT() / 100 * $this->getTotalAfterDiscount();
     }
 
     public function getShippingCost()
