@@ -38,7 +38,8 @@
                 <input type="hidden" id="product_srl" name="product_srl" value="{$product->product_srl}" />
                 <!--@end-->
                 <p>
-                    {ShopDisplay::priceFormat($product->price, $shop->getCurrencySymbol())}
+                    <span class="discount-price">{ShopDisplay::priceFormat($product->price, $shop->getCurrencySymbol())}</span><br />
+                    <span class="price">{ShopDisplay::priceFormat($product->discount_price, $shop->getCurrencySymbol())}</span>
                 </p>
                 <p>
                     <!--@if($product->isSimple())-->

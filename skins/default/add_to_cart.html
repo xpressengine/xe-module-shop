@@ -8,8 +8,8 @@
         </p>
         <!--@end-->
         <p class="f-right">
-            <span class="discount-price">{$product->discount_price}</span>
-            <span class="price">{ShopDisplay::priceFormat($product->price, $shop->getCurrencySymbol())}</span>
+            <span class="discount-price">{$product->price}</span>
+            <span class="price">{ShopDisplay::priceFormat($product->discount_price, $shop->getCurrencySymbol())}</span>
         </p>
         <!--@if($product->isSimple())-->
             <input type="hidden" id="product_srl" name="product_srl" value="{$product->product_srl}" />
