@@ -65,15 +65,15 @@
 
     <h2>{$lang->address_book}</h2>
     <p>{$lang->default_billing_address}:</p>
-    <p><b>Company:</b> {$logged_user->addresses->default_shipping->company}</p>
-    <p><b>Telephone:</b> {$logged_user->addresses->default_shipping->telephone}</p>
-    <p><b>Fax:</b> {$logged_user->addresses->default_shipping->fax}</p>
-    <p><b>Address:</b> {$logged_user->addresses->default_shipping->address}</p>
-    <p><b>Additional Info:</b> {$logged_user->addresses->default_shipping->additional_info}</p>
-    <p><b>City:</b> {$logged_user->addresses->default_shipping->city}</p>
-    <p><b>Region:</b> {$logged_user->addresses->default_shipping->region}</p>
-    <p><b>Postal Code:</b> {$logged_user->addresses->default_shipping->postal_code}</p>
-    <p><b>Country:</b> {$logged_user->addresses->default_shipping->country}</p>
+    <p><b>Company:</b> {$logged_user->addresses->default_billing->company}</p>
+    <p><b>Telephone:</b> {$logged_user->addresses->default_billing->telephone}</p>
+    <p><b>Fax:</b> {$logged_user->addresses->default_billing->fax}</p>
+    <p><b>Address:</b> {$logged_user->addresses->default_billing->address}</p>
+    <p><b>Additional Info:</b> {$logged_user->addresses->default_billing->additional_info}</p>
+    <p><b>City:</b> {$logged_user->addresses->default_billing->city}</p>
+    <p><b>Region:</b> {$logged_user->addresses->default_billing->region}</p>
+    <p><b>Postal Code:</b> {$logged_user->addresses->default_billing->postal_code}</p>
+    <p><b>Country:</b> {$logged_user->addresses->default_billing->country}</p>
     <p>
         <a class="button" href="{getURL('','act','dispShopEditAddress','address_srl',$logged_user->addresses->default_shipping->address_srl)}">Edit</a>
     </p>
