@@ -32,7 +32,15 @@ function fillFormWithCategory($category, $parent_title)
     jQuery("#title").val($category.title);
     jQuery("#description").val($category.description);
     jQuery("#friendly_url").val($category.friendly_url);
-    jQuery("#include_in_navigation_menu").val($category.include_in_navigation_menu);
+    if($category.include_in_navigation_menu == 'Y')
+    {
+        jQuery("#include_in_navigation_menu").attr('checked', true);
+    }
+    else
+    {
+        jQuery("#include_in_navigation_menu").attr('checked', false);
+    }
+
     jQuery("#regdate").val($category.regdate);
     jQuery("#last_update ").val($category.last_update);
 

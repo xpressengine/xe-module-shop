@@ -131,6 +131,11 @@ class CategoryRepository extends BaseRepository
 		return TRUE;
 	}
 
+	public function getNavigationCategoriesTree($module_srl)
+	{
+		return $this->getCategoriesTree($module_srl, true);
+	}
+
 	/**
 	 * Get all product categories for a module as a tree
 	 * Returns root node
@@ -140,10 +145,12 @@ class CategoryRepository extends BaseRepository
 	 * @throws Exception
 	 * @return CategoryTreeNode Tree root node
 	 */
-	public function getCategoriesTree($module_srl)
+	public function getCategoriesTree($module_srl, $only_included_in_navigation_menu = false)
 	{
 		$args = new stdClass();
 		$args->module_srl = $module_srl;
+		if($only_included_in_navigation_menu)
+			$args->include_in_navigation_menu = 'Y';
 
 		// Retrieve categories from database
 		try

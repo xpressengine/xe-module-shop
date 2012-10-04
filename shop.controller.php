@@ -1582,6 +1582,10 @@
 			}
 
 			$category = new Category($args);
+			if(!$args->include_in_navigation_menu)
+			{
+				$category->setIncludeInNavigationMenu('N');
+			}
 			try
 			{
 				if($category->category_srl === NULL)
@@ -1619,9 +1623,20 @@
 			$shopModel = $this->model;
 			$repository = $shopModel->getCategoryRepository();
 			$category = $repository->getCategory($category_srl);
-            $category->filename = $category->getThumbnailPath(50);
+			$json_category = new stdClass();
+			$properties = get_object_vars($category);
+			foreach($properties as $property_name => $property_value)
+			{
+				if(in_array($property_name, array('repo', 'cache')))
+				{
+					continue;
+				}
+				$json_category->$property_name = $property_value;
+			}
+			$json_category->include_in_navigation_menu = $category->getIncludeInNavigationMenu();
+            $json_category->filename = $category->getThumbnailPath(50);
 
-			$this->add('category', $category);
+			$this->add('category', $json_category);
 		}
 
 		/**

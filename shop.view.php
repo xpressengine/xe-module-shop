@@ -185,7 +185,7 @@ class shopView extends shop {
 
         // Load categories for display in search dropdown (header)
         $category_repository = new CategoryRepository();
-        $tree = $category_repository->getCategoriesTree($this->module_srl);
+        $tree = $category_repository->getNavigationCategoriesTree($this->module_srl);
         $flat_tree = $tree->toFlatStructure();
         Context::set('search_categories', $flat_tree);
 	}
@@ -946,7 +946,7 @@ class shopView extends shop {
         // Retrieve existing categories
         $category_srl = Context::get('category_srl');
         $category_repository = $this->model->getCategoryRepository();
-        $tree = $category_repository->getCategoriesTree($this->module_srl);
+        $tree = $category_repository->getNavigationCategoriesTree($this->module_srl);
 
         // Prepare tree for display
         $tree_config = new HtmlCategoryTreeConfig();
@@ -998,7 +998,7 @@ class shopView extends shop {
 		// Categories left tree
 		// Retrieve existing categories
 		$category_repository = $shopModel->getCategoryRepository();
-		$tree = $category_repository->getCategoriesTree($this->module_srl);
+		$tree = $category_repository->getNavigationCategoriesTree($this->module_srl);
 
 		// Prepare tree for display
 		$tree_config = new HtmlCategoryTreeConfig();

@@ -320,6 +320,7 @@ class CategoryTest extends Shop_Generic_Tests_DatabaseTestCase
 		$repository = $shopModel->getCategoryRepository();
 
 		$category = $repository->getCategory(1000);
+		$this->assertNotEquals('N', $category->include_in_navigation_menu);
 		$category->include_in_navigation_menu = 'N';
 
 		// Try to update
@@ -331,10 +332,6 @@ class CategoryTest extends Shop_Generic_Tests_DatabaseTestCase
 
 			// Check that properties were updated
 			$new_category = $repository->getCategory($category->category_srl);
-
-//			echo "Expected: " . $category->getIncludeInNavigationMenu() . PHP_EOL;
-//			echo "Actual: " . $new_category->getIncludeInNavigationMenu() . PHP_EOL;
-
 			$this->assertEquals($category->include_in_navigation_menu
 				, $new_category->include_in_navigation_menu);
 
