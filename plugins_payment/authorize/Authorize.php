@@ -84,6 +84,12 @@ class Authorize extends PaymentMethodAbstract
 		$cc_exp_year = Context::get('cc_exp_year');
 		$cc_cvv = Context::get('cc_cvv');
 
+		// Unset credit card info so that XE won't put it in session
+		Context::set('cc_number', null);
+		Context::set('cc_exp_month', null);
+		Context::set('cc_exp_year', null);
+		Context::set('cc_cvv', null);
+
 		if(!$cc_number)
 		{
 			$error_message = "Please enter you credit card number"; return FALSE;
