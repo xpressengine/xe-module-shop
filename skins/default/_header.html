@@ -119,10 +119,10 @@
             </p>
         </form>
         <!-- /Search box -->
-        <p id="header-links" class="f-right">
+        <p id="header-links" class="f-right" <!--@if(!$logged_info)-->style="margin-top: 15px;""<!--@end-->>
             <!--@if($logged_info)-->
-                <span>Welcome {$logged_info->user_id}!</span><span>|</span>
-                <a href="{getURL('','act','dispMemberLogout')}">Logout</a><br />
+                <span>Welcome {$logged_info->user_id}!</span><br />
+                <a href="{getURL('','act','dispMemberLogout')}">Logout</a><span>|</span>
                 <a href="{getURL('','act','dispShopMyAccount')}">My Account</a>
             <!--@else-->
                 <a href="{getURL('','act','dispMemberLoginForm')}">Login</a>

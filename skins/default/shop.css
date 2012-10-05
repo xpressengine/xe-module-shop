@@ -564,6 +564,8 @@ table tbody tr td:last-child {
 #header-links {
     margin: 5px 0;
     font-size: 1.063em;
+    text-align: right;
+    line-height: 1.500em !important;
 }
 
 #header-search {
@@ -596,7 +598,7 @@ table tbody tr td:last-child {
 #header-search input[type="text"] {
     border: 1px solid #cacaca;
     border-left: 0;
-    width: 300px;
+    width: 260px;
     padding: 0 34px 0 8px;
     border-radius: 0 6px 6px 0;
     -moz-border-radius: 0 6px 6px 0;
