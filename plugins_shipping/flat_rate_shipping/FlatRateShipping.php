@@ -31,4 +31,17 @@ class FlatRateShipping extends ShippingMethodAbstract
 
         return $this->price;
     }
+
+	/**
+	 * Checks is custom plugin parameters are set and valid;
+	 * If no validation is needed, just return true;
+	 * @return mixed
+	 */
+	public function isConfigured()
+	{
+		if(!isset($this->price) || !isset($this->type)) return false;
+		if(!in_array($this->type, array('per_item', 'per_order'))) return false;
+		if(!is_float($this->price)) return false;
+		return true;
+	}
 }

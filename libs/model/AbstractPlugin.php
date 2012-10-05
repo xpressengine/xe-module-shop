@@ -6,12 +6,20 @@
  */
 abstract class AbstractPlugin extends BaseItem
 {
-    public $id = null;
+    public $id = NULL;
     public $module_srl = 0;
     public $display_name;  /// Display name
     public $name; /// Unique name = folder name
     public $status = 0;
+	public $is_default = 0;
     public $properties;
+
+	/**
+	 * Checks is custom plugin parameters are set and valid;
+	 * If no validation is needed, just return true;
+	 * @return mixed
+	 */
+	public abstract function isConfigured();
 
     public function __construct()
     {
@@ -69,8 +77,18 @@ abstract class AbstractPlugin extends BaseItem
      */
     public function isActive()
     {
-        return $this->status ? true : false;
+        return $this->status ? TRUE : FALSE;
     }
+
+	/**
+	 * Check if plugin is marked as default
+	 *
+	 * @return bool
+	 */
+	public function isDefault()
+	{
+		return $this->is_default ? TRUE : FALSE;
+	}
 
     /**
      * All custom plugin properties different than name, status etc. will
@@ -95,6 +113,17 @@ abstract class AbstractPlugin extends BaseItem
         return $this->properties->$name;
     }
 
+	/**
+	 * Properties
+	 *
+	 * @param $name
+	 * @return mixed
+	 */
+	public function __isset($name)
+	{
+		return isset($this->properties->$name);
+	}
+
     /**
      * Returns the current plugin directory
      *
@@ -105,4 +134,12 @@ abstract class AbstractPlugin extends BaseItem
         $reflector = new ReflectionClass(get_class($this));
         return dirname($reflector->getFileName());
     }
+
+	/**
+	 * Set current plugin as default
+	 */
+	public function makeDefault()
+	{
+		$this->repo->setDefault($this->name, $this->module_srl);
+	}
 }

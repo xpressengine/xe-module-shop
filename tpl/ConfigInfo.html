@@ -52,6 +52,13 @@
                             <p>{$lang->about_address}</p>
                         </td>
                     </tr>
+                    <tr>
+                        <th scope="row"><label for="address">{$lang->shop_email}</label></th>
+                        <td>
+                            <input name="shop_email" type="text" class="iText" style="width:300px" id="shop_email" value="{htmlspecialchars($shop->getShopEmail())}" />
+                            <p>{$lang->about_shop_email}</p>
+                        </td>
+                    </tr>
 
                 </table>
             </fieldset>

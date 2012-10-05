@@ -7,5 +7,6 @@
     <conditions>
         <condition operation="equal" column="module_srl" var="module_srl" notnull="notnull" />
         <condition operation="equal" column="status" var="status" pipe="and" />
+        <condition operation="equal" column="is_default" var="is_default" pipe="and" />
     </conditions>
 </query>

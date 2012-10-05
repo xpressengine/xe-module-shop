@@ -39,7 +39,7 @@ abstract class BaseRepository
     {
         if (!is_object($output)) throw new Exception('A valid query output is expected here');
         if (!$output->toBool()) {
-            throw new Exception($output->getMessage(), $output->getError());
+            throw new DbQueryException($output->getMessage(), $output->getError());
         }
         return $output;
     }
@@ -68,6 +68,9 @@ abstract class BaseRepository
         if (!class_exists($entity)) throw new Exception("Class $entity doesn't exist");
         $output = $this->query($query, array_merge(array('srls'=>$srls), $extraParams), true);
         self::rowsToEntities($output->data, $entity);
+        if ($single && count($output->data) > 1) {
+            throw new Exception('Got more than 1 result, expected 1');
+        }
         return $single && count($output->data) == 1 ? $output->data[0] : $output->data;
     }
 

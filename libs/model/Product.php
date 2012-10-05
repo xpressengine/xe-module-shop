@@ -123,6 +123,11 @@ abstract class Product extends BaseItem
                         ));
     }
 
+    public function getPrice($discounted = true){
+        if($discounted && $this->discount_price > 0) return $this->discount_price;
+        else return $this->price;
+    }
+
     public function isInStock()
     {
         if($this->qty > 0) return true;
@@ -153,6 +158,9 @@ abstract class Product extends BaseItem
  */
 class SimpleProduct extends Product
 {
+    /** @var ProductRepository */
+    public $repo;
+
 	public function __construct($args = null)
 	{
 		parent::__construct($args);
@@ -162,6 +170,15 @@ class SimpleProduct extends Product
     public function getRepo()
     {
         return 'ProductRepository';
+    }
+
+    public function substractFromStock($qty)
+    {
+        if($qty > $this->qty){
+            throw new Exception("You do not have enough items in stock to ship this order. Go and update stocks for product $this->product_srl !");
+        }
+        $this->qty -= $qty;
+        $this->repo->updateProduct($this);
     }
 }
 

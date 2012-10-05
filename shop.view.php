@@ -136,6 +136,7 @@ class shopView extends shop {
 				$file_method = 'setLayoutFile';
 				$css_path_method = 'getLayoutPath';
 				Context::set('shop_mode', 'module');
+				Context::set('external_module', $oModule->module);
 			}else{
 				$path_method = 'setTemplatePath';
 				$file_method = 'setTemplateFile';
@@ -166,24 +167,15 @@ class shopView extends shop {
         // Load cart for display on all pages (in header)
         $cartRepo = new CartRepository();
         $logged_info = Context::get('logged_info');
-        $cart = $cartRepo->getCart($this->module_srl, null, $logged_info->member_srl, session_id());
+		// If cart doesn't exist, create new one
+        $cart = $cartRepo->getCart($this->module_srl, NULL, $logged_info->member_srl, session_id(), TRUE);
         Context::set('cart', $cart);
-        if ($cart && $discount = $cart->getDiscount()) {
-            Context::set('discount', $discount);
-            Context::set('discount_value', $discount->getReductionValue());
-            Context::set('discounted_value', $discount->getValueDiscounted());
-        }
 
         // Load cart preview (for ajax cart feature in header)
-        Context::set('cart_available_products_count', $cart ? $cart->countAvailableProducts() : 0);
-        if ($cart) {
-            $preview_products = $cart->getProducts(3, true);
-            Context::set('preview_products', $preview_products);
-        }
+		$cart_preview = new CartPreview($cart, 3);
+		Context::set('cart_preview', $cart_preview);
 
         // Load menu for display on all pages (in header)
-//        $shop_menu = $oShopModel->getShopMenu($this->site_srl);
-//        Context::set('menu', $shop_menu);
         $shop = Context::get('shop');
         $menus = $shop->getMenus();
         foreach($menus as $menu_key => $menu_srl)
@@ -194,7 +186,7 @@ class shopView extends shop {
 
         // Load categories for display in search dropdown (header)
         $category_repository = new CategoryRepository();
-        $tree = $category_repository->getCategoriesTree($this->module_srl);
+        $tree = $category_repository->getNavigationCategoriesTree($this->module_srl);
         $flat_tree = $tree->toFlatStructure();
         Context::set('search_categories', $flat_tree);
 	}
@@ -741,7 +733,18 @@ class shopView extends shop {
 	 */
 	public function dispShopToolAddProduct(){
 		$args = Context::getRequestVars();
-		if(isset($args->configurable_attributes)) Context::set('configurable_attributes',$args->configurable_attributes);
+		if(isset($args->configurable_attributes))
+		{
+			if(count($args->configurable_attributes) > 2)
+			{
+				global $lang;
+				$this->setMessage($lang->not_allowed_to_add_more_than_2_configurable_attributes, 'error');
+				$error_return_url = Context::get('error_return_url');
+				$this->setRedirectUrl($error_return_url);
+				return;
+			}
+			Context::set('configurable_attributes',$args->configurable_attributes);
+		}
 
 		/**
 		 * @var shopModel $shopModel
@@ -958,7 +961,7 @@ class shopView extends shop {
         // Retrieve existing categories
         $category_srl = Context::get('category_srl');
         $category_repository = $this->model->getCategoryRepository();
-        $tree = $category_repository->getCategoriesTree($this->module_srl);
+        $tree = $category_repository->getNavigationCategoriesTree($this->module_srl);
 
         // Prepare tree for display
         $tree_config = new HtmlCategoryTreeConfig();
@@ -1010,7 +1013,7 @@ class shopView extends shop {
 		// Categories left tree
 		// Retrieve existing categories
 		$category_repository = $shopModel->getCategoryRepository();
-		$tree = $category_repository->getCategoriesTree($this->module_srl);
+		$tree = $category_repository->getNavigationCategoriesTree($this->module_srl);
 
 		// Prepare tree for display
 		$tree_config = new HtmlCategoryTreeConfig();
@@ -1050,7 +1053,8 @@ class shopView extends shop {
             return;
         }
         $orderRepository = $this->model->getOrderRepository();
-        $output = $orderRepository->getList($this->module_info->module_srl,$logged_user->member_srl);
+        $extraParams['order_type'] = 'desc';
+        $output = $orderRepository->getList($this->module_info->module_srl,$logged_user->member_srl, $extraParams, Context::get('page'));
         Context::set('orders',$output->data);
         Context::set('page_navigation',$output->page_navigation);
         $this->setTemplateFile('my_orders.html');
@@ -1061,7 +1065,7 @@ class shopView extends shop {
         $addressRepository = $shopModel->getAddressRepository();
 
         $logged_info = Context::get('logged_info');
-        if(!isset($logged_user)){
+        if(!isset($logged_info)){
             $this->setTemplateFile('not_logged.html');
             return;
         }
@@ -1095,20 +1099,7 @@ class shopView extends shop {
         /** @var $cart Cart */
         if ($cart = Context::get('cart')) {
             $output = $cart->getProductsList(array('page' => Context::get('page')));
-            $total = 0;
-            /** @var $product Product */
-            foreach ($output->data as $product) {
-                if ($product->available) {
-                    $total += $product->price * $product->quantity;
-                }
-            }
-            Context::set('products', $output);
-            Context::set('total_price', $total);
-            if ($discount = $cart->getDiscount()) {
-                Context::set('discount', $discount);
-                Context::set('discount_value', $discount->getReductionValue());
-                Context::set('discounted_value', $discount->getValueDiscounted());
-            }
+            Context::set('products_output', $output);
         }
         $this->setTemplateFile('cart.html');
 	}
@@ -1144,12 +1135,18 @@ class shopView extends shop {
 
     public function dispShopCheckout()
     {
-        /** @var $cart Cart */
-        if (!(($cart = Context::get('cart')) instanceof Cart)) throw new Exception("No cart, you shouldn't be here");
+        try {
+            /** @var $cart Cart */
+            if (!(($cart = Context::get('cart')) instanceof Cart)) throw new Exception("No cart, you shouldn't be in the checkout page");
 
-        $products = $cart->getProducts(null, true);
-        if (empty($products)) {
-            throw new Exception('Cart is empty, you have nothing to checkout');
+            $products = $cart->getProducts(null, true);
+            if (empty($products)) {
+                throw new Exception('Cart is empty, you have nothing to checkout');
+            }
+        }
+        catch (Exception $e) {
+            $this->setRedirectUrl(getNotEncodedUrl('', 'act', 'dispShopHome'));
+            return new Object(-1, $e->getMessage());
         }
 
         $shippingRepo = new ShippingMethodRepository();
@@ -1195,7 +1192,7 @@ class shopView extends shop {
         $shopModel = getModel('shop');
 
         // Get selected payment method name
-        $payment_method_name = $cart->getExtra('payment_method');
+        $payment_method_name = $cart->getPaymentMethodName();
 
         // Get payment class
         $payment_repository = new PaymentMethodRepository();
@@ -1210,7 +1207,7 @@ class shopView extends shop {
         Context::set('billing_address', $cart->getBillingAddress());
         Context::set('shipping_address', $cart->getShippingAddress());
 
-        $shipping_method_name = $cart->getExtra('shipping_method');
+        $shipping_method_name = $cart->getShippingMethodName();
         $shipping_repository = new ShippingMethodRepository();
         $shipping_method = $shipping_repository->getShippingMethod($shipping_method_name, $this->module_srl);
         Context::set('shipping_method', $shipping_method->getDisplayName());
@@ -1578,9 +1575,7 @@ class shopView extends shop {
     /**
      * Change shop discount configuration from backend
      */
-    public function dispShopToolDiscountInfo(){
-
-    }
+    public function dispShopToolDiscountInfo(){}
 
 
     /**
@@ -1687,7 +1682,7 @@ class shopView extends shop {
 	// endregion
 
     // region Shipping
-    public function dispShopToolShippingList()
+    public function dispShopToolManageShippingMethods()
     {
         /**
          * @var shopModel $shopModel

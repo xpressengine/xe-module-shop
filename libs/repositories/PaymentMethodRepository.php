@@ -63,9 +63,9 @@ class PaymentMethodRepository extends AbstractPluginRepository
         return $output->data;
     }
 
-    protected function getAllPluginsInDatabase($module_srl)
+    protected function getAllPluginsInDatabase($module_srl, $args)
     {
-        $args = new stdClass();
+        if(!$args) $args = new stdClass();
         $args->module_srl = $module_srl;
         $output = executeQueryArray('shop.getPaymentMethods', $args);
 
@@ -162,5 +162,14 @@ class PaymentMethodRepository extends AbstractPluginRepository
     public function sanitizePaymentMethods($module_srl) {
         $this->sanitizePlugins($module_srl);
     }
+
+	protected function updatePluginsAllButThis($is_default, $name, $module_srl)
+	{
+		$args = new stdClass();
+		$args->except_name = $name;
+		$args->module_srl = $module_srl;
+		$args->is_default = 0;
+		$this->query('shop.updatePaymentMethods', $args);
+	}
 
 }

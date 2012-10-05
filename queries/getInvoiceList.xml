@@ -15,7 +15,7 @@
         </group>
     </conditions>
     <navigation>
-        <index var="invoice_srl" default="invoice_srl" order="invoice_type" />
+        <index var="invoice_srl" default="invoice_srl" order="order_type" />
         <list_count var="list_count" default="10" />
         <page_count var="page_count" default="10" />
         <page var="page" default="1" />

@@ -9,9 +9,10 @@ abstract class AbstractPluginRepository extends BaseRepository
     abstract protected function updatePluginInfo($plugin);
     abstract protected function insertPluginInfo(AbstractPlugin $plugin);
     abstract protected function deletePluginInfo($name, $module_srl);
-    abstract protected function getAllPluginsInDatabase($module_srl);
+    abstract protected function getAllPluginsInDatabase($module_srl, $args);
     abstract protected function getAllActivePluginsInDatabase($module_srl);
     abstract protected function fixPlugin($name, $old_module_srl, $new_module_srl);
+	abstract protected function updatePluginsAllButThis($is_default, $name, $module_srl);
 
     protected function getPluginInstanceByName($plugin_name, $module_srl)
     {
@@ -135,7 +136,11 @@ abstract class AbstractPluginRepository extends BaseRepository
         {
             try
             {
-                $active_plugins[] = $this->getPluginInstanceFromProperties($data);
+				$plugin_instance = $this->getPluginInstanceFromProperties($data);
+				if($plugin_instance->isConfigured())
+				{
+					$active_plugins[] = $this->getPluginInstanceFromProperties($data);
+				}
             }
             catch(Exception $e)
             {
@@ -182,11 +187,43 @@ abstract class AbstractPluginRepository extends BaseRepository
         $this->deletePluginInfo($name, $module_srl);
     }
 
+	public function setDefault($name, $module_srl)
+	{
+		if(!isset($name) || !isset($module_srl))
+		{
+			return new ArgumentException("You must provide name and module_srl for making a plugin default.");
+		}
+		$plugin = $this->getPlugin($name, $module_srl);
+		if(!$plugin->isActive())
+		{
+			return new ArgumentException("It is not allowed to set as default an inactive plugin");
+		}
+
+		// Update all other plugins with is_default = 0
+		$this->updatePluginsAllButThis(0, $name, $module_srl);
+
+		// Set this plugin is_default = 1
+		$plugin->is_default = 1;
+		$this->updatePlugin($plugin);
+	}
+
+	public function getDefault($module_srl)
+	{
+		$args = new stdClass();
+		$args->is_default = 1;
+		$plugin_info = $this->getAllPluginsInDatabase($module_srl, $args);
+		if(!$plugin_info)
+		{
+			return null;
+		}
+		return $this->getPluginInstanceFromProperties($plugin_info[0]);
+	}
+
     /**
      * Deletes plugins from DB if they do not have a folder with a corresponding name
      */
     public function sanitizePlugins($module_srl) {
-        $pgByDatabase = $this->getAllPluginsInDatabase($module_srl);
+        $pgByDatabase = $this->getAllPluginsInDatabase($module_srl, null);
         $pgByFolders = $this->getPluginsByFolder();
 
         foreach ($pgByDatabase as $obj) {

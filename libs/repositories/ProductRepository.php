@@ -20,6 +20,10 @@ class ProductRepository extends BaseRepository
 	{
 		$product->product_srl = getNextSequence();
 
+        if($product->discount_price >= $product->price){
+            throw new Exception("Discount price is bigger than normal price");
+        }
+
 		$output = executeQuery('shop.insertProduct', $product);
 		if(!$output->toBool())
 		{
@@ -264,10 +268,22 @@ class ProductRepository extends BaseRepository
             throw new Exception("Missing arguments for Products delete: please provide [product_srls]");
         }
 
+        foreach($args->product_srls as $product_srl){
+            $products[] = $this->getProduct($product_srl);
+        }
 		$this->query('deleteProducts',$args);
 		$args->parent_product_srls = $args->product_srls;
 		$this->query('deleteAssociatedProducts',$args);
 		$this->query('deleteProductCategories',$args);
+        foreach($products as $product){
+            if(isset($product->categories)){
+                foreach($product->categories as $category){
+                    $args->category_srl = $category;
+                    $this->updateProductCategoryCount($args);
+                }
+            }
+
+        }
 		$this->query('deleteProductAttributes',$args);
 		$this->query('deleteProductImages',$args);
 
@@ -288,11 +304,28 @@ class ProductRepository extends BaseRepository
      */
     public function deleteProductCategories(Product &$product)
     {
+		$old_product = new SimpleProduct();
+		$old_product->product_srl = $product->product_srl;
+		$old_product->module_srl = $product->module_srl;
+		$this->getProductCategories($old_product);
 		$args = new stdClass();
         $args->product_srls[] = $product->product_srl;
         $output = executeQuery('shop.deleteProductCategories',$args);
         if (!$output->toBool()) throw new Exception($output->getMessage(), $output->getError());
 
+        $args->module_srl = $product->module_srl;
+        if(isset($product->categories)){
+            foreach($product->categories as $category){
+                $args->category_srl = $category;
+                $this->updateProductCategoryCount($args);
+            }
+        }
+		if(isset($old_product->categories)){
+			foreach($old_product->categories as $category){
+				$args->category_srl = $category;
+				$this->updateProductCategoryCount($args);
+			}
+		}
         return TRUE;
     }
 
@@ -364,7 +397,7 @@ class ProductRepository extends BaseRepository
 	 * @param $product_srl int
 	 * @return Product
 	 */
-	public function getProduct($product_srl)
+	public function getProduct($product_srl, $loadImages = true)
 	{
 		$args = new stdClass();
 		$args->product_srl = $product_srl;
@@ -396,7 +429,7 @@ class ProductRepository extends BaseRepository
 		}
         $this->getProductCategories($product);
 		$this->getProductAttributes($product);
-		$this->getProductImages($product);
+		if($loadImages) $this->getProductImages($product);
 		return $product;
 	}
 
@@ -662,7 +695,7 @@ class ProductRepository extends BaseRepository
 		//table header for products csv
 		foreach($products[0] as $key => $value)
 		{
-			if(!in_array($key,array('member_srl','module_srl','regdate','last_update','primary_image','repo','associated_products')))
+			if(!in_array($key,array('member_srl','module_srl','regdate','last_update','primary_image','repo','associated_products','cache')))
 			{
                 if($key == 'product_srl') $buff = $buff.'id,';
 				else $buff = $buff.$key.",";
@@ -679,7 +712,7 @@ class ProductRepository extends BaseRepository
                 FileHandler::copyFile($filename,$export_filename);
             }
 			foreach($product as $key => $value){
-				if(!in_array($key,array('member_srl','module_srl','regdate','last_update','primary_image','primary_image_filename','repo','categories','attributes','images','associated_products','configurable_attributes')))
+				if(!in_array($key,array('member_srl','module_srl','regdate','last_update','primary_image','primary_image_filename','repo','categories','attributes','images','associated_products','configurable_attributes','cache')))
 				{
 					$buff = $buff.str_replace(",",";;",$value).",";
 				}
@@ -846,6 +879,9 @@ class ProductRepository extends BaseRepository
 	 */
 	public function updateProduct(Product $product)
 	{
+        if($product->discount_price >= $product->price){
+            throw new Exception("Discount price is bigger than normal price");
+        }
 		$output = executeQuery('shop.updateProduct', $product);
 		if(!$output->toBool())
 		{

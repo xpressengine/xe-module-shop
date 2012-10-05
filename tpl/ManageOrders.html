@@ -53,9 +53,6 @@
             <table border="1" cellspacing="0" summary="{$lang->content_list}" class="tableData">
                 <thead>
                 <tr>
-                    <th scope="col">
-                        <input type="checkbox" class="inputCheck" onclick="jQuery('input.boxlist').click()"/>
-                    </th>
                     <th scope="col">{$lang->order} #</th>
                     <th scope="col" class="title">{$lang->bill_to_name}</th>
                     <th scope="col">{$lang->ship_to_name}</th>
@@ -73,9 +70,6 @@
                 </tr>
                 <!--@foreach($orders as $order)-->
                 <tr>
-                    <td>
-                        <input type="checkbox" name="order_srl" value="{$order->order_srl}" class="inputCheck boxlist"/>
-                    </td>
                     <td class="small">{$order->order_srl}</td>
                     <td class="title"><a href="{getUrl('act','dispShopToolViewOrder','order_srl',$order->order_srl)}" class="attributeTitle">{reset(explode(',',$order->billing_address))}</a></td>
                     <td class="small">{reset(explode(',',$order->shipping_address))}</td>

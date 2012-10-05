@@ -64,7 +64,9 @@ class CartRepository extends BaseRepository
 
     public function deleteCartProducts($cart_srl, array $product_srls=null)
     {
-        return $this->query('deleteCartProducts', array('cart_srl' => $cart_srl, 'product_srls' => $product_srls));
+        $params = array('cart_srl' => $cart_srl);
+        if ($product_srls) $params['product_srls'] = $product_srls;
+        return $this->query('deleteCartProducts', $params);
     }
 
     public function updateCartProduct($cart_srl, $product_srl, $quantity, array $extraParams=array())
@@ -82,47 +84,27 @@ class CartRepository extends BaseRepository
      */
     public function getCart($module_srl=null, $cart_srl=null, $member_srl=null, $session_id=null, $create=false)
     {
-        $params = self::validateParamsForUniqueIdentification($module_srl, $cart_srl, $member_srl, $session_id);
-        $output = $this->query('getCart', $params);
+        $params = self::uid($module_srl, $cart_srl, $member_srl, $session_id);
+        $output = $this->query('getCart', $params, 'Cart');
         if (empty($output->data)) {
-            if ($create) {
-                return $this->getNewCart($module_srl, $member_srl, $session_id);
-            }
-            else return null;
+            if ($create) return $this->getNewCart($module_srl, $member_srl, $session_id);
+            return null;
         }
-        else return new Cart($output->data);
+        return $output->data[0];
     }
 
     /**
-     * Returns a cart object corresponding for the input parameters or null
-     * @return Cart|null
-     */
-    public function hasCart($module_srl=null, $cart_srl=null, $member_srl=null, $session_id=null)
-    {
-        $params = self::validateParamsForUniqueIdentification($module_srl, $cart_srl, $member_srl, $session_id);
-        $output = $this->query('getCart', $params);
-        return empty($output->data) ? null : new Cart($output->data);
-    }
-
-
-    /**
-     * Returns an array necessary for selecting the cart object
+     * Returns an array necessary for selecting the cart object (Unique Identification of a cart row)
      *
      * @return array sufficient data for cart identification (for the select query)
      * @throws Exception Invalid input
      */
-    public static function validateParamsForUniqueIdentification($module_srl = null, $cart_srl = null, $member_srl = null, $session_id = null)
+    public static function uid($module_srl = null, $cart_srl = null, $member_srl = null, $session_id = null)
     {
-        if (is_numeric($cart_srl)) return array(
-            'cart_srl' => $cart_srl
-        );
+        if (is_numeric($cart_srl)) return array('cart_srl' => $cart_srl);
         if (is_numeric($member_srl)) {
             if (is_numeric($module_srl)) {
-                $a = array(
-                    'member_srl' => $member_srl,
-                    'module_srl' => $module_srl
-                );
-                //if ($session_id) $a['session_id'] = $session_id;
+                $a = array('member_srl' => $member_srl, 'module_srl' => $module_srl);
                 return $a;
             }
             throw new Exception('Count not identify cart by member_srl (module_srl needed)');
@@ -150,9 +132,9 @@ class CartRepository extends BaseRepository
         return $cart;
     }
 
-    public function countCartProducts($module_srl=null, $cart_srl=null, $member_srl=null, $session_id=null, $sumQuantities=false)
+    public function countCartProducts(Cart $cart, $sumQuantities=false)
     {
-        $params = self::validateParamsForUniqueIdentification($module_srl, $cart_srl, $member_srl, $session_id);
+        $params = self::uid($cart->module_srl, $cart->cart_srl, $cart->member_srl, $cart->session_id);
         $what = ($sumQuantities ? 'total' : 'count');
         $rez = $this->query('getCartCount', $params)->data->$what;
         return $rez ? $rez : 0;

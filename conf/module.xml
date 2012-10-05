@@ -65,6 +65,7 @@
         <permission action="dispShopToolManagePaymentMethods" target="manager" />
         <permission action="procUpdateShopActivatePaymentMethod" target="manager" />
         <permission action="procUpdateShopDeactivatePaymentMethod" target="manager" />
+        <permission action="procShopToolSetPaymentMethodAsDefault" target="manager" />
         <permission action="procUpdateShopDeletePaymentMethod" target="manager" />
         <permission action="procShopUploadPaymentPlugin" target="manager" />
         <permission action="procSanitizePaymentMethods" target="manager" />
@@ -220,6 +221,7 @@
         <action name="procSanitizePaymentMethods" type="controller" />
         <action name="procShopPaymentMethodUpdate" type="controller" />
         <action name="procShopPaymentNotify" type="controller" />
+        <action name="procShopToolSetPaymentMethodAsDefault" type="controller" />
 
         <!-- Extra menu -->
         <action name="dispShopToolPages" type="view" />
@@ -232,10 +234,13 @@
         <action name="procShopToolSaveShopMenus" type="controller" standalone="true"/>
 
         <!-- Shipping -->
-        <action name="dispShopToolShippingList" type="view" />
+        <action name="dispShopToolManageShippingMethods" type="view" />
         <action name="dispShopToolEditShipping" type="view" />
         <action name="procShopToolShippingUpdate" type="controller" />
         <action name="procShopServiceActivateShippingMethod" type="controller" />
+        <action name="procShopTollActivateShippingMethod" type="controller" />
+        <action name="procShopTollDeactivateShippingMethod" type="controller" />
+        <action name="procShopToolSetShippingMethodAsDefault" type="controller" />
 
         <!-- Customers -->
         <action name="dispShopToolManageCustomers" type="view" />
@@ -271,7 +276,8 @@
         <action name="procShopToolCartAddProduct" type="controller" />
         <action name="procShopCartRemoveProducts" type="controller" />
         <action name="procShopCartUpdateProducts" type="controller" />
-        <action name="procShopToolCheckout" type="controller" />
+        <action name="procShopToolCheckout" type="controller" ruleset="checkout" />
+        <action name="procShopCheckoutLogin" type="controller" ruleset="checkout_login" />
 
         <!-- Orders -->
         <action name="dispShopToolManageOrders" type="view"/>

@@ -4,6 +4,7 @@
     </tables>
     <columns>
         <column name="status" var="status" filter="number" />
+        <column name="is_default" var="is_default" filter="number" />
         <column name="display_name" var="display_name" filter="varchar" />
         <column name="props" var="properties" filter="varchar" />
     </columns>

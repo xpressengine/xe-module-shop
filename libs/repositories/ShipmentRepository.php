@@ -23,7 +23,7 @@ class ShipmentRepository extends BaseRepository
 
     public function getList($module_srl)
     {
-        $params = array('module_srl'=> $module_srl);
+        $params = array('module_srl'=> $module_srl, 'order_type' => 'desc');
         $output = $this->query('getShipmentList', $params);
         foreach ($output->data as $i=>$data) $output->data[$i] = new Shipment((array) $data);
         return $output;

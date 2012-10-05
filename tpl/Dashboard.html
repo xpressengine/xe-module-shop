@@ -33,11 +33,11 @@
         <h4><span>{$lang->all_time} <em>{date('Y.m.d')}</em></span></h4>
         <dl class="lifetime_sales">
             <dt>{$lang->lifetime_sales}</dt>
-            <dd>{$stat->lifetime_sales} {$shop->getCurrencySymbol()}</dd>
+            <dd>{ShopDisplay::priceFormat($stat->lifetime_sales,$shop->getCurrencySymbol())}</dd>
         </dl>
         <dl class="average_order_amount">
             <dt>{$lang->average_sale_amount}</dt>
-            <dd>{$stat->average_sale_amount} {$shop->getCurrencySymbol()}</dd>
+            <dd>{ShopDisplay::priceFormat($stat->average_sale_amount,$shop->getCurrencySymbol())}</dd>
         </dl>
         <dl class="total_orders">
             <dt>{$lang->total_sales}</dt>

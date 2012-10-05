@@ -259,7 +259,7 @@ class AttributeRepository extends BaseRepository
         //table header for attributes csv
         foreach($attributes[0] as $key => $value)
         {
-            if(!in_array($key,array('member_srl','module_srl','regdate','last_update','repo')))
+            if(!in_array($key,array('member_srl','module_srl','regdate','last_update','repo','cache')))
             {
                 if($key == 'attribute_srl') $buff = $buff.'id,';
                 else $buff = $buff.$key.",";
@@ -269,7 +269,7 @@ class AttributeRepository extends BaseRepository
         //table values  for products  csv
         foreach($attributes as $attribute){
             foreach($attribute as $key => $value){
-                if(!in_array($key,array('member_srl','module_srl','regdate','last_update','repo','category_scope')))
+                if(!in_array($key,array('member_srl','module_srl','regdate','last_update','repo','category_scope','cache')))
                 {
                     $buff = $buff.$value.",";
                 }

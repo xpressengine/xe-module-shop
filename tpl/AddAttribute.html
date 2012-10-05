@@ -1,6 +1,12 @@
 <!--#include("_tool_header.html")-->
 <!--%import("css/pagination.css",optimized=false)-->
-
+<script type="text/javascript">
+    jQuery(document).ready(function($){
+        $("#category_scope input[type='checkbox']").change(function(){
+            checkOrUncheckParents($(this), 'category_scope');
+        });
+    });
+</script>
 <!-- Content -->
 <div id="content">
     <!-- contentHeader -->
@@ -35,21 +41,6 @@
 
                     <tr>
                         <th scope="row">
-                            <label for="type">{$lang->type}</label>
-                        </th>
-                        <td class="type">
-                            <div class="fItem">
-                                <select name="type" id="type">
-                                    <!--@foreach ($types as $val => $text)-->
-                                    <option value="{$val}"<!--@if ($attribute->type == $val)--> selected<!--@end-->>{$text}</option>
-                                    <!--@end-->
-                                </select>
-                            </div>
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <th scope="row">
                             <label for="required">{$lang->required}</label>
                         </th>
                         <td class="type">
@@ -78,6 +69,47 @@
 
                     <tr>
                         <th scope="row">
+                            <label for="type">{$lang->type}</label>
+                        </th>
+                        <td class="type">
+                            <div class="fItem">
+                                <select name="type" id="type">
+                                    <!--@foreach ($types as $val => $text)-->
+                                    <option value="{$val}" selected="selected"|cond="$attribute->type == $val">{$text}</option>
+                                    <!--@end-->
+                                </select>
+                                <script type="text/javascript">
+                                    (function( $ ){
+                                        $.fn.settingsVisibility = function(){
+                                            var selected = jQuery('option:selected', this);
+                                            var trs = jQuery('#valuesTr,#valueTr');
+                                            if (selected.val() == 5 || selected.val() == 6) {
+                                                trs.show();
+                                                trs.trRedLabels(1500);
+                                            }
+                                            else trs.hide();
+                                        };
+                                        $.fn.trRedLabels = function(milis){
+                                            var target = $('th label', this);
+                                            var originalColor = target.css('color');
+                                            target.css('color', '#EA3F22');
+                                            setTimeout(function(){
+                                                target.css('color', originalColor);
+                                            }, milis);
+                                        };
+                                    })(jQuery);
+                                    jQuery(function(){
+                                        jQuery('#type').live('change', function(){
+                                            jQuery(this).settingsVisibility();
+                                        }).change();
+                                    });
+                                </script>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <tr id="valuesTr">
+                        <th scope="row">
                             <label for="values">{$lang->attribute_values}</label>
                         </th>
                         <td class="title">
@@ -88,7 +120,7 @@
                         </td>
                     </tr>
 
-                    <tr>
+                    <tr id="valueTr">
                         <th scope="row">
                             <label for="default_value">{$lang->attribute_default_value}</label>
                         </th>

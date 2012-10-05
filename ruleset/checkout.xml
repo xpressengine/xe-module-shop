@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+'required'  => 'false',
+'default'   => '',
+'modifiers' => array(),
+'length'    => 0,
+'equalto'   => 0,
+'rule'      => 0,
+'if'        => array()
+-->
+<ruleset version="1.5.0">
+    <customrules>
+        <rule name = "phone" type = "regex" test = "/^[0-9]*$/i"/>
+        <rule name = "name" type="regex" test="/^[A-Za-z][A-Za-z- ]*$/i"/>
+        <rule name = "postal_code" type="regex" test="/^[a-z0-9-]*$/i"/>
+        <rule name = "yesno" type="enum" test="yes|no" delim="|"/>
+    </customrules>
+    <fields>
+        <field name="billing[address]" required="true" />
+        <field name="new_billing_address[firstname]" required="true" rule="name" />
+        <field name="new_billing_address[lastname]" required="true" rule="name" />
+        <field name="new_billing_address[email]" required="true" rule="email" />
+        <field name="new_billing_address[company]" required="false" rule="name" />
+        <field name="new_billing_address[telephone]" required="true" rule="phone" />
+        <field name="new_billing_address[fax]" required="false" rule="phone" />
+        <field name="new_billing_address[address]" required="true" />
+        <field name="new_billing_address[additional_info]" />
+        <field name="new_billing_address[city]" required="false" rule="name" />
+        <field name="new_billing_address[region]" required="false" rule="name" />
+        <field name="new_billing_address[postal_code]" required="false" rule="postal_code" />
+        <field name="new_billing_address[country]" required="false" rule="name" />
+
+        <field name="different_shipping" required="false" rule="yesno" />
+
+        <field name="shipping[address]">
+            <if test="$different_shipping == 'yes'" attr="required" value="true" />
+        </field>
+        <field name="new_shipping_address[firstname]" rule="name">
+            <if test="$different_shipping == 'yes'" attr="required" value="true" />
+        </field>
+        <field name="new_shipping_address[lastname]" rule="name">
+            <if test="$different_shipping == 'yes'" attr="required" value="true" />
+        </field>
+        <field name="new_shipping_address[email]" rule="email">
+            <if test="$different_shipping == 'yes'" attr="required" value="true" />
+        </field>
+        <field name="new_shipping_address[company]" rule="name" />
+        <field name="new_shipping_address[telephone]" rule="phone">
+            <if test="$different_shipping == 'yes'" attr="required" value="true" />
+        </field>
+        <field name="new_shipping_address[fax]" rule="phone" />
+        <field name="new_shipping_address[address]">
+            <if test="$different_shipping == 'yes'" attr="required" value="true" />
+        </field>
+        <field name="new_shipping_address[additional_info]" />
+        <field name="new_shipping_address[city]" rule="name" />
+        <field name="new_shipping_address[region]" rule="name" />
+        <field name="new_shipping_address[postal_code]" rule="postal_code" />
+        <field name="new_shipping_address[country]" rule="name" />
+    </fields>
+</ruleset>

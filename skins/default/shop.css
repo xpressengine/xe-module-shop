@@ -104,18 +104,10 @@ img{border:0}
     clear: both;
 }
 
-#cart th {
-    text-align: left;
-}
-
 #cart .quantity {
     width: 100px;
 }
 
-#cart .quantity input {
-    border: 1px dashed #cecbb1;
-    width: 40px;
-}
 #cart .title {
     width: 300px;
 }
@@ -146,10 +138,10 @@ img{border:0}
  * @author: Daniel Ionescu
  */
 body {
-    margin: 0;
-    padding : 0;
     font-family: Arial, Helvetica, sans;
     font-size: .750em;
+    margin: 0;
+    padding : 0;
     color: #000;
     width : 100%;
     height : 100%;
@@ -187,7 +179,12 @@ body, html {
     text-align: right;
 }
 
+.v-middle {
+    vertical-align: middle;
+}
+
 input, textarea, select {
+    font-family: Arial, Helvetica, sans;
     color: #2f2f2f;
     border-radius: 3px;
     -moz-border-radius: 3px;
@@ -202,7 +199,7 @@ input[type="text"], textarea {
     border-radius: 2px;
     -moz-border-radius: 2px;
     -webkit-border-radius: 2px;
-    padding: 3px;
+    padding: 6px;
 }
 
 select {
@@ -231,7 +228,7 @@ input[type="submit"] {
     outline:none;
 }
 
-button, .button {
+button, .button, input[type="submit"] {
     color: #2a5072;
     border-radius: 3px;
     -moz-border-radius: 3px;
@@ -243,9 +240,20 @@ button, .button {
     box-shadow: 0 1px 0 #e4e8ec;
     -moz-box-shadow: 0 1px 0 #e4e8ec;
     -webkit-box-shadow: 0 1px 0 #e4e8ec;
+    font-size: 1.167em;
+    padding: 5px 10px;
+    text-decoration: none;
+    background: #ffffff;
+    background: -moz-linear-gradient(top,  #ffffff 0%, #f6f6f6 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#f6f6f6));
+    background: -webkit-linear-gradient(top,  #ffffff 0%,#f6f6f6 100%);
+    background: -o-linear-gradient(top,  #ffffff 0%,#f6f6f6 100%);
+    background: -ms-linear-gradient(top,  #ffffff 0%,#f6f6f6 100%);
+    background: linear-gradient(to bottom,  #ffffff 0%,#f6f6f6 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#f6f6f6',GradientType=0 );
 }
 
-button:hover, .button:hover, button:focus, .button:focus {
+button:hover, .button:hover, button:focus, .button:focus, input[type="submit"]:focus, input[type="submit"]:hover {
     border: 1px solid #0588c1;
     color: #fff;
     text-shadow: 0 -1px 0 #0688c1;
@@ -261,7 +269,7 @@ button:hover, .button:hover, button:focus, .button:focus {
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#27abe5', endColorstr='#16a3e0',GradientType=0 );
 }
 
-button:active, .button:active {
+button:active, .button:active, input[type="submit"]:active {
     background: #20b2f1;
     background: -moz-linear-gradient(top,  #20b2f1 0%, #17a9e8 100%);
     background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#20b2f1), color-stop(100%,#17a9e8));
@@ -286,14 +294,14 @@ a {
 h1 {
     font-weight: normal;
     font-size: 1.500em;
-    margin: 1.250em 0 2.500em;
+    margin: 1.250em 0;
     color: #2d5375;
 }
 
 h2 {
     font-weight: normal;
     font-size: 1.333em;
-    margin: 2.500em 0 1.500em;
+    margin: 2em 0 .5em;
     color: #2d5375;
 }
 
@@ -301,8 +309,14 @@ h2 a {
     text-decoration: none;
 }
 
+h3 {
+    margin: 1em 0;
+    font-size: 1em;
+    color: #2D5375;
+}
 
 table {
+    font-family: Arial, Helvetica, sans;
     width: 100%;
 }
 
@@ -355,8 +369,9 @@ table td.no-data {
     text-align: center;
 }
 
-table tbody tr td {
+table tr td {
     border-bottom: 1px solid #bec9d4;
+    padding: 10px;
 }
 
 table tbody tr td:first-child {
@@ -365,6 +380,10 @@ table tbody tr td:first-child {
 
 table tbody tr td:last-child {
     border-right: 1px solid #bec9d4;
+}
+
+.underline {
+    border-bottom: 1px solid #e8e8e8;
 }
 
 /* START CLEARFIX */
@@ -449,6 +468,10 @@ table tbody tr td:last-child {
 
 #cart-button img {
     margin: 0 0 0 10px;
+}
+
+#cart-button a {
+    text-decoration: none;
 }
 
 #cart-details {
@@ -541,6 +564,8 @@ table tbody tr td:last-child {
 #header-links {
     margin: 5px 0;
     font-size: 1.063em;
+    text-align: right;
+    line-height: 1.500em !important;
 }
 
 #header-search {
@@ -573,7 +598,7 @@ table tbody tr td:last-child {
 #header-search input[type="text"] {
     border: 1px solid #cacaca;
     border-left: 0;
-    width: 300px;
+    width: 260px;
     padding: 0 34px 0 8px;
     border-radius: 0 6px 6px 0;
     -moz-border-radius: 0 6px 6px 0;
@@ -602,6 +627,10 @@ table tbody tr td:last-child {
     line-height: 40px;
     border: 1px solid #bec9d4;
     font-size: 1.167em;
+}
+
+.inside-content {
+    margin: 10px 0 !important;
 }
 
 .pagination a.number {
@@ -690,6 +719,10 @@ table tbody tr td:last-child {
 
 .main-content p, .main-content h1, .main-content h2, .main-content h3, .product.list-view {
     line-height: 1.5em;
+}
+
+.main-content p * {
+    vertical-align: middle;
 }
 
 .body-left-panel {
@@ -859,6 +892,12 @@ li span.close-sign, li span.open-sign {
     -webkit-border-radius: 3px;
 }
 
+.product-list .product:hover {
+    box-shadow: 0 0 5px 2px #98b7d5;
+    -moz-box-shadow: 0 0 5px 2px #98b7d5;
+    -webkit-box-shadow: 0 0 5px 2px #98b7d5;
+}
+
 .product-list .product.list-view {
     width: 694px;
 }
@@ -909,24 +948,27 @@ li span.close-sign, li span.open-sign {
     margin: 0;
     padding: 10px;
     background: #f3f4f6;
-    color: #129cdd;
+    color: #2d5375;
     border: 1px solid #bec9d4;
     font-size: 1.167em;
-    font-weight: normal;
 }
 
 .product-list .buy {
     border-top: 1px solid #e3e3e3;
-    padding: 10px 0;
+    padding: 5px 0;
     margin: 0;
     color: #2d5375;
-    font-size: 1.167em;
-    line-height: 18px;
+    line-height: 33px;
+    text-align: center;
 }
 
-.product-list .quantity input {
+.product-list .quantity {
+    margin: 5px 0;
+}
+
+.product-list .quantity input, .main-content .quantity input {
     text-align: center;
-    width: 30px;
+    width: 24px;
     margin: 0 0 0 5px;
     color: #000;
 }
@@ -942,9 +984,15 @@ li span.close-sign, li span.open-sign {
     -moz-box-shadow: none;
     -webkit-box-shadow: none;
 }
+.product-list .discount-price {
+    color: #4f4f4f;
+    text-decoration: line-through;
+}
 
 .product-list .price {
-    float: right;
+    font-size: 1.167em;
+    color: #2D5375;
+    font-weight: bold;
 }
 
 .breadcrumbs {
@@ -971,6 +1019,10 @@ li span.close-sign, li span.open-sign {
 }
 
 .body-two-columns .breadcrumbs {
+    margin-left: 10px;
+}
+
+.body-two-columns .message {
     margin-left: 10px;
 }
 
@@ -1020,7 +1072,14 @@ li span.close-sign, li span.open-sign {
     box-shadow: inset 0 0 0 1px #f5f6f7;
     -moz-box-shadow: inset 0 0 0 1px #f5f6f7;
     -webkit-box-shadow: inset 0 0 0 1px #f5f6f7;
-    background: #e4e6e9;
+    background: #dadbdd;
+    background: -moz-linear-gradient(top,  #e3e5e8 0%, #eaeaec 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#e3e5e8), color-stop(100%,#eaeaec));
+    background: -webkit-linear-gradient(top,  #e3e5e8 0%,#eaeaec 100%);
+    background: -o-linear-gradient(top,  #e3e5e8 0%,#eaeaec 100%);
+    background: -ms-linear-gradient(top,  #e3e5e8 0%,#eaeaec 100%);
+    background: linear-gradient(to bottom,  #e3e5e8 0%,#eaeaec 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e3e5e8', endColorstr='#eaeaec',GradientType=0 );
 }
 
 .breadcrumbs-button:active, .breadcrumbs-button:focus {
@@ -1078,20 +1137,67 @@ li span.close-sign, li span.open-sign {
 }
 
 /**
- * Product Stage
+ * Product Page
  * @author: Daniel Ionescu
  */
+#product-page {
+    float: left;
+}
 
 #product-images {
-    float: left;
+    padding-right: 10px;
+    margin: 0 0 10px 0;
     position: relative;
+    background: #fff;
+    float: left;
+}
+
+#product-images .prev {
+    display: block;
+    height: 62px;
+    float: left;
+    padding: 5px 5px 5px 4px;
+    margin-right: 6px;
+    border-radius: 0;
+    -moz-border-radius: 0;
+    -webkit-border-radius: 0;
+}
+
+#product-images .prev span {
+    background: url('img/arrows.png') 0 -9px no-repeat;
+    display: block;
+    width: 5px;
+    height: 9px;
+    margin: 26px 0;
+}
+
+#product-images .prev:hover span {
+    background: url('img/arrows.png') 0 -9px no-repeat;
+}
+
+#product-images .next {
+    display: block;
+    height: 62px;
+    float: right;
+    padding: 5px 4px 5px 5px;
+    border-radius: 0;
+    -moz-border-radius: 0;
+    -webkit-border-radius: 0;
+}
+
+#product-images .next span {
+    background: url('img/arrows.png') 0 0 no-repeat;
+    display: block;
+    width: 5px;
+    height: 9px;
+    margin: 26px 0;
 }
 
 #product-image {
     width: 340px;
     height: 240px;
     overflow: hidden;
-    margin: 10px 10px 5px 0;
+    margin: 10px 0 5px;
     border: 1px solid #cacaca;
     padding: 10px;
     text-align: center;
@@ -1126,7 +1232,7 @@ li span.close-sign, li span.open-sign {
 #thumbnails-container {
     overflow: hidden;
     height: 86px;
-    width: 368px;
+    width: 320px;
 }
 
 #thumbnails {
@@ -1134,12 +1240,21 @@ li span.close-sign, li span.open-sign {
     width: 5000px;
 }
 
-#thumbnails img {
+#thumbnails span.cont {
     border: 1px solid #cacaca;
+    text-align: center;
     margin: 0 6px 0 0;
-    padding: 5px;
-    float: left;
     cursor: pointer;
+    display: table;
+    width: 63px;
+    height: 63px;
+    float: left;
+    padding: 5px;
+}
+
+#thumbnails span span {
+    display: table-cell;
+    vertical-align: middle;
 }
 
 .preloading {
@@ -1148,6 +1263,34 @@ li span.close-sign, li span.open-sign {
     left: 46%;
     top: 34%;
 }
+
+.socials {
+    padding: 0 0 10px 0;
+    margin: 10px 0 0 0;
+}
+
+.socials>* {
+    margin: 0 5px 0 0;
+}
+
+.red {
+    color: red;
+}
+
+.green {
+    color: green;
+}
+
+.product-shop {
+    float: left;
+    width: 100%;
+}
+
+.product-stock p {
+    line-height: 2.3em !important;
+    margin: 10px 0;
+}
+
 
 /**
  * Footer Styles
@@ -1247,7 +1390,7 @@ li span.close-sign, li span.open-sign {
 
 .xm .h1 {
     font-size: 1.500em;
-    border: 0;
+    border-bottom: 1px solid #e8e8e8;
 }
 
 .xm .table table {
@@ -1268,13 +1411,44 @@ li span.close-sign, li span.open-sign {
     border: 0;
 }
 
+.xm input[type="submit"] {
+    padding: 0 8px;
+}
+
 .not-available {
     background-color: #fbdfca;
 }
+
 .product.deleted {
     background-color: #a8daf8;
 }
-.show_address {
-    font-size: 16px;
-    padding: 20px;
+
+/**
+ * Checkout page styles
+ * @author Daniel Ionescu
+*/
+.form ul {
+    padding: 0;
+    margin: 10px;
+    list-style-type: none;
+}
+
+.form p label {
+    width: 25%;
+    display: inline-block;
+}
+
+.form p input[type="text"], .form p textarea {
+    width: 40%;
+}
+
+/**
+ * Cart page styles
+ * @author Daniel Ionescu
+ */
+
+.cart-image {
+    border: 1px solid #cacaca;
+    padding: 5px;
+    margin: 0 10px 0 0;
 }

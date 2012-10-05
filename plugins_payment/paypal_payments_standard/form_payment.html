@@ -9,18 +9,18 @@
 <INPUT TYPE="hidden" NAME="handling_cart" value="{$cart->getShippingCost()}">
 <INPUT TYPE="hidden" name="no_shipping" value="1">
 
-<input type="hidden" name="first_name" value="{$cart->getExtra('firstname')}">
-<input type="hidden" name="last_name" value="{$cart->getExtra('lastname')}">
+<input type="hidden" name="first_name" value="{$cart->getCustomerFirstname()}">
+<input type="hidden" name="last_name" value="{$cart->getCustomerLastname()}">
 {@ $billing_address = $cart->getBillingAddress() }
 <input type="hidden" name="address1" value="{$billing_address->address}">
 <input type="hidden" name="address2" value="">
 <input type="hidden" name="city" value="{$billing_address->city}">
 <!-- // TODO Add country code; also tax and currency code need to be reviewed -->
 <!--<input type="hidden" name="country" value="{$billing_address->country}">-->
-<input type="hidden" name="country" value="US">
 <input type="hidden" name="zip" value="{$billing_address->postal_code}">
 <input type="hidden" name="email" value="{$cart->getExtra('email')}">
 <input type="hidden" name="custom" value="{$cart->cart_srl}">
+<input type="hidden" name="discount_amount_cart" value="{$cart->getDiscountAmount()}">
 
 {@ $i = 1; }
 <!--@foreach($cart->getProducts() as $product)-->

@@ -31,7 +31,16 @@ class OrderRepository extends BaseRepository
     public function getMostOrderedProducts($module_srl)
     {
         $params = array('module_srl'=> $module_srl);
-        $output = $this->query('getMostOrderedProducts', $params, true);
+		try
+		{
+			$output = $this->query('getMostOrderedProducts', $params, true);
+		}catch (DbQueryException $e)
+		{
+			$output = new stdClass();
+			$output->data = array();
+		}
+
+
         foreach ($output->data as $data) {
             if($data->product_type == 'simple') $product = new SimpleProduct((array) $data);
             elseif($data->product_type == 'configurable') $product = new ConfigurableProduct((array) $data);
@@ -79,12 +88,12 @@ class OrderRepository extends BaseRepository
         return $this->query('deleteOrders', array('order_srls' => $order_srls));
     }
 
-    public function insertOrderProduct($order_srl, SimpleProduct $product, $quantity = 1)
+    public function insertOrderProduct($order_srl, CartProduct $product)
     {
         $params = array(
             'order_srl' => $order_srl,
             'product_srl' => $product->product_srl,
-            'quantity' => $quantity,
+            'quantity' => $product->quantity,
             'member_srl' => $product->member_srl,
             'parent_product_srl' => $product->parent_product_srl,
             'product_type' => $product->product_srl,
@@ -157,8 +166,20 @@ class OrderRepository extends BaseRepository
         $args->order_srl = $order->order_srl;
         $output = $this->query('getOrderItems',$args,true);
         foreach($output->data as $item){
+            $product = new OrderProduct($item);
+            $ordered_items[] = $product;
+        }
+        return $ordered_items;
+    }
+
+    public function getOrderProductItems($order)
+    {   $shopModel = getModel('shop');
+        $productRepository = $shopModel->getProductRepository();
+        $args = new stdClass();
+        $args->order_srl = $order->order_srl;
+        $output = $this->query('getOrderItems',$args,true);
+        foreach($output->data as $item){
             $product = new SimpleProduct($item);
-            $product->ordered_qty = $item->quantity;
             $ordered_items[] = $product;
         }
         return $ordered_items;

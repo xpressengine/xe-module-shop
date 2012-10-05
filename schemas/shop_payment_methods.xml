@@ -4,5 +4,6 @@
     <column name="name" type="varchar" size="255" notnull="notnull" unique="unique_module_srl_name"/>
     <column name="display_name" type="varchar" size="255" notnull="notnull" />
     <column name="status" type="number" size="1" default="0" />
+    <column name="is_default" type="number" size="1" default="0" />
     <column name="props" type="text" />
 </table>

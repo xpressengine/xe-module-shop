@@ -393,7 +393,7 @@
             'dispShopToolManageAccount'=>'Admin account',
             'dispShopToolConfigInfo'=>'Shop Configuration',
             'dispShopToolDiscountInfo'=>'Shop Discount',
-            'dispShopToolShippingList'=>'Shipping methods',
+            'dispShopToolManageShippingMethods'=>'Shipping methods',
             'dispShopToolManagePaymentMethods'=>'Payment methods'
         )
     );
@@ -404,7 +404,7 @@
     $lang->discount_type = 'Discount type';
     $lang->about_discount_type = 'Fixed amount or percentage from order total';
     $lang->discount_amount = 'Discount amount';
-    $lang->about_discount_amount = 'Enter discount amount';
+    $lang->about_discount_amount = 'Enter discount amount or set it to 0 to disable the whole discount.';
     $lang->discount_tax_phase = 'When to apply the discount by tax';
     $lang->about_discount_tax_phase = 'Pre or post taxes';
     $lang->fixed_amount = 'fixed amount';
@@ -618,8 +618,59 @@
     $lang->about_not_logged = 'To access this part of the site you have to be logged in.';
     $lang->no_description = 'This product has no description';
     $lang->sort_by = 'Sort by';
+    $lang->checkout = 'Checkout';
+    $lang->products_in_shop = 'product(s) in shop';
+    $lang->products_matched_criteria = 'product(s) matched your criteria';
 
-    $lang->add_downloadable_product = 'Add downloadable product';
+    $lang->default = 'Default';
+	$lang->set_as_default = 'Set as default';
+	$lang->db_query_failed = 'The database query failed - please check if you have updated you module with the latest changes.';
+    $lang->additional_addresses = 'Additional addresses';
+	$lang->msg_select_product_variant = 'Please select type of product that you want - the one you tried to add has a few options for you too choose.';
+
+	/* Lang for new order email */
+	$lang->shop_email = 'Shop email';
+	$lang->about_shop_email = 'All email notifications will be sent from this address';
+
+    $lang->order_email_subject = 'Order receipt from %s (%s)';
+    $lang->order_email_content = '
+	    <p>Hello %s,</p>
+
+	    <p>Thank you for your purchase! Here is your order receipt.</p>
+
+	    <p><b>How do I check on this order?</b></p>
+	    <p>
+	    	<a href="%s">Get up to date information about order #%s</a>
+	    </p>
+
+		%s
+    ';
+
+	$lang->admin_order_email_subject = 'A new order was made by %s (%s)';
+	$lang->admin_order_email_content = '
+	    <p>
+	        <a href="%s">Go to order %s</a> in admin.
+	    </p>
+
+		%s
+	';
+
+	$lang->new_member_email_subject = 'Welcome to %s';
+
+	$lang->new_member_email_content = '
+	    <h1>Welcome to <a href="%s">%s</a>!</h1>
+
+	    <p>You have successfully set up your account. </p>
+
+	    <p>You can login to your account and see your past orders at this address:</p>
+	    <p><a href="%s">My account</a></p>
+
+	    <p>Thank your for choosing <a href="%s">%s</a>!</p>
+	';
+
+	$lang->not_allowed_to_add_more_than_2_configurable_attributes = 'You can only select maximun 2 attributes for your configurable product.';
+	
+	$lang->add_downloadable_product = 'Add downloadable product';
     $lang->edit_downloadable_product = 'Edit downloadable product';
     $lang->upload_content = "Upload content";
 

@@ -730,7 +730,6 @@ function doUpdateModule(module) {
     var params = new Array();
     params['module_name'] = module;
     exec_xml('install','procInstallAdminUpdate',params, completeInstallModule);
-    showWaitingFogLayer();
 }
 
 function completeInstallModule(ret_obj) {

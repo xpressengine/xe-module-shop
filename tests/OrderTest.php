@@ -41,10 +41,17 @@ class OrderTest extends Shop_Generic_Tests_DatabaseTestCase
     {
         $cart_srl = 774;
 
-        $cart = new Cart($cart_srl);
-        $order = new Order($cart);
-        $order->save();
-        $order->saveCartProducts($cart);
+		try
+		{
+			$cart = new Cart($cart_srl);
+			$order = new Order($cart);
+			$order->save();
+			$order->saveCartProducts($cart);
+		}
+		catch(Exception $e)
+		{
+			$this->fail($e->getMessage());
+		}
 
 
         $order_repository = new OrderRepository();

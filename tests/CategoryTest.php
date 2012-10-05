@@ -4,6 +4,7 @@ require_once dirname(__FILE__) . '/lib/Bootstrap.php';
 require_once dirname(__FILE__) . "/lib/Shop_Generic_Tests.class.php";
 
 require_once dirname(__FILE__) . '/../libs/model/Category.php';
+require_once dirname(__FILE__) . '/../shop.info.php';
 
 /**
  *  Test features related to Product categories
@@ -319,6 +320,7 @@ class CategoryTest extends Shop_Generic_Tests_DatabaseTestCase
 		$repository = $shopModel->getCategoryRepository();
 
 		$category = $repository->getCategory(1000);
+		$this->assertNotEquals('N', $category->include_in_navigation_menu);
 		$category->include_in_navigation_menu = 'N';
 
 		// Try to update
@@ -330,10 +332,6 @@ class CategoryTest extends Shop_Generic_Tests_DatabaseTestCase
 
 			// Check that properties were updated
 			$new_category = $repository->getCategory($category->category_srl);
-
-//			echo "Expected: " . $category->getIncludeInNavigationMenu() . PHP_EOL;
-//			echo "Actual: " . $new_category->getIncludeInNavigationMenu() . PHP_EOL;
-
 			$this->assertEquals($category->include_in_navigation_menu
 				, $new_category->include_in_navigation_menu);
 
@@ -381,6 +379,152 @@ class CategoryTest extends Shop_Generic_Tests_DatabaseTestCase
 		$category = $category_repository->getCategory(1000);
 		$this->assertEquals(1, $category->product_count);
 	}
+
+		public function testProductCountUpdatesOnProductDelete()
+		{
+			$module_srl = 1001;
+
+			$product_repository = new ProductRepository();
+
+			$product = new SimpleProduct();
+			$product->product_srl = 12;
+			$product->title = "Some product";
+			$product->member_srl = 4;
+			$product->module_srl = $module_srl;
+			$product->product_type = 'simple';
+			$product->sku = 'some-product';
+			$product->friendly_url = $product->sku;
+			$product->price = 100;
+			$product->categories[] = 1000;
+			$product->categories[] = 1002;
+			$product_repository->insertProduct($product);
+
+			// Check that count was increased
+			$category_repository = new CategoryRepository();
+			$category = $category_repository->getCategory(1000);
+			$this->assertEquals(1, $category->product_count);
+			// Check that count was increased
+			$category = $category_repository->getCategory(1002);
+			$this->assertEquals(1, $category->product_count);
+
+			// Delete product
+			$args = new stdClass();
+			$args->module_srl = $module_srl;
+			$products = $product_repository->getAllProducts($args);
+			$this->assertNotNull($products);
+
+			$product = array_shift($products);
+			$args = new stdClass();
+			$args->product_srl = $product->product_srl;
+			$product_repository->deleteProduct($args);
+
+			// Check that count was decreased
+			$category_repository = new CategoryRepository();
+			$category = $category_repository->getCategory(1000);
+			$this->assertEquals(0, $category->product_count);
+			// Check that count was decreased
+			$category = $category_repository->getCategory(1002);
+			$this->assertEquals(0, $category->product_count);
+		}
+
+		public function testProductCountUpdatesOnMultipleProductDelete()
+		{
+			$module_srl = 1001;
+
+			$product_repository = new ProductRepository();
+
+			$product = new SimpleProduct();
+			$product->product_srl = 12;
+			$product->title = "Some product";
+			$product->member_srl = 4;
+			$product->module_srl = $module_srl;
+			$product->product_type = 'simple';
+			$product->sku = 'some-product';
+			$product->friendly_url = $product->sku;
+			$product->price = 100;
+			$product->categories[] = 1000;
+			$product->categories[] = 1002;
+			$product_repository->insertProduct($product);
+
+			// Check that count was increased
+			$category_repository = new CategoryRepository();
+			$category = $category_repository->getCategory(1000);
+			$this->assertEquals(1, $category->product_count);
+			// Check that count was increased
+			$category = $category_repository->getCategory(1002);
+			$this->assertEquals(1, $category->product_count);
+
+			// Delete product
+			$args = new stdClass();
+			$args->module_srl = $module_srl;
+			$products = $product_repository->getAllProducts($args);
+			$this->assertNotNull($products);
+
+			$product = array_shift($products);
+			$args = new stdClass();
+			$args->product_srls = array($product->product_srl);
+			$product_repository->deleteProducts($args);
+
+			// Check that count was decreased
+			$category_repository = new CategoryRepository();
+			$category = $category_repository->getCategory(1000);
+			$this->assertEquals(0, $category->product_count);
+			// Check that count was decreased
+			$category = $category_repository->getCategory(1002);
+			$this->assertEquals(0, $category->product_count);
+		}
+
+		public function testProductCountUpdatesOnProductUpdate()
+		{
+			$module_srl = 1001;
+
+			$product_repository = new ProductRepository();
+
+			$product = new SimpleProduct();
+			$product->product_srl = 12;
+			$product->title = "Some product";
+			$product->member_srl = 4;
+			$product->module_srl = $module_srl;
+			$product->product_type = 'simple';
+			$product->sku = 'some-product';
+			$product->friendly_url = $product->sku;
+			$product->price = 100;
+			$product->categories[] = 1000;
+			$product->categories[] = 1002;
+			$product_repository->insertProduct($product);
+
+			// Check that count was increased
+			$category_repository = new CategoryRepository();
+			$category = $category_repository->getCategory(1000);
+			$this->assertEquals(1, $category->product_count);
+			// Check that count was increased
+			$category = $category_repository->getCategory(1002);
+			$this->assertEquals(1, $category->product_count);
+			// Check that count was increased
+			$category = $category_repository->getCategory(1008);
+			$this->isNull($category->product_count);
+
+			// Delete product
+			$args = new stdClass();
+			$args->module_srl = $module_srl;
+			$products = $product_repository->getAllProducts($args);
+			$this->assertNotNull($products);
+
+			$product = array_shift($products);
+			$product->categories = array(1002, 1008);
+			$product_repository->updateProduct($product);
+
+			// Check that count was decreased
+			$category_repository = new CategoryRepository();
+			$category = $category_repository->getCategory(1000);
+			$this->assertEquals(0, $category->product_count);
+			// Check that count was decreased
+			$category = $category_repository->getCategory(1002);
+			$this->assertEquals(1, $category->product_count);
+			// Check that count was increased
+			$category = $category_repository->getCategory(1008);
+			$this->assertEquals(1, $category->product_count);
+		}
 
 	/**
 	 * Test that product count gets updated correctly when product is configurable

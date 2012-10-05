@@ -565,7 +565,7 @@
             $oModuleModel = &getModel('module');
             $oShopModel = &getModel('shop');
 
-            $args = Context::gets('shop_title','shop_content','timezone','telephone','address','currency','VAT','show_VAT','out_of_stock_products','minimum_order');
+            $args = Context::gets('shop_title','shop_content','shop_email','timezone','telephone','address','currency','VAT','show_VAT','out_of_stock_products','minimum_order');
             $args->module_srl = $this->module_srl;
             $currencies = require_once(_XE_PATH_.'modules/shop/shop.currencies.php');
             $args->currency_symbol = $currencies[$args->currency]['symbol'];
@@ -610,7 +610,7 @@
             $args = Context::gets('discount_min_amount','discount_type','discount_amount','discount_tax_phase');
             $args->module_srl = $this->module_srl;
             if($args->discount_amount >= $args->discount_min_amount){
-                $this->setMessage('Discount amount is bigger than discount min amount');
+                $this->setMessage("Discount amount ($args->discount_amount) is bigger than discount min amount ($args->discount_min_amount)");
                 $returnUrl = getNotEncodedUrl('', 'act', 'dispShopToolDiscountInfo');
                 $this->setRedirectUrl($returnUrl);
                 return;
@@ -672,11 +672,11 @@
                 return new Object(-1, 'This is not your order');
             }
 
-            $order_items = $orderRepository->getOrderItems($order);
+            $order_items = $orderRepository->getOrderProductItems($order);
             $cart = $cartRepository->getCart($this->module_info->module_srl,null,$logged_info->member_srl, session_id(), true);
             $cartRepository->deleteCartProducts($cart->cart_srl);
             foreach($order_items as $item){
-                $cart->addProduct($item,$item->ordered_qty);
+                $cart->addProduct($item,$item->quantity);
             }
             $this->setMessage("Ordered renewed");
             $returnUrl = getNotEncodedUrl('', 'act', 'dispShopCart');
@@ -706,27 +706,44 @@
         /*
          * @author Florin Ercus (dev@xpressengine.org)
          */
+        public function procShopCheckoutLogin()
+        {
+            $this->setRedirectUrl(getNotEncodedUrl('', 'act', 'dispShopCheckout'));
+            $login = Context::get('login');
+            if ($user = $login['user']) {
+                try {
+                    if (Context::get('is_logged')) throw new Exception('Already logged in, this should not happen');
+                    if (!$pass = $login['pass']) throw new Exception('No password');
+                    /** @var $oMemberController memberController */
+                    $oMemberController = getController('member');
+                    return $oMemberController->procMemberLogin($user, $pass);
+                }
+                catch (Exception $e) {
+                    return new Object(-1, $e->getMessage());
+                }
+            }
+            else return new Object(-1, 'Username / password?');
+        }
+
+        /*
+         * @author Florin Ercus (dev@xpressengine.org)
+         */
         public function procShopToolCheckout()
         {
             $cartRepo = new CartRepository();
             $logged_info = Context::get('logged_info');
 
             //get or create cart:
-            if ($cart = $cartRepo->getCart($this->module_info->module_srl, null, $logged_info->member_srl, session_id(), true)) {
+            if ($cart = $cartRepo->getCart($this->module_info->module_srl, null, $logged_info->member_srl, session_id(), true))
+            {
 
-                $login = Context::get('login');
-                if ($user = $login['user']) {
-                    if (Context::get('is_logged')) throw new Exception('Already logged in, this should not happen');
-                    if (!$pass = $login['pass']) throw new Exception('No password');
-                    /** @var $oMemberController memberController */
-                    $oMemberController = getController('member');
-                    $result = $oMemberController->procMemberLogin($user, $pass);
-                    $this->setRedirectUrl(getNotEncodedUrl('', 'act', 'dispShopCheckout'));
-                    return $result;
-                }
                 $haveShipping = (Context::get('different_shipping') == 'yes');
                 $shipping = Context::get('shipping');
-                if (!$haveShipping) unset($shipping['address_srl']);
+                if (!$haveShipping)
+				{
+					$billing = Context::get('billing');
+					$shipping['address'] = $billing['address'];
+				}
 
                 try {
                     $cart->checkout(array(
@@ -883,8 +900,22 @@
             $args->order_srl = $order_srl;
             $args->module_srl = $order->module_srl;
             $shipment = new Shipment($args);
-            if(!isset($shipment->shipment_srl)) $insert=true;
-            $shipment->save();
+            $shipment->order = $order;
+            if(!isset($shipment->shipment_srl)) $insert = true;
+            try{
+                if($insert) {
+                    $productsEmptyStocks = $shipment->checkAndUpdateStocks();
+                    $product_srls = array();
+                    foreach($productsEmptyStocks as $product){
+                        $products_srls[] = $product->product_srl;
+                    }
+                    $products_srls = implode(', ',$product_srls);
+                }
+                $shipment->save();
+            }
+            catch(Exception $e) {
+                return new Object(-1, $e->getMessage());
+            }
             if($shipment->shipment_srl){
                 if(isset($order->invoice)) $order->order_status = Order::ORDER_STATUS_COMPLETED;
                 else $order->order_status = Order::ORDER_STATUS_PROCESSING;
@@ -895,7 +926,7 @@
                     return new Object(-1, $e->getMessage());
                 }
                 if($insert){
-                    $this->setMessage("Shipment has been created");
+                    $this->setMessage("Shipment has been created. " . (isset($products_srls) ? "Stock empty for products: $products_srls":''));
                     $return_url = getNotEncodedUrl('', 'act','dispShopToolViewOrder','order_srl',$order_srl);
                     $this->setRedirectUrl($return_url);
                 } else {
@@ -917,7 +948,7 @@
 
             // Get payment class
             $payment_repository = new PaymentMethodRepository();
-            $payment_method = $payment_repository->getPaymentMethod($cart->getExtra('payment_method'), $this->module_srl);
+            $payment_method = $payment_repository->getPaymentMethod($cart->getPaymentMethodName(), $this->module_srl);
 
             $error_message = '';
             if(!$payment_method->processPayment($cart, $error_message))
@@ -925,10 +956,18 @@
                 return new Object(-1, $error_message);
             }
 
-            $order = new Order($cart);
-            $order->save(); //obtain srl
-            $order->saveCartProducts($cart);
-            $cart->delete();
+			try
+			{
+				$order = new Order($cart);
+				$order->save(); //obtain srl
+				$order->saveCartProducts($cart);
+                Order::sendNewOrderEmails($order->order_srl);
+				$cart->delete();
+			}
+			catch(Exception $e)
+			{
+				return new Object(-1, $e->getMessage());
+			}
 
             $this->setRedirectUrl(getNotEncodedUrl('', 'act', 'dispShopOrderConfirmation', 'order_srl', $order->order_srl));
         }
@@ -1579,6 +1618,10 @@
 			}
 
 			$category = new Category($args);
+			if(!$args->include_in_navigation_menu)
+			{
+				$category->setIncludeInNavigationMenu('N');
+			}
 			try
 			{
 				if($category->category_srl === NULL)
@@ -1616,9 +1659,20 @@
 			$shopModel = $this->model;
 			$repository = $shopModel->getCategoryRepository();
 			$category = $repository->getCategory($category_srl);
-            $category->filename = $category->getThumbnailPath(50);
+			$json_category = new stdClass();
+			$properties = get_object_vars($category);
+			foreach($properties as $property_name => $property_value)
+			{
+				if(in_array($property_name, array('repo', 'cache')))
+				{
+					continue;
+				}
+				$json_category->$property_name = $property_value;
+			}
+			$json_category->include_in_navigation_menu = $category->getIncludeInNavigationMenu();
+            $json_category->filename = $category->getThumbnailPath(50);
 
-			$this->add('category', $category);
+			$this->add('category', $json_category);
 		}
 
 		/**
@@ -1717,6 +1771,41 @@
             $this->setRedirectUrl($returnUrl);
 
         }
+
+		public function procShopToolSetPaymentMethodAsDefault()
+		{
+			$name = Context::get('name');
+			if(!$name)
+			{
+				return new Object(-1, 'msg_invalid_request');
+			}
+
+			$payment_repository = new PaymentMethodRepository();
+			try
+			{
+				$payment_repository->setDefault($name, $this->module_srl);
+				$this->setMessage('success_registed');
+			}
+			catch(ArgumentException $e)
+			{
+				$this->setError(-1);
+				$this->setMessage($e->getMessage());
+			}
+			catch(DbQueryException $e)
+			{
+				$this->setError(-1);
+				$this->setMessage('db_query_failed');
+			}
+			catch(Exception $e)
+			{
+				$this->setError(-1);
+				$this->setMessage('fail_to_update');
+			}
+
+			$vid = Context::get('vid');
+			$returnUrl = getNotEncodedUrl('', 'vid', $vid, 'act', 'dispShopToolManagePaymentMethods');
+			$this->setRedirectUrl($returnUrl);
+		}
 
         /**
          * Deletes the payment plugins folder and database entry
@@ -2162,8 +2251,83 @@
 
             $vid = Context::get('vid');
             $mid = Context::get('mid');
-            $this->setRedirectUrl(getNotEncodedUrl('', 'vid', $vid, 'mid', $mid, 'act', 'dispShopToolShippingList'));
+            $this->setRedirectUrl(getNotEncodedUrl('', 'vid', $vid, 'mid', $mid, 'act', 'dispShopToolManageShippingMethods'));
         }
+
+		private function updateShippingMethodStatus($status)
+		{
+			$name = Context::get('name');
+			if(!isset($name))
+			{
+				return new Object(-1, 'msg_invalid_request');
+			}
+
+			$shipping_repository = new ShippingMethodRepository();
+			$shipping_method = $shipping_repository->getShippingMethod($name, $this->module_srl);
+			$shipping_method->status = $status;
+
+			try
+			{
+				$shipping_repository->updateShippingMethod($shipping_method);
+			}
+			catch(Exception $e)
+			{
+				$this->setError(-1);
+				$this->setMessage('msg_invalid_request');
+			}
+
+			$this->setMessage('Shipping method successfully updated!');
+
+			$vid = Context::get('vid');
+			$mid = Context::get('mid');
+			$this->setRedirectUrl(getNotEncodedUrl('', 'vid', $vid, 'mid', $mid, 'act', 'dispShopToolManageShippingMethods'));
+		}
+
+
+		public function procShopTollActivateShippingMethod()
+		{
+			$this->updateShippingMethodStatus(1);
+		}
+
+		public function procShopTollDeactivateShippingMethod()
+		{
+			$this->updateShippingMethodStatus(0);
+		}
+
+		public function procShopToolSetShippingMethodAsDefault()
+		{
+			$name = Context::get('name');
+			if(!$name)
+			{
+				return new Object(-1, 'msg_invalid_request');
+			}
+
+			$shipping_repository = new ShippingMethodRepository();
+			try
+			{
+				$shipping_repository->setDefault($name, $this->module_srl);
+				$this->setMessage('success_registed');
+			}
+			catch(ArgumentException $e)
+			{
+				$this->setError(-1);
+				$this->setMessage($e->getMessage());
+			}
+			catch(DbQueryException $e)
+			{
+				$this->setError(-1);
+				$this->setMessage('db_query_failed');
+			}
+			catch(Exception $e)
+			{
+				$this->setError(-1);
+				$this->setMessage('fail_to_update');
+			}
+
+			$vid = Context::get('vid');
+			$returnUrl = getNotEncodedUrl('', 'vid', $vid, 'act', 'dispShopToolManageShippingMethods');
+			$this->setRedirectUrl($returnUrl);
+		}
 
         public function procShopServiceActivateShippingMethod()
         {
@@ -2192,5 +2356,80 @@
         }
 
         // endregion
+
+		// moduleHandler.init after
+		public function triggerDeleteOldLogs()
+		{
+			if(__DEBUG__)
+			{
+				FileHandler::writeFile(ShopLogger::LOG_FILE_PATH . '.bk', FileHandler::readFile(ShopLogger::LOG_FILE_PATH), 'a');
+				FileHandler::writeFile(ShopLogger::XE_CORE_DEBUG_MESSAGE_PATH . '.bk', FileHandler::readFile(ShopLogger::XE_CORE_DEBUG_MESSAGE_PATH), 'a');
+				FileHandler::writeFile(ShopLogger::XE_CORE_DEBUG_DB_QUERY_PATH . '.bk', FileHandler::readFile(ShopLogger::XE_CORE_DEBUG_DB_QUERY_PATH), 'a');
+				FileHandler::removeFile(ShopLogger::LOG_FILE_PATH);
+				FileHandler::removeFile(ShopLogger::XE_CORE_DEBUG_MESSAGE_PATH);
+				FileHandler::removeFile(ShopLogger::XE_CORE_DEBUG_DB_QUERY_PATH);
+			}
+		}
+
+		// display after
+		public function triggerDisplayLogMessages()
+		{
+			if(__DEBUG__ && !in_array(Context::getResponseMethod(), array('XMLRPC')))
+			{
+				// Load XE Shop errors
+				$shop_log_messages = FileHandler::readFile(ShopLogger::LOG_FILE_PATH);
+				Context::set('shop_log_messages', $shop_log_messages);
+
+				// Load XE Core query log
+				$debug_messages = FileHandler::readFile(ShopLogger::XE_CORE_DEBUG_MESSAGE_PATH);
+				Context::set('debug_messages', $debug_messages);
+
+				// Load DB Query log
+				$debug_db_query = FileHandler::readFile(ShopLogger::XE_CORE_DEBUG_DB_QUERY_PATH);
+				Context::set('debug_db_query', $debug_db_query);
+
+				$oTemplateHandler = TemplateHandler::getInstance();
+				$view_logs = $oTemplateHandler->compile(_XE_PATH_ . '/modules/shop/tpl', 'log_viewer.html');
+				print $view_logs;
+			}
+		}
+
+		/**
+		 * Send email to new users
+		 */
+		public function triggerSendSignUpEmail($member_args)
+		{
+			$site_module_info = Context::get('site_module_info');
+			$module_srl = $site_module_info->index_module_srl;
+
+			$shop = new ShopInfo($module_srl);
+
+			// Don't send anything if sender and receiver email addresses are missing
+			if(!$shop->getEmail() || !$member_args->email_address)
+			{
+				ShopLogger::log("Failed to send welcome email to user. Member email is not set." . print_r($member_args, true));
+				return;
+			}
+
+			global $lang;
+			$email_subject = sprintf($lang->new_member_email_subject
+				, $shop->getShopTitle()
+			);
+
+			$email_content = sprintf($lang->new_member_email_content
+				, getFullSiteUrl('', 'act', 'dispShopHome')
+				, $shop->getShopTitle()
+				, getFullSiteUrl('', 'act', 'dispShopMyAccount')
+				, getFullSiteUrl('', 'act', 'dispShopHome')
+				, $shop->getShopTitle()
+			);
+
+			$oMail = new Mail();
+			$oMail->setTitle($email_subject);
+			$oMail->setContent($email_content);
+			$oMail->setSender($shop->getShopTitle(), $shop->getShopEmail());
+			$oMail->setReceiptor(false, $member_args->email_address);
+			$oMail->send();
+		}
     }
 ?>

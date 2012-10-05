@@ -28,10 +28,10 @@ jQuery(document).ready(function($){
     }).hide();
 
 
-	$(".product_variants select.level_1").change(function(){
+	$(".product-variants select.level_1").change(function(){
 		// When the first select changes ...
 		$first_select = $(this);
-		$current_container = $first_select.parent("p").parent(".product_variants");
+		$current_container = $first_select.parent("p").parent(".product-variants");
 
 		$selected_value = $first_select.val();
 
@@ -45,7 +45,7 @@ jQuery(document).ready(function($){
 		}
         else $addToCart.filter(':hidden').css('display', 'inline-block');
 
-		$product_srl = $current_container.attr("id").substr("product_variants_".length);
+		$product_srl = $current_container.attr("id").substr("product-variants_".length);
 
 		$second_select = $first_select.parent("p").next("p").children("select.level_2");
 		// If there's a second select
@@ -76,13 +76,13 @@ jQuery(document).ready(function($){
 		}
 		});
 
-	$(".product_variants select.level_2").change(function(){
+	$(".product-variants select.level_2").change(function(){
 		// When the second select changes ..
 		$second_select = $(this);
 		$selected_value = $(this).val();
 
 	    // If it's value is not set, we make sure product srl is reset and return
-		$current_container = $(this).parent("p").parent(".product_variants");
+		$current_container = $(this).parent("p").parent(".product-variants");
 		if(!$selected_value)
 		{
 			$current_container.find("#product_srl").val("");
@@ -91,7 +91,7 @@ jQuery(document).ready(function($){
 
 		$first_select = $second_select.parent("p").prev("p").children("select.level_1");
 
-		$product_srl = $current_container.attr("id").substr("product_variants_".length);
+		$product_srl = $current_container.attr("id").substr("product-variants_".length);
 
 		// There's always a first select, so we just take its value
 	    $corresponding_value = $first_select.val();

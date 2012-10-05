@@ -1,21 +1,30 @@
 <include target="_header.html" />
+<!--@if($shop_mode == 'module')-->
+        <!--@if(in_array($external_module, array('member')))-->
+            <include target="_my_account_sidebar.html" />
 
-<div id="body-content" class="main-content clearfix">
-    <!--@if($shop_mode == 'module')-->
-        {$content}
-    <!--@else-->
-        <!--@if(__DEBUG__)-->
-        This is the default layout / template file.
-        <br />
-
-        You should really set a custom
-        template file for your view using $this->setTemplateFile("someFile.html").
-
-        <br />
-        Good luck!
+            {$content}
         <!--@else-->
-        Ooops! We can't find the page you're looking for. Try going to the <a href="{getUrl('', 'vid', $mid)}">Hompepage</a>!.
+            <div id="body-content" class="main-content clearfix">
+                {$content}
+            </div>
         <!--@end-->
-    <!--@end-->
-</div>
+<!--@else-->
+    <div id="body-content" class="main-content clearfix">
+        <!--@if(__DEBUG__)-->
+            <h1>Missing layout file!</h1>
+            <p>This is the default layout / template file.</p>
+
+            <p>You should really set a custom template file for your view using <b>$this->setTemplateFile("someFile.html")</b>.</p>
+
+            <p>Good luck!</p>
+        <!--@else-->
+            <h1>Page not found</h1>
+            <p>
+                Ooops! We can't find the page you're looking for. Try going to the <a href="{getUrl('', 'vid', $vid, 'mid', $mid)}">Hompepage</a>!.
+            </p>
+        <!--@end-->
+    </div>
+<!--@end-->
+
 <include target="_footer.html"/>

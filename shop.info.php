@@ -75,6 +75,11 @@
             return $this->get('shop_title');
         }
 
+		public function getShopEmail(){
+			if(!$this->isExists()) return;
+			return $this->get('shop_email');
+		}
+
         function getFaviconSrc(){
             if(!$this->isExists()) return;
             $oShopModel = &getModel('shop');
@@ -255,5 +260,9 @@
             return getUrl('','mid',$this->getMid());
         }
 
+        public function showVAT()
+        {
+            return $this->getShowVAT() == 'Y' && $this->getVAT() > 0;
+        }
    }
 ?>

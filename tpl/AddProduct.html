@@ -241,7 +241,7 @@
                     <td class="title">
                         <div class="fItem">
                             <label class="iLabel" for="qty">{$lang->about_qty}</label>
-                            <input type="text" id="qty" name="qty" style="width:200px" class="iText iText" title="{$lang->about_qty}" <!--@if($product->title)-->value="{number_format($product->qty,2)}"<!--@end--> />
+                            <input type="text" id="qty" name="qty" style="width:200px" class="iText iText" title="{$lang->about_qty}" <!--@if($product->title)-->value="{$product->qty}"<!--@end--> />
                         </div>
                     </td>
                 </tr>

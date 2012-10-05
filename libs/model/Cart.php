@@ -2,7 +2,7 @@
 /**
  * @author Florin Ercus (dev@xpressengine.org)
  */
-class Cart extends BaseItem
+class Cart extends BaseItem implements IProductItemsContainer
 {
 
     public
@@ -34,14 +34,14 @@ class Cart extends BaseItem
         $this->query('deleteCartProducts', array('cart_srl'=> $this->cart_srl));
     }
 
-    public function merge(Cart $cart)
+    public function merge(Cart $cart, $withDelete=true)
     {
         if (!$cart->cart_srl || !$this->cart_srl) throw new Exception('Missing srl(s) for carts merge');
         if ($cart->cart_srl == $this->cart_srl) {
             throw new Exception('Cannot merge with same cart');
         }
         $this->copyProductLinksFrom($cart);
-        $cart->delete();
+        if ($withDelete) $cart->delete();
     }
 
     public function copyProductLinksFrom(Cart $cart)
@@ -58,10 +58,12 @@ class Cart extends BaseItem
                     break;
                 }
             }
-            //if I have it update my quantity
-            if ($have) $this->repo->updateCartProduct($this->cart_srl, $cp->product_srl, $cp->quantity + $cp2->quantity);
-            //else add it
-            else $this->repo->insertCartProduct($this->cart_srl, $cp->product_srl, $cp->quantity, array('title'=>$cp->title, 'price'=>$cp->price));
+            if ($have) { //if I have it update my quantity
+                $this->repo->updateCartProduct($this->cart_srl, $cp->product_srl, $cp->quantity + $cp2->quantity);
+            }
+            else { //else add it
+                $this->repo->insertCartProduct($this->cart_srl, $cp->product_srl, $cp->quantity, array('title'=>$cp->title, 'price'=>$cp->price));
+            }
         }
         //count again
         $this->setExtra('price', $this->getPrice(true));
@@ -104,7 +106,7 @@ class Cart extends BaseItem
         }
         else {
             $cartProductQuantity = $quantity;
-            $return = $this->repo->insertCartProduct($this->cart_srl, $product->product_srl, $cartProductQuantity, array('title' => $product->title, 'price'=>$product->price));
+            $return = $this->repo->insertCartProduct($this->cart_srl, $product->product_srl, $cartProductQuantity, array('title' => $product->title, 'price'=>$product->getPrice()));
         }
         $this->setExtra('price', $this->getPrice(true));
         $this->items = $this->count(true, true);
@@ -134,11 +136,17 @@ class Cart extends BaseItem
         return $this->getCartProduct($product) ? true : false;
     }
 
+    /**
+     * @param $product
+     *
+     * @return null|CartProduct
+     */
     public function getCartProduct($product)
     {
         return $this->repo->getCartProduct($this->cart_srl, $product);
     }
 
+	// TODO See what's the deal with this - could be replaced with getTotal i think
     public function getPrice($refresh=false, $onlyAvailables=false)
     {
         if (!$refresh && is_numeric($price = $this->getExtra('price'))) return $price;
@@ -169,7 +177,7 @@ class Cart extends BaseItem
                 return $count;
             }
         }
-        return $this->repo->countCartProducts($this->module_srl, $this->cart_srl, $this->member_srl, $this->session_id, $sumQuantities);
+        return $this->repo->countCartProducts($this, $sumQuantities);
     }
 
     public function countAvailableProducts()
@@ -190,12 +198,12 @@ class Cart extends BaseItem
      * @return mixed Cart products
      * @throws Exception
      */
-    public function getProducts($n=null, $onlyAvailables=false)
+    public function getProducts($n=null, $onlyAvailables=false, $ignoreCache=false)
     {
         if (!$this->cart_srl) throw new Exception('Cart is not persisted');
         //an entity-unique cache key for the current method and parameters combination
         $cacheKey = 'getProducts|' . ($n?$n:"_").(string)($onlyAvailables?'av':'all');
-        if (!$products = $this->cache[$cacheKey]) {
+        if ($ignoreCache || !$products = $this->cache[$cacheKey]) {
             $products = array();
             $shopInfo = new ShopInfo($this->module_srl);
             $checkIfInStock = ($shopInfo->getOutOfStockProducts() == 'Y');
@@ -204,21 +212,15 @@ class Cart extends BaseItem
             $output = $this->query('getCartAllProducts', $params, true);
             $stds = $output->data;
             foreach ($stds as $i=>$data) {
-                $product = new SimpleProduct($data);
-                $product->cart_product_srl = $data->cart_product_srl;
-                $product->cart_product_title = $data->cart_product_title;
-                $product->cart_product_price = $data->cart_product_price;
-                $product->quantity = $data->quantity;
-                if ($product->isPersisted()) {
-                    $available = $product->isAvailable($checkIfInStock);
-                    if ($onlyAvailables && !$available) continue;
-                    $product->available = $available;
+                $cartProduct = new CartProduct($data);
+                $simpleProduct = $cartProduct->getProduct();
+                if ($simpleProduct->isPersisted()) {
+                    if(!$simpleProduct->isAvailable($checkIfInStock) && $onlyAvailables) continue;
                 }
                 else {
-                    $product->available = false;
-                    if ($onlyAvailables) continue;
+                    if ($onlyAvailables || !$cartProduct->cart_product_srl) continue;
                 }
-                $products[$i] = $product;
+                $products[$i] = $cartProduct;
             }
             $this->cache[$cacheKey] = $products;
         }
@@ -229,22 +231,20 @@ class Cart extends BaseItem
         return $products;
     }
 
+    public function emptyCart()
+    {
+        $this->repo->deleteCartProducts($this->cart_srl);
+    }
+
     public function getProductsList(array $args=array())
     {
         if (!$this->cart_srl) throw new Exception('Cart is not persisted');
-
-        $shopInfo = new ShopInfo($this->module_srl);
-        $checkIfInStock = ($shopInfo->getOutOfStockProducts() == 'Y');
 
         $output = $this->query('getCartProductsList', array_merge(array('cart_srl'=>$this->cart_srl), $args), true);
         foreach ($output->data as $i=>&$data) {
             //if ($data->product_srl is missing) then product was deleted by shop admin
             if ($data->cart_product_srl) {
-                $product = new SimpleProduct($data);
-                $product->quantity = $data->quantity;
-                $product->available = ( $data->product_srl ? $this->productStillAvailable($product, $checkIfInStock) : false );
-                $product->cart_product_srl = $data->cart_product_srl;
-                $product->cart_product_title = $data->cart_product_title;
+                $product = new CartProduct($data);
                 $data = $product;
             }
             else unset($output->data[$i]);
@@ -267,6 +267,8 @@ class Cart extends BaseItem
     private $discount; //discount short cache
 
     /**
+     * @param null $forceDiscountType Forces a specific discount type
+     *
      * @return Discount|null
      * @throws Exception
      */
@@ -283,10 +285,10 @@ class Cart extends BaseItem
         $vat = $shop->getVAT();
         $currency = $shop->getCurrencySymbol();
         if ($discountAmount && $discountType && $discountMinAmount <= $cartValue) {
-            if ($discountType == 'fixed_amount') {
+            if ($discountType == Discount::DISCOUNT_TYPE_FIXED_AMOUNT) {
                 $discount = new FixedAmountDiscount($cartValue, $discountAmount, $discountMinAmount, $vat, $discountBeforeVAT, $currency);
             }
-            elseif ($discountType == 'percentage') {
+            elseif ($discountType == Discount::DISCOUNT_TYPE_PERCENTAGE) {
                 $discount = new PercentageDiscount($cartValue, $discountAmount, $discountMinAmount, $vat, $discountBeforeVAT, $currency);
             }
             //elseif... add new discount types here after you create the classes
@@ -298,11 +300,11 @@ class Cart extends BaseItem
         return null;
     }
 
-    public function getItemTotal($onlyAvailables=false)
+    public function getItemTotal()
     {
-        $output = $this->getProducts(null, $onlyAvailables);
+        $output = $this->getProducts(null, true);
         $total = 0;
-        /** @var $product Product */
+        /** @var $product CartProduct */
         foreach ($output as $product) {
             $price = ($product->price ? $product->price : $product->cart_product_price);
             $total += $price * $product->quantity;
@@ -310,31 +312,80 @@ class Cart extends BaseItem
         return $total;
     }
 
+	public function getTotalBeforeDiscountWithVAT()
+	{
+		return $this->getTotalBeforeDiscount();
+	}
 
-    public function getTotalBeforeDiscount($onlyAvailables=false)
+	public function getTotalBeforeDiscountWithoutVAT()
+	{
+		$shop = new ShopInfo($this->module_srl);
+		return $this->getTotalBeforeDiscountWithVAT() / (1 + $shop->getVAT() / 100);
+	}
+
+	public function getTotalAfterDiscount()
+	{
+		return $this->getTotalAfterDiscountWithVAT();
+	}
+
+	public function getTotalAfterDiscountWithVAT()
+	{
+		return $this->getTotalAfterDiscountWithoutVAT()
+			+ $this->getVATAfterDiscount();
+	}
+
+	public function getTotalAfterDiscountWithoutVAT()
+	{
+		$shop = new ShopInfo($this->module_srl);
+		$discount = $this->getDiscount();
+		if($discount && ($shop->getShopDiscountType() == Discount::DISCOUNT_TYPE_FIXED_AMOUNT
+			|| $shop->getShopDiscountTaxPhase() == Discount::PHASE_AFTER_VAT))
+		{
+			$total = $this->getTotalBeforeDiscountWithVAT();
+			$total -= $discount->getReductionValue();
+			return $total / (1 + $shop->getVAT() / 100);
+		}
+		$total = $this->getTotalBeforeDiscountWithoutVAT();
+		if($discount)
+		{
+			$total -= $discount->getReductionValue();
+		}
+		return $total;
+	}
+
+    public function getTotalBeforeDiscount()
     {
-        $total = $this->getItemTotal($onlyAvailables);
-        $total += $this->getShippingCost();
+        $total = $this->getItemTotal();
         return $total;
     }
 
-    public function getTotal($onlyAvailables=false)
+    public function getTotal()
     {
-        if ($discount = $this->getDiscount()) {
-            return $discount->getValueDiscounted();
-        }
-        return $this->getTotalBeforeDiscount($onlyAvailables);
+		$total = $this->getTotalAfterDiscount();
+		$total += $this->getShippingCost();
+        return $total;
     }
 
-    public function getVAT($onlyAvailable=false, $withDiscount=false)
+    public function getVAT()
     {
-        $shop = new ShopInfo($this->module_srl);
-        return $shop->getVAT() / 100 * $this->getTotal($onlyAvailable, $withDiscount);
+		return $this->getVATAfterDiscount();
     }
+
+	public function getVATBeforeDiscount()
+	{
+		$shop = new ShopInfo($this->module_srl);
+		return $this->getTotalBeforeDiscountWithoutVAT() * $shop->getVAT() / 100;
+	}
+
+	public function getVATAfterDiscount()
+	{
+		$shop = new ShopInfo($this->module_srl);
+		return $this->getTotalAfterDiscountWithoutVAT() * $shop->getVAT() / 100;
+	}
 
     public function getShippingCost()
     {
-        $shipping_method = $this->getExtra('shipping_method');
+        $shipping_method = $this->getShippingMethodName();
         if($shipping_method){
             $shipping_repository = new ShippingMethodRepository();
             $shipping = $shipping_repository->getShippingMethod($shipping_method, $this->module_srl);
@@ -571,14 +622,65 @@ class Cart extends BaseItem
 
     public function getShippingMethodName()
     {
-        return $this->getExtra('shipping_method');
+        $shipping_method = $this->getExtra('shipping_method');
+		if($shipping_method)
+		{
+			return $shipping_method;
+		}
+
+		$shipping_repository = new ShippingMethodRepository();
+		$default_shipping = $shipping_repository->getDefault($this->module_srl);
+		return $default_shipping->name;
     }
 
     public function getPaymentMethodName()
     {
-        return $this->getExtra('payment_method');
+        $payment_method = $this->getExtra('payment_method');
+		if($payment_method)
+		{
+			return $payment_method;
+		}
+
+		$payment_repository = new PaymentMethodRepository();
+		$default_payment = $payment_repository->getDefault($this->module_srl);
+		return $default_payment->name;
     }
 
+    /**
+     * Discount name
+     */
+    public function getDiscountName()
+    {
+		$discount = $this->getDiscount
+		();
+		return $discount ? $discount->getName() : null;
+    }
 
+    /**
+     * Discount description
+     */
+    public function getDiscountDescription()
+    {
+		$discount = $this->getDiscount();
+        return $discount ? $discount->getDescription() : null;
+    }
 
+    /**
+     * Discount amount
+     */
+    public function getDiscountAmount()
+    {
+		$discount = $this->getDiscount();
+        return $discount ? $discount->getReductionValue() : null;
+    }
+
+	public function getCustomerFirstname()
+	{
+		return $this->getBillingAddress()->firstname;
+	}
+
+	public function getCustomerLastname()
+	{
+		return $this->getBillingAddress()->lastname;
+	}
 }

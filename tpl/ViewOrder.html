@@ -13,10 +13,10 @@
             <a href="{getUrl('act', 'dispShopToolManageOrders')}">{$lang->back_to_orders}</a>
             <!--@if($order->order_status != Order::ORDER_STATUS_CANCELED)-->
                 <!--@if($order->order_status != Order::ORDER_STATUS_HOLD && $order->order_status != Order::ORDER_STATUS_COMPLETED)-->
-                    <li><a href="{getUrl('act','dispShopToolEditOrder','order_srl',$order->order_srl)}">{$lang->edit}</a></li>
+                    <!-- <li><a href="{getUrl('act','dispShopToolEditOrder','order_srl',$order->order_srl)}">{$lang->edit}</a></li>  -->
                     <li><a href="{getUrl('act','procShopToolCancelOrder','order_srl',$order->order_srl)}">{$lang->cancel}</a></li>
                 <!--@end-->
-                <li><a href="{getUrl('act','procShopToolSendOrderEmail','order_srl',$order->order_srl)}">{$lang->send_email}</a></li>
+                <!-- <li><a href="{getUrl('act','procShopToolSendOrderEmail','order_srl',$order->order_srl)}">{$lang->send_email}</a></li> -->
                 <!--@if($order->order_status != Order::ORDER_STATUS_COMPLETED)-->
                     <!--@if($order->order_status == Order::ORDER_STATUS_HOLD)-->
                         <li><a href="{getUrl('act','procShopToolUnholdOrder','order_srl',$order->order_srl)}">{$lang->unhold}</a></li>
@@ -34,7 +34,7 @@
                 <!--@end-->
             <!--@end-->
             <!--@if($order->order_status != Order::ORDER_STATUS_HOLD)-->
-                <li><a href="{getUrl('act','dispShopToolReorder','order_srl',$order->order_srl)}">{$lang->reorder}</a></li>
+                <!-- <li><a href="{getUrl('act','dispShopToolReorder','order_srl',$order->order_srl)}">{$lang->reorder}</a></li>    -->
             <!--@end-->
         </ul>
     </div>
@@ -60,56 +60,15 @@
     </fieldset>
     <fieldset>
         <h4 class="h4">{$lang->payment_info}</h4>
-        <p>{$lang->payment_method_used} <b>{$order->payment_method}</b></p>
+        <p>{$lang->payment_method_used} <b>{ucwords(str_replace('_', ' ', $order->payment_method))}</b></p>
     </fieldset>
     <fieldset>
         <h4 class="h4">{$lang->shipping_info}</h4>
-        <p>{$lang->shipping_method_used} <b>{$order->shipping_method}</b></p>
+        <p>{$lang->shipping_method_used} <b>{ucwords(str_replace('_', ' ', $order->shipping_method))}</b></p>
     </fieldset>
     <fieldset>
         <h4 class="h4">{$lang->items_ordered}</h4>
-        <table border="1" cellspacing="0" summary="{$lang->items_ordered}" class="tableData">
-            <thead>
-            <tr cond="!empty($ordered_items)">
-                <th scope="col" class="title">{$lang->title}</th>
-                <th scope="col">{$lang->sku}</th>
-                <th scope="col">{$lang->price}</th>
-                <th scope="col">{$lang->qty}</th>
-                <th scope="col">{$lang->subtotal}</th>
-            </tr>
-            </thead>
-            <tbody>
-
-            <!--@foreach($ordered_items as $no => $item)-->
-            <tr>
-                <td class="title">{$item->title}</td>
-                <td class="small">{$item->sku}</td>
-                <td class="small">{ShopDisplay::priceFormat($item->price, $shop->getCurrencySymbol())}</td>
-                <td class="small">{$item->ordered_qty}</td>
-                <td class="small">{ShopDisplay::priceFormat($item->price * $item->ordered_qty, $shop->getCurrencySymbol())}</td>
-            </tr>
-            <!--@end-->
-            <tfoot>
-                <tr>
-                    <td colspan="3"></td>
-                    <td><b>{$lang->grand_total}</b></td>
-                    <td>{ShopDisplay::priceFormat($order->total, $shop->getCurrencySymbol())}</td>
-                </tr>
-                <!--@if($shop->getShowVAT() == 'Y' && $shop->getVAT() > 0)-->
-                <tr >
-                    <td colspan="3"></td>
-                    <td>
-                        {$lang->taxes}
-                    </td>
-                    <td>
-                        {ShopDisplay::priceFormat($order->total * ($shop->getVAT()/100), $shop->getCurrencySymbol())}
-                    </td>
-                </tr>
-                <!--@end-->
-            </tfoot>
-
-            </tbody>
-        </table>
+        <include target="product_items" />
     </fieldset>
     </div>
     <a href="{getUrl('act', 'dispShopToolManageOrders')}">{$lang->back_to_orders}</a>

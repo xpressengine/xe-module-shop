@@ -131,6 +131,11 @@ class CategoryRepository extends BaseRepository
 		return TRUE;
 	}
 
+	public function getNavigationCategoriesTree($module_srl)
+	{
+		return $this->getCategoriesTree($module_srl, true);
+	}
+
 	/**
 	 * Get all product categories for a module as a tree
 	 * Returns root node
@@ -140,16 +145,22 @@ class CategoryRepository extends BaseRepository
 	 * @throws Exception
 	 * @return CategoryTreeNode Tree root node
 	 */
-	public function getCategoriesTree($module_srl)
+	public function getCategoriesTree($module_srl, $only_included_in_navigation_menu = false)
 	{
 		$args = new stdClass();
 		$args->module_srl = $module_srl;
+		if($only_included_in_navigation_menu)
+			$args->include_in_navigation_menu = 'Y';
 
 		// Retrieve categories from database
-		$output = executeQueryArray('shop.getCategories', $args);
-		if(!$output->toBool())
+		try
 		{
-			throw new Exception($output->getMessage(), $output->getError());
+			$output = $this->query('shop.getCategories', $args, true);
+		}
+		catch(DbQueryException $e)
+		{
+			$output = new stdClass();
+			$output->data = array();
 		}
 
 		// Arrange hierarchically
@@ -222,7 +233,7 @@ class CategoryRepository extends BaseRepository
         //table header for categories csv
         foreach($categories[0]->category as $key => $value)
         {
-            if(!in_array($key,array('member_srl','module_srl','regdate','last_update','repo','product_count')))
+            if(!in_array($key,array('member_srl','module_srl','regdate','last_update','repo','product_count','cache')))
             {
                 if($key == 'category_srl') $buff = $buff.'id,';
                 else $buff = $buff.$key.",";
@@ -237,7 +248,7 @@ class CategoryRepository extends BaseRepository
             FileHandler::copyFile($filename,$export_filename);
 
             foreach($category->category as $key => $value){
-                if(!in_array($key,array('member_srl','module_srl','regdate','last_update','repo','product_count','filename')))
+                if(!in_array($key,array('member_srl','module_srl','regdate','last_update','repo','product_count','filename','cache')))
                 {
                     $buff = $buff.$value.",";
                 }
