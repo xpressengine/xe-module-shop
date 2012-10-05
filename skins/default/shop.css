@@ -984,9 +984,13 @@ li span.close-sign, li span.open-sign {
     -moz-box-shadow: none;
     -webkit-box-shadow: none;
 }
-.product .discount-price {
+.product .discount-price, .product-price .discount-price {
     color: #4f4f4f;
     text-decoration: line-through;
+}
+
+.product-price .discount-price {
+    margin-right: 5px;
 }
 
 .product-list .price {
@@ -1304,7 +1308,6 @@ li span.close-sign, li span.open-sign {
 
 .product-price .add-to-cart {
     margin-right: 100px;
-    padding: 0 0 5px 0;
 }
 
 
