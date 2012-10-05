@@ -298,10 +298,10 @@ class CartTest extends Shop_Generic_Tests_DatabaseTestCase
         $this->assertEquals(2, count($cart->getProducts())); // Default, , show all products
 
         // 3. Check that item total is correct
-        $this->assertEquals(44.98, $cart->getItemTotal()); // Count just available products
+        $this->assertEquals(29.99, $cart->getItemTotal()); // Count just available products
 
         // 4. Check global total is correct (includes shipping +10)
-        $this->assertEquals(54.98, $cart->getTotal(), '', 0.01); // Count just available products
+        $this->assertEquals(39.99, $cart->getTotal(), '', 0.01); // Count just available products
     }
 
 	public function testDiscountPercentageBeforeVAT()
