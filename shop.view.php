@@ -136,6 +136,7 @@ class shopView extends shop {
 				$file_method = 'setLayoutFile';
 				$css_path_method = 'getLayoutPath';
 				Context::set('shop_mode', 'module');
+				Context::set('external_module', $oModule->module);
 			}else{
 				$path_method = 'setTemplatePath';
 				$file_method = 'setTemplateFile';
