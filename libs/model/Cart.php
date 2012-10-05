@@ -632,4 +632,14 @@ class Cart extends BaseItem implements IProductItemsContainer
 		$discount = $this->getDiscount();
         return $discount ? $discount->getReductionValue() : null;
     }
+
+	public function getCustomerFirstname()
+	{
+		return $this->getBillingAddress()->firstname;
+	}
+
+	public function getCustomerLastname()
+	{
+		return $this->getBillingAddress()->lastname;
+	}
 }

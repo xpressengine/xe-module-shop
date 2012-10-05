@@ -281,7 +281,7 @@ class PaypalPaymentsStandard extends PaymentMethodAbstract
 	 */
 	public function isConfigured()
 	{
-		if(!isset($this->business_email) || !isset($this->pdt_token) || !isset($this->gateway_api)) return false;
+		if(!isset($this->business_account) || !isset($this->pdt_token) || !isset($this->gateway_api)) return false;
 		return true;
 	}
 }
