@@ -199,6 +199,11 @@ class PaypalExpressCheckoutAPI extends PaymentAPIAbstract
         $this->data["PAYMENTREQUEST_0_TAXAMT"] = $tax_total;
     }
 
+	private function disablePaypalShippingAddresses()
+	{
+		$this->data["NOSHIPPING"] = 1;
+	}
+
     private function addShippingTotal($shipping_total)
     {
         $this->data["PAYMENTREQUEST_0_SHIPPINGAMT"] = $shipping_total;
@@ -236,6 +241,7 @@ class PaypalExpressCheckoutAPI extends PaymentAPIAbstract
         if($item_total) $this->addItemsTotal($item_total);
         if($tax_total) $this->addTaxTotal($tax_total);
         if($shipping_total) $this->addShippingTotal($shipping_total);
+		$this->disablePaypalShippingAddresses();
         $this->addOrderTotal($order_total);
         $this->addCurrency($currency);
         $this->addPaymentAction();
