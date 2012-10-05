@@ -10,9 +10,11 @@
         <div class="f-right cart">
             <span>
                 <span id="cart-button">
-                    <span>{$cart_preview->getCartProductsCount()}</span>
-                    {$lang->your_cart}
-                    <img src="img/arrow_dropdown.png" alt="" title=""/>
+                    <a href="{getURL('', 'act','dispShopCart')}">
+                        <span>{$cart_preview->getCartProductsCount()}</span>
+                        {$lang->your_cart}
+                        <img src="img/arrow_dropdown.png" alt="" title=""/>
+                    </a>
                 </span>
                 <span id="cart-details">
                     <!--@if($cart_preview->hasProducts())-->
