@@ -640,7 +640,7 @@
                 return new Object(-1, 'This is not your order');
             }
 
-            $order_items = $orderRepository->getOrderItems($order);
+            $order_items = $orderRepository->getOrderProductItems($order);
             $cart = $cartRepository->getCart($this->module_info->module_srl,null,$logged_info->member_srl, session_id(), true);
             $cartRepository->deleteCartProducts($cart->cart_srl);
             foreach($order_items as $item){

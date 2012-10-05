@@ -34,11 +34,10 @@
             <!--@end-->
         </tbody>
     </table>
-
     <!-- Pagination -->
     <!--@if($page_navigation)-->
     <!--@if($page==null)-->{@$page=1;}<!--@end-->
-    <div class="pagination inside-content" cond="!count($orders)">
+    <div class="pagination inside-content" cond="count($orders)">
         <a href="{getUrl('page','','mid',$mid)}" class="prev">&laquo; {$lang->first_page}</a>
         <!--@while($page_no = $page_navigation->getNextPage())-->
         <!--@if($page == $page_no)-->

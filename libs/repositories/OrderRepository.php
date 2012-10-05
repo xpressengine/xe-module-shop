@@ -172,5 +172,18 @@ class OrderRepository extends BaseRepository
         return $ordered_items;
     }
 
+    public function getOrderProductItems($order)
+    {   $shopModel = getModel('shop');
+        $productRepository = $shopModel->getProductRepository();
+        $args = new stdClass();
+        $args->order_srl = $order->order_srl;
+        $output = $this->query('getOrderItems',$args,true);
+        foreach($output->data as $item){
+            $product = new SimpleProduct($item);
+            $ordered_items[] = $product;
+        }
+        return $ordered_items;
+    }
+
 
 }
