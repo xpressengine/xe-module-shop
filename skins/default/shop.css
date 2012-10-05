@@ -1452,3 +1452,11 @@ li span.close-sign, li span.open-sign {
     padding: 5px;
     margin: 0 10px 0 0;
 }
+
+input.error, textarea.error {
+    background-color: #FFECEC;
+}
+label.error {
+    color: #dc143c;
+    margin-left: 20px;
+}
