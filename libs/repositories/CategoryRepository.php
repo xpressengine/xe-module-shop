@@ -233,7 +233,7 @@ class CategoryRepository extends BaseRepository
         //table header for categories csv
         foreach($categories[0]->category as $key => $value)
         {
-            if(!in_array($key,array('member_srl','module_srl','regdate','last_update','repo','product_count')))
+            if(!in_array($key,array('member_srl','module_srl','regdate','last_update','repo','product_count','cache')))
             {
                 if($key == 'category_srl') $buff = $buff.'id,';
                 else $buff = $buff.$key.",";
@@ -248,7 +248,7 @@ class CategoryRepository extends BaseRepository
             FileHandler::copyFile($filename,$export_filename);
 
             foreach($category->category as $key => $value){
-                if(!in_array($key,array('member_srl','module_srl','regdate','last_update','repo','product_count','filename')))
+                if(!in_array($key,array('member_srl','module_srl','regdate','last_update','repo','product_count','filename','cache')))
                 {
                     $buff = $buff.$value.",";
                 }
