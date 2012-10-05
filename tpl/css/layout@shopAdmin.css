@@ -6,7 +6,7 @@ body,
 #shopAdmin,
 #container{_height:100%}
 html{background-color:#fff;color:#000}
-body{margin:0;font-family:Tahoma, Sans-serif;background-image:url(../img/vrLnb.gif);background-repeat:repeat-y;background-position:169px top}
+body{margin:0;font-family:Tahoma, Sans-serif;background-image:url(../img/vrLnb.gif);background-repeat:repeat-y;background-position:199px top}
 img{border:0}
 form{margin:0;padding:0}
 form input, 
@@ -26,7 +26,7 @@ a.skipToContent{text-align:center;color:#fff;position:absolute;width:100%;font-s
 #shopAdmin.hybrid #container.ece #body{clear:both;height:100%;padding-left:210px;padding-right:270px;z-index:2}
 #shopAdmin.hybrid #container #body #content{z-index:1;padding-bottom:150px}
 #shopAdmin.hybrid #container #body .extension{z-index:2}
-#shopAdmin.hybrid #container.ec #body .extension.e1{width:170px;margin-right:-170px;padding-bottom:150px;left:-210px}
+#shopAdmin.hybrid #container.ec #body .extension.e1{width:200px;margin-right:-200px;padding-bottom:150px;left:-210px}
 #shopAdmin.hybrid #container.ece #body .extension.e1{width:170px;margin-right:-170px;margin-bottom:150px;left:-210px}
 #shopAdmin.hybrid #container.ece #body .extension.e2{padding-top:80px;width:230px;margin-left:-230px;margin-bottom:150px;left:250px}
 
@@ -84,9 +84,16 @@ a.skipToContent{text-align:center;color:#fff;position:absolute;width:100%;font-s
 .setUp .favicon .deleteFavicon span{position:absolute;width:0;height:0;overflow:hidden;font-size:0;line-height:0;visibility:hidden;z-index:-1}
 
 /* Header */
-#shopAdmin #header{width:100%;height:100px;zoom:1;z-index:1;clear:both;background:url(../img/bgHeader.gif) repeat-x}
+#shopAdmin #header{
+    width:100%;
+    height:110px;
+    zoom:1;
+    z-index:1;
+    clear:both;
+    background: #282e3f url(../img/bgHeader.gif) 0 10px repeat-x;
+}
 #shopAdmin #header:after{content:"";display:block;clear:both}
-#shopAdmin #header h1{position:relative;float:left;margin:0;padding:0 10px 0 18px;background:#282e3f}
+#shopAdmin #header h1{position:relative;float:left;margin: 5px 0 0 0;padding:0 10px 0 18px;background:#282e3f}
 #shopAdmin #header .navigation{position:static;left:-1px;float:left;clear:right;white-space:nowrap;font-size:11px;z-index:1;overflow:visible}
 #shopAdmin #header .navigation .section{position:static}
 #shopAdmin #header .navigation ul{padding-top:7px;zoom:1}
@@ -118,7 +125,24 @@ a.skipToContent{text-align:center;color:#fff;position:absolute;width:100%;font-s
 #shopAdmin #footer address img{display:block}
 
 /* LNB Toggle */
-#shopAdmin .lnbToggle{position:absolute;z-index:3;left:172px;top:355px;display:block;padding:0;width:14px;height:52px;margin-top:-26px;border:0;background-color:transparent;background-image:url(../img/buttonLnbToggle.gif);background-repeat:no-repeat;cursor:pointer;zoom:1}
+#shopAdmin .lnbToggle{
+    position:absolute;
+    z-index:3;
+    left:202px;
+    top:355px;
+    display:block;
+    padding:0;
+    width:14px;
+    height:52px;
+    margin-top:-26px;
+    border:0;
+    background-color:transparent;
+    background-image:url(../img/buttonLnbToggle.gif);
+    background-repeat:no-repeat;
+    cursor:pointer;
+    zoom:1;
+    display: none;
+}
 #shopAdmin .lnbToggle span{position:absolute;font-size:0;line-height:0;z-index:-1;width:0;height:0;overflow:hidden;visibility:hidden}
 .lnbClose #shopAdmin .lnbToggle{left:54px;background-position:0 -52px}
 
@@ -133,24 +157,126 @@ a.skipToContent{text-align:center;color:#fff;position:absolute;width:100%;font-s
 #shopAdmin #body .extension.e1 ul li.active ul{display:block}
 #shopAdmin #body .extension.e1 ul li.active ul{background:#f8f8f8}
 
-#shopAdmin #body .extension.e1 ul li{position:relative;border-bottom:1px solid #d2d2d2;border-top:1px solid #f8f8f8;white-space:nowrap;background-image:url(../img/iconLnb.gif);background-repeat:no-repeat;background-position:24px 11px}
-#shopAdmin #body .extension.e1 ul li.dashboard{background-position:24px 11px}
-#shopAdmin #body .extension.e1 ul li.post{background-position:24px -41px}
-#shopAdmin #body .extension.e1 ul li.comment{background-position:24px -91px}
-#shopAdmin #body .extension.e1 ul li.statistics{background-position:24px -141px}
-#shopAdmin #body .extension.e1 ul li.design{background-position:24px -191px}
-#shopAdmin #body .extension.e1 ul li.setup{background-position:24px -241px}
+#shopAdmin #body .extension.e1 ul li {
+    border-bottom:1px solid #d2d2d2;
+    border-top:1px solid #f8f8f8;
+}
+
+#shopAdmin #body .extension.e1 ul li * {
+    vertical-align: middle;
+}
+
+#shopAdmin #body .extension.e1 ul li a span.icon {
+    background: url(../img/icons-16px.png) 0 0 no-repeat;
+    display: inline-block;
+    height: 16px;
+    width: 16px;
+}
+
+#shopAdmin #body .extension.e1 ul li.catalog span.icon {
+    background-position: 0 -16px;
+}
+#shopAdmin #body .extension.e1 ul li.products span.icon {
+    background-position: 0 -32px;
+}
+#shopAdmin #body .extension.e1 ul li.categories span.icon {
+    background-position: 0 -48px;
+}
+#shopAdmin #body .extension.e1 ul li.attributes span.icon {
+    background-position: 0 -64px;
+}
+#shopAdmin #body .extension.e1 ul li.sales span.icon {
+    background-position: 0 -80px;
+}
+#shopAdmin #body .extension.e1 ul li.orders span.icon {
+    background-position: 0 -96px;
+}
+#shopAdmin #body .extension.e1 ul li.invoices span.icon {
+    background-position: 0 -112px;
+}
+#shopAdmin #body .extension.e1 ul li.shipments span.icon {
+    background-position: 0 -128px;
+}
+#shopAdmin #body .extension.e1 ul li.customers span.icon {
+    background-position: 0 -144px;
+}
+#shopAdmin #body .extension.e1 ul li.manage_accounts span.icon {
+    background-position: 0 -160px;
+}
+#shopAdmin #body .extension.e1 ul li.subscribers span.icon {
+    background-position: 0 -176px;
+}
+#shopAdmin #body .extension.e1 ul li.newsletters span.icon {
+    background-position: 0 -192px;
+}
+#shopAdmin #body .extension.e1 ul li.navigation span.icon {
+    background-position: 0 -208px;
+}
+#shopAdmin #body .extension.e1 ul li.all_menus span.icon {
+    background-position: 0 -224px;
+}
+#shopAdmin #body .extension.e1 ul li.all_pages span.icon {
+    background-position: 0 -240px;
+}
+#shopAdmin #body .extension.e1 ul li.add_page span.icon {
+    background-position: 0 -256px;
+}
+#shopAdmin #body .extension.e1 ul li.statistics span.icon {
+    background-position: 0 -272px;
+}
+#shopAdmin #body .extension.e1 ul li.visitor_statistics span.icon {
+    background-position: 0 -288px;
+}
+#shopAdmin #body .extension.e1 ul li.design span.icon {
+    background-position: 0 -304px;
+}
+#shopAdmin #body .extension.e1 ul li.skin span.icon {
+    background-position: 0 -320px;
+}
+#shopAdmin #body .extension.e1 ul li.html span.icon {
+    background-position: 0 -336px;
+}
+#shopAdmin #body .extension.e1 ul li.menus span.icon {
+    background-position: 0 -352px;
+}
+#shopAdmin #body .extension.e1 ul li.configuration span.icon {
+    background-position: 0 -368px;
+}
+#shopAdmin #body .extension.e1 ul li.admin_account span.icon {
+    background-position: 0 -384px;
+}
+#shopAdmin #body .extension.e1 ul li.shop_config span.icon {
+    background-position: 0 -400px;
+}
+#shopAdmin #body .extension.e1 ul li.shop_discout span.icon {
+    background-position: 0 -416px;
+}
+#shopAdmin #body .extension.e1 ul li.shipping span.icon {
+    background-position: 0 -432px;
+}
+#shopAdmin #body .extension.e1 ul li.payment span.icon {
+    background-position: 0 -448px;
+}
+
 #shopAdmin #body .extension.e1 ul li.active,
 #shopAdmin #body .extension.e1 ul li.hover{background-color:#f8f8f8}
 #shopAdmin #body .extension.e1 ul li li{border:0;background:none !important;zoom:1;position:relative}
 
-#shopAdmin #body .extension.e1 ul li a{padding:9px 0 10px 50px;height:15px;color:#5b5d60;font-weight:bold;position:relative;display:block;text-decoration:none;background-image:url(../img/iconLnbOpen.gif);background-repeat:no-repeat;background-position:145px 12px}
-#shopAdmin #body .extension.e1 ul li a:hover,
-#shopAdmin #body .extension.e1 ul li a:active,
-#shopAdmin #body .extension.e1 ul li a:focus{font-weight:bold}
-#shopAdmin #body .extension.e1 ul li li a:hover,
-#shopAdmin #body .extension.e1 ul li li a:active,
-#shopAdmin #body .extension.e1 ul li li a:focus{letter-spacing:-1px}
+#shopAdmin #body .extension.e1 ul li a {
+    padding:9px 0 10px 30px;
+    height:15px;
+    color:#5b5d60;
+    font-weight:bold;
+    position:relative;
+    display:block;
+    text-decoration:none;
+    background-image:url(../img/iconLnbOpen.gif);
+    background-repeat:no-repeat;
+    background-position:145px 12px;
+}
+#shopAdmin #body .extension.e1 ul li a:hover span.text,
+#shopAdmin #body .extension.e1 ul li a:active span.text,
+#shopAdmin #body .extension.e1 ul li a:focus span.text {color: #EA3F22 !important; text-decoration: underline;}
 #shopAdmin #body .extension.e1 ul li.noChild a{background-image:none;border-bottom:0 !important}
 #shopAdmin #body .extension.e1 ul li.noChild.active a{color:#ea3f22}
 #shopAdmin #body .extension.e1 ul li.open a,
@@ -184,9 +310,113 @@ a.skipToContent{text-align:center;color:#fff;position:absolute;width:100%;font-s
 .extension.e1 .language ul.hide{display:none}
 
 
+.dashboardHeader span.icon.dashboard {
+    background-position: 0 0;
+}
+
+.dashboardHeader span.icon.products {
+    background-position: -64px 0;
+}
+
+.dashboardHeader span.icon.categories {
+    background-position: -96px 0;
+}
+
+.dashboardHeader span.icon.attributes {
+    background-position: -128px 0;
+}
+
+.dashboardHeader span.icon.orders {
+    background-position: -192px 0;
+}
+
+.dashboardHeader span.icon.invoices {
+    background-position: -224px 0;
+}
+
+.dashboardHeader span.icon.shipments {
+    background-position: -256px 0;
+}
+
+.dashboardHeader span.icon.manage_accounts {
+    background-position: -320px 0;
+}
+
+.dashboardHeader span.icon.subscribers {
+    background-position: -352px 0;
+}
+
+.dashboardHeader span.icon.newsletters {
+    background-position: -384px 0;
+}
+
+.dashboardHeader span.icon.all_pages {
+    background-position: -480px 0;
+}
+
+.dashboardHeader span.icon.add_page {
+    background-position: -512px 0;
+}
+
+.dashboardHeader span.icon.visitor_statistics {
+    background-position: -576px 0;
+}
+
+.dashboardHeader span.icon.skins {
+    background-position: -640px 0;
+}
+
+.dashboardHeader span.icon.html {
+    background-position: -672px 0;
+}
+
+.dashboardHeader span.icon.menus {
+    background-position: -704px 0;
+}
+
+.dashboardHeader span.icon.admin_account {
+    background-position: -768px 0;
+}
+
+.dashboardHeader span.icon.shop_config {
+    background-position: -800px 0;
+}
+
+.dashboardHeader span.icon.shop_discout {
+    background-position: -832px 0;
+}
+
+.dashboardHeader span.icon.shipping {
+    background-position: -864px 0;
+}
+
+.dashboardHeader span.icon.payment {
+    background-position: -896px 0;
+}
+
+
 /* Dashboard Header */
-.dashboardHeader{position:relative;padding:29px 0 23px 0;border-bottom:2px solid #cbd4df;background:url(../img/iconH3dashboard.gif) no-repeat left center}
-.dashboardHeader .h3{font-size:18px;text-indent:50px;margin:0}
+.dashboardHeader {
+    position:relative;
+    padding: 15px 0;
+    border-bottom: 2px solid #cbd4df;
+    margin-bottom: 15px;
+}
+
+.dashboardHeader h3 span.icon {
+    display: inline-block;
+    width: 32px;
+    height: 32px;
+    background: url(../img/icons-32px.png) 0 0 no-repeat;
+    position: relative;
+    top: 8px;
+    margin: 0 10px 0 0;
+}
+
+.dashboardHeader .h3 {
+    font-size:18px;
+    margin:0;
+}
 
 /* Dashboard Notice */
 .dashboardNotice{padding:10px 0 0 0}
@@ -341,29 +571,6 @@ a.skipToContent{text-align:center;color:#fff;position:absolute;width:100%;font-s
 /* Content Header */
 .contentHeader{position:relative;height:28px;padding:29px 0 23px 0;background:url(../img/iconH3.gif) no-repeat left center}
 .contentHeader .h3{font-size:18px;text-indent:50px;margin:0}
-.contentHeader.writingHeader{background:url(../img/iconH3writing.gif) no-repeat left center}
-.contentHeader.postListHeader{background:url(../img/iconH3postList.gif) no-repeat left center}
-.contentHeader.depositHeader{background:url(../img/iconH3deposit.gif) no-repeat left center}
-.contentHeader.categoryHeader{background:url(../img/iconH3category.gif) no-repeat left center}
-.contentHeader.replyHeader{background:url(../img/iconH3reply.gif) no-repeat left center}
-.contentHeader.guestbookHeader{background:url(../img/iconH3guestbook.gif) no-repeat left center}
-.contentHeader.trackbackHeader{background:url(../img/iconH3trackback.gif) no-repeat left center}
-.contentHeader.spamHeader{background:url(../img/iconH3spam.gif) no-repeat left center}
-.contentHeader.uvHeader{background:url(../img/iconH3uv.gif) no-repeat left center}
-.contentHeader.refererHeader{background:url(../img/iconH3referer.gif) no-repeat left center}
-.contentHeader.suporterHeader{background:url(../img/iconH3suporter.gif) no-repeat left center}
-.contentHeader.popularHeader{background:url(../img/iconH3popular.gif) no-repeat left center}
-.contentHeader.skinHeader{background:url(../img/iconH3skin.gif) no-repeat left center}
-.contentHeader.editHeader{background:url(../img/iconH3edit.gif) no-repeat left center}
-.contentHeader.profileHeader{background:url(../img/iconH3profile.gif) no-repeat left center}
-.contentHeader.setupHeader{background:url(../img/iconH3setup.gif) no-repeat left center}
-.contentHeader.writingSetupHeader{background:url(../img/iconH3writingSetup.gif) no-repeat left center}
-.contentHeader.publishHeader{background:url(../img/iconH3publish.gif) no-repeat left center}
-.contentHeader.pwHeader{background:url(../img/iconH3pw.gif) no-repeat left center}
-.contentHeader.tagHeader{background:url(../img/iconH3tag.gif) no-repeat left center}
-.contentHeader.wasteHeader{background:url(../img/iconH3waste.gif) no-repeat left center}
-.contentHeader.dataHeader{background:url(../img/iconH3data.gif) no-repeat left center}
-.contentHeader.addonHeader{background:url(../img/iconH3addon.gif) no-repeat left center}
 .contentHeader.lineBottom{border-bottom:1px solid #e3e5e7}
 
 /* Content Navigation */
