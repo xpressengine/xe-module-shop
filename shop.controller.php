@@ -228,10 +228,10 @@
          * @author Dan Dragan (dev@xpressengine.org)
          */
         public function procShopToolInsertProduct(){
+            global $lang;
             $shopModel = $this->model;
             $productRepository = $shopModel->getProductRepository();
 			$imageRepository = $shopModel->getImageRepository();
-            global $lang;
 
             $args = Context::getRequestVars();
 			if(is_array($args->filesToUpload)) $args->images = $imageRepository->createImagesUploadedFiles($args->filesToUpload);
@@ -249,7 +249,7 @@
 			{
 				$product = new SimpleProduct($args);
 			}
-            elseif ('downloadable' == $args->product_type)
+            elseif ($args->product_type == 'downloadable')
             {
                 unset($args->weight);
                 $args->content_filename = $args->contentToUpload['name'];
@@ -262,8 +262,12 @@
 
             try
             {
+                $oDB = &DB::getInstance();//TODO review this: may fail for a pool of instances?
+                $oDB->begin();
+
                 if($product->product_srl === NULL)
                 {
+                    // add a new product
                     $product_srl = $productRepository->insertProduct($product);
 					if($product->isSimple())
 					{
@@ -272,6 +276,9 @@
 					}
                     elseif ($product->isDownloadable())
                     {
+                        if ($args->contentToUpload === NULL){
+                            return new Object(-1, $lang->content_not_provided_or_oversized);
+                        }
                         $productRepository->saveContent($product, $args->contentToUpload);
                         $this->setMessage($lang->downloadable_product_saved_successfully);
                         $returnUrl = getNotEncodedUrl('', 'act', 'dispShopToolManageProducts');
@@ -284,6 +291,7 @@
                 }
                 else
                 {
+                    // edit an existing product
 					$product->delete_images = $args->delete;
                     $productRepository->updateProduct($product);
 					if($product->isSimple())
@@ -292,6 +300,7 @@
 					}
                     elseif ($product->isDownloadable())
                     {
+                        $productRepository->updateContent($product, $args->contentToUpload);
                         $this->setMessage($lang->downloadable_product_updated_successfully);
                     }
 					else
@@ -309,9 +318,11 @@
 					}
                 }
 				$productRepository->updatePrimaryImageFilename($product);
+                $oDB->commit();
             }
             catch(Exception $e)
             {
+                $oDB->rollback();
                 return new Object(-1, $e->getMessage());
             }
 
@@ -335,9 +346,13 @@
 				$path = sprintf('./files/attach/images/shop/%d/product-images/%d/', $image->module_srl , $image->product_srl);
 				$image->source_filename = sprintf('%s%s', $path, $image->filename);
 			}
-			unset($product_srl);
+			$src_product_srl = $product_srl;
+            unset($product_srl);
 			$productRepository->insertProduct($product);
             $productRepository->updatePrimaryImageFilename($product);
+            $productRepository->saveContent($product,
+                $contentToUpload = array('tmp_name' => sprintf(ProductRepository::PRODUCT_CONTENT_PATH.'%s', $product->module_srl, $src_product_srl, $product->content_filename),
+                    'name' => $product->content_filename));
             $this->setMessage("A product has been successfully duplicated");
 			$returnUrl = getNotEncodedUrl('', 'act', 'dispShopToolManageProducts');
 			$this->setRedirectUrl($returnUrl);
@@ -1008,6 +1023,7 @@
             $args = new stdClass();
             $args->product_srl = Context::get('product_srl');
 			$args->product_type = Context::get('product_type');
+            $args->module_srl = $this->module_info->module_srl;
 
             $repository->deleteProduct($args);
             $this->setMessage("success_deleted");

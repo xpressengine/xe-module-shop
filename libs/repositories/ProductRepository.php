@@ -212,24 +212,45 @@ class ProductRepository extends BaseRepository
 	 * @author Dan Dragan (dev@xpressengine.org)
 	 * @param $args array
 	 */
-	public function deleteProduct($args)
-	{
-        if (is_array($args)) $args = (object) $args;
-		if(!isset($args->product_srl)) {
+    public function deleteProduct($args)
+    {
+        if (is_array($args)) $args = (object)$args;
+        if (!isset($args->product_srl)) {
             throw new Exception("Missing arguments for Product delete: please provide [product_srl] or [module_srl]");
         }
-		$this->query('deleteProduct',$args);
 
-		if ($args->product_type == 'simple') $product = new SimpleProduct($args);
-        else $product = new ConfigurableProduct($args);
+        try {
+            $oDB = &DB::getInstance(); //TODO review this: may fail for a pool of instances?
+            $oDB->begin();
 
-        if ($product->product_type == 'configurable') $this->deleteAssociatedProducts($product);
-		$this->deleteProductCategories($product);
-		$this->deleteProductAttributes($product);
-		$this->deleteProductImages($product);
+            $output = $this->query('deleteProduct', $args);
+            if (!$output->toBool()) throw new Exception($output->getMessage(), $output->getError());
 
-		return TRUE;
-	}
+            if ($args->product_type == 'simple') {
+                $product = new SimpleProduct($args);
+            } elseif($args->product_type == 'downloadable'){
+                $product = new DownloadableProduct($args);
+            } else {
+                $product = new ConfigurableProduct($args);
+            }
+
+            if ($product->product_type == 'configurable') $this->deleteAssociatedProducts($product);
+
+            $this->deleteProductCategories($product);
+            $this->deleteProductAttributes($product);
+            $this->deleteProductImages($product);
+
+            $oDB->commit();
+            $this->deleteContent($product);
+            // TODO review this: some junk images & content may still remain on storage;
+            // in such case, a separate scheduled cleaning process could be a solution.
+        } catch (Exception $e) {
+            $oDB->rollback();
+            return new Object(-1, $e->getMessage());
+        }
+
+        return TRUE;
+    }
 
     /**
      * Deletes more products by $product_srls
@@ -981,6 +1002,13 @@ class ProductRepository extends BaseRepository
 		return TRUE;
 	}
 
+    /**
+     * Save the content for a downloadable product, as a file
+     * @author Razvan Nutu (dev@xpressengine.org)
+     * @param $product
+     * @param $contentToUpload
+     * @return bool|Object
+     */
     public function saveContent($product, &$contentToUpload)
     {
         try{
@@ -993,8 +1021,39 @@ class ProductRepository extends BaseRepository
             return new Object(-1, $e->getMessage());
         }
 
-        return TRUE;;
+        return TRUE;
+    }
 
+    /**
+     * Update the file representing the content of a downloadable file
+     * @param $product
+     * @param $contentToUpload
+     * @return bool|Object
+     */
+    public function updateContent($product, &$contentToUpload){
+        try{
+            if ($contentToUpload !== NULL){
+                $path = sprintf(ProductRepository::PRODUCT_CONTENT_PATH, $product->module_srl,$product->product_srl,"");
+                FileHandler::removeFilesInDir($path);
+                $this->saveContent($product, $contentToUpload);
+            }
+        }
+        catch(Exception $e)
+        {
+            return new Object(-1, $e->getMessage());
+        }
+        return TRUE;
+    }
+
+    public function deleteContent($product)
+    {
+        try {
+            $path = sprintf(ProductRepository::PRODUCT_CONTENT_PATH, $product->module_srl, $product->product_srl, "");
+            FileHandler::removeDir($path);
+        } catch (Exception $e) {
+            return new Object(-1, $e->getMessage());
+        }
+        return TRUE;
     }
 
 }
