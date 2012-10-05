@@ -1103,6 +1103,7 @@ li span.close-sign, li span.open-sign {
 .search-product-list {
     margin: 10px 0 0;
     float: left;
+    width: 100%;
 }
 
 .search-product-list ul {
@@ -1337,6 +1338,7 @@ li span.close-sign, li span.open-sign {
 .footer-box h3 {
     font-weight: normal;
     font-size: 1.250em;
+    color: #fff;
 }
 
 .footer-box p {

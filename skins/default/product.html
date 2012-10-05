@@ -30,7 +30,7 @@
                 zoom = obj.find('#product-image-zoom'),
                 prev = obj.find('.prev'),
                 next = obj.find('.next'),
-                thumbNr = thumbs.children('span').children('img').size(),
+                thumbNr = thumbs.children('span').children('span').children('img').size(),
                 preloader = obj.find('.preloading'),
                 mainImage = '<img src="{$product->getPrimaryImage()->getThumbnailPath(340, 240)}" />',
                 mainImageH = 0,
@@ -229,26 +229,25 @@
 
 <div id="body-content" class="body-two-columns main-content clearfix">
     <div id="product-page">
-        <form action="./" method="post" cond="isset($product->available) ? $product->available : $product->isAvailable()">
-            <input type="hidden" name="act" value="procShopToolCartAddProduct" />
-
-            <div id="product-images">
-                <div id="product-image">
-                    <img src="{$product->getPrimaryImage()->getThumbnailPath(340, 240)}" />
-                </div>
-                <div id="product-image-zoom">
-                    <img src="{$product->getPrimaryImage()->getThumbnailPath(1020, 1020)}" />
-                </div>
-                <img class="preloading" src="img/loading.gif" alt="Loading" />
-                <a class="prev button" href="#"><span></span></a>
-                <a class="next button" href="#"><span></span></a>
-                <div id="thumbnails-container">
-                    <div id="thumbnails">
-                        <!-- DO NOT ADD SPACES IN FOREACH BECAUSE IT ADDS SPACES IN TEMPLATE -->
-                        <!--@foreach($product->images as $image)--><span class="cont"><span><img src="{$image->getThumbnailPath(63)}" /></span></span><!--@end-->
-                    </div>
+        <div id="product-images">
+            <div id="product-image">
+                <img src="{$product->getPrimaryImage()->getThumbnailPath(340, 240)}" />
+            </div>
+            <div id="product-image-zoom">
+                <img src="{$product->getPrimaryImage()->getThumbnailPath(1020, 1020)}" />
+            </div>
+            <img class="preloading" src="img/loading.gif" alt="Loading" />
+            <a class="prev button" href="#"><span></span></a>
+            <a class="next button" href="#"><span></span></a>
+            <div id="thumbnails-container">
+                <div id="thumbnails">
+                    <!-- DO NOT ADD SPACES IN FOREACH BECAUSE IT ADDS SPACES IN TEMPLATE -->
+                    <!--@foreach($product->images as $image)--><span class="cont"><span><img src="{$image->getThumbnailPath(63)}" /></span></span><!--@end-->
                 </div>
             </div>
+        </div>
+        <form action="./" method="post" cond="isset($product->available) ? $product->available : $product->isAvailable()">
+            <input type="hidden" name="act" value="procShopToolCartAddProduct" />
 
             <h1 style="text-decoration: line-through;"|cond="!$product->isAvailable()">{$product->title}</h1>
             {$product->short_description}
@@ -259,15 +258,16 @@
                 <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
             </p>
 
-            <p class="product-stock">
-                <span class="f-left">Stock: <span class="{$product->isInStock() ? 'green' : 'red'}" >{$product->isInStock() ? 'Available' : 'Out of stock'}</span></span>
-                <span class="f-right quantity"><label>Quantity:</label><input type="text" name="quantity" value="1" /></span>
-            </p>
-
-            <p class="clearfix">
-                <span class="f-left" cond="$product->discount_price && $product->discount_price < $product->price" class="discount-price">{$product->getPrice(false)}</span>
-                <span class="price">{ShopDisplay::priceFormat($product->getPrice(), $shop->getCurrencySymbol())}</span>
-            </p>
+            <div class="product-stock">
+                <p style="position: relative;">
+                    <span class="f-left">Stock: <span class="{$product->isInStock() ? 'green' : 'red'}" >{$product->isInStock() ? 'Available' : 'Out of stock'}</span></span>
+                   <span class="f-right quantity"><label>Quantity:</label><input type="text" name="quantity" value="1" /></span>
+               </p>
+                <p class="">
+                    <span class="f-left" cond="$product->discount_price && $product->discount_price < $product->price" class="discount-price">{$product->getPrice(false)}</span>
+                    <span class="price">{ShopDisplay::priceFormat($product->getPrice(), $shop->getCurrencySymbol())}</span>
+                </p>
+            </div>
 
             <!--@if($product->isSimple())-->
             <input type="hidden" id="product_srl" name="product_srl" value="{$product->product_srl}" />
