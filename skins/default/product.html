@@ -237,14 +237,16 @@
                 <img src="{$product->getPrimaryImage()->getThumbnailPath(1020, 1020)}" />
             </div>
             <img class="preloading" src="img/loading.gif" alt="Loading" />
-            <a class="prev button" href="#"><span></span></a>
-            <a class="next button" href="#"><span></span></a>
-            <div id="thumbnails-container">
-                <div id="thumbnails">
-                    <!-- DO NOT ADD SPACES IN FOREACH BECAUSE IT ADDS SPACES IN TEMPLATE -->
-                    <!--@foreach($product->images as $image)--><span class="cont"><span><img src="{$image->getThumbnailPath(63)}" /></span></span><!--@end-->
+            <!--@if(count($product->images) > 1)-->
+                <a class="prev button" href="#"><span></span></a>
+                <a class="next button" href="#"><span></span></a>
+                <div id="thumbnails-container">
+                    <div id="thumbnails">
+                        <!-- DO NOT ADD SPACES IN FOREACH BECAUSE IT ADDS SPACES IN TEMPLATE -->
+                        <!--@foreach($product->images as $image)--><span class="cont"><span><img src="{$image->getThumbnailPath(63)}" /></span></span><!--@end-->
+                    </div>
                 </div>
-            </div>
+            <!--@end-->
         </div>
         <form action="./" method="post" cond="isset($product->available) ? $product->available : $product->isAvailable()">
             <input type="hidden" name="act" value="procShopToolCartAddProduct" />
