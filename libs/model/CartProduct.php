@@ -87,7 +87,18 @@ class CartProduct extends BaseItem implements IProductItem
 
     function getThumbnailPath($width = 80, $height = 0, $thumbnail_type = '')
     {
-        return $this->product ? $this->product->getPrimaryImage()->getThumbnailPath($width, $height, $thumbnail_type) : '';
+        if($this->product) {
+            if($this->product->parent_product_srl){
+                $productRepo = new ProductRepository();
+                $parent_product = $productRepo->getProduct($this->product->parent_product_srl);
+                return $parent_product->getPrimaryImage()->getThumbnailPath($width, $height, $thumbnail_type);
+            }else{
+                return $this->product->getPrimaryImage()->getThumbnailPath($width, $height, $thumbnail_type);
+            }
+        }
+        else{
+            return '';
+        }
     }
 
     /**
