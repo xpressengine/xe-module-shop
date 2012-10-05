@@ -104,18 +104,10 @@ img{border:0}
     clear: both;
 }
 
-#cart th {
-    text-align: left;
-}
-
 #cart .quantity {
     width: 100px;
 }
 
-#cart .quantity input {
-    border: 1px dashed #cecbb1;
-    width: 40px;
-}
 #cart .title {
     width: 300px;
 }
@@ -185,6 +177,10 @@ body, html {
 
 .a-right {
     text-align: right;
+}
+
+.v-middle {
+    vertical-align: middle;
 }
 
 input, textarea, select {
@@ -472,6 +468,10 @@ table tbody tr td:last-child {
 
 #cart-button img {
     margin: 0 0 0 10px;
+}
+
+#cart-button a {
+    text-decoration: none;
 }
 
 #cart-details {
@@ -891,9 +891,9 @@ li span.close-sign, li span.open-sign {
 }
 
 .product-list .product:hover {
-    box-shadow: 0 0 5px 2px #2d5375;
-    -moz-box-shadow: 0 0 5px 2px #2d5375;
-    -webkit-box-shadow: 0 0 5px 2px #2d5375;
+    box-shadow: 0 0 5px 2px #98b7d5;
+    -moz-box-shadow: 0 0 5px 2px #98b7d5;
+    -webkit-box-shadow: 0 0 5px 2px #98b7d5;
 }
 
 .product-list .product.list-view {
@@ -1143,7 +1143,8 @@ li span.close-sign, li span.open-sign {
 }
 
 #product-images {
-    margin: 0 10px 10px 0;
+    padding-right: 10px;
+    margin: 0 0 10px 0;
     position: relative;
     background: #fff;
     float: left;
@@ -1278,7 +1279,12 @@ li span.close-sign, li span.open-sign {
     color: green;
 }
 
-.product-stock {
+.product-shop {
+    float: left;
+    width: 100%;
+}
+
+.product-stock p {
     line-height: 2.3em !important;
     margin: 10px 0;
 }
@@ -1432,4 +1438,15 @@ li span.close-sign, li span.open-sign {
 
 .form p input[type="text"], .form p textarea {
     width: 40%;
+}
+
+/**
+ * Cart page styles
+ * @author Daniel Ionescu
+ */
+
+.cart-image {
+    border: 1px solid #cacaca;
+    padding: 5px;
+    margin: 0 10px 0 0;
 }
