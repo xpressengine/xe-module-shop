@@ -252,7 +252,7 @@
             <input type="hidden" name="act" value="procShopToolCartAddProduct" />
 
             <h1 style="text-decoration: line-through;"|cond="!$product->isAvailable()">{$product->title}</h1>
-            {$product->short_description}
+            {nl2br($product->short_description)}
 
             <p class="socials underline">
                 <a name="fb_share" type="button_count" href="http://www.facebook.com/sharer.php">Share</a><script src="http://static.ak.fbcdn.net/connect.php/js/FB.Share" type="text/javascript"></script>
@@ -260,16 +260,18 @@
                 <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
             </p>
 
-            <div class="product-stock">
-                <p style="position: relative;">
-                    <span class="f-left">Stock: <span class="{$product->isInStock() ? 'green' : 'red'}" >{$product->isInStock() ? 'Available' : 'Out of stock'}</span></span>
-                   <span class="f-right quantity"><label>Quantity:</label><input type="text" name="quantity" value="1" /></span>
-               </p>
-                <p class="">
-                    <span class="f-left" cond="$product->discount_price && $product->discount_price < $product->price" class="discount-price">{$product->getPrice(false)}</span>
-                    <span class="price">{ShopDisplay::priceFormat($product->getPrice(), $shop->getCurrencySymbol())}</span>
-                </p>
-            </div>
+            <p class="product-stock underline">
+                <span class="stock">Stock: <span class="{$product->isInStock() ? 'green' : 'red'}" >{$product->isInStock() ? 'Available' : 'Out of stock'}</span></span>
+                <span class="quantity"><label>Quantity:</label><input type="text" name="quantity" value="1" /></span>
+            </p>
+
+            <p class="product-price underline">
+                <input class="add-to-cart" type="submit" value="Add to cart" />
+                <span class="price f-right">{ShopDisplay::priceFormat($product->getPrice(), $shop->getCurrencySymbol())}</span>
+                <span class="discount-price f-right" cond="$product->discount_price && $product->discount_price < $product->price" class="discount-price">{$product->getPrice(false)}</span>
+            </p>
+
+            <p class="clearfix"></p>
 
             <!--@if($product->isSimple())-->
             <input type="hidden" id="product_srl" name="product_srl" value="{$product->product_srl}" />
@@ -277,13 +279,8 @@
             <include target="product_variants.html"/>
             <!--@end-->
 
-            <p class="buy">
-                <input class="add-to-cart" type="submit" value="Add to cart" />
-            </p>
-
-
             <div id="description">
-                {$product->description}
+                {nl2br($product->description)}
             </div>
 
             <div id="additional_info">

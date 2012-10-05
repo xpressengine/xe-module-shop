@@ -984,7 +984,7 @@ li span.close-sign, li span.open-sign {
     -moz-box-shadow: none;
     -webkit-box-shadow: none;
 }
-.product-list .discount-price {
+.product .discount-price {
     color: #4f4f4f;
     text-decoration: line-through;
 }
@@ -1137,12 +1137,17 @@ li span.close-sign, li span.open-sign {
     color: #2D5375;
 }
 
+.search-product-list .actions p .discount-price {
+    font-size: 0.833em;
+}
+
 /**
  * Product Page
  * @author: Daniel Ionescu
  */
 #product-page {
     float: left;
+    width: 100%;
 }
 
 #product-images {
@@ -1287,9 +1292,19 @@ li span.close-sign, li span.open-sign {
     width: 100%;
 }
 
-.product-stock p {
+.product-stock, .product-price {
     line-height: 2.3em !important;
-    margin: 10px 0;
+    padding: 0 0 5px 0;
+    margin: 5px 0;
+}
+
+.product-stock .stock {
+    margin-right: 140px;
+}
+
+.product-price .add-to-cart {
+    margin-right: 100px;
+    padding: 0 0 5px 0;
 }
 
 
