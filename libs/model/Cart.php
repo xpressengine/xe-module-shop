@@ -146,6 +146,7 @@ class Cart extends BaseItem implements IProductItemsContainer
         return $this->repo->getCartProduct($this->cart_srl, $product);
     }
 
+	// TODO See what's the deal with this - could be replaced with getTotal i think
     public function getPrice($refresh=false, $onlyAvailables=false)
     {
         if (!$refresh && is_numeric($price = $this->getExtra('price'))) return $price;
@@ -299,9 +300,9 @@ class Cart extends BaseItem implements IProductItemsContainer
         return null;
     }
 
-    public function getItemTotal($onlyAvailables=false)
+    public function getItemTotal()
     {
-        $output = $this->getProducts(null, $onlyAvailables);
+        $output = $this->getProducts(null, true);
         $total = 0;
         /** @var $product CartProduct */
         foreach ($output as $product) {
@@ -352,20 +353,20 @@ class Cart extends BaseItem implements IProductItemsContainer
 		return $total;
 	}
 
-    public function getTotalBeforeDiscount($onlyAvailables=false)
+    public function getTotalBeforeDiscount()
     {
-        $total = $this->getItemTotal($onlyAvailables);
+        $total = $this->getItemTotal();
         return $total;
     }
 
-    public function getTotal($onlyAvailables=false)
+    public function getTotal()
     {
-		$total = $this->getTotalAfterDiscount($onlyAvailables);
+		$total = $this->getTotalAfterDiscount();
 		$total += $this->getShippingCost();
         return $total;
     }
 
-    public function getVAT($onlyAvailable=false, $withDiscount=false)
+    public function getVAT()
     {
 		return $this->getVATAfterDiscount();
     }
