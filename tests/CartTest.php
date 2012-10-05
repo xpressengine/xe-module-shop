@@ -79,11 +79,16 @@ class CartTest extends Shop_Generic_Tests_DatabaseTestCase
         // 3. Check that item total is correct
         $this->assertEquals(44.98, $cart->getItemTotal());
 
+		$this->assertEquals($cart->getVATBeforeDiscount(), $cart->getVATAfterDiscount());
+		$this->assertEquals($cart->getTotalBeforeDiscountWithoutVAT(), $cart->getTotalAfterDiscountWithoutVAT());
+		$this->assertEquals($cart->getTotalBeforeDiscountWithVAT(), $cart->getTotalAfterDiscountWithVAT());
+		$this->assertEquals($cart->getTotalBeforeDiscount(), $cart->getTotalAfterDiscount());
+
         // 4. Check global total is correct
         $this->assertEquals(54.98, $cart->getTotal());
 
 		// 5. Check VAT
-		$this->assertEquals(8.5462, $cart->getVAT(), '', 0.01);
+		$this->assertEquals(7.1816, $cart->getVAT(), '', 0.01);
     }
 
     public function testCartTotal_WithShippingAndDiscountFixedAmount()
@@ -125,7 +130,7 @@ class CartTest extends Shop_Generic_Tests_DatabaseTestCase
         $this->assertEquals(49.98, $cart->getTotal());
 
 		// 7. Check VAT
-		$this->assertEquals(7.5962, $cart->getVAT(), '', 0.01);
+		$this->assertEquals(6.3834, $cart->getVAT(), '', 0.01);
     }
 
 	public function testCartTotal_WithShippingAndDiscountPercentagePostTax()
@@ -169,7 +174,7 @@ class CartTest extends Shop_Generic_Tests_DatabaseTestCase
 		$this->assertEquals(50.482, $cart->getTotal());
 
 		// 7. Check VAT
-		$this->assertEquals(7.69158, $cart->getVAT(), '', 0.01);
+		$this->assertEquals(6.4635, $cart->getVAT(), '', 0.01);
 	}
 
 
@@ -207,22 +212,34 @@ class CartTest extends Shop_Generic_Tests_DatabaseTestCase
 		// 4. Check total before discount is correct
 		$this->assertEquals(44.98, $cart->getTotalBeforeDiscount());
 
+		// Step summary:
+		//                 | x=Total (with VAT) | y=Total (without VAT) | z=VAT amount
+		//                 |                    | y = x / (1 + 19%)     | 19% y
+		// ----------------------------------------------------------------------------
+		// Before discount |  44.98             |  37.7983              | 7.1816
+		// Discount        | - 10% y            |
+		// After discount  |  40.4819           |  34.0184              | 6.4635
+
+		// 4.1. Get VAT before discount
+		$this->assertEquals(7.1816, $cart->getVATBeforeDiscount(), '', 0.01);
+
+		// 4.2. Total before discount without VAT
+		$this->assertEquals(37.7983, $cart->getTotalBeforeDiscountWithoutVAT(), '', 0.01);
+
+		// 4.3. Total after discount without VAT
+		$this->assertEquals(34.0184, $cart->getTotalAfterDiscountWithoutVAT(), '', 0.01);
+
+		// 4.4. VAT after discount
+		$this->assertEquals(6.4635, $cart->getVATAfterDiscount(), '', 0.01);
+
 		// 5. Check total after discount is correct
-		// Before discount, the item total is 44.98 out of which:
-		//  - 36.4338 item value
-		//  - 8.5462  VAT
-		// The discount in this case applies before VAT, so to the 36.4338 amount
-		// Causing the item value to be 32.7904
-		// Next, we need to update the VAT and apply it on this value (after discount)
-		// causing the VAT to be 6.2301
-		// The total after discount should be: 39.02052
-		$this->assertEquals(39.02052, $cart->getTotalAfterDiscount(),'', 0.01);
+		$this->assertEquals(40.4819, $cart->getTotalAfterDiscount(),'', 0.01);
 
 		// 6. Check global total is correct
-		$this->assertEquals(49.02052, $cart->getTotal(),'', 0.01);
+		$this->assertEquals(50.4819, $cart->getTotal(),'', 0.01);
 
 		// 7. Check VAT
-		$this->assertEquals(6.2301, $cart->getVAT());
+		$this->assertEquals(6.4635, $cart->getVAT(), '', 0.01);
 	}
 
     public function testCartGetProducts_AllAvailable()
@@ -293,8 +310,8 @@ class CartTest extends Shop_Generic_Tests_DatabaseTestCase
 	{
 		$discount = new PercentageDiscount(100, 40, 99, 20, TRUE);
 
-		$this->assertEquals(80, $discount->getValueWithoutVAT(), 'Wrong VAT');
-		$this->assertEquals(32, $discount->getReductionValue(), 'Wrong reduction at discount before VAT');
+		$this->assertEquals(83.3333, $discount->getValueWithoutVAT(), 'Wrong VAT', 0.01);
+		$this->assertEquals(33.3333, $discount->getReductionValue(), 'Wrong reduction at discount before VAT', 0.01);
 		$this->assertEquals($discount->getTotalValue() - $discount->getReductionValue(), $discount->getValueDiscounted(), 'Wrong discounted value');
 	}
 

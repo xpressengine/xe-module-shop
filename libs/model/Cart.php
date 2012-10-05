@@ -311,17 +311,46 @@ class Cart extends BaseItem implements IProductItemsContainer
         return $total;
     }
 
-	public function getTotalAfterDiscount($onlyAvailable=false)
+	public function getTotalBeforeDiscountWithVAT()
 	{
-		$total = $this->getTotalBeforeDiscount($onlyAvailable);
+		return $this->getTotalBeforeDiscount();
+	}
+
+	public function getTotalBeforeDiscountWithoutVAT()
+	{
+		$shop = new ShopInfo($this->module_srl);
+		return $this->getTotalBeforeDiscountWithVAT() / (1 + $shop->getVAT() / 100);
+	}
+
+	public function getTotalAfterDiscount()
+	{
+		return $this->getTotalAfterDiscountWithVAT();
+	}
+
+	public function getTotalAfterDiscountWithVAT()
+	{
+		return $this->getTotalAfterDiscountWithoutVAT()
+			+ $this->getVATAfterDiscount();
+	}
+
+	public function getTotalAfterDiscountWithoutVAT()
+	{
+		$shop = new ShopInfo($this->module_srl);
 		$discount = $this->getDiscount();
+		if($discount && ($shop->getShopDiscountType() == Discount::DISCOUNT_TYPE_FIXED_AMOUNT
+			|| $shop->getShopDiscountTaxPhase() == Discount::PHASE_AFTER_VAT))
+		{
+			$total = $this->getTotalBeforeDiscountWithVAT();
+			$total -= $discount->getReductionValue();
+			return $total / (1 + $shop->getVAT() / 100);
+		}
+		$total = $this->getTotalBeforeDiscountWithoutVAT();
 		if($discount)
 		{
 			$total -= $discount->getReductionValue();
 		}
 		return $total;
 	}
-
 
     public function getTotalBeforeDiscount($onlyAvailables=false)
     {
@@ -338,9 +367,20 @@ class Cart extends BaseItem implements IProductItemsContainer
 
     public function getVAT($onlyAvailable=false, $withDiscount=false)
     {
-        $shop = new ShopInfo($this->module_srl);
-        return $shop->getVAT() / 100 * $this->getTotalAfterDiscount();
+		return $this->getVATAfterDiscount();
     }
+
+	public function getVATBeforeDiscount()
+	{
+		$shop = new ShopInfo($this->module_srl);
+		return $this->getTotalBeforeDiscountWithoutVAT() * $shop->getVAT() / 100;
+	}
+
+	public function getVATAfterDiscount()
+	{
+		$shop = new ShopInfo($this->module_srl);
+		return $this->getTotalAfterDiscountWithoutVAT() * $shop->getVAT() / 100;
+	}
 
     public function getShippingCost()
     {

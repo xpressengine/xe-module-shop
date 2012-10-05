@@ -47,7 +47,7 @@ abstract class Discount
 
     public function getValueWithoutVAT()
     {
-        return $this->getTotalValue() - $this->getVATPercent() / 100 * $this->getTotalValue();
+        return $this->getTotalValue() / ( 1 + $this->getVATPercent() / 100);
     }
 
     //region Getters/setters

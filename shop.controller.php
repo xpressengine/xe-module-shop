@@ -929,8 +929,7 @@
 				$order = new Order($cart);
 				$order->save(); //obtain srl
 				$order->saveCartProducts($cart);
-				//TODO resolve mail warnings
-                @Order::sendNewOrderEmails($order->order_srl);
+                Order::sendNewOrderEmails($order->order_srl);
 				$cart->delete();
 			}
 			catch(Exception $e)
