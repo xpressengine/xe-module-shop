@@ -59,7 +59,7 @@
         </div>
     </form>
 
-    <form action="./" method="post" id="big">
+    <form action="./" method="post" id="big" ruleset="checkout">
         <input type="hidden" id="act" name="act" value="procShopToolCheckout"/>
         <div id="billing">
 
@@ -71,7 +71,7 @@
                 <select style="width: 70%;" id="billing_address" name="billing[address]">
                     <option value="new">new address</option>
                     <!--@foreach ($addresses as $key=>$address)-->
-                    <option value="{$address->address_srl}" <!--@if ($default_billing && $address->address_srl == $default_billing->address_srl)-->selected<!--@endif-->>{$address}</option>
+                    <option value="{$address->address_srl}" selected="selected"|cond="$default_billing && $address->address_srl == $default_billing->address_srl">{$address}</option>
                     <!--@endforeach-->
                 </select>
             </p>

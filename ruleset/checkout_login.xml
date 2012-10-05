@@ -4,6 +4,6 @@
     </customrules>
     <fields>
         <field name="login[user]" required="true" />
-        <field name="login[password]" required="true" />
+        <field name="login[pass]" required="true" />
     </fields>
 </ruleset>

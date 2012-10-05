@@ -65,7 +65,7 @@
                         </p>
                         <p>
                             <span class="f-left"><a href="{getURL('', 'act','dispShopCart')}">{$lang->edit_cart}</a></span>
-                            <span class="f-right"><a href="{getURL('', 'act','dispShopCheckout')}">{$lang->checkout}</a></span>
+                            <span class="f-right"><a href="{getURL('', 'act','dispShopCheckout')}" cond="$cart && $cart->count()">{$lang->checkout}</a></span>
                         </p>
                     <!--@else-->
                         <p class="a-center">
@@ -125,9 +125,9 @@
             <!--@else-->
                 <a href="{getURL('','act','dispMemberLoginForm')}">Login</a>
             <!--@end-->
-            <!--@if (isset($cart) && $cart->items) -->
+            <!--@if (isset($cart) && $cart->count()) -->
                 <span>|</span>
-                <a href="{getURL('', 'act','dispShopCheckout')}" cond="isset($cart) && $cart->items">Checkout</a>
+                <a href="{getURL('', 'act','dispShopCheckout')}">{$lang->checkout}</a>
             <!--@end-->
         </p>
     </div>

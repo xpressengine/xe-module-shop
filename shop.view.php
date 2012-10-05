@@ -1119,12 +1119,18 @@ class shopView extends shop {
 
     public function dispShopCheckout()
     {
-        /** @var $cart Cart */
-        if (!(($cart = Context::get('cart')) instanceof Cart)) throw new Exception("No cart, you shouldn't be here");
+        try {
+            /** @var $cart Cart */
+            if (!(($cart = Context::get('cart')) instanceof Cart)) throw new Exception("No cart, you shouldn't be in the checkout page");
 
-        $products = $cart->getProducts(null, true);
-        if (empty($products)) {
-            throw new Exception('Cart is empty, you have nothing to checkout');
+            $products = $cart->getProducts(null, true);
+            if (empty($products)) {
+                throw new Exception('Cart is empty, you have nothing to checkout');
+            }
+        }
+        catch (Exception $e) {
+            $this->setRedirectUrl(getNotEncodedUrl('', 'act', 'dispShopHome'));
+            return new Object(-1, $e->getMessage());
         }
 
         $shippingRepo = new ShippingMethodRepository();
