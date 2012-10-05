@@ -315,7 +315,7 @@
 			}
 
 			if(!$oDB->isColumnExists("shop","shop_email")) {
-				$oDB->addColumn('shop',"shop_email","varchar", 250, '', true);
+				$oDB->addColumn('shop',"shop_email","varchar", 250);
 			}
 
             return new Object(0, 'success_updated');

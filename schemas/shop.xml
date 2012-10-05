@@ -3,7 +3,7 @@
   <column name="member_srl" type="number" size="11" notnull="notnull" index="idx_member_srl" />
   <column name="shop_title" type="varchar" size="250" notnull="notnull" />
   <column name="shop_content" type="varchar" size="250" default="" notnull="notnull" />
-  <column name="shop_email" type="varchar" size="250" default="" notnull="notnull" />
+  <column name="shop_email" type="varchar" size="250" />
   <column name="profile_content" type="text"  notnull="notnull" />
   <column name="input_email" type="char" size="1" default="R" />
   <column name="input_website" type="char" size="1" default="R" />
