@@ -1,6 +1,25 @@
 <!--#include("_tool_header.html")-->
 <!--%import("css/pagination.css",optimized=false)-->
 
+<script type="text/javascript">
+    if (!xe.lang) xe.lang = {};
+    xe.lang.not_allowed_to_add_more_than_2_configurable_attributes = '{$lang->not_allowed_to_add_more_than_2_configurable_attributes}';
+
+    jQuery(document).ready(function($){
+        $("#attributes input:checkbox").change(function(){
+            if($(this).is(":checked"))
+            {
+                count_of_already_selected_attributes = $("#attributes input:checkbox:checked").length;
+                if(count_of_already_selected_attributes > 2)
+                {
+                    $(this).attr("checked", false);
+                    alert(xe.lang.not_allowed_to_add_more_than_2_configurable_attributes);
+                }
+            }
+        });
+    });
+</script>
+
 <!-- Content -->
 <div id="content">
     <!-- contentHeader -->

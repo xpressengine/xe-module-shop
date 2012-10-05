@@ -668,4 +668,5 @@
 	    <p>Thank your for choosing <a href="%s">%s</a>!</p>
 	';
 
+	$lang->not_allowed_to_add_more_than_2_configurable_attributes = 'You can only select maximun 2 attributes for your configurable product.';
 ?>

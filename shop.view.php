@@ -732,7 +732,18 @@ class shopView extends shop {
 	 */
 	public function dispShopToolAddProduct(){
 		$args = Context::getRequestVars();
-		if(isset($args->configurable_attributes)) Context::set('configurable_attributes',$args->configurable_attributes);
+		if(isset($args->configurable_attributes))
+		{
+			if(count($args->configurable_attributes) > 2)
+			{
+				global $lang;
+				$this->setMessage($lang->not_allowed_to_add_more_than_2_configurable_attributes, 'error');
+				$error_return_url = Context::get('error_return_url');
+				$this->setRedirectUrl($error_return_url);
+				return;
+			}
+			Context::set('configurable_attributes',$args->configurable_attributes);
+		}
 
 		/**
 		 * @var shopModel $shopModel
