@@ -372,7 +372,7 @@ class ProductRepository extends BaseRepository
 	 * @param $product_srl int
 	 * @return Product
 	 */
-	public function getProduct($product_srl)
+	public function getProduct($product_srl, $loadImages = true)
 	{
 		$args = new stdClass();
 		$args->product_srl = $product_srl;
@@ -401,7 +401,7 @@ class ProductRepository extends BaseRepository
 		}
         $this->getProductCategories($product);
 		$this->getProductAttributes($product);
-		$this->getProductImages($product);
+		if($loadImages) $this->getProductImages($product);
 		return $product;
 	}
 

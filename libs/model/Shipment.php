@@ -27,7 +27,7 @@ class Shipment extends BaseItem
         $productsEmptyStocks = array();
         foreach($products as $orderProduct){
             /** @var $product SimpleProduct */
-            $product = $productRepo->getProduct($orderProduct->product_srl);
+            $product = $productRepo->getProduct($orderProduct->product_srl, false);
             if($orderProduct->quantity == $product->qty){
                 $productsEmptyStocks[] = $product;
             }
