@@ -8,6 +8,8 @@
     require_once(_XE_PATH_.'modules/shop/shop.info.php');
     require_once(__DIR__ . '/libs/autoload/autoload.php');
 
+    define(__XE_SHOP_DEBUG__, 0);
+
     class shop extends ModuleObject {
 
         /**
