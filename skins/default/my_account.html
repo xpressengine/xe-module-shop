@@ -18,7 +18,7 @@
                 <th scope="col" class="title">Bill to name</th>
                 <th scope="col">Total</th>
                 <th scope="col">Status</th>
-                <th scope="col">&nbsp;</th>
+                <th class="a-center" scope="col" width="21%">Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -29,14 +29,14 @@
             </tr>
             <!--@foreach($logged_user->recent_orders as $order)-->
             <tr>
-                <td class="small">{$order->order_srl}</td>
-                <td class="small">{zdate($order->regdate)}</td>
-                <td class="title">{reset(explode(',',$order->billing_address))}</td>
+                <td>{$order->order_srl}</td>
+                <td class="a-center">{zdate($order->regdate)}</td>
+                <td class="a-center">{reset(explode(',',$order->billing_address))}</td>
 
-                <td class="small">{ShopDisplay::priceFormat($order->total, $shop->getCurrencySymbol())}</td>
-                <td class="small">{$order->order_status}</td>
-                <td>
-                    <a class="button" title="This will fill your cart with the products existing on this order so you can buy them again" href="{getUrl('','act','dispShopViewOrder','order_srl',$order->order_srl)}">View </a>
+                <td class="a-center">{ShopDisplay::priceFormat($order->total, $shop->getCurrencySymbol())}</td>
+                <td class="a-center">{$order->order_status}</td>
+                <td class="a-center">
+                    <a class="button" title="This will fill your cart with the products existing on this order so you can buy them again" href="{getUrl('','act','dispShopViewOrder','order_srl',$order->order_srl)}">View </a>&nbsp;
                     <a class="button" href="{getUrl('','act','procShopRenewOrder','order_srl',$order->order_srl)}">Renew </a>
                 </td>
             </tr>
