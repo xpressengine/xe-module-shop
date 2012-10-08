@@ -41,7 +41,7 @@ class FlatRateShipping extends ShippingMethodAbstract
 	{
 		if(!isset($this->price) || !isset($this->type)) return false;
 		if(!in_array($this->type, array('per_item', 'per_order'))) return false;
-		if(!is_float($this->price)) return false;
+		if(!is_numeric($this->price)) return false;
 		return true;
 	}
 }

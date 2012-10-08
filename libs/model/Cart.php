@@ -458,7 +458,10 @@ class Cart extends BaseItem implements IProductItemsContainer
                 throw new Exception('No billing address');
             }
         }
-        if (self::validateFormBlock($shipping = $input['shipping'])) {
+        if ($input['different_shipping'] == 'yes') {
+            if (!self::validateFormBlock($shipping = $input['shipping'])) {
+                throw new Exception('Wrong shipping input');
+            }
             $data['extra']['shipping_method'] = $shipping['method'];
             if (is_numeric($shipping['address'])) {
                 $data['shipping_address_srl'] = $shipping['address'];

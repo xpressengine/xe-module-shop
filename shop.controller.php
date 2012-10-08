@@ -2360,7 +2360,7 @@
 		// moduleHandler.init after
 		public function triggerDeleteOldLogs()
 		{
-			if(__DEBUG__)
+			if(__DEBUG__ && __XE_SHOP_DEBUG__)
 			{
 				FileHandler::writeFile(ShopLogger::LOG_FILE_PATH . '.bk', FileHandler::readFile(ShopLogger::LOG_FILE_PATH), 'a');
 				FileHandler::writeFile(ShopLogger::XE_CORE_DEBUG_MESSAGE_PATH . '.bk', FileHandler::readFile(ShopLogger::XE_CORE_DEBUG_MESSAGE_PATH), 'a');
@@ -2374,7 +2374,7 @@
 		// display after
 		public function triggerDisplayLogMessages()
 		{
-			if(__DEBUG__ && !in_array(Context::getResponseMethod(), array('XMLRPC')))
+			if(__DEBUG__ && __XE_SHOP_DEBUG__ && !in_array(Context::getResponseMethod(), array('XMLRPC', 'JSON')))
 			{
 				// Load XE Shop errors
 				$shop_log_messages = FileHandler::readFile(ShopLogger::LOG_FILE_PATH);

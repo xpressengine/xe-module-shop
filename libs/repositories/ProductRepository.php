@@ -222,6 +222,7 @@ class ProductRepository extends BaseRepository
         if (!isset($args->product_srl)) {
             throw new Exception("Missing arguments for Product delete: please provide [product_srl] or [module_srl]");
         }
+        $product = $this->getProduct($args->product_srl);
 
         try {
             $oDB = &DB::getInstance(); //TODO review this: may fail for a pool of instances?
@@ -229,14 +230,6 @@ class ProductRepository extends BaseRepository
 
             $output = $this->query('deleteProduct', $args);
             if (!$output->toBool()) throw new Exception($output->getMessage(), $output->getError());
-
-            if ($args->product_type == 'simple') {
-                $product = new SimpleProduct($args);
-            } elseif($args->product_type == 'downloadable'){
-                $product = new DownloadableProduct($args);
-            } else {
-                $product = new ConfigurableProduct($args);
-            }
 
             if ($product->product_type == 'configurable') $this->deleteAssociatedProducts($product);
 
@@ -1062,6 +1055,7 @@ class ProductRepository extends BaseRepository
 
     /**
      * Update the file representing the content of a downloadable file
+     * @author Razvan Nutu (dev@xpressengine.org)
      * @param $product
      * @param $contentToUpload
      * @return bool|Object
