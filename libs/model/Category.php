@@ -254,7 +254,7 @@ class CategoryTreeNode
 		if(count($flat_tree) == 0)
 		{
 			global $lang;
-			$html = '<ul><li>' . $lang->no_categories . '</li></ul>';
+			$html = '<p style="margin: 0; padding: 10px;">' . $lang->no_categories . '</p>';
 			return $html;
 		}
 

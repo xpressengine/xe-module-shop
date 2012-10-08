@@ -621,6 +621,7 @@
     $lang->checkout = 'Checkout';
     $lang->products_in_shop = 'product(s) in shop';
     $lang->products_matched_criteria = 'product(s) matched your criteria';
+    $lang->no_products = 'No products';
 
     $lang->default = 'Default';
 	$lang->set_as_default = 'Set as default';

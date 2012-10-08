@@ -4,17 +4,14 @@
 <!-- Content -->
 <div id="content">
     <div class="dashboardHeader">
-        <h3 class="h3">{$lang->manage_shipments}</h3>
+        <h3 class="h3"><span class="icon shipments"></span>{$lang->manage_shipments}</h3>
     </div>
     <div cond="$XE_VALIDATOR_MESSAGE" class="message {$XE_VALIDATOR_MESSAGE_TYPE}">
         <p>{$XE_VALIDATOR_MESSAGE}</p>
     </div>
-    <div class="contentNavigation" cond="empty($shipments)">
-        {$lang->no_shipments}
-    </div>
 
     <!-- listHeader -->
-    <div class="listHeader" cond="!empty($shipments)">
+    <div class="listHeader">
         <p class="info">
             <!--@if($search_keyword)-->{sprintf($lang->search_result_count,$page_navigation->total_count)}
             <!--@else-->{sprintf($lang->total_result_count,$page_navigation->total_count)}
@@ -41,7 +38,7 @@
         <form action="" method="post">
             <table border="1" cellspacing="0" summary="{$lang->content_list}" class="tableData">
                 <thead>
-                <tr cond="!empty($shipments)">
+                <tr>
                     <th scope="col">{$lang->shipment} #</th>
                     <th scope="col">{$lang->shipment_for_order} #</th>
                     <th scope="col" class="title">{$lang->comments}</th>

@@ -5,11 +5,7 @@
 <include target="_sidebar.html" />
 <include target="product_variants_datasource.html" />
 
-<div id="body-content" class="body-two-columns">
-    <div cond="$XE_VALIDATOR_MESSAGE" class="message {$XE_VALIDATOR_MESSAGE_TYPE}">
-        <p>{$XE_VALIDATOR_MESSAGE}</p>
-    </div>
-    <div class="breadcrumbs">
+<div class="breadcrumbs main-content">
         <span class="breadcrumbs-title">
             <include target="breadcrumbs.html" />
         </span>
@@ -28,8 +24,14 @@
                     <option value="price_desc" selected="selected"|cond="$sort=='price_desc'">price (desc)</option>
                 </select></form><a href="{getUrl('', 'act', 'procShopToggleGridView', 'mode', 'grid')}" class="breadcrumbs-button <!--@if($grid_view)-->selected<!--@end-->"><img src="img/grid-icon.png" alt="Grid view" title="Grid view" /></a><a href="{getUrl('', 'act', 'procShopToggleGridView', 'mode', 'list')}" class="breadcrumbs-button <!--@if(!$grid_view)-->selected<!--@end-->"><img src="img/list-icon.png" alt="List view" title="List view" /></a>
         </span>
+</div>
+<div id="body-content" class="body-two-columns <!--@if(!$products || empty($products))-->main-content<!--@end-->">
+    <div cond="$XE_VALIDATOR_MESSAGE" class="message {$XE_VALIDATOR_MESSAGE_TYPE}">
+        <p>{$XE_VALIDATOR_MESSAGE}</p>
     </div>
+
     <h2 cond="$q && $act == 'dispShopSearch'">Searching for "{$q}"</h2>
+    <h1 cond="!$products || empty($products)" >{$lang->no_products}</h1>
     <include target="products_list.html"/>
 
     <!-- Pagination -->

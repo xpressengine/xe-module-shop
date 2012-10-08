@@ -918,17 +918,17 @@ li span.close-sign, li span.open-sign {
 }
 
 .product-list .product-link .product-image-container {
-    padding: 19px;
+    padding: 0 19px;
     border: 1px solid #cacaca;
     border-bottom: 0;
     width: 170px;
-    height: 170px;
-    display: block;
+    height: 208px;
     display: table-cell;
     vertical-align: middle;
 }
 
 .product-list .product-link .product-image-container.list-view {
+    padding: 19px;
     border: 1px solid #cacaca;
     width: 130px;
     height: 130px;
@@ -984,9 +984,13 @@ li span.close-sign, li span.open-sign {
     -moz-box-shadow: none;
     -webkit-box-shadow: none;
 }
-.product-list .discount-price {
+.product .discount-price, .product-price .discount-price {
     color: #4f4f4f;
     text-decoration: line-through;
+}
+
+.product-price .discount-price {
+    margin-right: 5px;
 }
 
 .product-list .price {
@@ -1103,6 +1107,7 @@ li span.close-sign, li span.open-sign {
 .search-product-list {
     margin: 10px 0 0;
     float: left;
+    width: 100%;
 }
 
 .search-product-list ul {
@@ -1136,12 +1141,17 @@ li span.close-sign, li span.open-sign {
     color: #2D5375;
 }
 
+.search-product-list .actions p .discount-price {
+    font-size: 0.833em;
+}
+
 /**
  * Product Page
  * @author: Daniel Ionescu
  */
 #product-page {
     float: left;
+    width: 100%;
 }
 
 #product-images {
@@ -1286,9 +1296,18 @@ li span.close-sign, li span.open-sign {
     width: 100%;
 }
 
-.product-stock p {
+.product-stock, .product-price {
     line-height: 2.3em !important;
-    margin: 10px 0;
+    padding: 0 0 5px 0;
+    margin: 5px 0;
+}
+
+.product-stock .stock {
+    margin-right: 140px;
+}
+
+.product-price .add-to-cart {
+    margin-right: 100px;
 }
 
 
@@ -1337,6 +1356,7 @@ li span.close-sign, li span.open-sign {
 .footer-box h3 {
     font-weight: normal;
     font-size: 1.250em;
+    color: #fff;
 }
 
 .footer-box p {

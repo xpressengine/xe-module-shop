@@ -3,7 +3,7 @@
     <!--@foreach($products as $product)-->
     <div id="product_{$product->product_srl}" class="product {$product->product_type}">
         <a href="{getUrl('vid', $mid, 'act', 'dispShopProduct', 'product_srl', $product->product_srl, 'category_srl', $category_srl)}" class="product-link">
-            <span class="product-image-container">
+            <span class="product-image-container">&nbsp;
                 <img src="{$product->getPrimaryImage()->getThumbnailPath(170)}" />
             </span>
             <h4>
@@ -51,7 +51,7 @@
             </form>
         </div>
         <!--@if($product->description != '')-->
-        {$product->description}
+        {nl2br($product->short_description)}
         <!--@else-->
         {$lang->no_description}
         <!--@end-->

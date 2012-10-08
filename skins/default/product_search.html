@@ -40,10 +40,13 @@
                     </a>
                 </h2>
                 <div class="actions f-right">
-                    <p class="a-right">{ShopDisplay::priceFormat($product->price, $shop->getCurrencySymbol())}</p>
-                    <p class="a-right"><a class="add-to-cart" href="{getUrl('vid', $mid, 'act', 'dispShopProduct', 'product_srl', $product->product_srl, 'category_srl', $category_srl)}">{$lang->add_to_cart}</a></p>
+                    <p class="a-right">
+                        <span cond="$product->discount_price && $product->discount_price < $product->price" class="discount-price">{ShopDisplay::priceFormat($product->getPrice(false), $shop->getCurrencySymbol())}</span><br/>
+                        <span class="price">{ShopDisplay::priceFormat($product->getPrice(), $shop->getCurrencySymbol())}</span>
+                    </p>
+                    <p class="a-right"><a class="button" href="{getUrl('vid', $mid, 'act', 'dispShopProduct', 'product_srl', $product->product_srl, 'category_srl', $category_srl)}">{$lang->add_to_cart}</a></p>
                 </div>
-                {$product->short_description}
+                {nl2br($product->short_description)}
             </li>
             <!--@end-->
             </ul>
