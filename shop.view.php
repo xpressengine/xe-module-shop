@@ -1152,7 +1152,7 @@ class shopView extends shop {
         //shipping methods
         $shipping = array();
         /** @var $shippingMethod ShippingMethodAbstract */
-        foreach ($shippingRepo->getAvailableShippingMethods($this->module_srl) as $shippingMethod) {
+        foreach ($shippingRepo->getActiveShippingMethods($this->module_srl) as $shippingMethod) {
             $shipping[$shippingMethod->getCode()] = $shippingMethod->getDisplayName();
         }
         Context::set('shipping_methods', $shipping);
