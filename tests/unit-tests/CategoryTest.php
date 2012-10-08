@@ -1,10 +1,10 @@
 <?php
 
-require_once dirname(__FILE__) . '/lib/Bootstrap.php';
-require_once dirname(__FILE__) . "/lib/Shop_Generic_Tests.class.php";
+require_once dirname(__FILE__) . '/../lib/Bootstrap.php';
+require_once dirname(__FILE__) . "/../lib/Shop_Generic_Tests.class.php";
 
-require_once dirname(__FILE__) . '/../libs/model/Category.php';
-require_once dirname(__FILE__) . '/../shop.info.php';
+require_once dirname(__FILE__) . '/../../libs/model/Category.php';
+require_once dirname(__FILE__) . '/../../shop.info.php';
 
 /**
  *  Test features related to Product categories

@@ -1,9 +1,9 @@
 <?php
 
-require_once "lib/Shop_Generic_Tests.class.php";
-require_once dirname(__FILE__) . '/lib/Bootstrap.php';
+require_once dirname(__FILE__) . "/../lib/Shop_Generic_Tests.class.php";
+require_once dirname(__FILE__) . '/../lib/Bootstrap.php';
 
-require_once dirname(__FILE__) . '/../libs/repositories/ProductRepository.php';
+require_once dirname(__FILE__) . '/../../libs/repositories/ProductRepository.php';
 
 /**
  *  Test features related to Products

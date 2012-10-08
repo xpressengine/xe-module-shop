@@ -1,7 +1,7 @@
 <?php
-require_once "lib/Shop_Generic_Tests.class.php";
-require_once dirname(__FILE__) . '/lib/Bootstrap.php';
-require_once dirname(__FILE__) . '/../libs/repositories/AttributeRepository.php';
+require_once dirname(__FILE__) . "/../lib/Shop_Generic_Tests.class.php";
+require_once dirname(__FILE__) . '/../lib/Bootstrap.php';
+require_once dirname(__FILE__) . '/../../libs/repositories/AttributeRepository.php';
 
 class AttributeTest extends Shop_Generic_Tests_DatabaseTestCase
 {
@@ -124,7 +124,7 @@ class AttributeTest extends Shop_Generic_Tests_DatabaseTestCase
         $this->assertEquals(5, $this->getConnection()->getRowCount('xe_shop_attributes'), "Insert failed");
 
         $attributes = $attribute_repository->getAttributes(array());
-        $attribute = null;
+        $attribute = NULL;
         foreach($attributes as $attribute)
         {
             if(!in_array($attribute->attribute_srl, array(1405, 1406, 1407, 1408)))

@@ -8,5 +8,6 @@
         <var name="DB_USER" value="db_user"/>
         <var name="DB_PASSWD" value="db_pass"/>
         <var name="DB_DBNAME" value="db_name"/>
+        <var name="XE_ROOT_URL" value="http://localhost/xe" />
     </php>
 </phpunit>

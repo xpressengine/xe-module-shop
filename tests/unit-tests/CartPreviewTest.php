@@ -1,8 +1,8 @@
 <?php
-	require_once "lib/Shop_Generic_Tests.class.php";
-	require dirname(__FILE__) . '/lib/Bootstrap.php';
-	require_once dirname(__FILE__) . '/../libs/repositories/CartRepository.php';
-	require_once dirname(__FILE__) . '/../shop.info.php';
+	require_once "/../lib/Shop_Generic_Tests.class.php";
+	require_once dirname(__FILE__) . '/../lib/Bootstrap.php';
+	require_once dirname(__FILE__) . '/../../libs/repositories/CartRepository.php';
+	require_once dirname(__FILE__) . '/../../shop.info.php';
 
 class CartPreviewTest extends Shop_Generic_Tests_DatabaseTestCase
 {
@@ -31,7 +31,7 @@ class CartPreviewTest extends Shop_Generic_Tests_DatabaseTestCase
 				array('id' => '768','name' => 'flat_rate_shipping','display_name' => 'Flat Rate Shipping','status' => '1','props' => 'O:8:"stdClass":2:{s:4:"type";s:9:"per_order";s:5:"price";s:2:"10";}','module_srl' => '107')
 			),
 			'xe_shop' => array(
-				array('module_srl' => '107','member_srl' => '4','shop_title' => '','shop_content' => '','profile_content' => '','input_email' => 'R','input_website' => 'R','timezone' => '+0300','currency' => 'EUR','VAT' => 19,'telephone' => NULL,'address' => NULL,'regdate' => '20120831171133','currency_symbol' => '€','discount_min_amount' => null,'discount_type' => null,'discount_amount' => null,'discount_tax_phase' => 'pre_taxes','out_of_stock_products' => 'Y','minimum_order' => NULL,'show_VAT' => NULL,'menus' => 'a:2:{s:11:"header_menu";s:3:"108";s:11:"footer_menu";s:3:"393";}')
+				array('module_srl' => '107','member_srl' => '4','shop_title' => '','shop_content' => '','profile_content' => '','input_email' => 'R','input_website' => 'R','timezone' => '+0300','currency' => 'EUR','VAT' => 19,'telephone' => NULL,'address' => NULL,'regdate' => '20120831171133','currency_symbol' => '€','discount_min_amount' => NULL,'discount_type' => NULL,'discount_amount' => NULL,'discount_tax_phase' => 'pre_taxes','out_of_stock_products' => 'Y','minimum_order' => NULL,'show_VAT' => NULL,'menus' => 'a:2:{s:11:"header_menu";s:3:"108";s:11:"footer_menu";s:3:"393";}')
 			),
 			'xe_sites' => array(
 				array('site_srl' => '106','index_module_srl' => '107','domain' => 'shop','default_language' => 'en','regdate' => '20120831171133')
@@ -80,7 +80,7 @@ class CartPreviewTest extends Shop_Generic_Tests_DatabaseTestCase
 
 		// Make sure new product was added to cart
 		$cart = new Cart($cart_srl);
-		$this->assertEquals(5, $cart->count(true));
+		$this->assertEquals(5, $cart->count(TRUE));
 
 		$cart_preview = new CartPreview($cart, 2);
 
