@@ -79,13 +79,13 @@ class CartTest extends Shop_Generic_Tests_DatabaseTestCase
         // 3. Check that item total is correct
         $this->assertEquals(44.98, $cart->getItemTotal());
 
-		$this->assertEquals($cart->getVATBeforeDiscount(), $cart->getVATAfterDiscount());
-		$this->assertEquals($cart->getTotalBeforeDiscountWithoutVAT(), $cart->getTotalAfterDiscountWithoutVAT());
-		$this->assertEquals($cart->getTotalBeforeDiscountWithVAT(), $cart->getTotalAfterDiscountWithVAT());
-		$this->assertEquals($cart->getTotalBeforeDiscount(), $cart->getTotalAfterDiscount());
+		$this->assertEquals($cart->getVATBeforeDiscount(), $cart->getVATAfterDiscount(), '', 0.01);
+		$this->assertEquals($cart->getTotalBeforeDiscountWithoutVAT(), $cart->getTotalAfterDiscountWithoutVAT(), '', 0.01);
+		$this->assertEquals($cart->getTotalBeforeDiscountWithVAT(), $cart->getTotalAfterDiscountWithVAT(), '', 0.01);
+		$this->assertEquals($cart->getTotalBeforeDiscount(), $cart->getTotalAfterDiscount(), '', 0.01);
 
         // 4. Check global total is correct
-        $this->assertEquals(54.98, $cart->getTotal());
+        $this->assertEquals(54.98, $cart->getTotal(), '', 0.01);
 
 		// 5. Check VAT
 		$this->assertEquals(7.1816, $cart->getVAT(), '', 0.01);
@@ -118,16 +118,16 @@ class CartTest extends Shop_Generic_Tests_DatabaseTestCase
         $this->assertEquals(10, $cart->getShippingCost());
 
         // 3. Check that item total is correct
-        $this->assertEquals(44.98, $cart->getItemTotal());
+        $this->assertEquals(44.98, $cart->getItemTotal(), '', 0.01);
 
         // 4. Check total before discount is correct
-        $this->assertEquals(44.98, $cart->getTotalBeforeDiscount());
+        $this->assertEquals(44.98, $cart->getTotalBeforeDiscount(), '', 0.01);
 
 		// 5. Check total after discount is correct
-		$this->assertEquals(39.98, $cart->getTotalAfterDiscount());
+		$this->assertEquals(39.98, $cart->getTotalAfterDiscount(), '', 0.01);
 
         // 6. Check global total is correct
-        $this->assertEquals(49.98, $cart->getTotal());
+        $this->assertEquals(49.98, $cart->getTotal(), '', 0.01);
 
 		// 7. Check VAT
 		$this->assertEquals(6.3834, $cart->getVAT(), '', 0.01);
@@ -162,16 +162,16 @@ class CartTest extends Shop_Generic_Tests_DatabaseTestCase
 		$this->assertEquals(10, $cart->getShippingCost());
 
 		// 3. Check that item total is correct
-		$this->assertEquals(44.98, $cart->getItemTotal());
+		$this->assertEquals(44.98, $cart->getItemTotal(), '', 0.01);
 
 		// 4. Check total before discount is correct
-		$this->assertEquals(44.98, $cart->getTotalBeforeDiscount());
+		$this->assertEquals(44.98, $cart->getTotalBeforeDiscount(), '', 0.01);
 
 		// 5. Check total before discount is correct
-		$this->assertEquals(40.482, $cart->getTotalAfterDiscount());
+		$this->assertEquals(40.482, $cart->getTotalAfterDiscount(), '', 0.01);
 
 		// 6. Check global total is correct
-		$this->assertEquals(50.482, $cart->getTotal());
+		$this->assertEquals(50.482, $cart->getTotal(), '', 0.01);
 
 		// 7. Check VAT
 		$this->assertEquals(6.4635, $cart->getVAT(), '', 0.01);
