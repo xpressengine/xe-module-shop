@@ -6,7 +6,7 @@ abstract class Shop_SeleniumTestCase extends PHPUnit_Extensions_SeleniumTestCase
 	protected $screenshotPath = '/../logs/screenshots';
 	protected $screenshotUrl = 'http://localhost/screenshots';
 	protected $xe_root_url;
-	protected $vid = 'shop';
+	protected $mid = 'shop';
 
 	public function __construct()
 	{
@@ -14,6 +14,7 @@ abstract class Shop_SeleniumTestCase extends PHPUnit_Extensions_SeleniumTestCase
 		$this->screenshotUrl = $GLOBALS['XE_ROOT_URL'] . '/modules/shop/tests/logs/screenshots';
 		$this->screenshotPath = dirname(__FILE__) . '/../logs/screenshots';
 		$this->xe_root_url = $GLOBALS['XE_ROOT_URL'];
+		$this->vid = $GLOBALS['XE_SHOP_VID'];
 	}
 
 }
