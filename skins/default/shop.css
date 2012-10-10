@@ -195,7 +195,7 @@ input, textarea, select {
     -webkit-box-shadow: 0 1px 0 0 #e4e8ec, inset 0 -1px 0 #fff;
 }
 
-input[type="text"], textarea {
+input[type="password"], input[type="text"], textarea {
     border-radius: 2px;
     -moz-border-radius: 2px;
     -webkit-border-radius: 2px;
@@ -498,6 +498,17 @@ table tbody tr td:last-child {
 #cart-products li {
     padding: 10px;
     border-bottom: 1px dotted #c5c6c7;
+}
+
+#cart-products li:hover {
+    background: #eef5fc;
+    box-shadow: inset 0 0 5px 1px #dce6ef;
+    -moz-shadow: inset 0 0 5px 1px #dce6ef;
+    -webkit-shadow: inset 0 0 5px 1px #dce6ef;
+}
+
+#cart-products li a {
+    text-decoration: none;
 }
 
 #cart-products p {
@@ -1458,7 +1469,7 @@ li span.close-sign, li span.open-sign {
     display: inline-block;
 }
 
-.form p input[type="text"], .form p textarea {
+.form p input[type="text"], .form p input[type="password"], .form p textarea {
     width: 40%;
 }
 

@@ -670,4 +670,6 @@
 	';
 
 	$lang->not_allowed_to_add_more_than_2_configurable_attributes = 'You can only select maximun 2 attributes for your configurable product.';
+
+    $lang->co_review_order = 'You can later review your order before submitting it';
 ?>

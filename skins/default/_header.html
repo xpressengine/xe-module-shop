@@ -22,6 +22,7 @@
                             {@ $cart_preview_products = $cart_preview->getProducts() }
                             <!--@foreach($cart_preview_products as $i => $cart_product)-->
                                 <li id="cart-product-{$cart_product->product_srl}" class="clearfix">
+                                    <a href="{getUrl('vid', $mid, 'act', 'dispShopProduct', 'product_srl', $cart_product->product_srl, 'category_srl', $category_srl)}">
                                     <p class="cart-product-image"><img src="{$cart_product->getThumbnailPath(50)}" alt="" title=""/></p>
                                     <p class="cart-preview-title">
                                         <!--@if(strlen($cart_product->title)>40)-->
@@ -31,6 +32,7 @@
                                         <!--@end-->
                                     </p>
                                     <p class="cart-preview-price">{$cart_product->quantity} x {ShopDisplay::priceFormat($cart_product->price, $shop->getCurrencySymbol())}</p>
+                                    </a>
                                 </li>
                             <!--@endforeach-->
                         </ul>

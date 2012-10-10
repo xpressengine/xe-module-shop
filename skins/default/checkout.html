@@ -274,11 +274,16 @@
             <include target="product_items" />
         </div>
 
-        <p><input type="submit" value="Continue">(You can review this order before it's final)</p>
+        <p class="f-left">
+            <input type="submit" value="Continue"><br />
+            {$lang->co_review_order}
+        </p>
+        <p class="f-right">
+            Forgot something? <a class="button" href="{getUrl('act','dispShopCart')}" title="cart">Edit your cart</a>
+        </p>
+        <div class="clearfix"></div>
 
     </form>
-
-    <p>Forgot something? Edit your <a href="{getUrl('act','dispShopCart')}" title="cart">cart</a>.</p>
 
 </div>
 
