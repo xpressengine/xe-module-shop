@@ -904,9 +904,9 @@ li span.close-sign, li span.open-sign {
 }
 
 .product-list .product:hover {
-    box-shadow: 0 0 5px 2px #98b7d5;
-    -moz-box-shadow: 0 0 5px 2px #98b7d5;
-    -webkit-box-shadow: 0 0 5px 2px #98b7d5;
+    box-shadow: 0px 1px 0px 0px #bdc6d0, 0 0 5px 2px #bbd3e9;
+    -moz-box-shadow: 0px 1px 0px 0px #bdc6d0, 0 0 5px 2px #bbd3e9;
+    -webkit-box-shadow: 0px 1px 0px 0px #bdc6d0, 0 0 5px 2px #bbd3e9;
 }
 
 .product-list .product.list-view {
