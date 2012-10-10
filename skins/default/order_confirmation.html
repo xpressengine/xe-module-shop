@@ -7,8 +7,8 @@
         <p>{$XE_VALIDATOR_MESSAGE}</p>
     </div>
 
-    You order has been successfully created with id {$order_srl}.
-    <a href="{getUrl('', 'act', 'dispShopViewOrder', 'order_srl', $order_srl)}">Go see it</a>!;
+    {sprintf($lang->order_successfully_created, $order_srl)}
+    <a href="{getUrl('', 'act', 'dispShopViewOrder', 'order_srl', $order_srl)}">{$lang->view_just_created_order}</a>!;
 
 </div>
 

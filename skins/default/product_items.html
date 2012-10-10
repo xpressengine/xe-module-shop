@@ -8,7 +8,7 @@
 <table border="0" cellspacing="0" cellpadding="0">
     <thead>
         <tr>
-            <th class="a-center">No.</th>
+            <th class="a-center">{$lang->product_no_dot}</th>
             <th class="a-left" colspan="2">{$lang->title}</th>
             <th class="a-center">{$lang->quantity}</th>
             <th width="10%" class="a-center">{$lang->price}</th>
@@ -48,7 +48,7 @@
         <tr cond="$product_container->getDiscountAmount()">
             <td colspan="4">
             </td>
-            <td><a href="#" onclick="alert('{$product_container->getDiscountName()}\n\n{$product_container->getDiscountDescription()}'); return false">Discount</a></td>
+            <td><a href="#" onclick="alert('{$product_container->getDiscountName()}\n\n{$product_container->getDiscountDescription()}'); return false">{$lang->discount}</a></td>
             <td>
                 {ShopDisplay::priceFormat(-1 * $product_container->getDiscountAmount(), $shop->getCurrencySymbol())}
             </td>
@@ -58,7 +58,7 @@
         <!-- Shipping cost -->
         <tr cond="$cart->getShippingMethodName()">
             <td colspan="4"></td>
-            <td>Shipping</td>
+            <td>{$lang->shipping}</td>
             <td>
                 {ShopDisplay::priceFormat($product_container->getShippingCost(), $shop->getCurrencySymbol())}
             </td>

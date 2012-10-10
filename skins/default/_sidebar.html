@@ -3,24 +3,24 @@
 
 <div id="body-left-sidebar">
     <div class="body-left-panel">
-        <h3>Categories</h3>
+        <h3>{$lang->categories}</h3>
         <div class="body-left-panel-content">
             {$HTML_tree}
         </div>
     </div>
     <div id="newsletter" class="body-left-panel">
-        <h3>Newsletter</h3>
+        <h3>{$lang->newsletter}</h3>
         <div class="body-left-panel-content clearfix">
             <p>
             <!--@if(Context::get('logged_info'))-->
                 <!--@ $logged_info = Context::get('logged_info');--> <!--@end-->
                 <!--@if($logged_info->newsletter == 'Y')-->
-                    You are already subscribed to our newsletter. <a href="{getUrl('','act','procShopSignToNewsletter','member_srl',$logged_info->member_srl,'email_address',$logged_info->email_address,'newsletter','N')}">Unsubscribe</a>
+                    {$lang->newsletter_already_subscribed}. <a href="{getUrl('','act','procShopSignToNewsletter','member_srl',$logged_info->member_srl,'email_address',$logged_info->email_address,'newsletter','N')}">{$lang->newsletter_unsubscribe}</a>
                 <!--@else-->
-                    <a href="{getUrl('','act','procShopSignToNewsletter','member_srl',$logged_info->member_srl,'email_address',$logged_info->email_address,'newsletter','Y')}">Subscribe</a>
+                    <a href="{getUrl('','act','procShopSignToNewsletter','member_srl',$logged_info->member_srl,'email_address',$logged_info->email_address,'newsletter','Y')}">{$lang->newsletter_subscribe}</a>
                 <!--@end-->
             <!--@else-->
-                In order to sign up to our newsletter you have to <a href="{getUrl('','act','dispMemberLoginForm')}">login</a>
+                {$lang->newsletter_in_order_to_sign_up} <a href="{getUrl('','act','dispMemberLoginForm')}">{strtolower($lang->login)}</a>
             <!--@end-->
             </p>
         </div>

@@ -261,12 +261,12 @@
             </p>
 
             <p class="product-stock underline">
-                <span class="stock">Stock: <span class="{$product->isInStock() ? 'green' : 'red'}" >{$product->isInStock() ? 'Available' : 'Out of stock'}</span></span>
-                <span class="quantity"><label>Quantity:</label><input type="text" name="quantity" value="1" /></span>
+                <span class="stock">{$lang->in_stock}: <span class="{$product->isInStock() ? 'green' : 'red'}" >{$product->isInStock() ? $lang->yes : $lang->no}</span></span>
+                <span class="quantity"><label>{$lang->quantity}:</label><input type="text" name="quantity" value="1" /></span>
             </p>
 
             <p class="product-price underline">
-                <input class="add-to-cart" type="submit" value="Add to cart" />
+                <input class="add-to-cart" type="submit" value="{$lang->add_to_cart}" />
                 <span class="price f-right">{ShopDisplay::priceFormat($product->getPrice(), $shop->getCurrencySymbol())}</span>
                 <span class="discount-price f-right" cond="$product->discount_price && $product->discount_price < $product->price" class="discount-price">{$product->getPrice(false)}</span>
             </p>
@@ -285,10 +285,10 @@
 
             <div id="additional_info">
                 <p>
-                    <b>SKU </b>: {$product->sku}
+                    <b>{$lang->sku} </b>: {$product->sku}
                 </p>
                 <p>
-                    <b> Weight </b>: {$product->weight} Kg
+                    <b> {$lang->weight} </b>: {$product->weight} Kg
                 </p>
             <!--<p>-->
                 <!--<b> Price </b> {ShopDisplay::priceFormat($product->price, $shop->getCurrencySymbol())}-->

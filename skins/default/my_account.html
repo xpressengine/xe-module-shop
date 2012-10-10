@@ -24,7 +24,7 @@
         <tbody>
             <tr cond="empty($logged_user->recent_orders)">
                 <td class="no-data" colspan="6">
-                    <p>No orders</p>
+                    <p>{$lang->no_orders}</p>
                 </td>
             </tr>
             <!--@foreach($logged_user->recent_orders as $order)-->
@@ -36,8 +36,8 @@
                 <td class="a-center">{ShopDisplay::priceFormat($order->total, $shop->getCurrencySymbol())}</td>
                 <td class="a-center">{$order->order_status}</td>
                 <td class="a-center">
-                    <a class="button" title="This will fill your cart with the products existing on this order so you can buy them again" href="{getUrl('','act','dispShopViewOrder','order_srl',$order->order_srl)}">View </a>&nbsp;
-                    <a class="button" href="{getUrl('','act','procShopRenewOrder','order_srl',$order->order_srl)}">Renew </a>
+                    <a class="button" title="This will fill your cart with the products existing on this order so you can buy them again" href="{getUrl('','act','dispShopViewOrder','order_srl',$order->order_srl)}">{$lang->read}</a>&nbsp;
+                    <a class="button" href="{getUrl('','act','procShopRenewOrder','order_srl',$order->order_srl)}">{$lang->renew}</a>
                 </td>
             </tr>
             <!--@end-->

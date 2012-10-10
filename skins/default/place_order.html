@@ -7,24 +7,22 @@
         <p>{$XE_VALIDATOR_MESSAGE}</p>
     </div>
 
-    Please review your order:
-
-    Payment will be made when you click Submit.
+    {$lang->please_review_order}
 
 
-    <h2>Billing info</h2>
+    <h2>{$lang->billing_info}</h2>
     <p>{$billing_address}</p>
 
-    <h2>Shipping method</h2>
+    <h2>{$lang->shipping_method}</h2>
     <p>{$shipping_method}</p>
 
-    <h2>Shipping info</h2>
+    <h2>{$lang->shipping_info}</h2>
     <p>{$shipping_address}</p>
 
-    <h2>Payment method</h2>
+    <h2>{$lang->payment_method}</h2>
     <p>{$payment_method->getDisplayName()}</p>
 
-    <h2>Products</h2>
+    <h2>{$lang->products}</h2>
 
     {@ $product_container = $cart; }
     <include target="product_items" />

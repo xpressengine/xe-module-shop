@@ -56,13 +56,13 @@ jQuery(function () {
 
 <div id="cart" class="main-content">
 
-    <h1 class="underline">Shopping Cart</h1>
+    <h1 class="underline">{$lang->shopping_cart}</h1>
 
     <div cond="$XE_VALIDATOR_MESSAGE" class="message {$XE_VALIDATOR_MESSAGE_TYPE}">
         <p>{$XE_VALIDATOR_MESSAGE}</p>
     </div>
 
-    <div cond="!$cart->items">is empty</div>
+    <div cond="!$cart->items">{$lang->cart_is_empty}</div>
 
     <div class="listHeader" cond="$cart->items">
         <p class="info">
@@ -82,7 +82,7 @@ jQuery(function () {
                     <th scope="col" class="a-center">{$lang->price}</th>
                     <th scope="col" class="a-center">{$lang->quantity}</th>
                     <th scope="col" class="a-center">{$lang->subtotal}</th>
-                    <th scope="col" class="a-center">Actions</th>
+                    <th scope="col" class="a-center">{$lang->actions}</th>
                 </tr>
             </thead>
             <tbody>
@@ -114,7 +114,7 @@ jQuery(function () {
                 </td>
 <!--@else-->
                 <td colspan="4">
-                    Product is no longer available. <a class="remove" href="{getUrl('act','procShopCartRemoveProducts','cart_srl',$cart->cart_srl, 'product_srls', $product->product_srl)}">{$lang->cmd_delete}</a> it from cart?
+                    {str_replace('Delete', '<a class="remove" href="'.getUrl('act','procShopCartRemoveProducts','cart_srl',$cart->cart_srl, 'product_srls', $product->product_srl).'">'.$lang->cmd_delete.'</a>', $lang->no_longer_available)}
                 </td>
 <!--@endif-->
                 </tr>
@@ -151,7 +151,7 @@ jQuery(function () {
         <!-- Total after discount -->
         <tr cond="$cart->getDiscountAmount()">
             <td colspan="4"></td>
-            <td>{$lang->total} after discount</td>
+            <td>{$lang->total_after_discount}</td>
             <td>
                 {ShopDisplay::priceFormat($cart->getTotalAfterDiscount(), $shop->getCurrencySymbol())}
             </td>
@@ -202,7 +202,7 @@ jQuery(function () {
     </form>
 
     <div class="checkout" cond="$cart->items">
-        <p class="a-center"><a class="button" href="{getUrl('act','dispShopCheckout')}">checkout</a></p>
+        <p class="a-center"><a class="button" href="{getUrl('act','dispShopCheckout')}">{$lang->checkout}</a></p>
     </div>
 
 </div>
