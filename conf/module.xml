@@ -238,8 +238,8 @@
         <action name="dispShopToolEditShipping" type="view" />
         <action name="procShopToolShippingUpdate" type="controller" />
         <action name="procShopServiceActivateShippingMethod" type="controller" />
-        <action name="procShopTollActivateShippingMethod" type="controller" />
-        <action name="procShopTollDeactivateShippingMethod" type="controller" />
+        <action name="procShopToolActivateShippingMethod" type="controller" />
+        <action name="procShopToolDeactivateShippingMethod" type="controller" />
         <action name="procShopToolSetShippingMethodAsDefault" type="controller" />
 
         <!-- Customers -->

@@ -1,11 +1,11 @@
 <!--@if($current_category)-->
-    <a href="{getUrl('vid', $mid, 'act', 'dispShop', 'category_srl', '')}">Home</a> /
+    <a href="{getUrl('vid', $mid, 'act', 'dispShop', 'category_srl', '')}">{$lang->home}</a> /
     <!--@foreach($breadcrumbs_items as $item)-->
         <a href="{getUrl('vid', $mid, 'act', 'dispShop', 'category_srl', $item->category_srl)}">{$item->title}</a> /
     <!--@end-->
     {@ $last_link = array( 'text' => $current_category->title, 'url' => getUrl('vid', $mid, 'act', 'dispShop', 'category_srl', $current_category->category_srl) )}
 <!--@else-->
-    {@ $last_link = array( 'text' => 'Home', 'url' => getUrl('vid', $mid, 'act', 'dispShop', 'category_srl', '')) }
+    {@ $last_link = array( 'text' => $lang->home, 'url' => getUrl('vid', $mid, 'act', 'dispShop', 'category_srl', '')) }
 <!--@end-->
 
 <!--@if($product)-->
@@ -14,5 +14,5 @@
 <!--@elseif($category_srl)-->
     {$last_link["text"]}
 <!--@else-->
-    <a href="{getUrl('vid', $mid, 'act', 'dispShop', 'category_srl', '')}">Home</a>
+    <a href="{getUrl('vid', $mid, 'act', 'dispShop', 'category_srl', '')}">{$lang->home}</a>
 <!--@end-->

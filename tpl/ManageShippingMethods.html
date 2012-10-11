@@ -55,9 +55,11 @@
 
                 <td>
                     <!--@if($shipping_method->isActive())-->
-                    <a href="{getUrl('act','procShopTollDeactivateShippingMethod','name',$shipping_method->name)}">{$lang->deactivate}</a>
+                        <!--@if(!$shipping_method->isDefault())-->
+                            <a href="{getUrl('act','procShopToolDeactivateShippingMethod','name',$shipping_method->name)}">{$lang->deactivate}</a>
+                        <!--@end-->
                     <!--@else-->
-                    <a href="{getUrl('act','procShopTollActivateShippingMethod','name',$shipping_method->name)}">{$lang->activate}</a>
+                    <a href="{getUrl('act','procShopToolActivateShippingMethod','name',$shipping_method->name)}">{$lang->activate}</a>
                     <!--@end-->
                     <!--@if($shipping_method->isActive() && !$shipping_method->isDefault())-->
                     &nbsp;|&nbsp;

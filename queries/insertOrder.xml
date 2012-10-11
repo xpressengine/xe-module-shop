@@ -14,7 +14,7 @@
         <column name="shipping_address" var="shipping_address"/>
         <column name="payment_method" var="payment_method"/>
         <column name="shipping_method" var="shipping_method"/>
-        <column name="shipping_cost" var="shipping_cost" filter="number"/>
+        <column name="shipping_cost" var="shipping_cost" />
         <column name="total" var="total"/>
         <column name="vat" var="vat" filter="number"/>
         <column name="order_status" var="order_status"/>

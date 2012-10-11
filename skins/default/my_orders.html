@@ -7,17 +7,17 @@
     <table border="0" cellspacing="0" cellpadding="0" summary="{$lang->content_list}">
         <thead>
             <tr>
-                <th scope="col" class="a-left">Order nr.</th>
-                <th scope="col" class="a-center">Purchased on</th>
-                <th scope="col" class="a-center">Bill to name</th>
-                <th scope="col" class="a-center">Total</th>
-                <th scope="col" class="a-center">Status</th>
-                <th scope="col" class="a-center" width="21%">Actions</th>
+                <th scope="col" class="a-left">{$lang->order_number}</th>
+                <th scope="col" class="a-center">{$lang->purchased_on}</th>
+                <th scope="col" class="a-center">{$lang->bill_to_name}</th>
+                <th scope="col" class="a-center">{$lang->total}</th>
+                <th scope="col" class="a-center">{$lang->status}</th>
+                <th scope="col" class="a-center" width="21%">{$lang->actions}</th>
             </tr>
         </thead>
         <tbody>
             <tr cond="empty($orders)">
-                <td class="no-data" colspan="6"><p>No orders</p></td>
+                <td class="no-data" colspan="6"><p>{$lang->no_orders}</p></td>
             </tr>
             <!--@foreach($orders as $order)-->
             <tr>
@@ -27,8 +27,8 @@
                 <td class="a-center">{ShopDisplay::priceFormat($order->total, $shop->getCurrencySymbol())}</td>
                 <td class="a-center">{$order->order_status}</td>
                 <td class="a-center">
-                    <a class="button" href="{getUrl('','act','dispShopViewOrder','order_srl',$order->order_srl)}">View </a>&nbsp;
-                    <a class="button" title="This will fill your cart with the products existing on this order so you can buy them again" href="{getUrl('','act','procShopRenewOrder','order_srl',$order->order_srl)}">Renew </a>
+                    <a class="button" href="{getUrl('','act','dispShopViewOrder','order_srl',$order->order_srl)}">{$lang->read}</a>&nbsp;
+                    <a class="button" title="This will fill your cart with the products existing on this order so you can buy them again" href="{getUrl('','act','procShopRenewOrder','order_srl',$order->order_srl)}">{$lang->renew}</a>
                 </td>
             </tr>
             <!--@end-->

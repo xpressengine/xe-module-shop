@@ -31,7 +31,7 @@
                 <input type="hidden" name="act" value="procShopToolCartAddProduct" />
                 <!--@if($product->isSimple())-->
                 <p>
-                    <span class="quantity"><label>Quantity:</label><input type="text" name="quantity" value="1" /></span>
+                    <span class="quantity"><label>{$lang->quantity}:</label><input type="text" name="quantity" value="1" /></span>
                 </p>
                 <!--@end-->
                 <!--@if($product->isSimple())-->
@@ -42,10 +42,10 @@
                     <span class="price">{ShopDisplay::priceFormat($product->getPrice(), $shop->getCurrencySymbol())}</span>
                 </p>
                 <p>
-                    <!--@if($product->isSimple())-->
+                    <!--@if($product->isSimple() || $product->isDownloadable())-->
                         <input class="add-to-cart" type="submit" value="Add to cart" />
                     <!--@elseif($product->isConfigurable())-->
-                        <a href="{getUrl('vid', $mid, 'act', 'dispShopProduct', 'product_srl', $product->product_srl, 'category_srl', $category_srl)}" class="button">Customize</a>
+                        <a href="{getUrl('vid', $mid, 'act', 'dispShopProduct', 'product_srl', $product->product_srl, 'category_srl', $category_srl)}" class="button">{$lang->customize}</a>
                     <!--@end-->
                 </p>
             </form>

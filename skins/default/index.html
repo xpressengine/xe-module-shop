@@ -6,7 +6,7 @@
 <include target="product_variants_datasource.html" />
 
 <div class="breadcrumbs main-content">
-    <span class="breadcrumbs-title">Featured products</span>
+    <span class="breadcrumbs-title">{$lang->featured_products}</span>
         <span class="breadcrumbs-options">
             <script type="text/javascript">
                 jQuery('.breadcrumbs-options select').live('change', function(){
@@ -17,8 +17,8 @@
             <form action="./"><input name="act" value="procShopSort" type="hidden">
                 <label for="sort">{$lang->sort_by}</label>
                 <select name="sort" id="sort">
-                    <option value="price_asc" selected="selected"|cond="$sort=='price_asc'">price (asc)</option>
-                    <option value="price_desc" selected="selected"|cond="$sort=='price_desc'">price (desc)</option>
+                    <option value="price_asc" selected="selected"|cond="$sort=='price_asc'">{$lang->price_ascendent}</option>
+                    <option value="price_desc" selected="selected"|cond="$sort=='price_desc'">{$lang->price_descendent}</option>
                 </select></form><a href="{getUrl('', 'act', 'procShopToggleGridView', 'mode', 'grid')}" class="breadcrumbs-button <!--@if($grid_view)-->selected<!--@end-->"><img src="img/grid-icon.png" alt="Grid view" title="Grid view" /></a><a href="{getUrl('', 'act', 'procShopToggleGridView', 'mode', 'list')}" class="breadcrumbs-button <!--@if(!$grid_view)-->selected<!--@end-->"><img src="img/list-icon.png" alt="List view" title="List view" /></a>
         </span>
 </div>
@@ -27,7 +27,7 @@
         <p>{$XE_VALIDATOR_MESSAGE}</p>
     </div>
 
-    <h2 cond="$q && $act == 'dispShopSearch'">Searching for "{$q}"</h2>
+    <h2 cond="$q && $act == 'dispShopSearch'">{sprintf($lang->searching_for, $q)}</h2>
     <h1 cond="!$products || empty($products)" >{$lang->no_products}</h1>
     <include target="products_list.html"/>
 

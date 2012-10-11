@@ -53,7 +53,9 @@
 
                 <td>
                     <!--@if($payment_method->isActive())-->
-                        <a href="{getUrl('act','procUpdateShopDeactivatePaymentMethod','name',$payment_method->name)}">{$lang->deactivate}</a>
+                        <!--@if(!$payment_method->isDefault())-->
+                            <a href="{getUrl('act','procUpdateShopDeactivatePaymentMethod','name',$payment_method->name)}">{$lang->deactivate}</a>
+                        <!--@end-->
                     <!--@else-->
                         <a href="{getUrl('act','procUpdateShopActivatePaymentMethod','name',$payment_method->name)}">{$lang->activate}</a>
                     <!--@end-->

@@ -1763,6 +1763,12 @@
 
             $payment_repository = new PaymentMethodRepository();
             $payment_method = $payment_repository->getPaymentMethod($name, $this->module_srl);
+
+			if($payment_method->isDefault())
+			{
+				return new Object(-1, 'msg_invalid_request');
+			}
+
             $payment_method->status = 0;
             $payment_repository->updatePaymentMethod($payment_method);
 
@@ -2264,6 +2270,12 @@
 
 			$shipping_repository = new ShippingMethodRepository();
 			$shipping_method = $shipping_repository->getShippingMethod($name, $this->module_srl);
+
+			// Cannot deactivate the default module
+			if($status === 0 && $shipping_method->isDefault())
+			{
+				return new Object(-1, 'msg_invalid_request');
+			}
 			$shipping_method->status = $status;
 
 			try
@@ -2284,12 +2296,12 @@
 		}
 
 
-		public function procShopTollActivateShippingMethod()
+		public function procShopToolActivateShippingMethod()
 		{
 			$this->updateShippingMethodStatus(1);
 		}
 
-		public function procShopTollDeactivateShippingMethod()
+		public function procShopToolDeactivateShippingMethod()
 		{
 			$this->updateShippingMethodStatus(0);
 		}

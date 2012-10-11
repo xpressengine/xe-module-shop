@@ -1,8 +1,8 @@
 <?php
-require_once "lib/Shop_Generic_Tests.class.php";
-require dirname(__FILE__) . '/lib/Bootstrap.php';
-require_once dirname(__FILE__) . '/../libs/repositories/CartRepository.php';
-require_once dirname(__FILE__) . '/../shop.info.php';
+require_once dirname(__FILE__) . "/../lib/Shop_Generic_Tests.class.php";
+require_once dirname(__FILE__) . '/../lib/Bootstrap.php';
+require_once dirname(__FILE__) . '/../../libs/repositories/CartRepository.php';
+require_once dirname(__FILE__) . '/../../shop.info.php';
 
 class CartTest extends Shop_Generic_Tests_DatabaseTestCase
 {
@@ -14,7 +14,7 @@ class CartTest extends Shop_Generic_Tests_DatabaseTestCase
         return new Shop_DbUnit_ArrayDataSet(array(
             'xe_shop_cart' => array(
                 array('cart_srl' => '774','module_srl' => '107','member_srl' => '4','session_id' => 'session1','billing_address_srl' => '253','shipping_address_srl' => '253','items' => '2','extra' => '{"price":44.979999542236,"shipping_method":"flat_rate_shipping","payment_method":"cash_on_delivery"}','regdate' => '20120929183309','last_update' => '20120929183309'),
-                array('cart_srl' => '14','module_srl' => '107','member_srl' => null,'session_id' => 'anonSession','billing_address_srl' => null,'shipping_address_srl' => null,'items' => '0','regdate' => '20120929183309','last_update' => '20120929183309')
+                array('cart_srl' => '14','module_srl' => '107','member_srl' => NULL,'session_id' => 'anonSession','billing_address_srl' => NULL,'shipping_address_srl' => NULL,'items' => '0','regdate' => '20120929183309','last_update' => '20120929183309')
             ),
             'xe_shop_cart_products' => array(
                 array('cart_srl' => '774','product_srl' => '133','quantity' => '1','title' => 'Cutie depozitare diferite modele', 'price'=>14.99),
@@ -79,13 +79,13 @@ class CartTest extends Shop_Generic_Tests_DatabaseTestCase
         // 3. Check that item total is correct
         $this->assertEquals(44.98, $cart->getItemTotal());
 
-		$this->assertEquals($cart->getVATBeforeDiscount(), $cart->getVATAfterDiscount());
-		$this->assertEquals($cart->getTotalBeforeDiscountWithoutVAT(), $cart->getTotalAfterDiscountWithoutVAT());
-		$this->assertEquals($cart->getTotalBeforeDiscountWithVAT(), $cart->getTotalAfterDiscountWithVAT());
-		$this->assertEquals($cart->getTotalBeforeDiscount(), $cart->getTotalAfterDiscount());
+		$this->assertEquals($cart->getVATBeforeDiscount(), $cart->getVATAfterDiscount(), '', 0.01);
+		$this->assertEquals($cart->getTotalBeforeDiscountWithoutVAT(), $cart->getTotalAfterDiscountWithoutVAT(), '', 0.01);
+		$this->assertEquals($cart->getTotalBeforeDiscountWithVAT(), $cart->getTotalAfterDiscountWithVAT(), '', 0.01);
+		$this->assertEquals($cart->getTotalBeforeDiscount(), $cart->getTotalAfterDiscount(), '', 0.01);
 
         // 4. Check global total is correct
-        $this->assertEquals(54.98, $cart->getTotal());
+        $this->assertEquals(54.98, $cart->getTotal(), '', 0.01);
 
 		// 5. Check VAT
 		$this->assertEquals(7.1816, $cart->getVAT(), '', 0.01);
@@ -118,16 +118,16 @@ class CartTest extends Shop_Generic_Tests_DatabaseTestCase
         $this->assertEquals(10, $cart->getShippingCost());
 
         // 3. Check that item total is correct
-        $this->assertEquals(44.98, $cart->getItemTotal());
+        $this->assertEquals(44.98, $cart->getItemTotal(), '', 0.01);
 
         // 4. Check total before discount is correct
-        $this->assertEquals(44.98, $cart->getTotalBeforeDiscount());
+        $this->assertEquals(44.98, $cart->getTotalBeforeDiscount(), '', 0.01);
 
 		// 5. Check total after discount is correct
-		$this->assertEquals(39.98, $cart->getTotalAfterDiscount());
+		$this->assertEquals(39.98, $cart->getTotalAfterDiscount(), '', 0.01);
 
         // 6. Check global total is correct
-        $this->assertEquals(49.98, $cart->getTotal());
+        $this->assertEquals(49.98, $cart->getTotal(), '', 0.01);
 
 		// 7. Check VAT
 		$this->assertEquals(6.3834, $cart->getVAT(), '', 0.01);
@@ -162,16 +162,16 @@ class CartTest extends Shop_Generic_Tests_DatabaseTestCase
 		$this->assertEquals(10, $cart->getShippingCost());
 
 		// 3. Check that item total is correct
-		$this->assertEquals(44.98, $cart->getItemTotal());
+		$this->assertEquals(44.98, $cart->getItemTotal(), '', 0.01);
 
 		// 4. Check total before discount is correct
-		$this->assertEquals(44.98, $cart->getTotalBeforeDiscount());
+		$this->assertEquals(44.98, $cart->getTotalBeforeDiscount(), '', 0.01);
 
 		// 5. Check total before discount is correct
-		$this->assertEquals(40.482, $cart->getTotalAfterDiscount());
+		$this->assertEquals(40.482, $cart->getTotalAfterDiscount(), '', 0.01);
 
 		// 6. Check global total is correct
-		$this->assertEquals(50.482, $cart->getTotal());
+		$this->assertEquals(50.482, $cart->getTotal(), '', 0.01);
 
 		// 7. Check VAT
 		$this->assertEquals(6.4635, $cart->getVAT(), '', 0.01);
@@ -368,15 +368,15 @@ class CartTest extends Shop_Generic_Tests_DatabaseTestCase
         $cart->addProduct($product2, 1405);
         $this->assertEquals(2, $cart->count(), "Adding product 2 failed");
         //getProducts should ignore its internal cache, so we tell it to.
-        $this->assertEquals($cart->count(), count($cart->getProducts(null, null, true)), "?");
+        $this->assertEquals($cart->count(), count($cart->getProducts(NULL, NULL, TRUE)), "?");
     }
 
     public function testCartChange()
     {
         $cRepo = new CartRepository();
         $pRepo = new ProductRepository();
-        $anonCart = $cRepo->getCart(107, null, null, 'anonSession');
-        $userCart = $cRepo->getCart(107, null, 4);
+        $anonCart = $cRepo->getCart(107, NULL, NULL, 'anonSession');
+        $userCart = $cRepo->getCart(107, NULL, 4);
         $userCart->emptyCart();
         $anonCart->emptyCart();
         $products = array(
@@ -386,7 +386,7 @@ class CartTest extends Shop_Generic_Tests_DatabaseTestCase
         );
         $userCart->addProduct($products[1], 2);
         $anonCart->addProduct($products[1], 13);
-        $userCart->merge($anonCart, false);
+        $userCart->merge($anonCart, FALSE);
         $this->assertEquals(15, $userCart->getCartProduct(130)->quantity, "Wrong quantity");
     }
 
@@ -394,7 +394,7 @@ class CartTest extends Shop_Generic_Tests_DatabaseTestCase
     {
         $cRepo = new CartRepository();
         $pRepo = new ProductRepository();
-        $cart = $cRepo->getCart(null, 14);
+        $cart = $cRepo->getCart(NULL, 14);
         $cart->emptyCart();
         $cart->addProduct($pRepo->getProduct(130));
         $cart->addProduct($pRepo->getProduct(132));

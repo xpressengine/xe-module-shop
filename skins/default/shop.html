@@ -19,9 +19,9 @@
 
             <p>Good luck!</p>
         <!--@else-->
-            <h1>Page not found</h1>
+            <h1>{$lang->page_not_found}</h1>
             <p>
-                Ooops! We can't find the page you're looking for. Try going to the <a href="{getUrl('', 'vid', $vid, 'mid', $mid)}">Hompepage</a>!.
+                {$lang->page_not_found_details} <a href="{getUrl('', 'vid', $vid, 'mid', $mid)}">{$lang->homepage}</a>.
             </p>
         <!--@end-->
     </div>

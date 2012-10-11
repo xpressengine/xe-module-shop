@@ -15,6 +15,15 @@ class ShippingMethodRepository extends AbstractPluginRepository
         return $this->getAvailablePlugins($module_srl);
     }
 
+	/**
+	 * Returns all active shipping methods
+	 */
+	public function getActiveShippingMethods($module_srl)
+	{
+		return $this->getActivePlugins($module_srl);
+	}
+
+
     /**
      * Get a certain shipping method instance
      *

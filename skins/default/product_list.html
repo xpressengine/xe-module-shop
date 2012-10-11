@@ -30,7 +30,7 @@
         <p>{$XE_VALIDATOR_MESSAGE}</p>
     </div>
 
-    <h2 cond="$q && $act == 'dispShopSearch'">Searching for "{$q}"</h2>
+    <h2 cond="$q && $act == 'dispShopSearch'">{sprintf($lang->searching_for, $q)}</h2>
     <h1 cond="!$products || empty($products)" >{$lang->no_products}</h1>
     <include target="products_list.html"/>
 

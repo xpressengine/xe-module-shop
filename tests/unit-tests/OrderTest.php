@@ -1,7 +1,7 @@
 <?php
-    require_once "lib/Shop_Generic_Tests.class.php";
-    require dirname(__FILE__) . '/lib/Bootstrap.php';
-    require_once dirname(__FILE__) . '/../shop.info.php';
+    require_once dirname(__FILE__) . "/../lib/Shop_Generic_Tests.class.php";
+    require_once dirname(__FILE__) . '/../lib/Bootstrap.php';
+    require_once dirname(__FILE__) . '/../../shop.info.php';
 
 class OrderTest extends Shop_Generic_Tests_DatabaseTestCase
 {

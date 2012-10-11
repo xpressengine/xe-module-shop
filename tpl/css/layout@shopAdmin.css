@@ -93,7 +93,13 @@ a.skipToContent{text-align:center;color:#fff;position:absolute;width:100%;font-s
     background: #282e3f url(../img/bgHeader.gif) 0 10px repeat-x;
 }
 #shopAdmin #header:after{content:"";display:block;clear:both}
-#shopAdmin #header h1{position:relative;float:left;margin: 5px 0 0 0;padding:0 10px 0 18px;background:#282e3f}
+#shopAdmin #header h1 {
+    position: relative;
+    float: left;
+    margin: 3px 0 0 0;
+    padding: 0 10px 0 18px;
+    background: #282e3f;
+}
 #shopAdmin #header .navigation{position:static;left:-1px;float:left;clear:right;white-space:nowrap;font-size:11px;z-index:1;overflow:visible}
 #shopAdmin #header .navigation .section{position:static}
 #shopAdmin #header .navigation ul{padding-top:7px;zoom:1}
@@ -392,6 +398,14 @@ a.skipToContent{text-align:center;color:#fff;position:absolute;width:100%;font-s
 
 .dashboardHeader span.icon.payment {
     background-position: -896px 0;
+}
+
+.dashboardHeader span.icon.shipping_settings {
+    background-position: -928px 0;
+}
+
+.dashboardHeader span.icon.payment_settings {
+    background-position: -960px 0;
 }
 
 
