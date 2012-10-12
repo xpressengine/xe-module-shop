@@ -16,7 +16,7 @@
 	<property name="config.build_dir_module_folder" value="./build/xe-shop" override="true" />
 	<property name="config.module_folder_name" value="/shop" override="true" />
 	<property name="config.svn" value="D:\svn\bin\svn.exe" override="true" />
-	<property name="release.repo" value="http://xe-shop.googlecode.com/svn/tags/shop/${version}" override="true" />
+	<property name="release.repo" value="http://xe-shop.googlecode.com/svn/tags/${version}" override="true" />
 	<property name="release.name" value="xe-shop.${version}" override="true" />
 
     <!-- ============================================  -->
