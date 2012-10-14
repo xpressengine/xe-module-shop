@@ -84,7 +84,7 @@ class Cart extends BaseItem implements IProductItemsContainer
     {
         if (!$this->isPersisted()) throw new Exception('Cart is not persisted');
 
-        if ($product instanceof SimpleProduct) {
+        if ($product instanceof ICartItemProduct) {
             if (!$product_srl = $product->product_srl) {
                 throw new Exception('Product is not persisted');
             }
@@ -118,7 +118,7 @@ class Cart extends BaseItem implements IProductItemsContainer
 
     public function productStillAvailable($product, $checkIfInStock=true)
     {
-        if ($product instanceof SimpleProduct) {
+        if ($product instanceof ICartItemProduct) {
             if (!$product->isPersisted()) {
                 throw new Exception('Product not persisted');
             }
@@ -428,30 +428,30 @@ class Cart extends BaseItem implements IProductItemsContainer
      * @return Order
      * @throws Exception
      */
-    public function checkout(array $orderData)
-    {
-        if (!$this->cart_srl) throw new Exception('Cart is not persisted');
-        $this->check();
-        $orderData = $this->formTranslation($orderData);
-        $this->setExtra($orderData['extra']);
-        $this->billing_address_srl = $orderData['billing_address_srl'];
-        $this->shipping_address_srl = (isset($orderData['shipping_address_srl']) ? $orderData['shipping_address_srl'] : $orderData['billing_address_srl']);
-        $this->save();
-    }
-
-    private function formTranslation(array $input)
-    {
-        $data = array('extra'=> array());
-        $addressRepo = new AddressRepository();
-        if (self::validateFormBlock($billing = $input['billing'])) {
-            if (is_numeric($billing['address'])) {
-                $data['billing_address_srl'] = $billing['address'];
-            } elseif (self::validateFormBlock($newAddress = $input['new_billing_address'])) {
-                $newAddress = new Address($newAddress);
-                if ($this->member_srl && !$addressRepo->hasDefaultAddress($this->member_srl, AddressRepository::TYPE_BILLING)) {
-                    $newAddress->default_billing = 'Y';
+                public function checkout(array $orderData)
+                {
+                    if (!$this->cart_srl) throw new Exception('Cart is not persisted');
+                    $this->check();
+                    $orderData = $this->formTranslation($orderData);
+                    $this->setExtra($orderData['extra']);
+                    $this->billing_address_srl = $orderData['billing_address_srl'];
+                    $this->shipping_address_srl = (isset($orderData['shipping_address_srl']) ? $orderData['shipping_address_srl'] : $orderData['billing_address_srl']);
+                    $this->save();
                 }
-                $newAddress->save();
+
+                private function formTranslation(array $input)
+                {
+                    $data = array('extra'=> array());
+                    $addressRepo = new AddressRepository();
+                    if (self::validateFormBlock($billing = $input['billing'])) {
+                        if (is_numeric($billing['address'])) {
+                            $data['billing_address_srl'] = $billing['address'];
+                        } elseif (self::validateFormBlock($newAddress = $input['new_billing_address'])) {
+                            $newAddress = new Address($newAddress);
+                            if ($this->member_srl && !$addressRepo->hasDefaultAddress($this->member_srl, AddressRepository::TYPE_BILLING)) {
+                                $newAddress->default_billing = 'Y';
+                            }
+                            $newAddress->save();
                 $data['billing_address_srl'] = $newAddress->address_srl;
             }
             else {
@@ -686,4 +686,8 @@ class Cart extends BaseItem implements IProductItemsContainer
 	{
 		return $this->getBillingAddress()->lastname;
 	}
+
+    public function allProductsAreDownloadable(){
+        //$this->getProducts()
+    }
 }

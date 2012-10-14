@@ -34,7 +34,7 @@
                     <span class="quantity"><label>{$lang->quantity}:</label><input type="text" name="quantity" value="1" /></span>
                 </p>
                 <!--@end-->
-                <!--@if($product->isSimple())-->
+                <!--@if($product->isSimple() || $product->isDownloadable())-->
                 <input type="hidden" id="product_srl" name="product_srl" value="{$product->product_srl}" />
                 <!--@end-->
                 <p>

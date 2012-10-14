@@ -10,12 +10,17 @@ class CartProduct extends BaseItem implements IProductItem
 
     public function __construct($data)
     {
-        $this->setProduct(new SimpleProduct($data));
+        $this->setProduct(ProductFactory::buildInstance($data));
+
+        if ($this->getProduct()->isDownloadable()){
+            // cannot have more than one item for each downloadable product
+            $data->quantity = 1;
+        }
+
         $this->cart_product_srl = $data->cart_product_srl;
         $this->cart_product_title = $data->cart_product_title;
         $this->cart_product_price = $data->cart_product_price;
         $this->quantity = $data->quantity ? $data->quantity : 1;
-
         parent::__construct();
     }
 
@@ -25,14 +30,14 @@ class CartProduct extends BaseItem implements IProductItem
         return "CartRepository";
     }
 
-    public function setProduct(SimpleProduct $product)
+    public function setProduct(ICartItemProduct $product)
     {
         $this->product = $product;
         return $this;
     }
 
     /**
-     * @return SimpleProduct
+     * @return ICartItemProduct
      */
     public function getProduct()
     {

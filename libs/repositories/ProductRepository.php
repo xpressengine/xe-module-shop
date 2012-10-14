@@ -397,13 +397,10 @@ class ProductRepository extends BaseRepository
 		$output = $this->query('getProduct', $args);
 		// If product does not exist, return null
 		if(!$output->data) return NULL;
-		if($output->data->product_type == 'simple') {
-			$product = new SimpleProduct($output->data);
-		}
-        else if ($output->data->product_type == 'downloadable'){
-            $product = new DownloadableProduct($output->data);
-        }
-		else {
+
+        $product = ProductFactory::buildInstance($output->data);
+
+		if($product->isConfigurable()){
 			$product = new ConfigurableProduct($output->data);
 			// Get associated products
 			$associated_products_args = new stdClass();
@@ -438,7 +435,15 @@ class ProductRepository extends BaseRepository
     public function getProductByFriendlyUrl($str)
     {
         $output = $this->query('getProductByFriendlyUrl', array('friendly_url' => $str));
-        return empty($output->data) ? NULL : new SimpleProduct($output->data);
+        if (empty($output->data)){
+            return NULL;
+        }elseif ($output->data->product_type == "simple"){
+            return new SimpleProduct($output->data);
+        }elseif ($output->data->product_type == "downloadable"){
+            return new DownloadableProduct($output->data);
+        }else{
+            return new ConfigurableProduct($output->data);
+        }
     }
 
     /**
@@ -562,21 +567,14 @@ class ProductRepository extends BaseRepository
 		// Get top level products
 		$confProdSrls = $products = array();
         foreach ($output->data as $row) {
-			if ($row->product_type == 'simple') {
-				$product = new SimpleProduct($row);
-				if ($loadAttributes) $this->getProductAttributes($product);
-                if($loadImages) $this->getProductImages($product);
-			} elseif ($row->product_type == 'downloadable') {
-                $product = new DownloadableProduct($row);
-                if ($loadAttributes) $this->getProductAttributes($product);
-                if($loadImages) $this->getProductImages($product);
+            $product = ProductFactory::buildInstance($row);
+
+            if ($loadAttributes) $this->getProductAttributes($product);
+            if($loadImages) $this->getProductImages($product);
+            if ($product->isConfigurable()){
+                $confProdSrls[] = $row->product_srl;
             }
-            else {
-				$product = new ConfigurableProduct($row);
-				if ($loadAttributes) $this->getProductAttributes($product);
-                if($loadImages) $this->getProductImages($product);
-				$confProdSrls[] = $row->product_srl;
-			}
+
             $products[$row->product_srl] = $product;
         }
 		if (count($confProdSrls)) {
@@ -616,19 +614,11 @@ class ProductRepository extends BaseRepository
         $configurable_products = array();
         $products = array();
         foreach ($output->data as $product) {
-            if ($product->product_type == 'simple') {
-                $product_object = new SimpleProduct($product);
-                if($loadAttributes) $this->getProductAttributes($product_object);
-                if($loadImages) $this->getProductImages($product_object);
-            }elseif ($product->product_type == 'downloadable') {
-                $product_object = new DownloadableProduct($product);
-                if($loadAttributes) $this->getProductAttributes($product_object);
-                if($loadImages) $this->getProductImages($product_object);
-            }
-            else {
-                $product_object = new ConfigurableProduct($product);
-                if($loadAttributes) $this->getProductAttributes($product_object);
-                if($loadImages) $this->getProductImages($product_object);
+            $product_object = ProductFactory::buildInstance($product);
+
+            if($loadAttributes) $this->getProductAttributes($product_object);
+            if($loadImages) $this->getProductImages($product_object);
+            if ($product_object->isConfigurable()){
                 $configurable_products[] = $product->product_srl;
             }
             $products[$product->product_srl] = $product_object;
@@ -834,7 +824,6 @@ class ProductRepository extends BaseRepository
                     $product->images[] = $new_image;
                 }
             }
-
 
             if($product->product_type == 'simple') {
                 $prod = new SimpleProduct($product);
@@ -1054,7 +1043,7 @@ class ProductRepository extends BaseRepository
     }
 
     /**
-     * Update the file representing the content of a downloadable file
+     * Update the file representing the content of a downloadable product
      * @author Razvan Nutu (dev@xpressengine.org)
      * @param $product
      * @param $contentToUpload
@@ -1075,6 +1064,11 @@ class ProductRepository extends BaseRepository
         return TRUE;
     }
 
+    /**
+     * Delete the file representing the content of a downloadable product
+     * @author Razvan Nutu (dev@xpressengine.org)
+     * @param $product
+     */
     public function deleteContent($product)
     {
         try {

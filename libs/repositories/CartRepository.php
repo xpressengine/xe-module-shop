@@ -51,7 +51,7 @@ class CartRepository extends BaseRepository
 
     public function getCartProduct($cart_srl, $product)
     {
-        if ($product instanceof SimpleProduct) {
+        if ($product instanceof ICartItemProduct) {
             if (!$product->isPersisted()) {
                 throw new Exception('Product is not persisted');
             }

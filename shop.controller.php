@@ -245,20 +245,14 @@
             $args->member_srl = $logged_info->member_srl;
             $args->module_srl = $this->module_info->module_srl;
 
-			if($args->product_type == 'simple')
-			{
-				$product = new SimpleProduct($args);
-			}
-            elseif ($args->product_type == 'downloadable')
+			$product = ProductFactory::buildInstance($args);
+
+            if ($product->isDownloadable())
             {
                 unset($args->weight);
                 $args->content_filename = $args->contentToUpload['name'];
                 $product = new DownloadableProduct($args);
             }
-			else
-			{
-				$product = new ConfigurableProduct($args);
-			}
 
             try
             {
@@ -982,7 +976,7 @@
                 $productsRepo = new ProductRepository();
                 if ($product = $productsRepo->getProduct($product_srl))
                 {
-                    if (!($product instanceof SimpleProduct)) {
+                    if (!($product instanceof ICartItemProduct)) {
                         return new Object(-1, 'msg_invalid_request');
                     }
                     $logged_info = Context::get('logged_info');

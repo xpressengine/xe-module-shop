@@ -108,7 +108,7 @@ class Order extends BaseItem implements IProductItemsContainer
         //remove all already existing links
         $this->repo->deleteOrderProducts($this->order_srl);
         //set the new links
-        /** @var $cart_product SimpleProduct */
+        /** @var $cart_product ICartItemProduct */
         $cart_products = $cart->getProducts();
         foreach ($cart_products as $cart_product) {
             if ($cart_product->available && $cart_product->product_srl) {

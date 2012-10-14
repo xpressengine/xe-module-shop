@@ -156,7 +156,7 @@ abstract class Product extends BaseItem
 /**
  * Model class for a simple product
  */
-class SimpleProduct extends Product
+class SimpleProduct extends Product implements ICartItemProduct
 {
     /** @var ProductRepository */
     public $repo;
@@ -205,7 +205,7 @@ class ConfigurableProduct extends Product
 /**
  * Model class for configurable product
  */
-class DownloadableProduct extends Product
+class DownloadableProduct extends Product implements ICartItemProduct
 {
 
     public function __construct($args = null)
@@ -217,6 +217,25 @@ class DownloadableProduct extends Product
     public function getRepo()
     {
         return 'ProductRepository';
+    }
+}
+
+/**
+ * Interface meant to designate the products which can be inserted into a cart;
+ * at this moment, only SimpleProduct and DownloadableProduct are qualified for.
+ */
+interface ICartItemProduct{}
+
+class ProductFactory{
+    static public function buildInstance($data){
+        if ($data->product_type == "simple"){
+            return new SimpleProduct($data);
+        }elseif ($data->product_type == "downloadable"){
+            return new DownloadableProduct($data);
+        }elseif ($data->product_type == "configurable" || $data->configurable_attributes){
+            return new ConfigurableProduct($data);
+        }
+        return new SimpleProduct($data);
     }
 }
 

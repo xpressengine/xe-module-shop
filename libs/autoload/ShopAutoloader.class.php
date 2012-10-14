@@ -28,7 +28,7 @@ class ShopAutoloader
                     $repoClass = 'BaseRepository';
                 }
                 else {
-                    if(in_array($class, array('SimpleProduct', 'ConfigurableProduct')))
+                    if(in_array($class, array('SimpleProduct', 'ConfigurableProduct', 'DownloadableProduct', 'ICartItemProduct', 'ProductFactory')))
                         $class = 'Product';
 
                     $itemClass = $class;
@@ -67,7 +67,7 @@ class ShopAutoloader
             throw new Exception("File $file exists, but it's not readable");
         }
         require_once $file;
-        if ($classToCheck === 'Product') $classToCheck = array('ConfigurableProduct', 'SimpleProduct');
+        if ($classToCheck === 'Product') $classToCheck = array('ConfigurableProduct', 'SimpleProduct', 'DownloadableProduct', 'ICartItemProduct', 'ProductFactory');
         if ($classToCheck) {
             if (!is_array($classToCheck)) $classToCheck = array($classToCheck);
             foreach ($classToCheck as $class) {

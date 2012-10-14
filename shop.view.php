@@ -774,7 +774,7 @@ class shopView extends shop {
 			{
 				$product = new ConfigurableProduct();
 			}
-            else if ($args->product_type == 'downloadable'){
+            elseif ($args->product_type == 'downloadable'){
                 $product = new DownloadableProduct();
             }
 			else

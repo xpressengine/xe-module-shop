@@ -42,8 +42,7 @@ class OrderRepository extends BaseRepository
 
 
         foreach ($output->data as $data) {
-            if($data->product_type == 'simple') $product = new SimpleProduct((array) $data);
-            elseif($data->product_type == 'configurable') $product = new ConfigurableProduct((array) $data);
+            $product = ProductFactory::buildInstance((array) $data);
             $product->order_count = $data->order_count;
             $products[] = $product;
         }
