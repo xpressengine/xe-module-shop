@@ -1,6 +1,6 @@
 <include target="_header.html"/>
 <!--%import("jquery.validate.js")-->
-<!--%import("validation.js")-->
+<!--%import("validator.js")-->
 
 <div id="checkout" class="main-content form" cond="isset($cart) && $cart->items">
     <h1 class="underline">{$lang->checkout}</h1>
@@ -203,7 +203,6 @@
             Forgot something? <a class="button" href="{getUrl('act','dispShopCart')}" title="cart">Edit your cart</a>
         </p>
         <div class="clearfix"></div>
-        <p><input type="submit" value="Continue">{$lang->you_can_review_order}</p>
 
     </form>
 
