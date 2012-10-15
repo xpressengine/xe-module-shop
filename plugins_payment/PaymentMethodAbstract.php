@@ -133,6 +133,8 @@ abstract class PaymentAPIAbstract
         curl_setopt($request, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($request, CURLOPT_POSTFIELDS, $post_string);
         curl_setopt($request, CURLOPT_SSL_VERIFYPEER, FALSE);
+        curl_setopt($request, CURLOPT_TIMEOUT, 10);
+
         $response = curl_exec($request);
         if(__DEBUG__)
         {

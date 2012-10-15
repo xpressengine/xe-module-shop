@@ -687,7 +687,34 @@ class Cart extends BaseItem implements IProductItemsContainer
 		return $this->getBillingAddress()->lastname;
 	}
 
+    public function hasDownloadableProducts(){
+        /** @var $cartProduct CartProduct */
+        foreach ($this->getProducts() as $cartProduct){
+            /**@var $product Product */
+            $product = $cartProduct->getProduct();
+            if ($product->isDownloadable())
+                return true;
+        }
+    }
+
+    public function hasSimpleProducts(){
+        /** @var $cartProduct CartProduct */
+        foreach ($this->getProducts() as $cartProduct){
+            /**@var $product Product */
+            $product = $cartProduct->getProduct();
+            if ($product->isSimple())
+                return true;
+        }
+    }
+
     public function allProductsAreDownloadable(){
-        //$this->getProducts()
+        /** @var $cartProduct CartProduct */
+        foreach ($this->getProducts() as $cartProduct){
+            /**@var $product Product */
+            $product = $cartProduct->getProduct();
+            if (!$product->isDownloadable())
+                return false;
+        }
+        return true;
     }
 }
