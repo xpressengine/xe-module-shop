@@ -4,7 +4,7 @@
 -->
 <phpunit>
     <php>
-        <var name="DB_DSN" value="db_type:mysql;dbname=db_name;host=db_host"/>
+        <var name="DB_DSN" value="mysql:dbname=tests_db;host=dbhost"/>
         <var name="DB_USER" value="db_user"/>
         <var name="DB_PASSWD" value="db_pass"/>
         <var name="DB_DBNAME" value="db_name"/>
