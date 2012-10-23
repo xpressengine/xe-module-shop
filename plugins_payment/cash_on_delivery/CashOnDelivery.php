@@ -10,7 +10,7 @@ class CashOnDelivery extends PaymentMethodAbstract
 	/**
 	 * Make sure all mandatory fields are set
 	 */
-	public function isConfigured()
+	public function isConfigured(&$error_message = 'msg_invalid_request')
 	{
 		return true;
 	}

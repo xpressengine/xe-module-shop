@@ -137,13 +137,16 @@ class PaypalExpressCheckout extends PaymentMethodAbstract
 	/**
 	 * Make sure all mandatory fields are set
 	 */
-	public function isConfigured()
+	public function isConfigured(&$error_message = 'msg_invalid_request')
 	{
 		if(isset($this->api_username)
 			&& isset($this->api_password)
 			&& isset($this->gateway_api)
 			&& isset($this->signature))
+		{
+			$error_message = 'msg_paypal_express_missing_fields';
 			return true;
+		}
 		return false;
 	}
 }

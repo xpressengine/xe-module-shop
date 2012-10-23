@@ -2484,4 +2484,25 @@
 		<value xml:lang="ko"><![CDATA[You can later review your order before submitting it]]></value>
 		<value xml:lang="en"><![CDATA[You can later review your order before submitting it]]></value>
 	</item>
+    <item name="msg_missing_shipping_price">
+        <value xml:lang="en">Please input a shipping price</value>
+    </item>
+    <item name="msg_missing_shipping_type">
+        <value xml:lang="en">Please input a shipping type</value>
+    </item>
+    <item name="msg_invalid_shipping_price">
+        <value xml:lang="en">The value you entered for price is invalid.</value>
+    </item>
+    <item name="msg_invalid_shipping_type">
+        <value xml:lang="en">The value you entered for shipping type is invalid.</value>
+    </item>
+    <item name="msg_authorize_missing_fields">
+        <value xml:lang="en">You must enter your API Login ID, Transaction key and Gateway API URL - all fields are mandatory.</value>
+    </item>
+    <item name="msg_paypal_express_missing_fields">
+        <value xml:lang="en">You must enter your API Username, API Password, Signature and Gateway API URL - all fields are mandatory.</value>
+    </item>
+    <item name="msg_paypal_standard_missing_fields">
+        <value xml:lang="en">You must enter your Business Email, PDT Token and Gateway API URL - all fields are mandatory.</value>
+    </item>
 </lang>

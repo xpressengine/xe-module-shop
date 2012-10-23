@@ -1845,6 +1845,13 @@
             }
             $payment_method->setProperties($data);
 
+			// Check that data is valid before saving
+			$error_message = 'msg_invalid_request';
+			if(!$payment_method->isConfigured($error_message))
+			{
+				return new Object(-1, $error_message);
+			}
+
             // Save changes
             $payment_repository->updatePaymentMethod($payment_method);
 
@@ -2210,6 +2217,13 @@
                 }
             }
             $shipping_method->setProperties($data);
+
+			// Check that input data is valid
+			$error_message = '';
+			if(!$shipping_method->isConfigured($error_message))
+			{
+				return new Object(-1, $error_message);
+			}
 
             try
             {

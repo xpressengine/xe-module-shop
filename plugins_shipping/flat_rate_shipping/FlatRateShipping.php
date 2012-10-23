@@ -37,11 +37,30 @@ class FlatRateShipping extends ShippingMethodAbstract
 	 * If no validation is needed, just return true;
 	 * @return mixed
 	 */
-	public function isConfigured()
+	public function isConfigured(&$error_message = 'msg_invalid_request')
 	{
-		if(!isset($this->price) || !isset($this->type)) return false;
-		if(!in_array($this->type, array('per_item', 'per_order'))) return false;
-		if(!is_numeric($this->price)) return false;
+		if(!isset($this->price))
+		{
+			$error_message = 'msg_missing_shipping_price';
+			return false;
+		}
+
+		if(!isset($this->type))
+		{
+			$error_message = 'msg_missing_shipping_type';
+			return false;
+		}
+
+		if(!in_array($this->type, array('per_item', 'per_order')))
+		{
+			$error_message = 'msg_invalid_shipping_type';
+			return false;
+		}
+		if(!is_numeric($this->price))
+		{
+			$error_message = 'msg_invalid_shipping_price';
+			return false;
+		}
 		return true;
 	}
 }

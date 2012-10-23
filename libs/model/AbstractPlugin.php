@@ -19,7 +19,7 @@ abstract class AbstractPlugin extends BaseItem
 	 * If no validation is needed, just return true;
 	 * @return mixed
 	 */
-	public abstract function isConfigured();
+	public abstract function isConfigured(&$error_message = 'msg_invalid_request');
 
     public function __construct()
     {
@@ -58,7 +58,7 @@ abstract class AbstractPlugin extends BaseItem
     }
 
     /**
-     * Sets multiple properties at once
+     * Sets all properties at once
      *
      * @param $data
      */
@@ -68,6 +68,18 @@ abstract class AbstractPlugin extends BaseItem
         {
             $this->{$property_name} = $property_value; // If given property does not exist, __set and __get will be called
         }
+
+		if($this->properties && !$data->properties)
+		{
+			$all_custom_properties_names = array_keys(get_object_vars($this->properties));
+			foreach($all_custom_properties_names as $custom_property_name)
+			{
+				if(!isset($data->$custom_property_name))
+				{
+					unset($this->properties->$custom_property_name);
+				}
+			}
+		}
     }
 
     /**
