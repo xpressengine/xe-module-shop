@@ -477,6 +477,11 @@ class Cart extends BaseItem implements IProductItemsContainer
                 throw new ShopException('No shipping address');
             }
         }
+		else
+		{
+			$shipping = $input['shipping'];
+			$data['extra']['shipping_method'] = $shipping['method'];
+		}
         if (self::validateFormBlock($payment = $input['payment'])) {
             $data['extra']['payment_method'] = $payment['method'];
         }
