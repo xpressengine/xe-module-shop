@@ -53,7 +53,11 @@ abstract class Shop_SeleniumTestCase extends PHPUnit_Extensions_Selenium2TestCas
     protected function addToCart(array $products)
     {
         foreach ($products as $order=>$quantity) {
-            $block = $this->getMultiple('.product'); $block = $block[$order];
+            $block = $this->getMultiple('.product');
+			if(isset($block[$order]))
+			{
+				$block = $block[$order];
+			}
             /** @var $block PHPUnit_Extensions_Selenium2TestCase_Element */
             $addButton = $block->element($this->using('css selector')->value('.add-to-cart'));
             $quantityInput = $block->element($this->using('css selector')->value('.quantity input'));

@@ -2,7 +2,7 @@
 
 require_once dirname(__FILE__) . '/../lib/Shop_SeleniumTestCase.php';
 
-class OrderTest extends Shop_SeleniumTestCase
+class CheckoutTest extends Shop_SeleniumTestCase
 {
     protected $startUrl;
 
@@ -15,6 +15,7 @@ class OrderTest extends Shop_SeleniumTestCase
 
     public function testOrder()
     {
+		$this->url($this->startUrl);
         $this->addToCart(array(
             //product order in list => quantity to add
             0 => 2,
