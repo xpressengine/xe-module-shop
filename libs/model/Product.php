@@ -126,7 +126,7 @@ abstract class Product extends BaseItem
     public function isAvailable($shopSettingsCheck=true)
     {
         if (!$this->isPersisted()) {
-            throw new Exception('Product not persisted');
+            throw new ShopException('Product not persisted');
         }
         if ($shopSettingsCheck) {
             $shopInfo = new ShopInfo($this->module_srl);
@@ -164,7 +164,7 @@ class SimpleProduct extends Product
     public function substractFromStock($qty)
     {
         if($qty > $this->qty){
-            throw new Exception("You do not have enough items in stock to ship this order. Go and update stocks for product $this->product_srl !");
+            throw new ShopException("You do not have enough items in stock to ship this order. Go and update stocks for product $this->product_srl !");
         }
         $this->qty -= $qty;
         $this->repo->updateProduct($this);

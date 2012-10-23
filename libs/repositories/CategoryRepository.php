@@ -25,7 +25,7 @@ class CategoryRepository extends BaseRepository
 		$output = executeQuery('shop.insertCategory', $category);
 		if(!$output->toBool())
 		{
-			throw new Exception($output->getMessage(), $output->getError());
+			throw new ShopException($output->getMessage(), $output->getError());
 		}
 		return $category->category_srl;
 	}
@@ -42,7 +42,7 @@ class CategoryRepository extends BaseRepository
 	{
 		if(!isset($args->category_srl) && !isset($args->module_srl))
 		{
-			throw new Exception("Missing arguments for Product category delete: please provide [category_srl] or [module_srl]");
+			throw new ShopException("Missing arguments for Product category delete: please provide [category_srl] or [module_srl]");
 		}
 
 		// Get category info before deleting it, so we can also delete category image
@@ -58,21 +58,21 @@ class CategoryRepository extends BaseRepository
 		if(!$output->toBool())
 		{
             $db->rollback();
-			throw new Exception($output->getMessage(), $output->getError());
+			throw new ShopException($output->getMessage(), $output->getError());
 		}
 
 		$output = executeQuery('shop.deleteAttributesScope', $args);
 		if(!$output->toBool())
 		{
             $db->rollback();
-			throw new Exception($output->getMessage(), $output->getError());
+			throw new ShopException($output->getMessage(), $output->getError());
 		}
 
 		$output = executeQuery('shop.deleteProductCategories', $args);
 		if(!$output->toBool())
 		{
             $db->rollback();
-			throw new Exception($output->getMessage(), $output->getError());
+			throw new ShopException($output->getMessage(), $output->getError());
 		}
 
 		if($args->category_srl)
@@ -105,7 +105,7 @@ class CategoryRepository extends BaseRepository
 		$output = executeQuery('shop.getCategory', $args);
 		if(!$output->toBool())
 		{
-			throw new Exception($output->getMessage(), $output->getError());
+			throw new ShopException($output->getMessage(), $output->getError());
 		}
 
 		$category = new Category($output->data);
@@ -126,7 +126,7 @@ class CategoryRepository extends BaseRepository
 		$output = executeQuery('shop.updateCategory', $category);
 		if(!$output->toBool())
 		{
-			throw new Exception($output->getMessage(), $output->getError());
+			throw new ShopException($output->getMessage(), $output->getError());
 		}
 		return TRUE;
 	}

@@ -17,7 +17,7 @@ class ShopCache implements ArrayAccess
     {
         if ($this->has($key)) {
             if (!$overwrite) {
-                throw new Exception("Cache key '$key' already exists");
+                throw new ShopException("Cache key '$key' already exists");
             }
         }
         $this->data[$key] = $value;

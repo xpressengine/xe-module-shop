@@ -18,13 +18,13 @@ class ProductRepository extends BaseRepository
 		$product->product_srl = getNextSequence();
 
         if($product->discount_price >= $product->price){
-            throw new Exception("Discount price is bigger than normal price");
+            throw new ShopException("Discount price is bigger than normal price");
         }
 
 		$output = executeQuery('shop.insertProduct', $product);
 		if(!$output->toBool())
 		{
-			throw new Exception($output->getMessage(), $output->getError());
+			throw new ShopException($output->getMessage(), $output->getError());
 		}
 		else
 		{
@@ -61,7 +61,7 @@ class ProductRepository extends BaseRepository
 			$output = executeQuery('shop.insertProductAttribute', $args);
 			if(!$output->toBool())
 			{
-				throw new Exception($output->getMessage(), $output->getError());
+				throw new ShopException($output->getMessage(), $output->getError());
 			}
 		}
 		return TRUE;
@@ -101,7 +101,7 @@ class ProductRepository extends BaseRepository
 		foreach($product->configurable_attributes as $config_attribute_srl => $config_attribute_title){
 			$args->attribute_srl = $config_attribute_srl;
 			$output = executeQuery('shop.insertProductAttribute',$args);
-			if(!$output->toBool()) throw new Exception($output->getMessage(), $output->getError());
+			if(!$output->toBool()) throw new ShopException($output->getMessage(), $output->getError());
 		}
 		return TRUE;
 	}
@@ -124,7 +124,7 @@ class ProductRepository extends BaseRepository
             else return;
 		if(!$output->toBool())
 		{
-			throw new Exception($output->getMessage(), $output->getError());
+			throw new ShopException($output->getMessage(), $output->getError());
 		}
 
 		$attributes_list = array();
@@ -168,7 +168,7 @@ class ProductRepository extends BaseRepository
                 $output = executeQuery('shop.insertProductCategories', $args);
                 if(!$output->toBool())
                 {
-                    throw new Exception($output->getMessage(), $output->getError());
+                    throw new ShopException($output->getMessage(), $output->getError());
                 }
                 $this->updateProductCategoryCount($args);
             }
@@ -191,7 +191,7 @@ class ProductRepository extends BaseRepository
         $count_output = executeQuery('shop.getProductsInCategoryCount', $args);
         if(!$count_output->toBool())
         {
-            throw new Exception($count_output->getMessage(), $count_output->getError());
+            throw new ShopException($count_output->getMessage(), $count_output->getError());
         }
 
 
@@ -203,7 +203,7 @@ class ProductRepository extends BaseRepository
         $output = executeQuery('shop.updateCategory', $update_args);
         if(!$output->toBool())
         {
-            throw new Exception($output->getMessage(), $output->getError());
+            throw new ShopException($output->getMessage(), $output->getError());
         }
     }
 
@@ -217,7 +217,7 @@ class ProductRepository extends BaseRepository
 	{
         if (is_array($args)) $args = (object) $args;
 		if(!isset($args->product_srl)) {
-            throw new Exception("Missing arguments for Product delete: please provide [product_srl] or [module_srl]");
+            throw new ShopException("Missing arguments for Product delete: please provide [product_srl] or [module_srl]");
         }
         $product = $this->getProduct($args->product_srl);
 		$this->query('deleteProduct',$args);
@@ -241,7 +241,7 @@ class ProductRepository extends BaseRepository
     public function deleteProducts($args)
     {
         if(!isset($args->product_srls)) {
-            throw new Exception("Missing arguments for Products delete: please provide [product_srls]");
+            throw new ShopException("Missing arguments for Products delete: please provide [product_srls]");
         }
         foreach($args->product_srls as $product_srl){
             $products[] = $this->getProduct($product_srl);
@@ -287,7 +287,7 @@ class ProductRepository extends BaseRepository
 		$args = new stdClass();
         $args->product_srls[] = $product->product_srl;
         $output = executeQuery('shop.deleteProductCategories',$args);
-        if (!$output->toBool()) throw new Exception($output->getMessage(), $output->getError());
+        if (!$output->toBool()) throw new ShopException($output->getMessage(), $output->getError());
         $args->module_srl = $product->module_srl;
         if(isset($product->categories)){
             foreach($product->categories as $category){
@@ -326,7 +326,7 @@ class ProductRepository extends BaseRepository
 	public function deleteProductAttributes(Product &$product)
 	{
 		if(!$product->product_srl) {
-			throw new Exception("Invalid arguments! Please provide product_srl for delete atrributes.");
+			throw new ShopException("Invalid arguments! Please provide product_srl for delete atrributes.");
 		}
 
 		$args = new stdClass();
@@ -334,7 +334,7 @@ class ProductRepository extends BaseRepository
 		$output = executeQuery('shop.deleteProductAttributes', $args);
 		if(!$output->toBool())
 		{
-			throw new Exception($output->getMessage(), $output->getError());
+			throw new ShopException($output->getMessage(), $output->getError());
 		}
 		return TRUE;
 	}
@@ -350,7 +350,7 @@ class ProductRepository extends BaseRepository
 	{
 		if(!$product->product_srl)
 		{
-			throw new Exception("Invalid arguments! Please provide product_srl for delete attributes.");
+			throw new ShopException("Invalid arguments! Please provide product_srl for delete attributes.");
 		}
 
 		$args = new stdClass();
@@ -358,7 +358,7 @@ class ProductRepository extends BaseRepository
 		$output = executeQuery('shop.deleteProductImages', $args);
 		if(!$output->toBool())
 		{
-			throw new Exception($output->getMessage(), $output->getError());
+			throw new ShopException($output->getMessage(), $output->getError());
 		}
 		$path = sprintf('./files/attach/images/shop/%d/product-images/%d/', $product->module_srl,$product->product_srl);
 		FileHandler::removeDir($path);
@@ -389,7 +389,7 @@ class ProductRepository extends BaseRepository
 			$associated_products_args->configurable_product_srls = array($product->product_srl);
 			$associated_products_output = executeQueryArray('shop.getAssociatedProducts', $associated_products_args);
 			if(!$associated_products_output->toBool()) {
-				throw new Exception($associated_products_output->getMessage());
+				throw new ShopException($associated_products_output->getMessage());
 			}
 			$associated_products = $associated_products_output->data;
 			foreach($associated_products as $associated_product)
@@ -432,7 +432,7 @@ class ProductRepository extends BaseRepository
 		$args = new stdClass();
         $args->product_srl = $product->product_srl;
         $output = executeQuery('shop.getProductCategories',$args);
-        if (!$output->toBool()) throw new Exception($output->getMessage(), $output->getError());
+        if (!$output->toBool()) throw new ShopException($output->getMessage(), $output->getError());
         if(!is_array($output->data)){
             $product->categories[] = $output->data->category_srl;
         }else{
@@ -457,7 +457,7 @@ class ProductRepository extends BaseRepository
 		$output = executeQueryArray('shop.getProductAttributes', $args);
 		if(!$output->toBool())
 		{
-			throw new Exception($output->getMessage(), $output->getError());
+			throw new ShopException($output->getMessage(), $output->getError());
 		}
 
 		foreach($output->data as $attribute)
@@ -485,7 +485,7 @@ class ProductRepository extends BaseRepository
 		$output = executeQueryArray('shop.getProductImages', $args);
 		if(!$output->toBool())
 		{
-			throw new Exception($output->getMessage(), $output->getError());
+			throw new ShopException($output->getMessage(), $output->getError());
 		}
 
 		foreach($output->data as $image)
@@ -534,7 +534,7 @@ class ProductRepository extends BaseRepository
 	 */
     public function getProductList($args, $loadAttributes = FALSE, $loadImages = FALSE, $orderBy=null)
     {
-        if (!isset($args->module_srl)) throw new Exception("Missing arguments for get product list : please provide [module_srl]");
+        if (!isset($args->module_srl)) throw new ShopException("Missing arguments for get product list : please provide [module_srl]");
 		if (!$args->page) $args->page = 1;
         $query = ($args->category_srls && !empty($args->category_srls) ? 'getProductListByCategory' : 'getProductList');
         $output = $this->query($query, $args, true);
@@ -584,7 +584,7 @@ class ProductRepository extends BaseRepository
      * @return stdClass $output
      */
     public function getFeaturedProducts($args, $loadAttributes = FALSE, $loadImages = FALSE){
-        if (!isset($args->module_srl)) throw new Exception("Missing arguments for get product list : please provide [module_srl]");
+        if (!isset($args->module_srl)) throw new ShopException("Missing arguments for get product list : please provide [module_srl]");
         $args->is_featured = 'Y';
         $output = $this->query('getFeaturedProducts', $args, true);
         // Get top level products
@@ -633,7 +633,7 @@ class ProductRepository extends BaseRepository
 	 */
 	public function getAllProducts($args){
 		if(!isset($args->module_srl))
-			throw new Exception("Missing arguments for get product list : please provide [module_srl]");
+			throw new ShopException("Missing arguments for get product list : please provide [module_srl]");
 
 		$output = $this->query('getProductSrls',$args,true);
 
@@ -842,12 +842,12 @@ class ProductRepository extends BaseRepository
 	public function updateProduct(Product $product)
 	{
         if($product->discount_price >= $product->price){
-            throw new Exception("Discount price is bigger than normal price");
+            throw new ShopException("Discount price is bigger than normal price");
         }
         $output = executeQuery('shop.updateProduct', $product);
 		if(!$output->toBool())
 		{
-			throw new Exception($output->getMessage(), $output->getError());
+			throw new ShopException($output->getMessage(), $output->getError());
 		} else {
             $this->updateProductCategories($product);
 			$this->updateProductAttributes($product);
@@ -911,7 +911,7 @@ class ProductRepository extends BaseRepository
 			$output = executeQuery('shop.deleteProductImages', $args);
 			if(!$output->toBool())
 			{
-				throw new Exception($output->getMessage(), $output->getError());
+				throw new ShopException($output->getMessage(), $output->getError());
 			}
 		}
 		$this->insertProductImages($product);
@@ -933,7 +933,7 @@ class ProductRepository extends BaseRepository
 		$output = executeQuery('shop.updatePrimaryImage', $args);
 		if(!$output->toBool())
 		{
-			throw new Exception($output->getMessage(), $output->getError());
+			throw new ShopException($output->getMessage(), $output->getError());
 		}
 		if(isset($product->primary_image)){
 			$args->primary_image = $product->primary_image;
@@ -941,7 +941,7 @@ class ProductRepository extends BaseRepository
 			$output = executeQuery('shop.updatePrimaryImage', $args);
 			if(!$output->toBool())
 			{
-				throw new Exception($output->getMessage(), $output->getError());
+				throw new ShopException($output->getMessage(), $output->getError());
 			}
 		}
 	}
@@ -961,7 +961,7 @@ class ProductRepository extends BaseRepository
 		$output = executeQuery('shop.getPrimaryImageFilename', $args);
 		if(!$output->toBool())
 		{
-			throw new Exception($output->getMessage(), $output->getError());
+			throw new ShopException($output->getMessage(), $output->getError());
 		}
 		$args->primary_image_filename = $output->data->filename;
 		$output = executeQuery('shop.updatePrimaryImageFilename', $args);
@@ -982,20 +982,20 @@ class ProductRepository extends BaseRepository
 		$output = executeQueryArray('shop.getProductImages', $args);
 		if(!$output->toBool())
 		{
-			throw new Exception($output->getMessage(), $output->getError());
+			throw new ShopException($output->getMessage(), $output->getError());
 		}
 		$args->primary_image_filename = $output->data[0]->filename;
 		$args->primary_image = $output->data[0]->image_srl;
 		$output = executeQuery('shop.updatePrimaryImageFilename', $args);
 		if(!$output->toBool())
 		{
-			throw new Exception($output->getMessage(), $output->getError());
+			throw new ShopException($output->getMessage(), $output->getError());
 		}
 		$args->is_primary = 'Y';
 		$output = executeQuery('shop.updatePrimaryImage', $args);
 		if(!$output->toBool())
 		{
-			throw new Exception($output->getMessage(), $output->getError());
+			throw new ShopException($output->getMessage(), $output->getError());
 		}
 		return TRUE;
 	}

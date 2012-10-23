@@ -10,14 +10,14 @@ class InvoiceRepository extends BaseRepository
 
     public function insert(Invoice &$invoice)
     {
-        if ($invoice->invoice_srl) throw new Exception('A srl must NOT be specified for the insert operation!');
+        if ($invoice->invoice_srl) throw new ShopException('A srl must NOT be specified for the insert operation!');
         $invoice->invoice_srl = getNextSequence();
         return $this->query('insertInvoice', get_object_vars($invoice));
     }
 
     public function update(Invoice $invoice)
     {
-        if (!is_numeric($invoice->order_srl)) throw new Exception('You must specify a srl for the updated invoice');
+        if (!is_numeric($invoice->order_srl)) throw new ShopException('You must specify a srl for the updated invoice');
         return $this->query('updateInvoice', get_object_vars($invoice));
     }
 

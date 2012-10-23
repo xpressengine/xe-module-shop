@@ -61,10 +61,10 @@ class ShopAutoloader
     protected function getFile($file, $classToCheck=null)
     {
         if (!file_exists($file)) {
-            throw new Exception("File $file not found");
+            throw new ShopException("File $file not found");
         }
         if (!is_readable($file)) {
-            throw new Exception("File $file exists, but it's not readable");
+            throw new ShopException("File $file exists, but it's not readable");
         }
         require_once $file;
         if ($classToCheck === 'Product') $classToCheck = array('ConfigurableProduct', 'SimpleProduct');
@@ -74,7 +74,7 @@ class ShopAutoloader
                 $reflection = new ReflectionClass($class);
                 if (!$reflection->isInstantiable()) {
                     if (!$reflection->isAbstract() && !$reflection->isInterface()) {
-                        throw new Exception("$class class is not instantiable");
+                        throw new ShopException("$class class is not instantiable");
                     }
                 }
             }

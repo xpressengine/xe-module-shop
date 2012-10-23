@@ -23,7 +23,7 @@ class AddressRepository extends BaseRepository
      */
     public function insert(Address &$address)
     {
-        if ($address->address_srl) throw new Exception('A srl must NOT be specified for the insert operation!');
+        if ($address->address_srl) throw new ShopException('A srl must NOT be specified for the insert operation!');
         $address->address_srl = getNextSequence();
         return $this->query('insertAddress', get_object_vars($address));
     }
@@ -38,7 +38,7 @@ class AddressRepository extends BaseRepository
      */
     public function update(Address &$address)
     {
-        if (!$address->address_srl) throw new Exception('A srl must be specified for the update operation!');
+        if (!$address->address_srl) throw new ShopException('A srl must be specified for the update operation!');
         return $this->query('updateAddress', get_object_vars($address));
     }
 
@@ -133,14 +133,14 @@ class AddressRepository extends BaseRepository
      */
     public function getAddressesList($member_srl)
     {
-        if (!is_numeric($member_srl)) throw new Exception('member_srl must be a valid int');
+        if (!is_numeric($member_srl)) throw new ShopException('member_srl must be a valid int');
         $args = new stdClass();
         $args->page = Context::get('page');
         if (!$args->page) $args->page = 1;
         Context::set('page', $args->page);
 
         $args->member_srl = $member_srl;
-        if (!isset($args->member_srl)) throw new Exception("Missing arguments for attributes list : please provide member_srl");
+        if (!isset($args->member_srl)) throw new ShopException("Missing arguments for attributes list : please provide member_srl");
 
         $output = executeQueryArray('shop.getAddressesList', $args);
         $addresses = array();
@@ -165,7 +165,7 @@ class AddressRepository extends BaseRepository
 
     public function hasDefaultAddress($member_srl, $type=self::TYPE_BILLING)
     {
-        if (!in_array($type, array(self::TYPE_BILLING, self::TYPE_SHIPPING))) throw new Exception('Type should be "billing" or "shipping"');
+        if (!in_array($type, array(self::TYPE_BILLING, self::TYPE_SHIPPING))) throw new ShopException('Type should be "billing" or "shipping"');
         $addresses = $this->getAddresses($member_srl, true);
         /** @var $a Address */
         foreach ($addresses as $a) {

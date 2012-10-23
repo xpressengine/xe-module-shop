@@ -40,7 +40,7 @@
         public function procShopSort()
         {
             if (!in_array($sort = Context::get('sort'), array('price_asc', 'price_desc'))) {
-                throw new Exception('Invalid sorting required');
+                throw new ShopException('Invalid sorting required');
             }
             $_SESSION['sort'] = $sort;
             $category_srl = Context::get('category_srl');
@@ -52,7 +52,7 @@
             $mode = Context::get('mode');
             if ($mode == 'grid') $sess = true;
             elseif ($mode == 'list') $sess = false;
-            else throw new Exception("Invalid setting $mode");
+            else throw new ShopException("Invalid setting $mode");
             $_SESSION['grid_view'] = $sess;
             $this->setRedirectUrlIfNoReferer(getNotEncodedUrl('', 'act', 'dispShopHome'));
         }
@@ -680,8 +680,8 @@
             $login = Context::get('login');
             if ($user = $login['user']) {
                 try {
-                    if (Context::get('is_logged')) throw new Exception('Already logged in, this should not happen');
-                    if (!$pass = $login['pass']) throw new Exception('No password');
+                    if (Context::get('is_logged')) throw new ShopException('Already logged in, this should not happen');
+                    if (!$pass = $login['pass']) throw new ShopException('No password');
                     /** @var $oMemberController memberController */
                     $oMemberController = getController('member');
                     return $oMemberController->procMemberLogin($user, $pass);
@@ -752,7 +752,7 @@
                     $this->setRedirectUrl(getNotEncodedUrl('', 'act', 'dispShopPlaceOrder'));
                 }
             }
-            else throw new Exception('No cart');
+            else throw new ShopException('No cart');
         }
 
         /*
@@ -851,7 +851,7 @@
                 }
 
             } else {
-                throw new Exception('Something whent wrong when adding invoice');
+                throw new ShopException('Something whent wrong when adding invoice');
             }
         }
 
@@ -904,7 +904,7 @@
                 }
 
             } else {
-                throw new Exception('Something whent wrong when adding shipment');
+                throw new ShopException('Something whent wrong when adding shipment');
             }
         }
 
@@ -976,9 +976,9 @@
          */
         public function procShopCartRemoveProducts() {
             $cart_srl = Context::get('cart_srl');
-            if ($cart_srl && !is_numeric($cart_srl)) throw new Exception('Invalid cart_srl');
+            if ($cart_srl && !is_numeric($cart_srl)) throw new ShopException('Invalid cart_srl');
             if (!is_array($product_srls = Context::get('product_srls'))) {
-                if (!is_numeric($product_srls)) throw new Exception('Invalid product_srl for single product delete');
+                if (!is_numeric($product_srls)) throw new ShopException('Invalid product_srl for single product delete');
                 $product_srls = array($product_srls);
             }
             $cartRepo = new CartRepository();
@@ -995,14 +995,14 @@
          */
         public function procShopCartUpdateProducts() {
             $cart_srl = Context::get('cart_srl');
-            if ($cart_srl && !is_numeric($cart_srl)) throw new Exception('Invalid cart_srl');
+            if ($cart_srl && !is_numeric($cart_srl)) throw new ShopException('Invalid cart_srl');
             if (!is_array($quantities = Context::get('quantity'))) {
-                throw new Exception('Invalid products array input.');
+                throw new ShopException('Invalid products array input.');
             }
             $cartRepo = new CartRepository();
             $logged_info = Context::get('logged_info');
             if (!$cart = $cartRepo->getCart($this->module_srl, $cart_srl, $logged_info->member_srl, session_id())) {
-                throw new Exception('No cart');
+                throw new ShopException('No cart');
             }
             $cart->updateProducts($quantities);
             $this->setRedirectUrlIfNoReferer(getNotEncodedUrl('', 'act', 'dispShopCart'));

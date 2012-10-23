@@ -56,7 +56,7 @@ class Order extends BaseItem implements IProductItemsContainer
             }
             foreach (array('billing_address', 'shipping_address', 'shipping_method', 'payment_method') as $val) {
                 if (!isset($orderData[$val])) {
-                    //throw new Exception("Missing $val, can't continue.");
+                    //throw new ShopException("Missing $val, can't continue.");
                 }
             }
         }
@@ -103,8 +103,8 @@ class Order extends BaseItem implements IProductItemsContainer
 
     public function saveCartProducts(Cart $cart)
     {
-        if (!$this->order_srl) throw new Exception('Order not persisted');
-        if (!$cart->cart_srl) throw new Exception('Cart not persisted');
+        if (!$this->order_srl) throw new ShopException('Order not persisted');
+        if (!$cart->cart_srl) throw new ShopException('Cart not persisted');
         //remove all already existing links
         $this->repo->deleteOrderProducts($this->order_srl);
         //set the new links

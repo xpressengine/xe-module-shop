@@ -20,7 +20,7 @@ abstract class BaseRepository
     {
         if (!$params) $params = array();
         if ($params instanceof BaseItem) $params = get_object_vars($params);
-        if (!is_array($params) && !($params instanceof stdClass)) throw new Exception('Wrong $params type');
+        if (!is_array($params) && !($params instanceof stdClass)) throw new ShopException('Wrong $params type');
         if (!strpos($name, '.')) $name = "shop.$name";
         $name = str_replace('%E', $this->entity, $name);
         if ($params) $params = (object) $params;
@@ -37,7 +37,7 @@ abstract class BaseRepository
 
     public static function check($output)
     {
-        if (!is_object($output)) throw new Exception('A valid query output is expected here');
+        if (!is_object($output)) throw new ShopException('A valid query output is expected here');
         if (!$output->toBool()) {
             throw new DbQueryException($output->getMessage(), $output->getError());
         }
@@ -63,13 +63,13 @@ abstract class BaseRepository
         if (is_numeric($srls)) {
             $single = true;
             $srls = array($srls);
-        } elseif (!is_array($srls)) throw new Exception('Invalid $srls input');
+        } elseif (!is_array($srls)) throw new ShopException('Invalid $srls input');
         if (!$entity) $entity = $this->entity;
-        if (!class_exists($entity)) throw new Exception("Class $entity doesn't exist");
+        if (!class_exists($entity)) throw new ShopException("Class $entity doesn't exist");
         $output = $this->query($query, array_merge(array('srls'=>$srls), $extraParams), true);
         self::rowsToEntities($output->data, $entity);
         if ($single && count($output->data) > 1) {
-            throw new Exception('Got more than 1 result, expected 1');
+            throw new ShopException('Got more than 1 result, expected 1');
         }
         return $single && count($output->data) == 1 ? $output->data[0] : $output->data;
     }
@@ -84,13 +84,13 @@ abstract class BaseRepository
      */
     protected static function rowsToEntities(array &$data, $entity, $prefixDelimiter='.')
     {
-        if (!is_string($entity) && !is_array($entity)) throw new Exception('invalid input');
+        if (!is_string($entity) && !is_array($entity)) throw new ShopException('invalid input');
         foreach ($data as $i=>$row) {
             if (is_string($entity)) $data[$i] = new $entity($row);
             else {
                 $rowObjects = array();
                 foreach ($entity as $prefix=>$entityName) {
-                    if (!is_string($entityName)) throw new Exception('Invalid input');
+                    if (!is_string($entityName)) throw new ShopException('Invalid input');
                     $entityData = array();
                     foreach ($row as $col=>$val) {
                         $prefixBlock = $prefix.$prefixDelimiter;
@@ -116,7 +116,7 @@ abstract class BaseRepository
     {
         if (is_numeric($srls)) {
             $srls = array($srls);
-        } elseif (!is_array($srls)) throw new Exception('Invalid $srls input');
+        } elseif (!is_array($srls)) throw new ShopException('Invalid $srls input');
         return $this->query($query, array('srls'=>$srls));
     }
 
@@ -129,7 +129,7 @@ abstract class BaseRepository
     {
         $params['page'] = ($page ? $page : 1);
         $entity = ($entity ? $entity : $this->entity);
-        if (!class_exists($entity)) throw new Exception("Class $entity doesn't exist");
+        if (!class_exists($entity)) throw new ShopException("Class $entity doesn't exist");
         $output = $this->query($query, $params, $entity);
         return $output;
     }
