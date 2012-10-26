@@ -29,16 +29,16 @@ class Cart extends BaseItem implements IProductItemsContainer
 
     public function delete()
     {
-        if (!$this->cart_srl) throw new Exception('Cart is not persisted, can\'t delete.');
+        if (!$this->cart_srl) throw new ShopException('Cart is not persisted, can\'t delete.');
         $this->query('deleteCarts', array('cart_srls' => array($this->cart_srl)));
         $this->query('deleteCartProducts', array('cart_srl'=> $this->cart_srl));
     }
 
     public function merge(Cart $cart, $withDelete=true)
     {
-        if (!$cart->cart_srl || !$this->cart_srl) throw new Exception('Missing srl(s) for carts merge');
+        if (!$cart->cart_srl || !$this->cart_srl) throw new ShopException('Missing srl(s) for carts merge');
         if ($cart->cart_srl == $this->cart_srl) {
-            throw new Exception('Cannot merge with same cart');
+            throw new ShopException('Cannot merge with same cart');
         }
         $this->copyProductLinksFrom($cart);
         if ($withDelete) $cart->delete();
@@ -46,8 +46,8 @@ class Cart extends BaseItem implements IProductItemsContainer
 
     public function copyProductLinksFrom(Cart $cart)
     {
-        if (!$cart->cart_srl || !$this->cart_srl) throw new Exception('Missing srl(s) for cart products copy');
-        if ($cart->cart_srl == $this->cart_srl) throw new Exception('Cannot copy from same cart');
+        if (!$cart->cart_srl || !$this->cart_srl) throw new ShopException('Missing srl(s) for cart products copy');
+        if ($cart->cart_srl == $this->cart_srl) throw new ShopException('Cannot copy from same cart');
         $myCps = $this->repo->getCartProducts($this->cart_srl)->data;
         $cps = $this->repo->getCartProducts($cart->cart_srl)->data;
         foreach ($cps as $cp) {
@@ -82,22 +82,22 @@ class Cart extends BaseItem implements IProductItemsContainer
      */
     public function addProduct($product, $quantity=1, $relativeQuantity=true)
     {
-        if (!$this->isPersisted()) throw new Exception('Cart is not persisted');
+        if (!$this->isPersisted()) throw new ShopException('Cart is not persisted');
 
         if ($product instanceof ICartItemProduct) {
             if (!$product_srl = $product->product_srl) {
-                throw new Exception('Product is not persisted');
+                throw new ShopException('Product is not persisted');
             }
         }
         elseif (is_numeric($product)) {
             $product = new SimpleProduct($product);
         }
         else {
-            throw new Exception('Wrong $product input for addProduct to cart');
+            throw new ShopException('Wrong $product input for addProduct to cart');
         }
 
         if (!$this->productStillAvailable($product)) {
-            throw new Exception('Product is no longer available, cannot add it to cart.');
+            throw new ShopException('Product is no longer available, cannot add it to cart.');
         }
 
         if ($cp = $this->getCartProduct($product)) {
@@ -120,14 +120,14 @@ class Cart extends BaseItem implements IProductItemsContainer
     {
         if ($product instanceof ICartItemProduct) {
             if (!$product->isPersisted()) {
-                throw new Exception('Product not persisted');
+                throw new ShopException('Product not persisted');
             }
         }
         elseif (is_numeric($product)) {
             $pRepo = new ProductRepository();
             $product = $pRepo->getProduct($product);
         }
-        else throw new Exception('Invalid input');
+        else throw new ShopException('Invalid input');
         return $product && $product->isAvailable($checkIfInStock);
     }
 
@@ -187,7 +187,7 @@ class Cart extends BaseItem implements IProductItemsContainer
 
     public function setProductQuantity($product_srl, $quantity, array $extraParams=array())
     {
-        if (!$this->cart_srl) throw new Exception('Cart is not persisted');
+        if (!$this->cart_srl) throw new ShopException('Cart is not persisted');
         return $this->repo->updateCartProduct($this->cart_srl, $product_srl, $quantity, $extraParams);
     }
 
@@ -200,7 +200,7 @@ class Cart extends BaseItem implements IProductItemsContainer
      */
     public function getProducts($n=null, $onlyAvailables=false, $ignoreCache=false)
     {
-        if (!$this->cart_srl) throw new Exception('Cart is not persisted');
+        if (!$this->cart_srl) throw new ShopException('Cart is not persisted');
         //an entity-unique cache key for the current method and parameters combination
         $cacheKey = 'getProducts|' . ($n?$n:"_").(string)($onlyAvailables?'av':'all');
         if ($ignoreCache || !$products = $this->cache[$cacheKey]) {
@@ -238,7 +238,7 @@ class Cart extends BaseItem implements IProductItemsContainer
 
     public function getProductsList(array $args=array())
     {
-        if (!$this->cart_srl) throw new Exception('Cart is not persisted');
+        if (!$this->cart_srl) throw new ShopException('Cart is not persisted');
 
         $output = $this->query('getCartProductsList', array_merge(array('cart_srl'=>$this->cart_srl), $args), true);
         foreach ($output->data as $i=>&$data) {
@@ -258,7 +258,7 @@ class Cart extends BaseItem implements IProductItemsContainer
         if ($minOrder = $shopInfo->getMinimumOrder()) {
             // TO DO getPrice() doesn't work without true
             if ($this->getPrice(true) < $minOrder) {
-                throw new Exception("Minimum order amount of $minOrder not met");
+                throw new ShopException("Minimum order amount of $minOrder not met");
             }
         }
         return true;
@@ -293,7 +293,7 @@ class Cart extends BaseItem implements IProductItemsContainer
             }
             //elseif... add new discount types here after you create the classes
             else {
-                throw new Exception("Unknown discount type $discountType");
+                throw new ShopException("Unknown discount type $discountType");
             }
             return $this->discount = $discount;
         }
@@ -399,7 +399,7 @@ class Cart extends BaseItem implements IProductItemsContainer
 
     public function removeProducts(array $product_srls)
     {
-        if (empty($product_srls)) throw new Exception('Empty array $products_srls');
+        if (empty($product_srls)) throw new ShopException('Empty array $products_srls');
         $output = $this->query('deleteCartProducts', array('cart_srl'=>$this->cart_srl, 'product_srls'=>$product_srls));
         //TODO: optimize queries here
         $this->setExtra('price', $this->getPrice(true));
@@ -410,9 +410,9 @@ class Cart extends BaseItem implements IProductItemsContainer
 
     public function updateProducts(array $quantities)
     {
-        if (empty($quantities)) throw new Exception('Empty array $quantities');
+        if (empty($quantities)) throw new ShopException('Empty array $quantities');
         foreach ($quantities as $product_srl=>$quantity) {
-            if (!is_numeric($product_srl) || !is_numeric($quantity)) throw new Exception('Problem with input $quantities array');
+            if (!is_numeric($product_srl) || !is_numeric($quantity)) throw new ShopException('Problem with input $quantities array');
             if ($quantity == 0) $this->removeProducts(array($product_srl));
             else $this->query('updateCartProduct', array('cart_srl'=>$this->cart_srl, 'product_srl'=>$product_srl, 'quantity'=>$quantity));
         }
@@ -432,39 +432,39 @@ class Cart extends BaseItem implements IProductItemsContainer
      * @return Order
      * @throws Exception
      */
-                public function checkout(array $orderData)
-                {
-                    if (!$this->cart_srl) throw new Exception('Cart is not persisted');
-                    $this->check();
-                    $orderData = $this->formTranslation($orderData);
-                    $this->setExtra($orderData['extra']);
-                    $this->billing_address_srl = $orderData['billing_address_srl'];
-                    $this->shipping_address_srl = (isset($orderData['shipping_address_srl']) ? $orderData['shipping_address_srl'] : $orderData['billing_address_srl']);
-                    $this->save();
-                }
+    public function checkout(array $orderData)
+    {
+        if (!$this->cart_srl) throw new ShopException('Cart is not persisted');
+        $this->check();
+        $orderData = $this->formTranslation($orderData);
+        $this->setExtra($orderData['extra']);
+        $this->billing_address_srl = $orderData['billing_address_srl'];
+        $this->shipping_address_srl = (isset($orderData['shipping_address_srl']) ? $orderData['shipping_address_srl'] : $orderData['billing_address_srl']);
+        $this->save();
+    }
 
-                private function formTranslation(array $input)
-                {
-                    $data = array('extra'=> array());
-                    $addressRepo = new AddressRepository();
-                    if (self::validateFormBlock($billing = $input['billing'])) {
-                        if (is_numeric($billing['address'])) {
-                            $data['billing_address_srl'] = $billing['address'];
-                        } elseif (self::validateFormBlock($newAddress = $input['new_billing_address'])) {
-                            $newAddress = new Address($newAddress);
-                            if ($this->member_srl && !$addressRepo->hasDefaultAddress($this->member_srl, AddressRepository::TYPE_BILLING)) {
-                                $newAddress->default_billing = 'Y';
-                            }
-                            $newAddress->save();
+    private function formTranslation(array $input)
+    {
+        $data = array('extra'=> array());
+        $addressRepo = new AddressRepository();
+        if (self::validateFormBlock($billing = $input['billing'])) {
+            if (is_numeric($billing['address'])) {
+                $data['billing_address_srl'] = $billing['address'];
+            } elseif (self::validateFormBlock($newAddress = $input['new_billing_address'])) {
+                $newAddress = new Address($newAddress);
+                if ($this->member_srl && !$addressRepo->hasDefaultAddress($this->member_srl, AddressRepository::TYPE_BILLING)) {
+                    $newAddress->default_billing = 'Y';
+                }
+                $newAddress->save();
                 $data['billing_address_srl'] = $newAddress->address_srl;
             }
             else {
-                throw new Exception('No billing address');
+                throw new ShopException('No billing address');
             }
         }
         if ($input['different_shipping'] == 'yes') {
             if (!self::validateFormBlock($shipping = $input['shipping'])) {
-                throw new Exception('Wrong shipping input');
+                throw new ShopException('Wrong shipping input');
             }
             $data['extra']['shipping_method'] = $shipping['method'];
             if (is_numeric($shipping['address'])) {
@@ -478,9 +478,14 @@ class Cart extends BaseItem implements IProductItemsContainer
                 $data['shipping_address_srl'] = $newAddress->address_srl;
             }
             else {
-                throw new Exception('No shipping address');
+                throw new ShopException('No shipping address');
             }
         }
+		else
+		{
+			$shipping = $input['shipping'];
+			$data['extra']['shipping_method'] = $shipping['method'];
+		}
         if (self::validateFormBlock($payment = $input['payment'])) {
             $data['extra']['payment_method'] = $payment['method'];
         }
@@ -658,8 +663,7 @@ class Cart extends BaseItem implements IProductItemsContainer
      */
     public function getDiscountName()
     {
-		$discount = $this->getDiscount
-		();
+		$discount = $this->getDiscount();
 		return $discount ? $discount->getName() : null;
     }
 

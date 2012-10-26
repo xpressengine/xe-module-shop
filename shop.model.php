@@ -495,7 +495,7 @@ class shopModel extends shop
 		$output = executeQuery("menu.deleteMenuItem", $args);
 		if(!$output->toBool())
         {
-            throw new Exception($output->getMessage());
+            throw new ShopException($output->getMessage());
         }
 
 		$menuAdminController = getAdminController('menu');

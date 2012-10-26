@@ -71,14 +71,14 @@ class OrderRepository extends BaseRepository
 
     public function insert(Order &$order)
     {
-        if ($order->order_srl) throw new Exception('A srl must NOT be specified for the insert operation!');
+        if ($order->order_srl) throw new ShopException('A srl must NOT be specified for the insert operation!');
         $order->order_srl = getNextSequence();
         return $this->query('insertOrder', get_object_vars($order));
     }
 
     public function update(Order $order)
     {
-        if (!is_numeric($order->order_srl)) throw new Exception('You must specify a srl for the updated order');
+        if (!is_numeric($order->order_srl)) throw new ShopException('You must specify a srl for the updated order');
         return $this->query('updateOrder', get_object_vars($order));
     }
 

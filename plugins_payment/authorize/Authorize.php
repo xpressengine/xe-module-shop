@@ -154,10 +154,13 @@ class Authorize extends PaymentMethodAbstract
 	/**
 	 * Make sure all mandatory fields are set
 	 */
-	public function isConfigured()
+	public function isConfigured(&$error_message = 'msg_invalid_request')
 	{
-		if(!isset($this->api_login_id) && !isset($this->transaction_key) && !isset($this->gateway_api))
+		if(!isset($this->api_login_id) || !isset($this->transaction_key) || !isset($this->gateway_api_url))
+		{
+			$error_message = 'msg_authorize_missing_fields';
 			return false;
+		}
 		return true;
 	}
 }

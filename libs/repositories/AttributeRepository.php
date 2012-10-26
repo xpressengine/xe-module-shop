@@ -24,7 +24,7 @@ class AttributeRepository extends BaseRepository
 	 */
 	public function insertAttribute(Attribute &$attribute)
 	{
-        if ($attribute->attribute_srl) throw new Exception('A srl must NOT be specified');
+        if ($attribute->attribute_srl) throw new ShopException('A srl must NOT be specified');
         $attribute->attribute_srl = getNextSequence();
         if(count($attribute->values ) == 0)
         {
@@ -69,7 +69,7 @@ class AttributeRepository extends BaseRepository
      */
     public function updateAttribute(Attribute $attribute)
     {
-        if (!$attribute->attribute_srl) throw new Exception('Target srl must be specified');
+        if (!$attribute->attribute_srl) throw new ShopException('Target srl must be specified');
         if (count($attribute->values ) == 0)
         {
             unset($attribute->values);
@@ -108,8 +108,8 @@ class AttributeRepository extends BaseRepository
 	public function deleteAttributes($args)
 	{
         if (!isset($args->attribute_srls)) {
-            if (!isset($args->module_srl)) throw new Exception("Please provide attribute_srls or module_srl.");
-            if (!is_array($args->attribute_srls)) throw new Exception("This query expects an array of attribute srls");
+            if (!isset($args->module_srl)) throw new ShopException("Please provide attribute_srls or module_srl.");
+            if (!is_array($args->attribute_srls)) throw new ShopException("This query expects an array of attribute srls");
         }
         //delete attributes
 		$output = executeQuery('shop.deleteAttributes', $args);
@@ -227,7 +227,7 @@ class AttributeRepository extends BaseRepository
      */
     public function getAttributesList($module_srl, array $extraArgs=null)
     {
-        if (!is_numeric($module_srl)) throw new Exception('module_srl must be a valid int');
+        if (!is_numeric($module_srl)) throw new ShopException('module_srl must be a valid int');
         $params = array(
             'page' => $page = (Context::get('page') ? Context::get('page') : 1),
             'module_srl' => $module_srl
@@ -347,10 +347,10 @@ class AttributeRepository extends BaseRepository
      */
     public function getConfigurableAttributesList($module_srl)
     {
-        if (!is_numeric($module_srl)) throw new Exception('module_srl must be a valid int');
+        if (!is_numeric($module_srl)) throw new ShopException('module_srl must be a valid int');
         $args = new stdClass();
         $args->module_srl = $module_srl;
-        if (!isset($args->module_srl)) throw new Exception("Missing arguments for attributes list : please provide module_srl");
+        if (!isset($args->module_srl)) throw new ShopException("Missing arguments for attributes list : please provide module_srl");
         $args->type = $this::TYPE_SELECT;
 
         $output = executeQueryArray('shop.getAttributesList', $args);
@@ -375,7 +375,7 @@ class AttributeRepository extends BaseRepository
             self::TYPE_SELECT_MULTIPLE => $lang->types['select_multiple']
         );
         if (!$id) return $arr;
-        if (!array_key_exists($id, $arr)) throw new Exception('Invalid type');
+        if (!array_key_exists($id, $arr)) throw new ShopException('Invalid type');
         return $arr[$id];
     }
 

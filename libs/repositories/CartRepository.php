@@ -11,14 +11,14 @@ class CartRepository extends BaseRepository
     //region Cart operations
     public function insertCart(Cart &$cart)
     {
-        if ($cart->cart_srl) throw new Exception('A srl must NOT be specified for the insert operation!');
+        if ($cart->cart_srl) throw new ShopException('A srl must NOT be specified for the insert operation!');
         $cart->cart_srl = getNextSequence();
         return $this->query('insertCart', get_object_vars($cart));
     }
 
     public function updateCart(Cart $cart)
     {
-        if (!is_numeric($cart->cart_srl)) throw new Exception('You must specify a srl for the updated cart');
+        if (!is_numeric($cart->cart_srl)) throw new ShopException('You must specify a srl for the updated cart');
         return $this->query('updateCart', get_object_vars($cart));
     }
 
@@ -53,7 +53,7 @@ class CartRepository extends BaseRepository
     {
         if ($product instanceof ICartItemProduct) {
             if (!$product->isPersisted()) {
-                throw new Exception('Product is not persisted');
+                throw new ShopException('Product is not persisted');
             }
             $product_srl = $product->product_srl;
         }
@@ -107,16 +107,16 @@ class CartRepository extends BaseRepository
                 $a = array('member_srl' => $member_srl, 'module_srl' => $module_srl);
                 return $a;
             }
-            throw new Exception('Count not identify cart by member_srl (module_srl needed)');
+            throw new ShopException('Count not identify cart by member_srl (module_srl needed)');
         }
         if ($session_id) {
             if (is_numeric($module_srl)) return array(
                 'session_id' => $session_id,
                 'module_srl' => $module_srl
             );
-            throw new Exception('Count not identify cart by session_id (module_srl needed)');
+            throw new ShopException('Count not identify cart by session_id (module_srl needed)');
         }
-        throw new Exception('Invalid input for cart identification');
+        throw new ShopException('Invalid input for cart identification');
     }
 
     public function getNewCart($module_srl, $member_srl = null, $session_id = null, $items = 0)

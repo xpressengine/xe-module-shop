@@ -74,7 +74,7 @@ abstract class Discount
     public function setVATPercent($VATPercent)
     {
         if ($VATPercent < 0 || $VATPercent > 99.9) {
-            throw new Exception("Invalit VAT '$VATPercent'");
+            throw new ShopException("Invalit VAT '$VATPercent'");
         }
         $this->VATPercent = $VATPercent;
         return $this;
@@ -92,7 +92,7 @@ abstract class Discount
         elseif (is_bool($calculateBeforeApplyingVAT)) {
             $this->calculateBeforeApplyingVAT = $calculateBeforeApplyingVAT;
         }
-        else throw new Exception('Invalid setting');
+        else throw new ShopException('Invalid setting');
         return $this;
     }
     public function calculateBeforeApplyingVAT()
@@ -140,7 +140,7 @@ class FixedAmountDiscount extends Discount
     protected function validate($value, $discountValue)
     {
         if ($value < $discountValue) {
-            throw new Exception("{$this->getTotalValue()} should be bigger than the fix amount discount value {$this->getDiscountAmount()}");
+            throw new ShopException("{$this->getTotalValue()} should be bigger than the fix amount discount value {$this->getDiscountAmount()}");
         }
     }
 
@@ -167,7 +167,7 @@ class PercentageDiscount extends Discount
     protected function validate($value, $discountValue)
     {
         if ($discountValue > 99.9 || $discountValue < 0.1 ) {
-            throw new Exception('Discount value should be between 1 and 99');
+            throw new ShopException('Discount value should be between 1 and 99');
         }
     }
 

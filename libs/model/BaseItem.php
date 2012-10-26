@@ -11,7 +11,7 @@ abstract class BaseItem
 	public function __construct($data = NULL)
 	{
 		if (!is_null($data) && !is_numeric($data) && !is_array($data) && !($data instanceof stdClass)) {
-            throw new Exception('Invalid $data type');
+            throw new ShopException('Invalid $data type');
         }
 		if (is_array($data) || $data instanceof stdClass) {
 			$this->loadFromArray((array)$data);
@@ -32,7 +32,7 @@ abstract class BaseItem
         if ($srlField = $this->getMeta('srl')) { //if srl is given
             $reflection = new ReflectionClass($this);
             if (!$reflection->hasProperty($srlField)) {
-                throw new Exception("Srl field '$srlField' doesn't exist");
+                throw new ShopException("Srl field '$srlField' doesn't exist");
             }
         }
         else { //else return the first _srl field
@@ -43,7 +43,7 @@ abstract class BaseItem
                 }
             }
             if (!$this->getMeta('srl')) {
-                throw new Exception('Couldn\'t identify the _srl column');
+                throw new ShopException('Couldn\'t identify the _srl column');
             }
         }
 
@@ -52,7 +52,7 @@ abstract class BaseItem
             if ($obj = $this->repo->get($data, "get%E", get_called_class())) {
                 $this->copy($obj);
             }
-            else throw new Exception("No such {$this->repo->entity} srl $data");
+            else throw new ShopException("No such {$this->repo->entity} srl $data");
         }
 
         $this->cache = new ShopCache();
@@ -90,7 +90,7 @@ abstract class BaseItem
     public function query($name, $params = null, $array = false)
     {
         if (!isset($this->repo)) {
-            throw new Exception(get_called_class() . " doesn't have a repository.");
+            throw new ShopException(get_called_class() . " doesn't have a repository.");
         }
         return $this->repo->query($name, $params, $array);
     }
@@ -130,14 +130,14 @@ abstract class BaseItem
     public function update($query='update%E')
     {
         $entity = get_called_class();
-        if (!$this->isPersisted()) throw new Exception("No $entity srl for update");
+        if (!$this->isPersisted()) throw new ShopException("No $entity srl for update");
         return $this->query($query, get_object_vars($this));
     }
 
     public function insert($query='insert%E')
     {
         $entity = get_called_class();
-        if ($this->isPersisted()) throw new Exception("$entity already persisted, can't insert.");
+        if ($this->isPersisted()) throw new ShopException("$entity already persisted, can't insert.");
         $srl = $this->getMeta('srl');
         $this->$srl = getNextSequence();
         return $this->query($query, get_object_vars($this));
@@ -147,7 +147,7 @@ abstract class BaseItem
     {
         $entity = get_called_class();
         $srl = $this->getMeta('srl');
-        if (!$this->isPersisted()) throw new Exception("$entity not persisted, can't delete.");
+        if (!$this->isPersisted()) throw new ShopException("$entity not persisted, can't delete.");
         $this->query($query, array('srls' => array($this->$srl)));
     }
 

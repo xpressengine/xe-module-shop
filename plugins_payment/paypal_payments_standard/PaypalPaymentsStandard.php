@@ -270,18 +270,21 @@ class PaypalPaymentsStandard extends PaymentMethodAbstract
     private function markTransactionAsFailedInUserCart($cart_srl, $transaction_id, $error_message)
     {
         $cart = new Cart($cart_srl);
-        ShopLogger::log("Possible fraud - invalid receiver email: " . $receiver_email);
-        $cart->setExtra("transaction_id", $txn_id);
-        $cart->setExtra("transaction_message", "There was a problem processing your payment. Your order could not be completed.");
+        $cart->setExtra("transaction_id", $transaction_id);
+        $cart->setExtra("transaction_message", $error_message);
         $cart->save();
     }
 
 	/**
 	 * Make sure all mandatory fields are set
 	 */
-	public function isConfigured()
+	public function isConfigured(&$error_message = 'msg_invalid_request')
 	{
-		if(!isset($this->business_account) || !isset($this->pdt_token) || !isset($this->gateway_api)) return false;
+		if(!isset($this->business_account) || !isset($this->pdt_token) || !isset($this->gateway_api))
+		{
+			$error_message = 'msg_paypal_standard_missing_fields';
+			return false;
+		}
 		return true;
 	}
 }

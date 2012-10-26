@@ -9,7 +9,7 @@ class CustomerRepository extends BaseRepository
 {
     public function getCustomersList($site_srl, array $extraParams=array()){
       if (!$site_srl) {
-          throw new Exception("Missing arguments for get customers list : please provide [site_srl]");
+          throw new ShopException("Missing arguments for get customers list : please provide [site_srl]");
       }
       $addressRepository = new AddressRepository();
       $page = (Context::get('page') ? Context::get('page') : 1);

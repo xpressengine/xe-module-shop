@@ -19,7 +19,7 @@ abstract class AbstractPluginRepository extends BaseRepository
         // Skip files (we are only interested in the folders)
         if(!is_dir($this->getPluginsDirectoryPath() . DIRECTORY_SEPARATOR . $plugin_name))
         {
-            throw new Exception("Given folder name is not a directory");
+            throw new ShopException("Given folder name is not a directory");
         }
 
         // Convert from under_scores to CamelCase in order to get class name
@@ -29,7 +29,7 @@ abstract class AbstractPluginRepository extends BaseRepository
             . DIRECTORY_SEPARATOR . $plugin_class_name . '.php';
 
         if(!file_exists($plugin_class_path)) {
-            throw new Exception("Plugin class was not found in given folder");
+            throw new ShopException("Plugin class was not found in given folder");
         };
 
         // Include class and check if it extends the required abstract class
@@ -39,7 +39,7 @@ abstract class AbstractPluginRepository extends BaseRepository
         $class_name_that_plugin_must_extend = $this->getClassNameThatPluginsMustExtend();
         if(!($plugin_instance instanceof $class_name_that_plugin_must_extend))
         {
-            throw new Exception("Plugin class does not extend required $class_name_that_plugin_must_extend");
+            throw new ShopException("Plugin class does not extend required $class_name_that_plugin_must_extend");
         };
 
         $plugin_instance->module_srl = $module_srl;
@@ -166,7 +166,7 @@ abstract class AbstractPluginRepository extends BaseRepository
     {
         if(!isset($plugin->name))
         {
-            throw new Exception("Please provide the name of the element you want to update");
+            throw new ShopException("Please provide the name of the element you want to update");
         }
         if(isset($plugin->properties) && !is_string($plugin->properties))
         {

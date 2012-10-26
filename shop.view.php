@@ -584,7 +584,7 @@ class shopView extends shop {
             Context::set('ordered_items',$order_items);
             Context::set('order', $order);
         }
-        else throw new Exception('No such order');
+        else throw new ShopException('No such order');
     }
 
     public function dispShopToolInvoiceOrder()
@@ -644,7 +644,7 @@ class shopView extends shop {
 		$shopModel = getModel('shop');
 		$attributeRepository = $shopModel->getAttributeRepository();
 		$srl = Context::get('attribute_srl');
-		if (!$attributes = $attributeRepository->getAttributes(array($srl))) throw new Exception("Attribute doesn't exist");
+		if (!$attributes = $attributeRepository->getAttributes(array($srl))) throw new ShopException("Attribute doesn't exist");
 		$attribute = array_shift($attributes);
         if(is_array($attribute->values)) $attribute->values = implode('|', $attribute->values);
 
@@ -682,7 +682,7 @@ class shopView extends shop {
             $args->$col = $search;
         }
         if ($cat_srl = Context::get('category_srl')) {
-            if (!is_numeric($cat_srl)) throw new Exception('invalid category srl');
+            if (!is_numeric($cat_srl)) throw new ShopException('invalid category srl');
             $cat = new Category($cat_srl);
             Context::set('filterCategory', $cat);
             $args->category_srls = array($cat_srl);
@@ -1137,11 +1137,11 @@ class shopView extends shop {
     {
         try {
             /** @var $cart Cart */
-            if (!(($cart = Context::get('cart')) instanceof Cart)) throw new Exception("No cart, you shouldn't be in the checkout page");
+            if (!(($cart = Context::get('cart')) instanceof Cart)) throw new ShopException("No cart, you shouldn't be in the checkout page");
 
             $products = $cart->getProducts(null, true);
             if (empty($products)) {
-                throw new Exception('Cart is empty, you have nothing to checkout');
+                throw new ShopException('Cart is empty, you have nothing to checkout');
             }
         }
         catch (Exception $e) {
@@ -1182,7 +1182,7 @@ class shopView extends shop {
     {
         /** @var $cart Cart  */
         if ((!$cart = Context::get('cart')) || !$cart->items) {
-            throw new Exception("No cart, you shouldn't be here");
+            throw new ShopException("No cart, you shouldn't be here");
         }
 
         // 1. Setup payment info

@@ -4,6 +4,8 @@
 
 <!-- Content -->
 <div id="content">
+    <include target="_multilingual.html" />
+
     <!-- contentHeader -->
     <div class="contentHeader postListHeader">
         <!--@if(!$product->product_srl)-->
@@ -93,10 +95,7 @@
                         <label for="title">{$lang->title}</label>
                     </th>
                     <td class="title">
-                        <div class="fItem">
-                            <label class="iLabel" for="title">{$lang->about_title}</label>
-                            <input type="text" id="title" name="title" style="width:200px" class="iText iText" title="{$lang->about_title}" <!--@if($product->title)-->value="{$product->title}"<!--@end--> />
-                        </div>
+                            {ShopDisplay::multiLanguageInput('title', 'title', $product->title, null, 'iText', $lang->about_title, 'iLabel', 'fItem')}
                     </td>
                 </tr>
                 <!--@if(!$product->parent_product_srl)-->

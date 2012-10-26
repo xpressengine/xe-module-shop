@@ -37,7 +37,7 @@ class PaymentMethodRepository extends AbstractPluginRepository
         $output = executeQuery('shop.updatePaymentMethod', $payment_method);
 
         if(!$output->toBool()) {
-            throw new Exception($output->getMessage(), $output->getError());
+            throw new ShopException($output->getMessage(), $output->getError());
         }
     }
 
@@ -46,7 +46,7 @@ class PaymentMethodRepository extends AbstractPluginRepository
         $payment_method->id = getNextSequence();
         $output = executeQuery('shop.insertPaymentMethod', $payment_method);
         if(!$output->toBool()) {
-            throw new Exception($output->getMessage(), $output->getError());
+            throw new ShopException($output->getMessage(), $output->getError());
         }
     }
 
@@ -57,7 +57,7 @@ class PaymentMethodRepository extends AbstractPluginRepository
         $args->module_srl = $module_srl;
         $output = executeQuery('shop.deletePaymentMethod',$args);
         if (!$output->toBool()) {
-            throw new Exception($output->getMessage(), $output->getError());
+            throw new ShopException($output->getMessage(), $output->getError());
         }
 
         return $output->data;
@@ -71,7 +71,7 @@ class PaymentMethodRepository extends AbstractPluginRepository
 
         if (!$output->toBool())
         {
-            throw new Exception($output->getMessage(), $output->getError());
+            throw new ShopException($output->getMessage(), $output->getError());
         }
 
         return $output->data;
@@ -86,7 +86,7 @@ class PaymentMethodRepository extends AbstractPluginRepository
 
         if (!$output->toBool())
         {
-            throw new Exception($output->getMessage(), $output->getError());
+            throw new ShopException($output->getMessage(), $output->getError());
         }
 
         return $output->data;

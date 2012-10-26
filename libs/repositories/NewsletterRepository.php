@@ -10,14 +10,14 @@ class NewsletterRepository extends BaseRepository
 
     public function insert(Newsletter &$newsletter)
     {
-        if ($newsletter->newsletter_srl) throw new Exception('A srl must NOT be specified for the insert operation!');
+        if ($newsletter->newsletter_srl) throw new ShopException('A srl must NOT be specified for the insert operation!');
         $newsletter->newsletter_srl = getNextSequence();
         return $this->query('insertNewsletter', get_object_vars($newsletter));
     }
 
     public function update(Newsletter $newsletter)
     {
-        if (!is_numeric($newsletter->newsletter_srl)) throw new Exception('You must specify a srl for the updated newsletter');
+        if (!is_numeric($newsletter->newsletter_srl)) throw new ShopException('You must specify a srl for the updated newsletter');
         return $this->query('updateNewsletter', get_object_vars($newsletter));
     }
 
@@ -38,7 +38,7 @@ class NewsletterRepository extends BaseRepository
 
     public function deleteNewsletters($args)
     {
-        if (!isset($args->newsletter_srls))throw new Exception("Please provide newsletter_srls or module_srl.");
+        if (!isset($args->newsletter_srls))throw new ShopException("Please provide newsletter_srls or module_srl.");
         //delete newsletters
         return $this->query('deleteNewsletters',$args);
     }
