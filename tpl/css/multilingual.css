@@ -35,3 +35,7 @@
     display: inline-block;
     width: 70px;
 }
+.multiLanguageInput a.translate {
+    margin: 0 5px;
+    vertical-align: middle;
+}
