@@ -3,7 +3,7 @@ function Translation(text)
 {
     this.name = null;
     this.text = text;
-    this.translations_list = null;
+    this.translations_list = {};
 
     // region Public methods
     this.isNew = function() {
@@ -34,12 +34,17 @@ function Translation(text)
         return '';
     }
 
-    this.loadTranslationList = function() {
+    this.loadTranslationList = function(on_success) {
         var $this = this;
         var callback = function(data){
             if(data.error || !data.lang_list) return;
 
-            $this.translations_list = data.lang_list;
+            for(var translation_index in data.lang_list)
+            {
+                $this.translations_list[data.lang_list[translation_index].lang_code] = data.lang_list[translation_index].value;
+            }
+
+            on_success();
         };
 
         if($this.isNew()) {
@@ -54,12 +59,12 @@ function Translation(text)
     // region Private methods
     var getTranslationListByName = function(name, callback) {
         if(!name) return;
-        jQuery.exec_json('module.getModuleAdminLangListByName', { lang_name: name }, callback);
+        jQuery.exec_json('module.getModuleAdminLangListByName', { lang_name: name, site_srl: site_srl }, callback);
     }
 
     var getTranslationListByValue = function(value, callback) {
         if(!value) return;
-        jQuery.exec_json('module.getModuleAdminLangListByValue', { value: value }, callback);
+        jQuery.exec_json('module.getModuleAdminLangListByValue', { value: value, site_srl: site_srl }, callback);
     }
     // endregion
 
@@ -81,14 +86,19 @@ function TranslationDisplayer(multiLanguageInput)
     // region Public methods
     this.show = function()
     {
-        multiLanguageInput.translation.loadTranslationList();
-        jQuery(translationsContainerID).find("li." + xe.current_lang + " input").val(multiLanguageInput.translation.getValue());
-        jQuery(translationsContainerID).show();
+        multiLanguageInput.translation.loadTranslationList(function(){
+            for(var translation_lang_code in multiLanguageInput.translation.translations_list)
+            {
+                jQuery(translationsContainerID).find("li." + translation_lang_code + " input").val(multiLanguageInput.translation.translations_list[translation_lang_code]);
+            }
+            jQuery(translationsContainerID).find("li." + xe.current_lang + " input").val(multiLanguageInput.translation.getValue());
+            jQuery(translationsContainerID).dialog({modal: true, width: 400}).show();
+        });
     }
 
     this.hide = function()
     {
-        jQuery(translationsContainerID).hide();
+        jQuery(translationsContainerID).dialog("close").hide();
     }
 
     this.saveCurrentValues = function()
@@ -123,6 +133,7 @@ function TranslationDisplayer(multiLanguageInput)
  */
 function MultiLanguageInput(inputContainer)
 {
+    this.jquery_element = null;
     this.hidden_input = null;
     this.visible_input = null;
     this.translation = null;
@@ -143,6 +154,7 @@ function MultiLanguageInput(inputContainer)
 
     // region Constructor
     __construct = function($this) {
+        $this.jquery_element = inputContainer;
         $this.hidden_input = inputContainer.find("input[type='hidden']");
         $this.visible_input = inputContainer.find("input[type='text']");
 

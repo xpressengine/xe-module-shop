@@ -1,12 +1,12 @@
 <script type="text/javascript">
     xe.current_lang = '{$lang_type}';
+    site_srl = {$module_info->site_srl}
 </script>
 
 <load target="js/multilingual.js" />
 <load target="css/multilingual.css" />
 
 <div id="multiLanguageValues" style="display:none">
-     <!--style="display:none"-->
     <h2>{$lang->multilingual}</h2>
     <ul>
         {@
@@ -23,5 +23,4 @@
 
     <span class="btnGray medium"><input id="saveTranslations" type="submit" value="Save"></span>
     <a href="#" id="closeTranslations">Close</a>
-
 </div>

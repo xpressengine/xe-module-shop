@@ -2,6 +2,10 @@
 {
     width:300px;
     text-align: center;
+    z-index: 10000;
+    background-color: white;
+    border: 1px solid gray;
+    padding: 10px;
 }
 #multiLanguageValues ul
 {
@@ -26,3 +30,8 @@
 #multiLanguageValues li.mn {background-image:url(../../../admin/tpl/img/flag.mn.gif) }
 #multiLanguageValues li.zh-CN {background-image:url(../../../admin/tpl/img/flag.cn.gif) }
 #multiLanguageValues li.zh-TW {background-image:url(../../../admin/tpl/img/flag.tw.gif) }
+
+#multiLanguageValues li label {
+    display: inline-block;
+    width: 70px;
+}
