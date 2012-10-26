@@ -121,6 +121,8 @@ abstract class PaymentAPIAbstract
 {
     public function request($url, $data)
     {
+        $timeout = isset($data['TIMEOUT']) ? $data['TIMEOUT'] : 0;
+        unset($data['TIMEOUT']);
         $post_string = http_build_query($data);
         if(__DEBUG__)
         {
@@ -129,11 +131,11 @@ abstract class PaymentAPIAbstract
 
         // Request
         $request = curl_init($url);
+        curl_setopt($request, CURLOPT_TIMEOUT, $timeout);
         curl_setopt($request, CURLOPT_HEADER, 0);
         curl_setopt($request, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($request, CURLOPT_POSTFIELDS, $post_string);
         curl_setopt($request, CURLOPT_SSL_VERIFYPEER, FALSE);
-        curl_setopt($request, CURLOPT_TIMEOUT, 10);
 
         $response = curl_exec($request);
         if(__DEBUG__)

@@ -385,6 +385,10 @@ class Cart extends BaseItem implements IProductItemsContainer
 
     public function getShippingCost()
     {
+        // a cart full of downloadable products only has no shipping cost
+        if($this->allProductsAreDownloadable()){
+            return 0;
+        }
         $shipping_method = $this->getShippingMethodName();
         if($shipping_method){
             $shipping_repository = new ShippingMethodRepository();

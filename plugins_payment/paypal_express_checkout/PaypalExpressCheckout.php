@@ -50,6 +50,7 @@ class PaypalExpressCheckout extends PaymentMethodAbstract
 			, $this->api_username
             , $this->api_password
             , $this->signature
+            , $this->timeout
         );
 
         // Get shop info
@@ -90,6 +91,7 @@ class PaypalExpressCheckout extends PaymentMethodAbstract
 			, $this->api_username
             , $this->api_password
             , $this->signature
+            , $this->timeout
         );
         $customer_info = $paypalAPI->getExpressCheckoutDetails($token);
         Context::set('payer_id', $customer_info['PAYERID']);
@@ -104,6 +106,7 @@ class PaypalExpressCheckout extends PaymentMethodAbstract
 			, $this->api_username
             , $this->api_password
             , $this->signature
+            , $this->timeout
         );
 
         // Get shop info
@@ -142,7 +145,8 @@ class PaypalExpressCheckout extends PaymentMethodAbstract
 		if(isset($this->api_username)
 			&& isset($this->api_password)
 			&& isset($this->gateway_api)
-			&& isset($this->signature))
+			&& isset($this->signature)
+            && isset($this->timeout))
 			return true;
 		return false;
 	}
@@ -160,7 +164,7 @@ class PaypalExpressCheckoutAPI extends PaymentAPIAbstract
     );
     private $data = array();
 
-    public function __construct($is_live, $api_username, $api_password, $signature)
+    public function __construct($is_live, $api_username, $api_password, $signature, $timeout = 0)
     {
 		if($is_live)
 		{
@@ -173,6 +177,7 @@ class PaypalExpressCheckoutAPI extends PaymentAPIAbstract
         $this->setup['USER'] = $api_username;
         $this->setup['PWD'] = $api_password;
         $this->setup['SIGNATURE'] = $signature;
+        $this->setup['TIMEOUT'] = $timeout;
     }
 
     private function addItemsInfo($items)

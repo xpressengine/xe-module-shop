@@ -726,6 +726,7 @@
         {
             $cartRepo = new CartRepository();
             $logged_info = Context::get('logged_info');
+            global $lang;
 
             //get or create cart:
             if ($cart = $cartRepo->getCart($this->module_info->module_srl, null, $logged_info->member_srl, session_id(), true))
@@ -768,6 +769,9 @@
                 $error_message = '';
                 if(!$payment_method->onCheckoutFormSubmit($cart, $error_message))
                 {
+                    //if no error message return, most probably the call timed out
+                    $error_message = (" ( )" == $error_message ? $lang->payment_service_timed_out : $error_message );
+
                     $this->setMessage($error_message, 'error');
                     $vid = Context::get('vid');
                     $return_url = getNotEncodedUrl('', 'vid', $vid, 'act', 'dispShopCheckout');

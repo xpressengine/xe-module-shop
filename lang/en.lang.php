@@ -718,18 +718,20 @@ $lang->new_member_email_content = '
 
 $lang->not_allowed_to_add_more_than_2_configurable_attributes = 'You can only select maximun 2 attributes for your configurable product.';
 
-    $lang->co_review_order = 'You can later review your order before submitting it';
-	
-	$lang->add_downloadable_product = 'Add downloadable product';
-    $lang->edit_downloadable_product = 'Edit downloadable product';
-    $lang->upload_content = "Upload content";
+$lang->co_review_order = 'You can later review your order before submitting it';
 
-    $lang->simple_product_saved_successfully = "Saved simple product successfully";
-    $lang->downloadable_product_saved_successfully = "Saved downloadable product successfully";
-    $lang->configurable_product_saved_successfully = "Saved configurable product successfully";
-    $lang->simple_product_updated_successfully = "Updated simple product successfully";
-    $lang->downloadable_product_updated_successfully = "Updated downloadable product successfully";
-    $lang->configurable_product_updated_successfully = "Updated configurable product successfully";
+$lang->add_downloadable_product = 'Add downloadable product';
+$lang->edit_downloadable_product = 'Edit downloadable product';
+$lang->upload_content = "Upload content";
 
-    $lang->content_not_provided_or_oversized = "Please provide content and verify its size doesn't exceed 3MB";
+$lang->simple_product_saved_successfully = "Saved simple product successfully";
+$lang->downloadable_product_saved_successfully = "Saved downloadable product successfully";
+$lang->configurable_product_saved_successfully = "Saved configurable product successfully";
+$lang->simple_product_updated_successfully = "Updated simple product successfully";
+$lang->downloadable_product_updated_successfully = "Updated downloadable product successfully";
+$lang->configurable_product_updated_successfully = "Updated configurable product successfully";
+
+$lang->content_not_provided_or_oversized = "Please provide content and verify its size doesn't exceed 3MB";
+
+$lang->payment_service_timed_out = "It seems that the chosen payment service experienced some unusual delays. Please chose another one, or try again later.";
 ?>
