@@ -192,7 +192,7 @@ class shopView extends shop {
 	}
 
 
-	/**
+    /**
 	 * @brief Tool dashboard
 	 **/
 	public function dispShopToolDashboard(){
@@ -1178,8 +1178,14 @@ class shopView extends shop {
     public function dispShopPlaceOrder()
     {
         /** @var $cart Cart  */
-        if ((!$cart = Context::get('cart')) || !$cart->items) {
-            throw new ShopException("No cart, you shouldn't be here");
+        try {
+            if ((!$cart = Context::get('cart')) || !$cart->items) {
+                throw new ShopException("Cart doesn't exist anymore.");
+            }
+        }
+        catch (Exception $e) {
+            $this->setRedirectUrl(getNotEncodedUrl('', 'act', 'dispShopHome'));
+            return new Object(-1, $e->getMessage());
         }
 
         // 1. Setup payment info
@@ -1708,5 +1714,3 @@ class shopView extends shop {
 
 
 }
-?>
-
