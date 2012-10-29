@@ -16,8 +16,9 @@
         $lang_supported = array_merge($a, $lang_supported);
         }
         <li loop="$lang_supported=>$code,$name" class="{$code}">
-            <label for="{$code}_var1">{$name}</label>
-            <input type="text" value="" id="{$code}_var1" />
+            <label for="{$code}_input">{$name}</label>
+            <input type="text" value="" id="{$code}_input" />
+            <textarea id="{$code}_textarea" rows="8" cols="42"></textarea>
         </li>
     </ul>
 

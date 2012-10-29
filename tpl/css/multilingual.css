@@ -12,24 +12,25 @@
     list-style-type: none;
     text-align: left;
 }
-#multiLanguageValues li
-{
+#multiLanguageValues li label {
+    vertical-align: top;
     background-repeat: no-repeat;
     background-position: left center;
+    padding: 5px;
     padding-left: 30px;
 }
-#multiLanguageValues li.en {background-image:url(../../../admin/tpl/img/flag.us.gif) }
-#multiLanguageValues li.ko {background-image:url(../../../admin/tpl/img/flag.kr.gif) }
-#multiLanguageValues li.jp {background-image:url(../../../admin/tpl/img/flag.jp.gif) }
-#multiLanguageValues li.fr {background-image:url(../../../admin/tpl/img/flag.fr.gif) }
-#multiLanguageValues li.de {background-image:url(../../../admin/tpl/img/flag.de.gif) }
-#multiLanguageValues li.ru {background-image:url(../../../admin/tpl/img/flag.ru.gif) }
-#multiLanguageValues li.es {background-image:url(../../../admin/tpl/img/flag.es.gif) }
-#multiLanguageValues li.tr {background-image:url(../../../admin/tpl/img/flag.tr.gif) }
-#multiLanguageValues li.vi {background-image:url(../../../admin/tpl/img/flag.vn.gif) }
-#multiLanguageValues li.mn {background-image:url(../../../admin/tpl/img/flag.mn.gif) }
-#multiLanguageValues li.zh-CN {background-image:url(../../../admin/tpl/img/flag.cn.gif) }
-#multiLanguageValues li.zh-TW {background-image:url(../../../admin/tpl/img/flag.tw.gif) }
+#multiLanguageValues li.en label {background-image:url(../../../admin/tpl/img/flag.us.gif) }
+#multiLanguageValues li.ko label {background-image:url(../../../admin/tpl/img/flag.kr.gif) }
+#multiLanguageValues li.jp label {background-image:url(../../../admin/tpl/img/flag.jp.gif) }
+#multiLanguageValues li.fr label {background-image:url(../../../admin/tpl/img/flag.fr.gif) }
+#multiLanguageValues li.de label {background-image:url(../../../admin/tpl/img/flag.de.gif) }
+#multiLanguageValues li.ru label {background-image:url(../../../admin/tpl/img/flag.ru.gif) }
+#multiLanguageValues li.es label {background-image:url(../../../admin/tpl/img/flag.es.gif) }
+#multiLanguageValues li.tr label {background-image:url(../../../admin/tpl/img/flag.tr.gif) }
+#multiLanguageValues li.vi label {background-image:url(../../../admin/tpl/img/flag.vn.gif) }
+#multiLanguageValues li.mn label {background-image:url(../../../admin/tpl/img/flag.mn.gif) }
+#multiLanguageValues li.zh-CN label {background-image:url(../../../admin/tpl/img/flag.cn.gif) }
+#multiLanguageValues li.zh-TW label {background-image:url(../../../admin/tpl/img/flag.tw.gif) }
 
 #multiLanguageValues li label {
     display: inline-block;
@@ -38,4 +39,9 @@
 .multiLanguageInput a.translate {
     margin: 0 5px;
     vertical-align: middle;
+}
+
+.multiLanguageTextarea a.translate {
+    margin: 0 5px;
+    vertical-align: bottom;
 }

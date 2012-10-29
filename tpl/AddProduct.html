@@ -85,7 +85,7 @@
                         <label for="title">{$lang->title}</label>
                     </th>
                     <td class="title">
-                        {ShopDisplay::multiLanguageInput('title', 'title', $product->title, 'width:200px', 'iText', $lang->about_title, 'iLabel', 'fItem')}
+                        {ShopDisplay::multiLanguageInput('title', 'title', $product->title, 'width:517px', 'iText', $lang->about_title, 'iLabel', 'fItem')}
                     </td>
                 </tr>
                 <!--@if(!$product->parent_product_srl)-->
@@ -94,10 +94,7 @@
                         <label for="description">{$lang->description}</label>
                     </th>
                     <td class="title">
-                        <div class="fItem">
-                            <label class="iLabel" for="description">{$lang->about_description}</label>
-                            <textarea name="description" rows="8" cols="100" class="iTextarea" id="description" title="{$lang->about_description}"><!--@if($product->title)-->{$product->description}<!--@end--></textarea>
-                        </div>
+                        {ShopDisplay::multiLanguageTextarea('description', 'description', $product->description, null, 'iTextarea', $lang->about_description, 'iLabel', 'fItem', 8, 100)}
                     </td>
                 </tr>
                 <tr>
