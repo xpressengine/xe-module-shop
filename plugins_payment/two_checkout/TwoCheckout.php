@@ -11,6 +11,26 @@ class TwoCheckout extends PaymentMethodAbstract
 	}
 
 	/**
+	 * 2Checkout form action
+	 *
+	 * @return string
+	 */
+	public function getPaymentFormAction()
+	{
+		return TwoCheckout::GATEWAY_API_URL;
+	}
+
+	/**
+	 * Text that will be displayed on the payment form Submit button
+	 *
+	 * @return string
+	 */
+	public function getPaymentSubmitButtonText()
+	{
+		return "Proceed to 2checkout.com to pay";
+	}
+
+	/**
 	 * Checks is custom plugin parameters are set and valid;
 	 * If no validation is needed, just return true;
 	 * @return mixed
