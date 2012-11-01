@@ -1240,6 +1240,12 @@ class shopView extends shop {
             {
                 $payment_method->onOrderConfirmationPageLoad($cart, $this->module_srl);
             }
+			catch(PaymentProcessingException $exception)
+			{
+				Context::set('error_details', $exception->getMessage());
+				$this->setTemplateFile("order_failed");;
+				return;
+			}
             catch(NetworkErrorException $exception)
             {
                 $this->setTemplateFile("order_confirmation_coming_soon");

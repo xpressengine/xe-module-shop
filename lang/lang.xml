@@ -2505,4 +2505,10 @@
     <item name="msg_paypal_standard_missing_fields">
         <value xml:lang="en">You must enter your Business Email, PDT Token and Gateway API URL - all fields are mandatory.</value>
     </item>
+    <item name="order_failed">
+        <value xml:lang="en">There was a problem processing your payment. Your order has not been created.</value>
+    </item>
+    <item name="payment_error">
+        <value xml:lang="en">Payment error</value>
+    </item>
 </lang>

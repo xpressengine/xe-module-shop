@@ -1,6 +1,6 @@
 <?php
 
-class NetworkErrorException extends Exception
+class NetworkErrorException extends ShopException
 {
 
 }
