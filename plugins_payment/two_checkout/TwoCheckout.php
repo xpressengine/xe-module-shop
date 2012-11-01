@@ -49,12 +49,30 @@ class TwoCheckout extends PaymentMethodAbstract
 		$total = Context::get('total');
 		$expected_key = strtoupper(md5($secret_word . $account_number . $order_number . $total));
 
-		if($key != $expected_key)
+		// Check if using demo mode, since on demo, all responses have invalid key
+		$is_demo = Context::get('demo') == 'Y';
+
+		if($key != $expected_key && !$is_demo)
 		{
 			ShopLogger::log("Invalid 2 checkout message received - key " . $key . ' ' . print_r($_REQUEST, true));
-			throw new PaymentProcessingException("There was a problem processing your transaction");
+				throw new PaymentProcessingException("There was a problem processing your transaction");
 		}
 
+		// We need a unique identifier for this transaction - we will use order number
+		$transaction_id = $order_number;
+
+		$order_repository = new OrderRepository();
+
+		// Check if order has already been created for this transaction
+		$order = $order_repository->getOrderByTransactionId($transaction_id);
+		if(!$order) // If not, create it
+		{
+			$this->createNewOrderAndDeleteExistingCart($cart, $transaction_id);
+		}
+		else
+		{
+			Context::set('order_srl', $order->order_srl);
+		}
 	}
 
 	/**

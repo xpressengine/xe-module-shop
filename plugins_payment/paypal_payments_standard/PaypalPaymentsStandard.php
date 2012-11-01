@@ -148,20 +148,6 @@ class PaypalPaymentsStandard extends PaymentMethodAbstract
         return new PDTResponse($response_array);
     }
 
-    private function createNewOrderAndDeleteExistingCart($cart, $transaction_id)
-    {
-        $order = new Order($cart);
-        $order->transaction_id = $transaction_id;
-        $order->save(); //obtain srl
-        $order->saveCartProducts($cart);
-		Order::sendNewOrderEmails($order->order_srl);
-        $cart->delete();
-
-        Context::set('order_srl', $order->order_srl);
-        // Override cart, otherwise it would still show up with products
-        Context::set('cart', NULL);
-    }
-
     /**
      * Handles all IPN notifications from Paypal
      */
