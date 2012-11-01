@@ -93,7 +93,7 @@ jQuery(function () {
                     <input type="checkbox" name="product_srls[]" value="{$product->product_srl}" class="inputCheck boxlist" cond="$product->product_srl" />
                 </td>
                 <td width="45%" class="v-middle a-left">
-                    <a href="{getUrl('act','dispShopProduct','product_srl',$product->product_srl)}">
+                    <a href="{$product->getProduct()->getUrl()}">
                         <img class="f-left cart-image" src="{$product->getThumbnailPath(50)}" alt="" title=""/>
                         <p>{$product->title}</p>
                     </a>

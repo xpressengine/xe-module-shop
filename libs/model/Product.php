@@ -32,6 +32,9 @@ abstract class Product extends BaseItem
 	public $primary_image;
 	public $primary_image_filename;
 
+    /** @var ProductRepository */
+    public $repo;
+
 
 	/**
 	 * Constructor override - initialises default values when none given
@@ -43,7 +46,6 @@ abstract class Product extends BaseItem
 		if(!isset($this->description)) $this->description = "";
 		if(!isset($this->short_description)) $this->short_description = "";
 		if(!isset($this->status)) $this->status = "enabled";
-		if(!isset($this->friendly_url)) $this->friendly_url = $this->sku;
 	}
 
 	/**
@@ -98,6 +100,13 @@ abstract class Product extends BaseItem
 	{
 		return $this->product_type == 'configurable';
 	}
+
+    public function getUrl($relative=true)
+    {
+        if (!$this->friendly_url) throw new ShopException('Could not generate url for product: no friendly_url');
+        $repo = $this->repo;
+        return $repo::getUrl($this->friendly_url, $relative);
+    }
 
     public function getPrimaryImage()
     {

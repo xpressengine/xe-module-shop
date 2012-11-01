@@ -227,7 +227,8 @@
          * brief function for product insert
          * @author Dan Dragan (dev@xpressengine.org)
          */
-        public function procShopToolInsertProduct(){
+        public function procShopToolInsertProduct()
+        {
             $shopModel = $this->model;
             $productRepository = $shopModel->getProductRepository();
 			$imageRepository = $shopModel->getImageRepository();
@@ -255,25 +256,28 @@
 
             try
             {
-                if($product->product_srl === NULL)
+                if (!$product->isPersisted())
                 {
-                    $product_srl = $productRepository->insertProduct($product);
-					if($product->isSimple())
+                    $productRepository->insertProduct($product);
+
+					if ($product->isSimple())
 					{
-						$this->setMessage("Saved simple product successfull");
+						$this->setMessage("Saved simple product successful");
 						$returnUrl = getNotEncodedUrl('', 'act', 'dispShopToolManageProducts');
 					}
 					else
 					{
-						$this->setMessage("Saved configurable product successfull");
+						$this->setMessage("Saved configurable product successful");
 						$returnUrl = getNotEncodedUrl('', 'act', 'dispShopToolAddAssociatedProducts','product_srl',$product->product_srl);
 					}
                 }
                 else
                 {
 					$product->delete_images = $args->delete;
+
                     $productRepository->updateProduct($product);
-					if($product->isSimple())
+
+                    if ($product->isSimple())
 					{
 						$this->setMessage("Updated simple product successfull");
 					}
@@ -282,7 +286,7 @@
 						$this->setMessage("Updated configurable product successfull");
 					}
 
-					if($product->isSimple() && $product->parent_product_srl)
+					if ($product->isSimple() && $product->parent_product_srl)
 					{
 						$returnUrl = getNotEncodedUrl('', 'act', 'dispShopToolEditProduct', 'product_srl', $product->parent_product_srl);
 					}
@@ -325,6 +329,28 @@
 			$returnUrl = getNotEncodedUrl('', 'act', 'dispShopToolManageProducts');
 			$this->setRedirectUrl($returnUrl);
 		}
+
+        /**
+         * call it through ajax (json)
+         * @throws ShopException
+         */
+        public function procShopToolCheckFriendlyUrlAvailability()
+        {
+            if (!$type = Context::get('type')) $type = 'product';
+            if (!$slug = Context::get('slug')) throw new ShopException('Missing slug');
+
+            if ($type == 'product') {
+                $repo = new ProductRepository();
+                $object = $repo->getProductByFriendlyUrl($slug);
+            }
+            elseif ($type == 'category') {
+                $repo = new CategoryRepository();
+                $object = $repo->getCategoryByFriendlyUrl($slug);
+            }
+            else throw new ShopException('Invalid entity type');
+
+            $this->add('notAvailable', (boolean) $object);
+        }
 
 		/*
 		* brief function for export products to csv

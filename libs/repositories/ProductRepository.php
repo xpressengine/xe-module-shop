@@ -6,7 +6,22 @@
  */
 class ProductRepository extends BaseRepository
 {
-	/**
+
+    /**
+     * Returns an absolute url for product with friendly_url $slug
+     *
+     * @author Florin Ercus (dev@xpressengine.org)
+     *
+     * @param $slug string
+     *
+     * @return string absolute url
+     */
+    public static function getUrl($slug, $relative=true)
+    {
+        return ShopUtils::getUrl("product/$slug", $relative);
+    }
+
+    /**
 	 * Insert a new Product  returns the ID of the newly created record
 	 *
 	 * @author Dan Dragan (dev@xpressengine.org)
@@ -33,6 +48,9 @@ class ProductRepository extends BaseRepository
 			if($product->product_type == 'configurable') $this->insertProductConfigurableAttributes($product);
 			$this->insertProductImages($product);
 		}
+
+        $slug = ShopUtils::slugify($product->title);
+
 		return $product->product_srl;
 	}
 
@@ -414,9 +432,14 @@ class ProductRepository extends BaseRepository
      *
      * @return Product
      */
-    public function getProductByFriendlyUrl($str)
+    public function getProductByFriendlyUrl($str, $module_srl=null)
     {
-        $output = $this->query('getProductByFriendlyUrl', array('friendly_url' => $str));
+        if (!is_numeric($module_srl)) { //get current module_srl
+            $info = Context::get('site_module_info');
+            $module_srl = $info->index_module_srl;
+        }
+        if (!$module_srl) throw new ShopException('Count not get module_srl');
+        $output = $this->query('getProductByFriendlyUrl', array('friendly_url' => $str, 'module_srl' => $module_srl));
         return empty($output->data) ? NULL : new SimpleProduct($output->data);
     }
 

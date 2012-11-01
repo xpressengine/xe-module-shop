@@ -8,6 +8,7 @@
     <permissions>
 
         <!-- Backend -->
+		<permission action="route" target="manager" />
 		<permission action="dispShopToolDashboard" target="manager" />
 		<permission action="dispShopToolLayoutConfigSkin" target="manager" />
 		<permission action="dispShopToolLayoutConfigEdit" target="manager" />
@@ -31,6 +32,7 @@
         <permission action="procShopToolDiscountUpdate" target="manager" />
         <permission action="procShopToolManageProducts" target="manager" />
         <permission action="procShopToolCustomerInsert" target="manager" />
+        <permission action="procShopToolCheckFriendlyUrlAvailability" target="manager" />
 
         <!-- Products -->
         <permission action="dispShopToolManageProducts" target="manager" />
@@ -137,6 +139,7 @@
         <action name="procShopSort" type="controller"/>
 
         <!-- Shop backend -->
+        <action name="route" type="view" />
         <action name="dispShopToolLogin" type="view" />
 		<action name="dispShopToolLayoutConfigSkin" type="view" />
 		<action name="dispShopToolLayoutConfigEdit" type="view" />
@@ -165,6 +168,7 @@
         <action name="procShopToolDiscountUpdate" type="controller" ruleset="discount_update"/>
         <action name="procShopToolCustomerInsert" type="controller" ruleset="insert_customer"/>
         <action name="procShopToolManageProducts" type="controller"/>
+        <action name="procShopToolCheckFriendlyUrlAvailability" type="controller"/>
 
         <action name="procShopAdminCreate" type="controller" standalone="true" ruleset="insert_shop"  />
 		<action name="procShopAdminUpdate" type="controller" standalone="true" ruleset="update_shop" />

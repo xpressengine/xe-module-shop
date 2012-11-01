@@ -9,6 +9,40 @@ class CategoryRepository extends BaseRepository
 {
 	private $category_images_folder = './files/attach/images/shop/%d/product-categories/';
 
+    /**
+     * Returns an absolute url for category with friendly_url $slug
+     *
+     * @author Florin Ercus (dev@xpressengine.org)
+     *
+     * @param $slug string
+     *
+     * @return string absolute url
+     */
+    public static function getUrl($slug, $relative=true)
+    {
+        return ShopUtils::getUrl("category/$slug", $relative);
+    }
+
+    /**
+     * Retrieve a Category object from the database given a friendly url
+     *
+     * @author Florin Ercus (dev@xpressengine.org)
+     *
+     * @param $str string
+     *
+     * @return Category
+     */
+    public function getCategoryByFriendlyUrl($str, $module_srl=null)
+    {
+        if (!is_numeric($module_srl)) {
+            $info = Context::get('site_module_info');
+            $module_srl = $info->index_module_srl;
+        }
+        if (!$module_srl) throw new ShopException('Count not get module_srl');
+        $output = $this->query('getCategoryByFriendlyUrl', array('friendly_url' => $str, 'module_srl'=>$module_srl));
+        return empty($output->data) ? null : new Category($output->data);
+    }
+
 	/**
 	 * Insert a new Product category; returns the ID of the newly created record.
 	 *

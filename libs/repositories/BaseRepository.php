@@ -134,4 +134,11 @@ abstract class BaseRepository
         return $output;
     }
 
+    public static function vid()
+    {
+        /** @var $oModuleModel moduleModel */
+        $siteModuleInfo = Context::get('site_module_info');
+        return $siteModuleInfo->domain;
+    }
+
 }

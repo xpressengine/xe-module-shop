@@ -39,7 +39,14 @@ class Category extends BaseItem implements IThumbnailable
 		return NULL;
 	}
 
-	/**
+    public function getUrl($relative=true)
+    {
+        if (!$this->friendly_url) throw new ShopException('Could not generate url for category: no friendly_url');
+        $repo = $this->repo;
+        return $repo::getUrl($this->friendly_url, $relative);
+    }
+
+    /**
 	 * Calls setters for private properties when accessed directly
 	 *
 	 * @param string $name  Property name
@@ -332,7 +339,8 @@ class CategoryTreeNode
 			{
 				$config->linkGetUrlParams[] = 'category_srl';
 				$config->linkGetUrlParams[] = $node->category->category_srl;
-				$nodeTitle = '<a href="' . call_user_func_array('getUrl', $config->linkGetUrlParams) . '">' . $nodeTitle . '</a>';
+				//$nodeTitle = '<a href="' . call_user_func_array('getUrl', $config->linkGetUrlParams) . '">' . $nodeTitle . '</a>';
+                $nodeTitle = '<a href="' . $node->category->getUrl() . '">' . $nodeTitle . '</a>';
 			}
 			$nodeContent .= $nodeTitle;
 

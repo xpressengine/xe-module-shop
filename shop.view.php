@@ -44,7 +44,7 @@ class shopView extends shop {
 			if($site_srl) {
 				$this->module_srl = $site_module_info->index_module_srl;
 				$this->module_info = $oModuleModel->getModuleInfoByModuleSrl($this->module_srl);
-				if (!$is_other_module){
+				if (!$is_other_module) {
 					Context::set('module_info',$this->module_info);
 					Context::set('mid',$this->module_info->mid);
 					Context::set('current_module_info',$this->module_info);
@@ -96,10 +96,7 @@ class shopView extends shop {
 
 		$info = Context::getDBInfo();
 
-
-
-
-		if ($is_other_module){
+		if ($is_other_module) {
 			$oModule->setLayoutPath($this->module_path.'tpl');
 			$oModule->setLayoutFile('_tool_layout');
 		}else{
@@ -191,6 +188,31 @@ class shopView extends shop {
         Context::set('search_categories', $flat_tree);
 	}
 
+
+    public function route()
+    {
+        try {
+            if (!$type = Context::get('type')) throw new ShopException('Routing: no type');
+            if (!$identifier = Context::get('identifier')) throw new ShopException('Routing: no identifier');
+            if ($type == 'product') {
+                $repo = new ProductRepository();
+                if (!$product = $repo->getProductByFriendlyUrl($identifier)) throw new ShopException('Product does not exist');
+                Context::set('product', $product);
+                return $this->dispShopProduct();
+            }
+            elseif ($type == 'category') {
+                $repo = new CategoryRepository();
+                if (!$cat = $repo->getCategoryByFriendlyUrl($identifier)) throw new ShopException('Category does not exist');
+                Context::set('category', $cat);
+                return $this->dispShop();
+            }
+            else throw new ShopException("Routing: invalid type: $type");
+        }
+        catch (ShopException $e) {
+            $this->setRedirectUrl(getNotEncodedUrl('', 'act', 'dispShopHome'));
+            return new Object(-1, $e->getMessage());
+        }
+    }
 
     /**
 	 * @brief Tool dashboard
@@ -731,7 +753,8 @@ class shopView extends shop {
 	/**
 	 * @brief Shop display simple product add page
 	 */
-	public function dispShopToolAddProduct(){
+	public function dispShopToolAddProduct()
+    {
 		$args = Context::getRequestVars();
 		if(isset($args->configurable_attributes))
 		{
@@ -927,8 +950,8 @@ class shopView extends shop {
             if($this->shop->getOutOfStockProducts() == 'N') $args->in_stock = 'Y';
 			$page = Context::get('page');
 			if($page) $args->page = $page;
-			$category_srl = Context::get('category_srl');
-			if($category_srl) $args->category_srls = array($category_srl);
+			$category_srl = (($category = Context::get('category')) instanceof Category ? $category->category_srl : Context::get('category_srl'));
+			if ($category_srl) $args->category_srls = array($category_srl);
 
             $args->status = 'enabled';
             if($this->shop->getOutOfStockProducts() == 'N') $args->in_stock = 'Y';
@@ -986,14 +1009,18 @@ class shopView extends shop {
 	 */
 	public function dispShopProduct()
 	{
-		$product_srl = Context::get('product_srl');
-
-		/** @var shopModel $shopModel */
-		$shopModel = getModel('shop');
-		$product_repository = $shopModel->getProductRepository();
-
-		$product = $product_repository->getProduct($product_srl);
-		Context::set('product', $product);
+        /** @var $product Product */
+        if ($product = Context::get('product')) {
+            //came from from routing
+            if (!($product instanceof Product) || !$product->isPersisted()) throw new ShopException('Wrong product');
+        }
+		else {
+            if (!$product_srl = Context::get('product_srl')) throw new ShopException('Could not identify product');
+            $product_repository = new ProductRepository();
+            $product = $product_repository->getProduct($product_srl);
+            if (!$product instanceof Product) throw new ShopException('Product does not exist');
+            Context::set('product', $product);
+        }
 
 		// Setup Javscript datasource for linked dropdowns
 		$datasourceJS = $this->getAssociatedProductsAttributesAsJavascriptArray(array($product));
@@ -1002,14 +1029,14 @@ class shopView extends shop {
 		// Setup attributes names for display
 		if(count($product->attributes))
 		{
-			$attribute_repository = $shopModel->getAttributeRepository();
+			$attribute_repository = new AttributeRepository();
 			$attributes = $attribute_repository->getAttributes(array_keys($product->attributes));
 			Context::set('attributes', $attributes);
 		}
 
 		// Categories left tree
 		// Retrieve existing categories
-		$category_repository = $shopModel->getCategoryRepository();
+		$category_repository = new CategoryRepository();
 		$tree = $category_repository->getNavigationCategoriesTree($this->module_srl);
 
 		// Prepare tree for display
@@ -1232,12 +1259,10 @@ class shopView extends shop {
         $cart = Context::get('cart');
 
         $payment_method_name = Context::get('payment_method_name');
-        if($payment_method_name)
-        {
+        if ($payment_method_name) {
             $payment_repository = new PaymentMethodRepository();
             $payment_method = $payment_repository->getPaymentMethod($payment_method_name, $this->module_srl);
-            try
-            {
+            try {
                 $payment_method->onOrderConfirmationPageLoad($cart, $this->module_srl);
             }
 			catch(PaymentProcessingException $exception)

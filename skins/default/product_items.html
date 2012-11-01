@@ -23,8 +23,13 @@
             <!--@if($product instanceof IProductItem)-->
             <tr>
                 <td class="a-center">{@ ++$i;}{$i}</td>
+                <!--@if ($product instanceof OrderProduct) -->
                 <td><p><img src="{$product->getThumbnailPath(70)}" /></p></td>
                 <td>{$product->getTitle()}</td>
+                <!--@else-->
+                <td><p><a target="_blank" href="{$product->getProduct()->getUrl()}"><img src="{$product->getThumbnailPath(70)}" /></a></p></td>
+                <td><a target="_blank" href="{$product->getProduct()->getUrl()}">{$product->getTitle()}</a></td>
+                <!--@end-->
                 <td class="a-center">{$product->getQuantity()}</td>
                 <td class="a-center">{ShopDisplay::priceFormat($product->getPrice(), $shop->getCurrencySymbol())}</td>
                 <td class="a-center">{ShopDisplay::priceFormat($product->getPrice() * $product->getQuantity(), $shop->getCurrencySymbol())}</td>

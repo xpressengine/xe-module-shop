@@ -22,7 +22,14 @@
                 <select name="sort" id="sort">
                     <option value="price_asc" selected="selected"|cond="$sort=='price_asc'">price (asc)</option>
                     <option value="price_desc" selected="selected"|cond="$sort=='price_desc'">price (desc)</option>
-                </select></form><a href="{getUrl('', 'act', 'procShopToggleGridView', 'mode', 'grid')}" class="breadcrumbs-button <!--@if($grid_view)-->selected<!--@end-->"><img src="img/grid-icon.png" alt="Grid view" title="Grid view" /></a><a href="{getUrl('', 'act', 'procShopToggleGridView', 'mode', 'list')}" class="breadcrumbs-button <!--@if(!$grid_view)-->selected<!--@end-->"><img src="img/list-icon.png" alt="List view" title="List view" /></a>
+                </select>
+            </form>
+            <a href="{getUrl('', 'act', 'procShopToggleGridView', 'mode', 'grid')}" class="breadcrumbs-button <!--@if($grid_view)-->selected<!--@end-->">
+                <img src="img/grid-icon.png" alt="Grid view" title="Grid view" />
+            </a>
+            <a href="{getUrl('', 'act', 'procShopToggleGridView', 'mode', 'list')}" class="breadcrumbs-button <!--@if(!$grid_view)-->selected<!--@end-->">
+                <img src="img/list-icon.png" alt="List view" title="List view" />
+            </a>
         </span>
 </div>
 <div id="body-content" class="body-two-columns <!--@if(!$products || empty($products))-->main-content<!--@end-->">
@@ -32,6 +39,7 @@
 
     <h2 cond="$q && $act == 'dispShopSearch'">{sprintf($lang->searching_for, $q)}</h2>
     <h1 cond="!$products || empty($products)" >{$lang->no_products}</h1>
+
     <include target="products_list.html"/>
 
     <!-- Pagination -->

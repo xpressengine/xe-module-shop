@@ -89,12 +89,27 @@
                     </td>
                 </tr>
                 <!--@if(!$product->parent_product_srl)-->
+                <tr style="font-size: 10px">
+                    <th scope="row" title="{$lang->about_friendly_url}">
+                        <label for="friendly_url">{$lang->friendly_url}</label>
+                    </th>
+                    <td class="title">
+                        <div class="fItem">
+                            <span>{call_user_func(array($product->repo, getUrl), '')}</span>
+                            <input data-ajaxcheck="{getNotEncodedUrl('', 'act', 'procShopToolCheckFriendlyUrlAvailability')}" type="text" id="friendly_url" name="friendly_url" style="width:417px;" class="iText iText" title="{$lang->about_friendly_url}" value="{$product->friendly_url}"|cond="$product->title" />
+                            <span id="availability" class="available"></span>
+                        </div>
+                    </td>
+                </tr>
                 <tr>
                     <th scope="row">
                         <label for="description">{$lang->description}</label>
                     </th>
                     <td class="title">
-                        {ShopDisplay::multiLanguageTextarea('description', 'description', $product->description, null, 'iTextarea', $lang->about_description, 'iLabel', 'fItem', 8, 100)}
+                        <div class="fItem">
+                            <label class="iLabel" for="description">{$lang->about_description}</label>
+                            <textarea name="description" rows="8" cols="100" class="iTextarea" id="description" title="{$lang->about_description}"><!--@if($product->title)-->{$product->description}<!--@end--></textarea>
+                        </div>
                     </td>
                 </tr>
                 <tr>
@@ -167,17 +182,6 @@
                     </td>
                 </tr>
                 <!--@if(!$product->parent_product_srl)-->
-                <tr cond="false">
-                    <th scope="row">
-                        <label for="friendly_url">{$lang->friendly_url}</label>
-                    </th>
-                    <td class="title">
-                        <div class="fItem">
-                            <label class="iLabel" for="friendly_url">{$lang->about_friendly_url}</label>
-                            <input type="text" id="friendly_url" name="friendly_url" style="width:200px" class="iText iText" title="{$lang->about_friendly_url}" <!--@if($product->title)-->value="{$product->friendly_url}"<!--@end--> />
-                        </div>
-                    </td>
-                </tr>
                 <tr>
                     <th scope="row">
                         <label for="price">{$lang->price}</label>
