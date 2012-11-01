@@ -41,7 +41,7 @@ class Category extends BaseItem implements IThumbnailable
 
     public function getUrl($relative=true)
     {
-        if (!$this->friendly_url) throw new ShopException('Could not generate url for category: no friendly_url');
+        if (!$this->friendly_url) return getUrl('', 'act', 'dispShop', 'vid', BaseRepository::vid(), 'category_srl', $this->category_srl);
         $repo = $this->repo;
         return $repo::getUrl($this->friendly_url, $relative);
     }

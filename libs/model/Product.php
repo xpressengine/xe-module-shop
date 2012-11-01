@@ -103,7 +103,7 @@ abstract class Product extends BaseItem
 
     public function getUrl($relative=true)
     {
-        if (!$this->friendly_url) throw new ShopException('Could not generate url for product: no friendly_url');
+        if (!$this->friendly_url) return getUrl('', 'act', 'dispShopProduct', 'vid', BaseRepository::vid(), 'product_srl', $this->product_srl);
         $repo = $this->repo;
         return $repo::getUrl($this->friendly_url, $relative);
     }
