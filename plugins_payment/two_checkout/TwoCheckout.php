@@ -31,6 +31,19 @@ class TwoCheckout extends PaymentMethodAbstract
 	}
 
 	/**
+	 * Customize the way 2checkout is displayed on the checkout page
+	 * as a payment option
+	 *
+	 * @return string
+	 */
+	public function getSelectPaymentHtml()
+	{
+		return '<img src="modules/shop/plugins_payment/two_checkout/paymentlogoshorizontal.png"
+                    align="left"
+                    style="margin-right:7px;">';
+	}
+
+	/**
 	 * Retrieve payment info from 2checkout and create a new order
 	 *
 	 * @param $cart

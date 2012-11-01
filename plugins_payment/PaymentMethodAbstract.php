@@ -115,6 +115,14 @@ abstract class PaymentMethodAbstract extends AbstractPlugin
 
     }
 
+	protected function markTransactionAsFailedInUserCart($cart_srl, $transaction_id, $error_message)
+	{
+		$cart = new Cart($cart_srl);
+		$cart->setExtra("transaction_id", $transaction_id);
+		$cart->setExtra("transaction_message", $error_message);
+		$cart->save();
+	}
+
 	protected function createNewOrderAndDeleteExistingCart($cart, $transaction_id)
 	{
 		$order = new Order($cart);

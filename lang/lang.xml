@@ -121,8 +121,8 @@
 		<value xml:lang="en"><![CDATA[Order number]]></value>
 	</item>
 	<item name="order_with_number">
-		<value xml:lang="ko"><![CDATA[Order #%r]]></value>
-		<value xml:lang="en"><![CDATA[Order #%r]]></value>
+		<value xml:lang="ko"><![CDATA[Order #%s]]></value>
+		<value xml:lang="en"><![CDATA[Order #%s]]></value>
 	</item>
 	<item name="update_order">
 		<value xml:lang="ko"><![CDATA[Update order]]></value>
@@ -133,8 +133,8 @@
 		<value xml:lang="en"><![CDATA[Please log in to view this page]]></value>
 	</item>
 	<item name="order_successfully_created">
-		<value xml:lang="ko"><![CDATA[You order has been successfully created with id %r.]]></value>
-		<value xml:lang="en"><![CDATA[You order has been successfully created with id %r.]]></value>
+		<value xml:lang="ko"><![CDATA[You order has been successfully created with id %s.]]></value>
+		<value xml:lang="en"><![CDATA[You order has been successfully created with id %s.]]></value>
 	</item>
 	<item name="view_just_created_order">
 		<value xml:lang="ko"><![CDATA[Go see it]]></value>

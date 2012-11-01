@@ -253,14 +253,6 @@ class PaypalPaymentsStandard extends PaymentMethodAbstract
         return new IPNPaymentInfo($paypal_info);
     }
 
-    private function markTransactionAsFailedInUserCart($cart_srl, $transaction_id, $error_message)
-    {
-        $cart = new Cart($cart_srl);
-        $cart->setExtra("transaction_id", $transaction_id);
-        $cart->setExtra("transaction_message", $error_message);
-        $cart->save();
-    }
-
 	/**
 	 * Make sure all mandatory fields are set
 	 */
