@@ -317,6 +317,7 @@
 			$product = $productRepository->getProduct($product_srl);
 			$product->title = 'Copy of '.$product->title;
 			$product->sku = 'Copy-'.$product->sku;
+            $product->friendly_url = ($product->friendly_url ? $product->friendly_url : ShopUtils::slugify($product->title)) . "_copy";
 			foreach($product->images as $image){
 				unset($image->image_srl);
 				$path = sprintf('./files/attach/images/shop/%d/product-images/%d/', $image->module_srl , $image->product_srl);
@@ -337,7 +338,11 @@
         public function procShopToolCheckFriendlyUrlAvailability()
         {
             if (!$type = Context::get('type')) $type = 'product';
-            if (!$slug = Context::get('slug')) throw new ShopException('Missing slug');
+            if (!$slug = Context::get('slug')) {
+                //throw new ShopException('Missing slug');
+                $this->add('notAvailable', false);
+                return;
+            }
 
             if ($type == 'product') {
                 $repo = new ProductRepository();
