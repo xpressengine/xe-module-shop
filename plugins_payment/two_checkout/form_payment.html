@@ -3,7 +3,7 @@
 <!-- Required parameters -->
 <input type="hidden" name="sid" value="{$payment_method->sid}" />
 <input type="hidden" name="total" value="{$cart->getTotal()}" />
-<input type="hidden" name="cart_order_id" value="{$shop->getShopTitle()}" />
+<input type="hidden" name="cart_order_id" value="{$cart->cart_srl}" />
 
 <!-- Product identification parameters -->
 <input type="hidden" name="id_type" value="1" />
@@ -19,9 +19,11 @@
 <!-- Additional parameters -->
 <!--@if(!$payment_method->isLive())-->
 <input type="hidden" name="demo" value="Y" />
+<!--@end-->
+<input type="hidden" name="merchant_order_id" value="{$cart->cart_srl}" />
 <input type="hidden" name="fixed" value="Y" />
 <input type="hidden" name="x_receipt_link_url" value="{$payment_method->getOrderConfirmationPageUrl()}" />
-<!--@end-->
+
 
 <!-- Fields for pre-populating billing info -->
 <input type="hidden" name="card_holder_name" value="{$cart->getCustomerFirstname() . ' ' . $cart->getCustomerLastname()}" />

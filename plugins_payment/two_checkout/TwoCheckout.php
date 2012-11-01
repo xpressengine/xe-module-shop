@@ -52,9 +52,9 @@ class TwoCheckout extends PaymentMethodAbstract
 		// Check if using demo mode, since on demo, all responses have invalid key
 		$is_demo = Context::get('demo') == 'Y';
 
-		if($key != $expected_key && !$is_demo)
+		if(strtoupper($key) != $expected_key && !$is_demo)
 		{
-			ShopLogger::log("Invalid 2 checkout message received - key " . $key . ' ' . print_r($_REQUEST, true));
+			ShopLogger::log("Invalid 2 checkout message received - key " . $key . ' ' . print_r($_REQUEST, TRUE));
 				throw new PaymentProcessingException("There was a problem processing your transaction");
 		}
 
@@ -72,6 +72,47 @@ class TwoCheckout extends PaymentMethodAbstract
 		else
 		{
 			Context::set('order_srl', $order->order_srl);
+		}
+	}
+
+	/**
+	 * Handle all incoming IPN notifications from 2checkout
+	 */
+	public function notify()
+	{
+		// Check the sender is 2Checkout
+		$key = Context::get('md5_hash');
+
+		$sale_id = Context::get('sale_id');
+		$vendor_id = $this->sid;
+		$invoice_id = Context::get('invoice_id');
+		$secret_word = $this->secret_word;
+		$expected_key = strtoupper(md5($sale_id . $vendor_id . $invoice_id . $secret_word));
+
+		if(strtoupper($key) != $expected_key)
+		{
+			ShopLogger::log("Invalid 2checkout IPN message received - key " . $key . ' ' . print_r($_REQUEST, TRUE));
+			return;
+		}
+
+		$message_type = Context::get('message_type');
+		if($message_type != 'ORDER_CREATED')
+		{
+			ShopLogger::log("Unsupported IPN 2checkout message received: " . print_r($_REQUEST, TRUE));
+			return;
+		}
+
+		$cart_srl = Context::get('vendor_order_id');
+		$transaction_id = $sale_id; // Hopefully, this is order number
+
+		$order_repository = new OrderRepository();
+
+		// Check if order has already been created for this transaction
+		$order = $order_repository->getOrderByTransactionId($transaction_id);
+		if(!$order) // If not, create it
+		{
+			$cart = new Cart($cart_srl);
+			$this->createNewOrderAndDeleteExistingCart($cart, $transaction_id);
 		}
 	}
 
