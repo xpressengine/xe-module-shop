@@ -104,4 +104,8 @@ class CartPreview implements IProductItemsContainer
 	{
 		return $this->cart->getVAT();
 	}
+
+    public function getShippingMethodName(){
+        return $this->cart->getShippingMethodName();
+    }
 }

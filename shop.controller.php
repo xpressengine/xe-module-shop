@@ -682,6 +682,132 @@
             $this->setRedirectUrl($returnUrl);
         }
 
+        public function procShopPrintOrder(){
+
+            $orderRepo = new OrderRepository();
+            $order = $orderRepo->getOrderBySrl(Context::get('order_srl'));
+            $this->printPDFOrder($order);
+        }
+
+        public function procShopToolPrintOrder(){
+
+            $orderRepo = new OrderRepository();
+            $order = $orderRepo->getOrderBySrl(Context::get('order_srl'));
+            $this->printPDFOrder($order);
+        }
+
+        private function printPDFOrder(Order $order){
+
+            global $lang;
+            $product_items = $order->getProducts();
+            $shop = new ShopInfo($this->module_srl);
+            $this->model->includeTCPDF();
+
+            // create new PDF document
+            $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+
+            // set document information
+            $pdf->SetCreator($shop->getShopTitle());
+            $pdf->SetTitle(sprintf($lang->order_with_number, $order->order_srl));
+            $pdf->SetSubject(sprintf($lang->order_with_number, $order->order_srl));
+
+            $pdf->setPrintHeader(false);
+            $pdf->setPrintFooter(false);
+
+            // set font
+            $pdf->SetFont('dejavusans', '', 10);
+
+            // add a page
+            $pdf->AddPage();
+
+
+            // create HTML content
+            $html = '
+            <div style="float:left; text-align: center;">'.$shop->getShopTitle().'</div>
+            <h1>'.sprintf($lang->order_with_number, $order->order_srl).'</h1>
+            <p></p>
+            Order date: '.zdate($order->regdate,'d-M-y').'
+            <p></p><h3>'.$lang->shipping_address.'</h3>'.$order->shipping_address.'
+            <p></p><h3>'.$lang->billing_address.'</h3>'.$order->billing_address.'
+            <p></p><h3>'.$lang->payment_method_used.'</h3>'.ucwords(str_replace('_', ' ', $order->payment_method)).'
+            <p></p><h3>'.$lang->shipping_method_used.'</h3>'.ucwords(str_replace('_', ' ', $order->shipping_method)).'
+            <p></p><h3>'.$lang->items_ordered.'</h3></br>';
+
+            // output the HTML content
+            $pdf->writeHTML($html, true, false, true, false, '');
+
+            // Colors, line width and bold font
+            $pdf->SetFillColor(38, 74, 108);
+            $pdf->SetTextColor(255);
+            $pdf->SetDrawColor(38, 74, 108);
+            $pdf->SetLineWidth(0.3);
+            $pdf->SetFont('', 'B');
+            // Header
+            $w = array(15, 70, 20, 45, 45);
+            $header= $header = array($lang->product_no_dot, $lang->title, $lang->quantity, $lang->price, $lang->subtotal);
+            $num_headers = count($header);
+            for($i = 0; $i < $num_headers; ++$i) {
+                $pdf->Cell($w[$i], 7, $header[$i], 1, 0, 'C', 1);
+            }
+            $pdf->Ln();
+            // Color and font restoration
+            $pdf->SetFillColor(224, 235, 255);
+            $pdf->SetTextColor(0);
+            $pdf->SetFont('');
+            // Data
+            $fill = 0;
+            $i = 0;
+            foreach($product_items as $product){
+                $i++;
+                $pdf->Cell($w[0], 6, $i, 'LR', 0, 'C', $fill);
+                $pdf->Cell($w[1], 6, $product->getTitle(), 'LR', 0, 'L', $fill);
+                $pdf->Cell($w[2], 6, $product->getQuantity(), 'LR', 0, 'R', $fill);
+                $pdf->Cell($w[3], 6, ShopDisplay::priceFormat($product->getPrice(), $shop->getCurrencySymbol()), 'LR', 0, 'R', $fill);
+                $pdf->Cell($w[4], 6, ShopDisplay::priceFormat($product->getPrice() * $product->getQuantity(), $shop->getCurrencySymbol()), 'LR', 0, 'R', $fill);
+                $pdf->Ln();
+                $fill=!$fill;
+            }
+
+            $pdf->Cell(array_sum($w) - $w[4], 6, $lang->total, 1, 0, 'R',$fill);
+            $pdf->Cell($w[4], 6, ShopDisplay::priceFormat($order->getTotalBeforeDiscount(), $shop->getCurrencySymbol()), 1, 0, 'R',$fill);
+            $fill=!$fill;
+            $pdf->Ln();
+
+            if($order->getDiscountAmount()){
+                $pdf->Cell(array_sum($w) - $w[4], 6, $lang->discount, 1, 0, 'R',$fill);
+                $pdf->Cell($w[4], 6, ShopDisplay::priceFormat(-1 * $order->getDiscountAmount(), $shop->getCurrencySymbol()), 1, 0, 'R',$fill);
+                $fill=!$fill;
+                $pdf->Ln();
+            }
+
+            if($order->getShippingMethodName()){
+                $pdf->Cell(array_sum($w) - $w[4], 6, $lang->shipping, 1, 0, 'R',$fill);
+                $pdf->Cell($w[4], 6, ShopDisplay::priceFormat($order->getShippingCost(), $shop->getCurrencySymbol()), 1, 0, 'R',$fill);
+                $fill=!$fill;
+                $pdf->Ln();
+            }
+
+            $pdf->SetFont('', 'B');
+            $pdf->Cell(array_sum($w) - $w[4], 6, $lang->grand_total, 1, 0, 'R',$fill);
+            $pdf->Cell($w[4], 6, ShopDisplay::priceFormat($order->getTotal(), $shop->getCurrencySymbol()), 1, 0, 'R',$fill);
+            $fill=!$fill;
+            $pdf->Ln();
+            $pdf->SetFont('');
+
+            if($shop->showVAT()){
+                $pdf->Cell(array_sum($w) - $w[4], 6, $lang->taxes, 1, 0, 'R',$fill);
+                $pdf->Cell($w[4], 6, ShopDisplay::priceFormat($order->getVAT(), $shop->getCurrencySymbol()), 1, 0, 'R',$fill);
+                $fill=!$fill;
+                $pdf->Ln();
+            }
+
+            $pdf->Cell(array_sum($w), 0, '', 'T');
+
+
+            //Close and output PDF document
+            $pdf->Output(sprintf($lang->order_with_number, $order->order_srl), 'I');
+        }
+
         public function procShopToolManageProducts()
         {
             $params = array('', 'act', 'dispShopToolManageProducts');

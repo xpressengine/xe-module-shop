@@ -394,11 +394,20 @@ class shopModel extends shop
      * Includes Zip Handler Class
      *
      * @author Dan Dragan(dev@xpressengine.org)
-     * @return GuestRepository
      */
     public function includeZipHandler()
     {
         require_once dirname(__FILE__) . '/libs/ZipHandler.class.php';
+    }
+
+    /**
+     * Includes TCPDF library
+     *
+     * @author Dan Dragan(dev@xpressengine.org)
+     */
+    public function includeTCPDF()
+    {
+        require_once dirname(__FILE__) . '/libs/tcpdf/tcpdf.php';
     }
 
     /**

@@ -127,6 +127,14 @@ class Order extends BaseItem implements IProductItemsContainer
         return $this->shipping_cost;
     }
 
+    /**
+     * Shipping method name
+     */
+    public function getShippingMethodName()
+    {
+        return $this->shipping_method;
+    }
+
     public function getTotalBeforeDiscount()
     {
         return $this->total + $this->discount_amount - $this->shipping_cost;

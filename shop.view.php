@@ -1153,6 +1153,16 @@ class shopView extends shop {
     }
 
     public function dispShopViewOrder(){
+        try{
+            $orderRepo = new OrderRepository();
+            $order = $orderRepo->getOrderBySrl(Context::get('order_srl'));
+            $logged_info = Context::get('logged_info');
+            if($order->member_srl != $logged_info->member_srl) throw new ShopException("This order does not belong to you");
+        }
+        catch (Exception $e) {
+            $this->setRedirectUrl(getNotEncodedUrl('', 'act', 'dispShopHome'));
+            return new Object(-1, $e->getMessage());
+        }
         $this->dispShopToolViewOrder();
         $this->setTemplateFile('view_order');
     }

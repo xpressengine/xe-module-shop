@@ -41,12 +41,13 @@
                     <th scope="col" class="title">{$lang->comments}</th>
                     <th scope="col">{$lang->invoice_on}</th>
                     <th scope="col">&nbsp;</th>
+                    <th scope="col">&nbsp;</th>
                 </tr>
                 </thead>
                 <tbody>
 
                 <tr cond="empty($invoices)">
-                    <td class="noData" colspan="9">
+                    <td class="noData" colspan="10">
                         <p cond="!$search">{$lang->no_invoices}</p>
                         <p cond="$search">{$lang->no_search_results}</p>
                     </td>
@@ -60,6 +61,11 @@
                     <td>
                         <span class="btnGray small">
                             <a href="{getUrl('act','dispShopToolInvoiceOrder','order_srl',$invoice->order_srl)}">{$lang->cmd_view}</a>
+                        </span>
+                    </td>
+                    <td>
+                        <span class="btnGray small">
+                            <a href="{getUrl('act','procShopToolPrintOrder','order_srl',$invoice->order_srl)}" target="_blank">{$lang->print}</a>
                         </span>
                     </td>
                 </tr>

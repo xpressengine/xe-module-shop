@@ -16,6 +16,11 @@ interface IProductItemsContainer
     public function getShippingCost();
 
     /**
+     * Shipping method name
+     */
+    public function getShippingMethodName();
+
+    /**
      * Total before applying discount
      *
      * @return float

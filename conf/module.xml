@@ -136,6 +136,8 @@
         <action name="procShopUnsignToNewsletter" type="controller" />
         <action name="procShopSearch" type="controller"/>
         <action name="procShopRenewOrder" type="controller"/>
+        <action name="procShopPrintOrder" type="controller"/>
+        <action name="procShopToolPrintOrder" type="controller"/>
         <action name="procShopSort" type="controller"/>
 
         <!-- Shop backend -->
@@ -296,6 +298,7 @@
         <action name="procShopToolInsertShipment" type="controller"/>
         <action name="procShopToggleGridView" type="controller"/>
         <action name="dispShopToolShipOrder" type="view"/>
+        <action name="procShopToolPrintOrder" type="controller"/>
 
     </actions>
 </module>

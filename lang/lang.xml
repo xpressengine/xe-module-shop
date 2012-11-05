@@ -116,6 +116,10 @@
 		<value xml:lang="ko"><![CDATA[Renew]]></value>
 		<value xml:lang="en"><![CDATA[Renew]]></value>
 	</item>
+    <item name="print">
+        <value xml:lang="ko"><![CDATA[Print]]></value>
+        <value xml:lang="en"><![CDATA[Print]]></value>
+    </item>
 	<item name="order_number">
 		<value xml:lang="ko"><![CDATA[Order number]]></value>
 		<value xml:lang="en"><![CDATA[Order number]]></value>
@@ -2237,8 +2241,8 @@
 		<value xml:lang="en"><![CDATA[Invoices List]]></value>
 	</item>
 	<item name="invoice_for_order">
-		<value xml:lang="ko"><![CDATA[Invoice for order]]></value>
-		<value xml:lang="en"><![CDATA[Invoice for order]]></value>
+		<value xml:lang="ko"><![CDATA[Invoice for order ]]></value>
+		<value xml:lang="en"><![CDATA[Invoice for order ]]></value>
 	</item>
 	<item name="invoice_on">
 		<value xml:lang="ko"><![CDATA[Invoiced on]]></value>
