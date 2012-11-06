@@ -352,7 +352,7 @@ class PDTResponse
     }
 }
 
-class PaypalPaymentsStandardAPI extends PaymentAPIAbstract
+class PaypalPaymentsStandardAPI extends APIAbstract
 {
     private function processArray($data, $function_name)
     {

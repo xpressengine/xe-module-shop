@@ -151,7 +151,7 @@ class PaypalExpressCheckout extends PaymentMethodAbstract
 	}
 }
 
-class PaypalExpressCheckoutAPI extends PaymentAPIAbstract
+class PaypalExpressCheckoutAPI extends APIAbstract
 {
     const SANDBOX_API_URL = 'https://api-3t.sandbox.paypal.com/nvp'
 		, LIVE_API_URL = 'https://api-3t.paypal.com/nvp';

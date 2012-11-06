@@ -25,11 +25,9 @@ abstract class ShippingMethodAbstract extends AbstractPlugin
     /**
      * Calculates shipping rates
      *
-     * // TODO Enforce parameter type Address when class is ready
-     *
      * @param Cart $cart SHipping cart for which to calculate shipping
      * @param Address $shipping_address Address to which products should be shipped
      */
-    abstract public function calculateShipping(Cart $cart, $shipping_address);
+    abstract public function calculateShipping(Cart $cart, Address $shipping_address = null);
 
 }

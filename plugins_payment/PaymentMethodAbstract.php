@@ -138,30 +138,3 @@ abstract class PaymentMethodAbstract extends AbstractPlugin
 	}
 
 }
-
-abstract class PaymentAPIAbstract
-{
-    public function request($url, $data)
-    {
-        $post_string = http_build_query($data);
-        if(__DEBUG__)
-        {
-            ShopLogger::log('REQUEST ' . $url . ' ' . $post_string);
-        }
-
-        // Request
-        $request = curl_init($url);
-        curl_setopt($request, CURLOPT_HEADER, 0);
-        curl_setopt($request, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($request, CURLOPT_POSTFIELDS, $post_string);
-        $response = curl_exec($request);
-        if(__DEBUG__)
-        {
-            ShopLogger::log('RESPONSE ' . $response);
-        }
-
-        curl_close ($request);
-        return $response;
-    }
-
-}
