@@ -389,7 +389,13 @@ class Cart extends BaseItem implements IProductItemsContainer
         if($shipping_method){
             $shipping_repository = new ShippingMethodRepository();
             $shipping = $shipping_repository->getShippingMethod($shipping_method, $this->module_srl);
-            return $shipping->calculateShipping($this, $this->getShippingAddress());
+			$cacheKey = $this->cart_srl . '_shipping_cost';
+			if(!$this->cache->has($cacheKey))
+			{
+				$this->cache[$cacheKey] = $shipping->calculateShipping($this, $this->getShippingAddress());;
+			}
+			$shipping_cost = $this->cache[$cacheKey];
+            return $shipping_cost;
         } else return 0;
     }
 

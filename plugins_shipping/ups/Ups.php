@@ -27,6 +27,16 @@ class Ups extends ShippingMethodAbstract
 		, SERVICE_WORLDWIDE_EXPRESS_PLUS = '54'
 		, SERVICE_WORLDWIDE_EXPEDITED = '08';
 
+	const PACKAGE_TYPE_UNKNOWN = '00'
+		, PACKAGE_TYPE_UPS_LETTER = '01'
+		, PACKAGE_TYPE_PACKAGE = '02'
+		, PACKAGE_TYPE_TUBE = '03'
+		, PACKAGE_TYPE_PAK = '04'
+		, PACKAGE_TYPE_EXPRESS_BOX = '21'
+		, PACKAGE_TYPE_25KG_BOX = '24'
+		, PACKAGE_TYPE_15KG_BOX = '25'
+		, PACKAGE_TYPE_PALLET = '30';
+
 	/**
 	 * Checks is custom plugin parameters are set and valid;
 	 * If no validation is needed, just return true;
@@ -157,23 +167,33 @@ class UpsAPI extends APIAbstract
 						</Address>
 					</ShipTo>
 					<Service><Code>$ups_config->service</Code></Service>
+					<Package>
+						<PackagingType>
+							<Code>$ups_config->package_type</Code>
+						</PackagingType>
+						<!-- Dimensions are required if Packaging Type if not Letter, Express Tube,
+						or Express Box; Required for GB to GB and Poland to Poland shipments -->
+						<!-- <Dimensions>
+							<UnitOfMeasurement>
+								<Code>CM</Code>
+							</UnitOfMeasurement>
+							<Length>$length</Length>
+							<Width>$width</Width>
+							<Height>$height</Height>
+						</Dimensions>-->
+						<!-- Weight allowed for letters/envelopes.-->
+						<!--<PackageWeight>
+    						<UnitOfMeasurement>
+    							<Code>KGS</Code>
+    						</UnitOfMeasurement>
+    						<Weight>2</Weight>
+    					</PackageWeight>-->
+					</Package>
+					<ShipmentServiceOptions />
 				</Shipment>
 			</RatingServiceSelectionRequest>";
 
-//					<Package>
-//						<PackagingType>
-//							<Code>04</Code>
-//							<Description>UPS 25KG Box</Description>
-//						</PackagingType>
-//						<Description>Rate</Description>
-//						<PackageWeight>
-//							<UnitOfMeasurement>
-//								<Code>KGS</Code>
-//							</UnitOfMeasurement>
-//							<Weight>23</Weight>
-//						</PackageWeight>
-//					</Package>
-//					<ShipmentServiceOptions />
+
 	}
 
 

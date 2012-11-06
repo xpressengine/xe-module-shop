@@ -158,3 +158,62 @@
         </option>
     </select>
 </p>
+<p>
+    <label for="package_type">Service</label>
+    <select name="package_type" id="package_type">
+        <option value="{Ups::PACKAGE_TYPE_UNKNOWN}"
+            <!--@if($shipping_method->package_type == Ups::PACKAGE_TYPE_UNKNOWN)-->
+            selected="selected"
+            <!--@end-->>
+        Unknown
+        </option>
+        <option value="{Ups::PACKAGE_TYPE_UPS_LETTER}"
+            <!--@if($shipping_method->package_type == Ups::PACKAGE_TYPE_UPS_LETTER)-->
+            selected="selected"
+            <!--@end-->>
+        UPS Letter
+        </option>
+        <option value="{Ups::PACKAGE_TYPE_PACKAGE}"
+            <!--@if($shipping_method->package_type == Ups::PACKAGE_TYPE_PACKAGE)-->
+            selected="selected"
+            <!--@end-->>
+        Package
+        </option>
+        <option value="{Ups::PACKAGE_TYPE_TUBE}"
+            <!--@if($shipping_method->package_type == Ups::PACKAGE_TYPE_TUBE)-->
+            selected="selected"
+            <!--@end-->>
+        Tube
+        </option>
+        <option value="{Ups::PACKAGE_TYPE_PAK}"
+            <!--@if($shipping_method->package_type == Ups::PACKAGE_TYPE_PAK)-->
+            selected="selected"
+            <!--@end-->>
+        Pak
+        </option>
+        <option value="{Ups::PACKAGE_TYPE_EXPRESS_BOX}"
+            <!--@if($shipping_method->package_type == Ups::PACKAGE_TYPE_EXPRESS_BOX)-->
+            selected="selected"
+            <!--@end-->>
+        Express Box
+        </option>
+        <option value="{Ups::PACKAGE_TYPE_25KG_BOX}"
+            <!--@if($shipping_method->package_type == Ups::PACKAGE_TYPE_25KG_BOX)-->
+            selected="selected"
+            <!--@end-->>
+        25kg box
+        </option>
+        <option value="{Ups::PACKAGE_TYPE_15KG_BOX}"
+            <!--@if($shipping_method->package_type == Ups::PACKAGE_TYPE_15KG_BOX)-->
+            selected="selected"
+            <!--@end-->>
+        15kg box
+        </option>
+        <option value="{Ups::PACKAGE_TYPE_PALLET}"
+            <!--@if($shipping_method->package_type == Ups::PACKAGE_TYPE_PALLET)-->
+            selected="selected"
+            <!--@end-->>
+        Pallet
+        </option>
+    </select>
+</p>
