@@ -25,7 +25,8 @@ class Ups extends ShippingMethodAbstract
 	const SERVICE_STANDARD = '11'
 		, SERVICE_WORLDWIDE_EXPRESS = '07'
 		, SERVICE_WORLDWIDE_EXPRESS_PLUS = '54'
-		, SERVICE_WORLDWIDE_EXPEDITED = '08';
+		, SERVICE_WORLDWIDE_EXPEDITED = '08'
+		, SERVICE_SAVER = '65';
 
 	const PACKAGE_TYPE_UNKNOWN = '00'
 		, PACKAGE_TYPE_UPS_LETTER = '01'
@@ -109,7 +110,7 @@ class UpsAPI extends APIAbstract
 			throw new APIException("UPS Error: [ErrorSeverity] - " . $error->ErrorSeverity . "; [ErrorCode] - " . $error->ErrorCode . '; [Error description] - ' . $error->ErrorDescription);
 		}
 
-		$shipping_cost = $RatingServiceSelectionResponse->RatedShipment->TransportationCharges->Monetary->Value;
+		$shipping_cost = floatval(strip_tags($RatingServiceSelectionResponse->RatedShipment->TotalCharges->MonetaryValue->asXml()));
 		return $shipping_cost;
 	}
 
@@ -141,6 +142,7 @@ class UpsAPI extends APIAbstract
 					</TransactionReference>
 					<RequestAction>Rate</RequestAction>
 					<RequestOption>Rate</RequestOption>
+			        <!-- <RequestOption>Shop</RequestOption> -->
 				</Request>
 				<PickupType>
 					<Code>$ups_config->pickup_type</Code>
@@ -153,15 +155,19 @@ class UpsAPI extends APIAbstract
 							<CountryCode>$ups_config->country_code</CountryCode>
 						</Address>
 					</Shipper>
-					<ShipTo>
-						<CompanyName>$shipping_address->company</CompanyName>
-						<AttentionName>$shipping_address->firstname $shipping_address->lastname</AttentionName>
-						<PhoneNumber>$shipping_address->telephone</PhoneNumber>
+					<ShipFrom>
 						<Address>
-							<AddressLine1>$shipping_address->address</AddressLine1>
-							<AddressLine2 />
-							<AddressLine3 />
-							<City>$shipping_address->city</City>
+							<PostalCode>$ups_config->postal_code</PostalCode>
+							<CountryCode>$ups_config->country_code</CountryCode>
+						</Address>
+					</ShipFrom>
+					<ShipTo>
+						<!--<CompanyName>$shipping_address->company</CompanyName>
+						<AttentionName>$shipping_address->firstname $shipping_address->lastname</AttentionName>
+						<PhoneNumber>$shipping_address->telephone</PhoneNumber>-->
+						<Address>
+							<!-- <AddressLine1>$shipping_address->address</AddressLine1>
+							<City>$shipping_address->city</City> -->
 							<PostalCode>$shipping_address->postal_code</PostalCode>
 							<CountryCode>$shipping_address->country</CountryCode>
 						</Address>
@@ -182,12 +188,12 @@ class UpsAPI extends APIAbstract
 							<Height>$height</Height>
 						</Dimensions>-->
 						<!-- Weight allowed for letters/envelopes.-->
-						<!--<PackageWeight>
+						<PackageWeight>
     						<UnitOfMeasurement>
     							<Code>KGS</Code>
     						</UnitOfMeasurement>
     						<Weight>2</Weight>
-    					</PackageWeight>-->
+    					</PackageWeight>
 					</Package>
 					<ShipmentServiceOptions />
 				</Shipment>

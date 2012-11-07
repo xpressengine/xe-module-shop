@@ -156,6 +156,12 @@
             <!--@end-->>
         International - Worldwide Expedited
         </option>
+        <option value="{Ups::SERVICE_SAVER}"
+            <!--@if($shipping_method->service == Ups::SERVICE_SAVER)-->
+            selected="selected"
+            <!--@end-->>
+        International - Saver
+        </option>
     </select>
 </p>
 <p>
