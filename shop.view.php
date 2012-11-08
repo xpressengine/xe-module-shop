@@ -1187,12 +1187,13 @@ class shopView extends shop {
         $paymentRepo = new PaymentMethodRepository();
 
         //shipping methods
-        $shipping = array();
-        /** @var $shippingMethod ShippingMethodAbstract */
-        foreach ($shippingRepo->getActiveShippingMethods($this->module_srl) as $shippingMethod) {
-            $shipping[$shippingMethod->getCode()] = $shippingMethod->getDisplayName();
-        }
-        Context::set('shipping_methods', $shipping);
+//        $shipping = array();
+//        /** @var $shippingMethod ShippingMethodAbstract */
+//        foreach ( as $shippingMethod) {
+//            $shipping[$shippingMethod->getCode()] = $shippingMethod->getDisplayName();
+//        }
+		$shipping_methods = $shippingRepo->getActiveShippingMethods($this->module_srl);
+        Context::set('shipping_methods', $shipping_methods);
 
         // payment methods
         $payment_methods = $paymentRepo->getActivePaymentMethods($this->module_srl);
@@ -1250,7 +1251,9 @@ class shopView extends shop {
         $shipping_method_name = $cart->getShippingMethodName();
         $shipping_repository = new ShippingMethodRepository();
         $shipping_method = $shipping_repository->getShippingMethod($shipping_method_name, $this->module_srl);
-        Context::set('shipping_method', $shipping_method->getDisplayName());
+        Context::set('shipping_method_name', $shipping_method->getDisplayName());
+		$shipping_variants = $shipping_method->getVariants();
+		Context::set('shipping_method_variant', $shipping_variants[$cart->getShippingMethodVariant()]);
 
         Context::set('extra', $cart->getExtraArray());
         Context::set('cart_products', $cart->getProducts());

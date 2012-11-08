@@ -10,7 +10,8 @@
     <column name="shipping_address" type="text"/>
     <column name="payment_method" type="varchar" size="255"/>
     <column name="shipping_method" type="varchar" size="255"/>
-    <column name="shipping_cost" type="number" size="11"/>
+    <column name="shipping_variant" type="varchar" size="255"/>
+    <column name="shipping_cost" type="float" size="20"/>
     <column name="vat" type="number" size="11"/>
     <column name="order_status" type="varchar" size="255"/>
     <column name="transaction_id" type="varchar" size="128" />

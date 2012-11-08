@@ -31,7 +31,7 @@
 
 
         <h2>{$lang->shipping_info}</h2>
-        <p>{$lang->shipping_method_used} <b>{ucwords(str_replace('_', ' ', $order->shipping_method))}</b></p>
+        <p>{$lang->shipping_method_used} <b>{ucwords(str_replace('_', ' ', $order->shipping_method))}</b>{$order->getShippingMethodVariant() ? ' - ' . $order->getShippingMethodVariant() : ''}</p>
 
 
         <h2>{$lang->items_ordered}</h2>

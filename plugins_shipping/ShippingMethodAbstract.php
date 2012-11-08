@@ -6,6 +6,7 @@ abstract class ShippingMethodAbstract extends AbstractPlugin
     protected $shipping_method_dir;
     static protected $template_file_name = 'template.html';
 
+
     public function getCode()
     {
         return $this->getName();
@@ -22,12 +23,29 @@ abstract class ShippingMethodAbstract extends AbstractPlugin
         return $oTemplate->compile($this->getPluginDir(), self::$template_file_name);
     }
 
+	public function hasVariants()
+	{
+		return false;
+	}
+
+
+	/**
+	 * Defines the variants of a certain shipping type
+	 * For instance, for UPS we can have: Expedited, Saver etc.
+	 */
+	public function getVariants()
+	{
+		return array();
+	}
+
     /**
      * Calculates shipping rates
      *
      * @param Cart $cart SHipping cart for which to calculate shipping
      * @param Address $shipping_address Address to which products should be shipped
      */
-    abstract public function calculateShipping(Cart $cart, Address $shipping_address = null);
+    abstract public function calculateShipping(Cart $cart, Address $shipping_address = NULL);
+
+
 
 }

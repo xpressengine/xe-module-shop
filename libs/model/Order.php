@@ -21,6 +21,7 @@ class Order extends BaseItem implements IProductItemsContainer
         $shipping_address,
         $payment_method,
         $shipping_method,
+		$shipping_variant,
         $shipping_cost,
         $total,
         $vat,
@@ -76,6 +77,7 @@ class Order extends BaseItem implements IProductItemsContainer
         $this->shipping_address = (string) $cart->getShippingAddress();
         $this->payment_method = $cart->getPaymentMethodName();
         $this->shipping_method = $cart->getShippingMethodName();
+		$this->shipping_variant = $cart->getShippingMethodVariant();
         $this->shipping_cost = $cart->getShippingCost();
         $this->total = $cart->getTotal(true);
         $this->vat = ($shopInfo->getVAT() ? $shopInfo->getVAT() : 0);
@@ -134,6 +136,11 @@ class Order extends BaseItem implements IProductItemsContainer
     {
         return $this->shipping_method;
     }
+
+	public function getShippingMethodVariant()
+	{
+		return $this->shipping_variant;
+	}
 
     public function getTotalBeforeDiscount()
     {

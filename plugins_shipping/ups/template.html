@@ -88,8 +88,8 @@
 </p>
 
 <p>
-    <label for="service">Service</label>
-    <select name="service" id="service">
+    <label for="enabled_services">Enabled services</label>
+    <select name="enabled_services[]" id="enabled_services" multiple="multiple">
         <option value="{Ups::SERVICE_NEXT_DAY_AIR_EARLY_AM}"
             <!--@if($shipping_method->service == Ups::SERVICE_NEXT_DAY_AIR_EARLY_AM)-->
             selected="selected"
@@ -165,7 +165,7 @@
     </select>
 </p>
 <p>
-    <label for="package_type">Service</label>
+    <label for="package_type">Package type</label>
     <select name="package_type" id="package_type">
         <option value="{Ups::PACKAGE_TYPE_UNKNOWN}"
             <!--@if($shipping_method->package_type == Ups::PACKAGE_TYPE_UNKNOWN)-->

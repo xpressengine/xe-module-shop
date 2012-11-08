@@ -106,11 +106,67 @@
             <h2 class="underline">{$lang->shipping}</h2>
             <p>
                 <label for="shipping_method">{$lang->shipping_method}</label>
+                <script type="text/javascript">
+                    var shipping_methods = new Array();
+                    <!--@foreach($shipping_methods as $shipping_method)-->
+                     shipping_methods['{$shipping_method->getCode()}'] = {
+                         'display_name' : '{$shipping_method->getDisplayName()}'
+                         , 'variants' : {json_encode($shipping_method->getVariants())}
+                     };
+                    <!--@end-->
+                    jQuery(document).ready(function($){
+                           $("#shipping_method").change(function(){
+                               var selected_value = $(this).val();
+                               var shipping_method = shipping_methods[selected_value];
+                               if(!$.isEmptyObject(shipping_method.variants))
+                               {
+                                   $("#shipping_variant").html("");
+                                   for(var variant_code in shipping_method.variants)
+                                   {
+                                       var option = $("<option></option>").attr("value", variant_code).html(shipping_method.variants[variant_code]);
+                                       $("#shipping_variant").append(option);
+                                   }
+                                   $("#shipping_variant").show();
+                               }
+                               else
+                               {
+                                   $("#shipping_variant").hide();
+                               }
+
+
+                           });
+                    });
+                </script>
+                {@ $current_shipping_method = null; }
                 <select name="shipping[method]" id="shipping_method">
                     <option value=""></option>
-                    <!--@foreach($shipping_methods as $value=>$name)-->
-                    <option value="{$value}" selected="selected"|cond="$cart->getShippingMethodName() == $value">{$name}</option>
+                    <!--@foreach($shipping_methods as $shipping_method)-->
+                        {@ $value = $shipping_method->getCode(); }
+                        {@ $name = $shipping_method->getDisplayName(); }
+                        <option value="{$value}"
+                                <!--@if($cart->getShippingMethodName() == $value)-->
+                                    selected="selected"
+                                    {@ $current_shipping_method = $shipping_method; }
+                                <!--@end-->
+                        >{$name}</option>
                     <!--@endforeach-->
+                </select>
+                <select name="shipping[variant]" id="shipping_variant"
+                        <!--@if(!$current_shipping_method->hasVariants())-->
+                            style="display:none"
+                        <!--@end-->
+                        >
+                    <!--@if($current_shipping_method->hasVariants())-->
+                        {@ $variants = $cart->getShippingMethod()->getVariants(); }
+
+                        <!--@foreach($variants as $code => $name)-->
+                        <option value="{$code}"
+                                selected="selected"|cond="$cart->getShippingMethodVariant() == $code">
+                                {$name}
+                        </option>
+                        <!--@end-->
+                    <!--@end-->
+
                 </select>
             </p>
             <p id="shipping-address-select" style="display:none"|cond="!$needs_new_shipping">

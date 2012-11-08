@@ -469,6 +469,7 @@ class Cart extends BaseItem implements IProductItemsContainer
                 throw new ShopException('Wrong shipping input');
             }
             $data['extra']['shipping_method'] = $shipping['method'];
+			$data['extra']['shipping_variant'] = $shipping['variant'];
             if (is_numeric($shipping['address'])) {
                 $data['shipping_address_srl'] = $shipping['address'];
             } elseif (self::validateFormBlock($newAddress = $input['new_shipping_address'])) {
@@ -487,6 +488,7 @@ class Cart extends BaseItem implements IProductItemsContainer
 		{
 			$shipping = $input['shipping'];
 			$data['extra']['shipping_method'] = $shipping['method'];
+			$data['extra']['shipping_variant'] = $shipping['variant'];
 		}
         if (self::validateFormBlock($payment = $input['payment'])) {
             $data['extra']['payment_method'] = $payment['method'];
@@ -634,6 +636,18 @@ class Cart extends BaseItem implements IProductItemsContainer
         return $this->getExtra('transaction_message');
     }
 
+	public function getShippingMethod()
+	{
+		$shipping_repository = new ShippingMethodRepository();
+		$shipping_method_name = $this->getExtra('shipping_method');
+		if($shipping_method_name)
+		{
+			return $shipping_repository->getShippingMethod($shipping_method_name, $this->module_srl);
+		}
+		$default_shipping = $shipping_repository->getDefault($this->module_srl);
+		return $default_shipping;
+	}
+
     public function getShippingMethodName()
     {
         $shipping_method = $this->getExtra('shipping_method');
@@ -646,6 +660,11 @@ class Cart extends BaseItem implements IProductItemsContainer
 		$default_shipping = $shipping_repository->getDefault($this->module_srl);
 		return $default_shipping->name;
     }
+
+	public function getShippingMethodVariant()
+	{
+		return $this->getExtra('shipping_variant');
+	}
 
     public function getPaymentMethodName()
     {

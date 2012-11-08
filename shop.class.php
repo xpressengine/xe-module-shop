@@ -114,6 +114,8 @@ class shop extends ModuleObject {
 
         if(!$oDB->isColumnExists("shop","shop_email")) return true;
 
+		if(!$oDB->isColumnExists("shop_orders","shipping_variant")) return true;
+
         return false;
     }
 
@@ -319,6 +321,10 @@ class shop extends ModuleObject {
         if(!$oDB->isColumnExists("shop","shop_email")) {
             $oDB->addColumn('shop',"shop_email","varchar", 250);
         }
+
+		if(!$oDB->isColumnExists("shop_orders","shipping_variant")) {
+			$oDB->addColumn('shop_orders',"shipping_variant","varchar", 250);
+		}
 
         return new Object(0, 'success_updated');
     }

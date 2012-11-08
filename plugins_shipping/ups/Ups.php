@@ -28,6 +28,21 @@ class Ups extends ShippingMethodAbstract
 		, SERVICE_WORLDWIDE_EXPEDITED = '08'
 		, SERVICE_SAVER = '65';
 
+	public static $service_names = array(
+		Ups::SERVICE_NEXT_DAY_AIR_EARLY_AM => 'Domestic - Next Day Air Early AM'
+		, Ups::SERVICE_NEXT_DAY_AIR => 'Domestic - Next Day Air'
+		, Ups::SERVICE_NEXT_DAY_AIR_SAVER => 'Domestic - Next Day Air Saver'
+		, Ups::SERVICE_2ND_DAY_AIR_AM => 'Domestic - 2nd Day Air AM'
+		, Ups::SERVICE_2ND_DAY_AIR => 'Domestic - 2nd Day Air'
+		, Ups::SERVICE_3DAY_SELECT => 'Domestic - 3 Day Select'
+		, Ups::SERVICE_GROUND => 'Domestic - Ground'
+		, Ups::SERVICE_STANDARD => 'International - Standard'
+		, Ups::SERVICE_WORLDWIDE_EXPRESS => 'International - Worldwide Express'
+		, Ups::SERVICE_WORLDWIDE_EXPRESS_PLUS => 'International - Worldwide Epxress Plus'
+		, Ups::SERVICE_WORLDWIDE_EXPEDITED => 'International - Worldwide Expedited'
+		, Ups::SERVICE_SAVER => 'International - Saver'
+	);
+
 	const PACKAGE_TYPE_UNKNOWN = '00'
 		, PACKAGE_TYPE_UPS_LETTER = '01'
 		, PACKAGE_TYPE_PACKAGE = '02'
@@ -67,6 +82,28 @@ class Ups extends ShippingMethodAbstract
 		$ups_api = new UpsAPI($this);
 		$shipping_cost = $ups_api->getRate($shipping_address);
 		return $shipping_cost;
+	}
+
+	/**
+	 * Defines the variants of a certain shipping type
+	 * For instance, for UPS we can have: Expedited, Saver etc.
+	 */
+	public function getVariants()
+	{
+		$enabled_services = $this->enabled_services;
+		if(!$enabled_services) return array();
+
+		$variants = array();
+		foreach($enabled_services as  $enabled_service)
+		{
+			$variants[$enabled_service] = Ups::$service_names[$enabled_service];
+		}
+		return $variants;
+	}
+
+	public function hasVariants()
+	{
+		return true;
 	}
 }
 
@@ -141,8 +178,8 @@ class UpsAPI extends APIAbstract
 						<XpciVersion>1.0</XpciVersion>
 					</TransactionReference>
 					<RequestAction>Rate</RequestAction>
-					<RequestOption>Rate</RequestOption>
-			        <!-- <RequestOption>Shop</RequestOption> -->
+					<!-- <RequestOption>Rate</RequestOption> -->
+			        <RequestOption>Shop</RequestOption>
 				</Request>
 				<PickupType>
 					<Code>$ups_config->pickup_type</Code>
@@ -172,7 +209,7 @@ class UpsAPI extends APIAbstract
 							<CountryCode>$shipping_address->country</CountryCode>
 						</Address>
 					</ShipTo>
-					<Service><Code>$ups_config->service</Code></Service>
+					<!--<Service><Code>$ups_config->service</Code></Service>-->
 					<Package>
 						<PackagingType>
 							<Code>$ups_config->package_type</Code>
