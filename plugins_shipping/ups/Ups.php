@@ -61,26 +61,26 @@ class Ups extends ShippingMethodAbstract
 	public function isConfigured(&$error_message = 'msg_invalid_request')
 	{
 		if($error_message == '') $error_message = 'msg_invalid_request';
-		if(!isset($this->gateway_api)) return false;
-		if(!isset($this->username)) return false;
-		if(!isset($this->password)) return false;
-		if(!isset($this->shipper_number)) return false;
-		if(!isset($this->api_access_key)) return false;
-		return true;
+		if(!isset($this->gateway_api)) return FALSE;
+		if(!isset($this->username)) return FALSE;
+		if(!isset($this->password)) return FALSE;
+		if(!isset($this->shipper_number)) return FALSE;
+		if(!isset($this->api_access_key)) return FALSE;
+		return TRUE;
 	}
 
 	/**
 	 * Calculates shipping rates
 	 *
 	 * @param Cart    $cart             SHipping cart for which to calculate shipping
-	 * @param Address $shipping_address Address to which products should be shipped
+	 * @param string $service			Service for which to calculate cost (Standard, Priority etc.)
 	 */
-	public function calculateShipping(Cart $cart, Address $shipping_address = null)
+	public function calculateShipping(Cart $cart, $service = null)
 	{
-		if($shipping_address == null) return 0;
+		if($cart->getShippingAddress() == NULL) return 0;
 
 		$ups_api = new UpsAPI($this);
-		$shipping_cost = $ups_api->getRate($shipping_address);
+		$shipping_cost = $ups_api->getRate($cart->getShippingAddress(), $service);
 		return $shipping_cost;
 	}
 
@@ -103,7 +103,49 @@ class Ups extends ShippingMethodAbstract
 
 	public function hasVariants()
 	{
-		return true;
+		return TRUE;
+	}
+
+
+	/**
+	 * Returns a list of available variants
+	 * The structure is:
+	 * array(
+	 *     stdclass(
+	 *         'name' => 'ups'
+	 *         , 'display_name' => 'UPS'
+	 *         , 'variant' => '01'
+	 *         , 'variant_display_name' => 'Domestic'
+	 *         ,  price => 12
+	 * ))
+	 *
+	 * @param Address $shipping_address
+	 * @return array
+	 */
+	public function getAvailableVariants(Cart $cart)
+	{
+		$shipping_address = $cart->getShippingAddress();
+		if(!$shipping_address) return array();
+
+
+		$ups_api = new UpsAPI($this);
+		$available_rates = $ups_api->getAvailableRates($shipping_address);
+
+		$available_variants = array();
+		// TODO Filtrat si dupa enabled services - degeaba e supported, daca adminul nu l-a activat in backend
+		foreach($available_rates as $rate)
+		{
+			$service_code = $rate['service'];
+			$price = $rate['price'];
+			$variant = new stdClass();
+			$variant->name = $this->getName();
+			$variant->display_name = $this->getDisplayName();
+			$variant->variant = $service_code;
+			$variant->variant_display_name = UPS::$service_names[$service_code];
+			$variant->price = $price;
+			$available_variants[] = $variant;
+		}
+		return $available_variants;
 	}
 }
 
@@ -116,7 +158,7 @@ class UpsAPI extends APIAbstract
 		$this->ups_config = $ups_config;
 	}
 
-	public function getRate(Address $shipping_address)
+	public function getAvailableRates(Address $shipping_address)
 	{
 		$data = $this->getAccessRequestXML(
 		  	$this->ups_config->api_access_key
@@ -126,6 +168,7 @@ class UpsAPI extends APIAbstract
 		$data .= $this->getRatingServiceSelectionRequestXML(
 			$this->ups_config
 			, $shipping_address
+			, 'Shop'
 		);
 
 		if($this->ups_config->gateway_api == Ups::SANDBOX_URL)
@@ -141,12 +184,54 @@ class UpsAPI extends APIAbstract
 
 		$RatingServiceSelectionResponse = simplexml_load_string($response);
 
-		if($RatingServiceSelectionResponse->Response->ResponseStatusCode === 0)
+		if(intval(strip_tags($RatingServiceSelectionResponse->Response->ResponseStatusCode->asXml())) === 0)
 		{
 			$error = $RatingServiceSelectionResponse->Response->Error;
 			throw new APIException("UPS Error: [ErrorSeverity] - " . $error->ErrorSeverity . "; [ErrorCode] - " . $error->ErrorCode . '; [Error description] - ' . $error->ErrorDescription);
 		}
 
+		// TODO See if we can have more than one RatedShipment - the docs say no, but I thinks it's the only way to send rates for more than one service
+		$shipping_service = strip_tags($RatingServiceSelectionResponse->RatedShipment->Service->Code->asXml());
+		$shipping_cost = floatval(strip_tags($RatingServiceSelectionResponse->RatedShipment->TotalCharges->MonetaryValue->asXml()));
+		return array(array( 'service' => $shipping_service, 'price' => $shipping_cost));
+	}
+
+
+	public function getRate(Address $shipping_address, $service)
+	{
+		if(!$service) return 0; // TODO See how to treat this - giving shipping for free is not necessarily the best idea :)
+		// Should throw AddressNotAvailable exception so I can show a message
+
+		$data = $this->getAccessRequestXML(
+			$this->ups_config->api_access_key
+			, $this->ups_config->username
+			, $this->ups_config->password
+		);
+		$data .= $this->getRatingServiceSelectionRequestXML(
+			$this->ups_config
+			, $shipping_address
+			, 'Rate'
+			, $service
+		);
+
+		if($this->ups_config->gateway_api == Ups::SANDBOX_URL)
+		{
+			// If using sandbox, skip SSL verify, otherwise all requests fail with:
+			// "Error [60]: SSL certificate problem, verify that the CA cert is OK"
+			$response = $this->request($this->ups_config->gateway_api, $data, true);
+		}
+		else
+		{
+			$response = $this->request($this->ups_config->gateway_api, $data);
+		}
+
+		$RatingServiceSelectionResponse = simplexml_load_string($response);
+
+		if(intval(strip_tags($RatingServiceSelectionResponse->Response->ResponseStatusCode->asXml())) === 0)
+		{
+			$error = $RatingServiceSelectionResponse->Response->Error;
+			throw new APIException("UPS Error: [ErrorSeverity] - " . $error->ErrorSeverity . "; [ErrorCode] - " . $error->ErrorCode . '; [Error description] - ' . $error->ErrorDescription);
+		}
 		$shipping_cost = floatval(strip_tags($RatingServiceSelectionResponse->RatedShipment->TotalCharges->MonetaryValue->asXml()));
 		return $shipping_cost;
 	}
@@ -168,9 +253,9 @@ class UpsAPI extends APIAbstract
 			</AccessRequest>";
 	}
 
-	public function getRatingServiceSelectionRequestXML($ups_config, Address $shipping_address)
+	public function getRatingServiceSelectionRequestXML($ups_config, Address $shipping_address, $RequestOption /* Rate or Shop */, $service = null)
 	{
-		return "<?xml version=\"1.0\" ?>
+		$request = "<?xml version=\"1.0\" ?>
 			<RatingServiceSelectionRequest>
 				<Request>
 					<TransactionReference>
@@ -178,8 +263,7 @@ class UpsAPI extends APIAbstract
 						<XpciVersion>1.0</XpciVersion>
 					</TransactionReference>
 					<RequestAction>Rate</RequestAction>
-					<!-- <RequestOption>Rate</RequestOption> -->
-			        <RequestOption>Shop</RequestOption>
+			        <RequestOption>$RequestOption</RequestOption>
 				</Request>
 				<PickupType>
 					<Code>$ups_config->pickup_type</Code>
@@ -208,9 +292,9 @@ class UpsAPI extends APIAbstract
 							<PostalCode>$shipping_address->postal_code</PostalCode>
 							<CountryCode>$shipping_address->country</CountryCode>
 						</Address>
-					</ShipTo>
-					<!--<Service><Code>$ups_config->service</Code></Service>-->
-					<Package>
+					</ShipTo>";
+			$request .= ( $service ? "<Service><Code>$service</Code></Service>" : '');
+			$request .=	"<Package>
 						<PackagingType>
 							<Code>$ups_config->package_type</Code>
 						</PackagingType>
@@ -235,8 +319,7 @@ class UpsAPI extends APIAbstract
 					<ShipmentServiceOptions />
 				</Shipment>
 			</RatingServiceSelectionRequest>";
-
-
+		return $request;
 	}
 
 

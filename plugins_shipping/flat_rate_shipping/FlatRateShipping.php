@@ -16,7 +16,7 @@ class FlatRateShipping extends ShippingMethodAbstract
      * @param Cart $cart SHipping cart for which to calculate shipping
      * @param Address $shipping_address Address to which products should be shipped
      */
-    public function calculateShipping(Cart $cart, Address $shipping_address = null)
+    public function calculateShipping(Cart $cart, $service = null)
     {
         if($this->type == 'per_item')
         {
@@ -40,25 +40,51 @@ class FlatRateShipping extends ShippingMethodAbstract
 		if(!isset($this->price))
 		{
 			$error_message = 'msg_missing_shipping_price';
-			return false;
+			return FALSE;
 		}
 
 		if(!isset($this->type))
 		{
 			$error_message = 'msg_missing_shipping_type';
-			return false;
+			return FALSE;
 		}
 
 		if(!in_array($this->type, array('per_item', 'per_order')))
 		{
 			$error_message = 'msg_invalid_shipping_type';
-			return false;
+			return FALSE;
 		}
 		if(!is_numeric($this->price))
 		{
 			$error_message = 'msg_invalid_shipping_price';
-			return false;
+			return FALSE;
 		}
-		return true;
+		return TRUE;
+	}
+
+	/**
+	 * Returns a list of available variants
+	 * The structure is:
+	 * array(
+	 *     stdclass(
+	 *         'name' => 'ups'
+	 *         , 'display_name' => 'UPS'
+	 *         , 'variant' => '01'
+	 *         , 'variant_display_name' => 'Domestic'
+	 *         ,  price => 12
+	 * ))
+	 *
+	 * @param Address $shipping_address
+	 * @return array
+	 */
+	public function getAvailableVariants(Cart $cart)
+	{
+		$variant = new stdClass();
+		$variant->name = $this->getName();
+		$variant->display_name = $this->getDisplayName();
+		$variant->variant = null;
+		$variant->variant_display_name = null;
+		$variant->price = $this->calculateShipping($cart);
+		return array($variant);
 	}
 }

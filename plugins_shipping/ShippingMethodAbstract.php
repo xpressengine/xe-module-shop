@@ -25,7 +25,7 @@ abstract class ShippingMethodAbstract extends AbstractPlugin
 
 	public function hasVariants()
 	{
-		return false;
+		return FALSE;
 	}
 
 
@@ -41,11 +41,27 @@ abstract class ShippingMethodAbstract extends AbstractPlugin
     /**
      * Calculates shipping rates
      *
-     * @param Cart $cart SHipping cart for which to calculate shipping
-     * @param Address $shipping_address Address to which products should be shipped
+     * @param Cart $cart Shipping cart for which to calculate shipping; includes shipping address
+	 * @param String $service Represents the specific service for which to calcualte shipping (e.g. Standard or Priority)
      */
-    abstract public function calculateShipping(Cart $cart, Address $shipping_address = NULL);
+    abstract public function calculateShipping(Cart $cart, $service = NULL);
 
+	/**
+	 * Returns a list of available variants
+	 * The structure is:
+	 * array(
+	 * 	stdclass(
+	 * 		'name' => 'ups'
+	 * 		, 'display_name' => 'UPS'
+	 * 		, 'variant' => '01'
+	 * 		, 'variant_display_name' => 'Domestic'
+	 * 		,  price => 12
+	 * ))
+	 *
+	 * @param Cart $cart
+	 * @return array
+	 */
+	abstract public function getAvailableVariants(Cart $cart);
 
 
 }

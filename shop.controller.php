@@ -883,6 +883,11 @@
                     return new Object(-1, $e->getMessage());
                 }
 
+				// Validate shipping -> check if method is available for given shipping address
+				$shipping_method = $cart->getShippingMethod();
+
+
+
                 // Get selected payment method name
                 $payment = Context::get('payment');
                 $payment_method_name = $payment['method'];

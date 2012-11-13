@@ -1186,13 +1186,7 @@ class shopView extends shop {
         $shippingRepo = new ShippingMethodRepository();
         $paymentRepo = new PaymentMethodRepository();
 
-        //shipping methods
-//        $shipping = array();
-//        /** @var $shippingMethod ShippingMethodAbstract */
-//        foreach ( as $shippingMethod) {
-//            $shipping[$shippingMethod->getCode()] = $shippingMethod->getDisplayName();
-//        }
-		$shipping_methods = $shippingRepo->getActiveShippingMethods($this->module_srl);
+		$shipping_methods = $shippingRepo->getAvailableShippingMethodsAndTheirPrices($this->module_srl, $cart);
         Context::set('shipping_methods', $shipping_methods);
 
         // payment methods

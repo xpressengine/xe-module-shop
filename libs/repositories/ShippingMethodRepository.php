@@ -23,6 +23,41 @@ class ShippingMethodRepository extends AbstractPluginRepository
 		return $this->getActivePlugins($module_srl);
 	}
 
+	/**
+	 * Returns all available shipping methods for the current cart
+	 * together with the appropriate prices
+	 *
+	 * Sample return
+	 * return array(
+	 *  'flat_rate_shipping' => 'Flat rate shipping 10$'
+	 * , 'ups__01' => 'UPS Domestic bla bla 5$'
+	 * , 'ups__65' => 'UPS International saver 4$'
+	 * )
+	 */
+	public function getAvailableShippingMethodsAndTheirPrices($module_srl, Cart $cart)
+	{
+		$shop_info = new ShopInfo($module_srl);
+		$active_shipping_methods = $this->getActiveShippingMethods($module_srl);
+
+		$available_shipping_methods = array();
+		foreach($active_shipping_methods as $shipping_method)
+		{
+			$available_variants = $shipping_method->getAvailableVariants($cart);
+			foreach($available_variants as $variant)
+			{
+				$key = $variant->name;
+				if($variant->variant) $key .= '__' . $variant->variant;
+
+				$value = $variant->display_name;
+				if($variant->variant) $value .= ' - ' . $variant->variant_display_name;
+				$value .= ' - ' . ShopDisplay::priceFormat($variant->price, $shop_info->getCurrencySymbol());
+
+				$available_shipping_methods[$key] = $value;
+			}
+		}
+		return $available_shipping_methods;
+	}
+
 
     /**
      * Get a certain shipping method instance

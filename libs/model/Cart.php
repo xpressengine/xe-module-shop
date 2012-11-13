@@ -392,7 +392,7 @@ class Cart extends BaseItem implements IProductItemsContainer
 			$cacheKey = $this->cart_srl . '_shipping_cost';
 			if(!$this->cache->has($cacheKey))
 			{
-				$this->cache[$cacheKey] = $shipping->calculateShipping($this, $this->getShippingAddress());;
+				$this->cache[$cacheKey] = $shipping->calculateShipping($this, $this->getShippingMethodVariant());
 			}
 			$shipping_cost = $this->cache[$cacheKey];
             return $shipping_cost;
