@@ -91,73 +91,73 @@
     <label for="enabled_services">Enabled services</label>
     <select name="enabled_services[]" id="enabled_services" multiple="multiple">
         <option value="{Ups::SERVICE_NEXT_DAY_AIR_EARLY_AM}"
-            <!--@if($shipping_method->service == Ups::SERVICE_NEXT_DAY_AIR_EARLY_AM)-->
+            <!--@if(in_array(Ups::SERVICE_NEXT_DAY_AIR_EARLY_AM, $shipping_method->enabled_services))-->
             selected="selected"
             <!--@end-->>
         Domestic - Next Day Air Early AM
         </option>
         <option value="{Ups::SERVICE_NEXT_DAY_AIR}"
-            <!--@if($shipping_method->service == Ups::SERVICE_NEXT_DAY_AIR)-->
+            <!--@if(in_array(Ups::SERVICE_NEXT_DAY_AIR, $shipping_method->enabled_services))-->
             selected="selected"
             <!--@end-->>
         Domestic - Next Day Air
         </option>
         <option value="{Ups::SERVICE_NEXT_DAY_AIR_SAVER}"
-            <!--@if($shipping_method->service == Ups::SERVICE_NEXT_DAY_AIR_SAVER)-->
+            <!--@if(in_array(Ups::SERVICE_NEXT_DAY_AIR_SAVER, $shipping_method->enabled_services))-->
             selected="selected"
             <!--@end-->>
         Domestic - Next Day Air Saver
         </option>
         <option value="{Ups::SERVICE_2ND_DAY_AIR_AM}"
-            <!--@if($shipping_method->service == Ups::SERVICE_2ND_DAY_AIR_AM)-->
+            <!--@if(in_array(Ups::SERVICE_2ND_DAY_AIR_AM, $shipping_method->enabled_services))-->
             selected="selected"
             <!--@end-->>
         Domestic - 2nd Day Air AM
         </option>
         <option value="{Ups::SERVICE_2ND_DAY_AIR}"
-            <!--@if($shipping_method->service == Ups::SERVICE_2ND_DAY_AIR)-->
+            <!--@if(in_array(Ups::SERVICE_2ND_DAY_AIR, $shipping_method->enabled_services))-->
             selected="selected"
             <!--@end-->>
         Domestic - 2nd Day Air
         </option>
         <option value="{Ups::SERVICE_3DAY_SELECT}"
-            <!--@if($shipping_method->service == Ups::SERVICE_3DAY_SELECT)-->
+            <!--@if(in_array(Ups::SERVICE_3DAY_SELECT, $shipping_method->enabled_services))-->
             selected="selected"
             <!--@end-->>
         Domestic - 3rd Day Select
         </option>
         <option value="{Ups::SERVICE_GROUND}"
-            <!--@if($shipping_method->service == Ups::SERVICE_GROUND)-->
+            <!--@if(in_array(Ups::SERVICE_GROUND, $shipping_method->enabled_services))-->
             selected="selected"
             <!--@end-->>
         Domestic - Ground
         </option>
         <option value="{Ups::SERVICE_STANDARD}"
-            <!--@if($shipping_method->service == Ups::SERVICE_STANDARD)-->
+            <!--@if(in_array(Ups::SERVICE_STANDARD, $shipping_method->enabled_services))-->
             selected="selected"
             <!--@end-->>
         International - Standard
         </option>
         <option value="{Ups::SERVICE_WORLDWIDE_EXPRESS}"
-            <!--@if($shipping_method->service == Ups::SERVICE_WORLDWIDE_EXPRESS)-->
+            <!--@if(in_array(Ups::SERVICE_WORLDWIDE_EXPRESS, $shipping_method->enabled_services))-->
             selected="selected"
             <!--@end-->>
         International - Worldwide Express
         </option>
         <option value="{Ups::SERVICE_WORLDWIDE_EXPRESS_PLUS}"
-            <!--@if($shipping_method->service == Ups::SERVICE_WORLDWIDE_EXPRESS_PLUS)-->
+            <!--@if(in_array(Ups::SERVICE_WORLDWIDE_EXPRESS_PLUS, $shipping_method->enabled_services))-->
             selected="selected"
             <!--@end-->>
         International - Worldwide Express Plus
         </option>
         <option value="{Ups::SERVICE_WORLDWIDE_EXPEDITED}"
-            <!--@if($shipping_method->service == Ups::SERVICE_WORLDWIDE_EXPEDITED)-->
+            <!--@if(in_array(Ups::SERVICE_WORLDWIDE_EXPEDITED, $shipping_method->enabled_services))-->
             selected="selected"
             <!--@end-->>
         International - Worldwide Expedited
         </option>
         <option value="{Ups::SERVICE_SAVER}"
-            <!--@if($shipping_method->service == Ups::SERVICE_SAVER)-->
+            <!--@if(in_array(Ups::SERVICE_SAVER, $shipping_method->enabled_services))-->
             selected="selected"
             <!--@end-->>
         International - Saver
