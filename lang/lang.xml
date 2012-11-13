@@ -596,6 +596,14 @@
 		<value xml:lang="ko"><![CDATA[Enter shop default currency]]></value>
 		<value xml:lang="en"><![CDATA[Enter shop default currency]]></value>
 	</item>
+    <item name="unit_of_measure">
+        <value xml:lang="ko"><![CDATA[Unit of measure]]></value>
+        <value xml:lang="en"><![CDATA[Unit of measure]]></value>
+    </item>
+    <item name="about_unit_of_measure">
+        <value xml:lang="ko"><![CDATA[Choose the unit of measure you will use for product weight and shipping]]></value>
+        <value xml:lang="en"><![CDATA[Choose the unit of measure you will use for product weight and shipping]]></value>
+    </item>
 	<item name="VAT">
 		<value xml:lang="ko"><![CDATA[VAT]]></value>
 		<value xml:lang="en"><![CDATA[VAT]]></value>

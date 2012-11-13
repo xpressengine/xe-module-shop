@@ -169,11 +169,12 @@
             $shipping_repository->updatePlugin($shipping_method);
 
             /**
-             * Set default currency
+             * Set default currency and unit of measure
              */
             $args = new stdClass();
             $args->currency = 'USD';
             $args->currency_symbol = '$';
+			$args->unit_of_measure = ShopInfo::UNIT_OF_MEASURE_KGS;
             $args->module_srl = $module_srl;
             $output = executeQuery('shop.updateShopInfo',$args);
             if(!$output->toBool()) return $output;

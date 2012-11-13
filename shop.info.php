@@ -7,6 +7,9 @@
 
     class ShopInfo extends Object {
 
+		const UNIT_OF_MEASURE_KGS = 'Kg'
+			, UNIT_OF_MEASURE_LBS = 'Lbs';
+
         public $site_srl = null,
             $domain = null,
             $shop_srl = null,
@@ -153,6 +156,11 @@
             if(!$this->isExists()) return;
             return $this->get('currency');
         }
+
+		public function getUnitOfMeasure() {
+			if(!$this->isExists()) return;
+			return $this->get('unit_of_measure');
+		}
 
         public function getCurrencySymbol() {
             if(!$this->isExists()) return;

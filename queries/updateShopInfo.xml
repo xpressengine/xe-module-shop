@@ -9,6 +9,7 @@
 		<column name="timezone" var="timezone" />
         <column name="telephone" var="telephone" />
         <column name="address" var="address" />
+        <column name="unit_of_measure" var="unit_of_measure" />
         <column name="currency" var="currency" />
         <column name="currency_symbol" var="currency_symbol" />
         <column name="out_of_stock_products" var="out_of_stock_products" />

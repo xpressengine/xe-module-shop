@@ -116,6 +116,8 @@ class shop extends ModuleObject {
 
 		if(!$oDB->isColumnExists("shop_orders","shipping_variant")) return true;
 
+		if(!$oDB->isColumnExists("shop","unit_of_measure")) return true;
+
         return false;
     }
 
@@ -324,6 +326,10 @@ class shop extends ModuleObject {
 
 		if(!$oDB->isColumnExists("shop_orders","shipping_variant")) {
 			$oDB->addColumn('shop_orders',"shipping_variant","varchar", 250);
+		}
+
+		if(!$oDB->isColumnExists("shop","unit_of_measure")) {
+			$oDB->addColumn('shop',"unit_of_measure","varchar",5);
 		}
 
         return new Object(0, 'success_updated');
