@@ -663,7 +663,25 @@ class Cart extends BaseItem implements IProductItemsContainer
 
 	public function getShippingMethodVariant()
 	{
-		return $this->getExtra('shipping_variant');
+		if(!$this->getShippingMethod()->hasVariants()) return null;
+		$shipping_variant = $this->getExtra('shipping_variant');
+		if($shipping_variant)
+		{
+			return $shipping_variant;
+		}
+		// If a variant hasn't been selected yet, we just return the first one
+		$shippingRepo = new ShippingMethodRepository();
+		$shipping_methods = $shippingRepo->getAvailableShippingMethodsAndTheirPrices($this->module_srl, $this);
+		$available_keys = array_keys($shipping_methods);
+		$selected_shipping_method = $this->getShippingMethodName();
+		foreach($available_keys as $key)
+		{
+			if(strpos($key, $selected_shipping_method) !== false)
+			{
+				$this->setExtra('shipping_variant', $key);
+				return $key;
+			}
+		}
 	}
 
     public function getPaymentMethodName()

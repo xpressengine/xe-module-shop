@@ -108,7 +108,11 @@
                 <label for="shipping_method">{$lang->shipping_method}</label>
                 <select id="shipping_method">
                     <!--@foreach($shipping_methods as $key => $value)-->
-                    <option value="{$key}">{$value}</option>
+                        <option value="{$key}"
+                                <!--@if($selected_shipping_method == $key)-->
+                                selected="selected"
+                                <!--@end-->
+                                >{$value}</option>
                     <!--@end-->
                 </select>
                 <input type="hidden" name="shipping[method]" id="shipping_method_name" value="{$cart->getShippingMethodName()}" />
@@ -121,6 +125,9 @@
                             $("#shipping_method_name").val($shipping_info[0]);
                             $("#shipping_method_variant").val($shipping_info[1]);
 
+                            $checkout_form = $(this).closest('form');
+                            $checkout_form.find("input[name='act']").val("procShopToolRefreshCheckout");
+                            $checkout_form.submit();
                         });
                     });
                 </script>

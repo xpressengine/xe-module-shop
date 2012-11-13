@@ -1186,8 +1186,14 @@ class shopView extends shop {
         $shippingRepo = new ShippingMethodRepository();
         $paymentRepo = new PaymentMethodRepository();
 
+		// Init the list of all available methods
 		$shipping_methods = $shippingRepo->getAvailableShippingMethodsAndTheirPrices($this->module_srl, $cart);
         Context::set('shipping_methods', $shipping_methods);
+
+		// Setup the selected shipping method - check if using default value or value from cart;
+		$selected_shipping_method = $cart->getShippingMethodName();
+		$selected_shipping_method .= $cart->getShippingMethodVariant() ? '__' . $cart->getShippingMethodVariant() : '';
+		Context::set('selected_shipping_method', $selected_shipping_method);
 
         // payment methods
         $payment_methods = $paymentRepo->getActivePaymentMethods($this->module_srl);

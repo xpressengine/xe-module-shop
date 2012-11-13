@@ -45,12 +45,20 @@ class ShippingMethodRepository extends AbstractPluginRepository
 			$available_variants = $shipping_method->getAvailableVariants($cart);
 			foreach($available_variants as $variant)
 			{
-				$key = $variant->name;
-				if($variant->variant) $key .= '__' . $variant->variant;
+				if(!$variant->price)
+				{
+					$key = "";
+					$value = $variant->display_name . ' - ' . $variant->variant_display_name;
+				}
+				else
+				{
+					$key = $variant->name;
+					if($variant->variant) $key .= '__' . $variant->variant;
 
-				$value = $variant->display_name;
-				if($variant->variant) $value .= ' - ' . $variant->variant_display_name;
-				$value .= ' - ' . ShopDisplay::priceFormat($variant->price, $shop_info->getCurrencySymbol());
+					$value = $variant->display_name;
+					if($variant->variant) $value .= ' - ' . $variant->variant_display_name;
+					$value .= ' - ' . ShopDisplay::priceFormat($variant->price, $shop_info->getCurrencySymbol());
+				}
 
 				$available_shipping_methods[$key] = $value;
 			}

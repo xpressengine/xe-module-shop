@@ -284,6 +284,7 @@
         <action name="procShopCartUpdateProducts" type="controller" />
         <action name="procShopToolCheckout" type="controller" ruleset="checkout" />
         <action name="procShopCheckoutLogin" type="controller" ruleset="checkout_login" />
+        <action name="procShopToolRefreshCheckout" type="controller" ruleset="checkout" />
 
         <!-- Orders -->
         <action name="dispShopToolManageOrders" type="view"/>

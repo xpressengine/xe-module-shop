@@ -50,14 +50,14 @@
         public function procShopToggleGridView()
         {
             $mode = Context::get('mode');
-            if ($mode == 'grid') $sess = true;
-            elseif ($mode == 'list') $sess = false;
+            if ($mode == 'grid') $sess = TRUE;
+            elseif ($mode == 'list') $sess = FALSE;
             else throw new ShopException("Invalid setting $mode");
             $_SESSION['grid_view'] = $sess;
             $this->setRedirectUrlIfNoReferer(getNotEncodedUrl('', 'act', 'dispShopHome'));
         }
 
-        public function procShopLogin($user_id = null, $password = null, $keep_signed = null) {
+        public function procShopLogin($user_id = NULL, $password = NULL, $keep_signed = NULL) {
             $oMemberController = getController('member');
 
             if(!$user_id) $user_id = Context::get('user_id');
@@ -340,7 +340,7 @@
             if (!$type = Context::get('type')) $type = 'product';
             if (!$slug = Context::get('slug')) {
                 //throw new ShopException('Missing slug');
-                $this->add('notAvailable', false);
+                $this->add('notAvailable', FALSE);
                 return;
             }
 
@@ -672,7 +672,7 @@
             }
 
             $order_items = $orderRepository->getOrderProductItems($order);
-            $cart = $cartRepository->getCart($this->module_info->module_srl,null,$logged_info->member_srl, session_id(), true);
+            $cart = $cartRepository->getCart($this->module_info->module_srl,NULL,$logged_info->member_srl, session_id(), TRUE);
             $cartRepository->deleteCartProducts($cart->cart_srl);
             foreach($order_items as $item){
                 $cart->addProduct($item,$item->quantity);
@@ -704,15 +704,15 @@
             $this->model->includeTCPDF();
 
             // create new PDF document
-            $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+            $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, TRUE, 'UTF-8', FALSE);
 
             // set document information
             $pdf->SetCreator($shop->getShopTitle());
             $pdf->SetTitle(sprintf($lang->order_with_number, $order->order_srl));
             $pdf->SetSubject(sprintf($lang->order_with_number, $order->order_srl));
 
-            $pdf->setPrintHeader(false);
-            $pdf->setPrintFooter(false);
+            $pdf->setPrintHeader(FALSE);
+            $pdf->setPrintFooter(FALSE);
 
             // set font
             $pdf->SetFont('dejavusans', '', 10);
@@ -734,7 +734,7 @@
             <p></p><h3>'.$lang->items_ordered.'</h3></br>';
 
             // output the HTML content
-            $pdf->writeHTML($html, true, false, true, false, '');
+            $pdf->writeHTML($html, TRUE, FALSE, TRUE, FALSE, '');
 
             // Colors, line width and bold font
             $pdf->SetFillColor(38, 74, 108);
@@ -850,71 +850,96 @@
             else return new Object(-1, 'Username / password?');
         }
 
-        /*
-         * @author Florin Ercus (dev@xpressengine.org)
-         */
-        public function procShopToolCheckout()
-        {
-            $cartRepo = new CartRepository();
-            $logged_info = Context::get('logged_info');
+		private function persistCart(&$cart)
+		{
+			$cartRepo = new CartRepository();
+			$logged_info = Context::get('logged_info');
 
-            //get or create cart:
-            if ($cart = $cartRepo->getCart($this->module_info->module_srl, null, $logged_info->member_srl, session_id(), true))
-            {
+			//get or create cart:
+			if ($cart = $cartRepo->getCart($this->module_info->module_srl, NULL, $logged_info->member_srl, session_id(), TRUE))
+			{
 
-                $haveShipping = (Context::get('different_shipping') == 'yes');
-                $shipping = Context::get('shipping');
-                if (!$haveShipping)
+				$haveShipping = (Context::get('different_shipping') == 'yes');
+				$shipping = Context::get('shipping');
+				if (!$haveShipping)
 				{
 					$billing = Context::get('billing');
 					$shipping['address'] = $billing['address'];
 				}
 
-                try {
-                    $cart->checkout(array(
-                        'billing'  => Context::get('billing'),
-                        'new_billing_address' => Context::get('new_billing_address'),
-                        'shipping' => $shipping, // MUST send shipping, otherwise shipping_method is lost
-                        'new_shipping_address' => $haveShipping ? Context::get('new_shipping_address') : null,
-                        'payment'  => Context::get('payment'),
-                    ));
-                }
-                catch (Exception $e) {
-                    return new Object(-1, $e->getMessage());
-                }
+				$cart->checkout(array(
+					'billing'  => Context::get('billing'),
+					'new_billing_address' => Context::get('new_billing_address'),
+					'shipping' => $shipping, // MUST send shipping, otherwise shipping_method is lost
+					'new_shipping_address' => $haveShipping ? Context::get('new_shipping_address') : NULL,
+					'payment'  => Context::get('payment'),
+				));
+			}
+			else
+				throw new ShopException('No cart');
+		}
 
-				// Validate shipping -> check if method is available for given shipping address
-				$shipping_method = $cart->getShippingMethod();
+		/**
+		 * Persist the new input values and refreshes dropdown values and all based on new addresses, for example
+		 */
+		public function procShopToolRefreshCheckout()
+		{
+			$cart = null;
+			try
+			{
+				$this->persistCart($cart);
+			}
+			catch(Exception $exception)
+			{
+				return new Object(-1, $exception->getMessage());
+			}
+
+			$vid = Context::get('vid');
+			$return_url = getNotEncodedUrl('', 'vid', $vid, 'act', 'dispShopCheckout');
+			$this->setRedirectUrl($return_url);
+		}
+
+        /*
+         * @author Florin Ercus (dev@xpressengine.org)
+         */
+        public function procShopToolCheckout()
+        {
+			$cart = null;
+			try
+			{
+				$this->persistCart($cart);
+			}
+			catch(Exception $exception)
+			{
+				return new Object(-1, $exception->getMessage());
+			}
 
 
+			// Get selected payment method name
+			$payment = Context::get('payment');
+			$payment_method_name = $payment['method'];
 
-                // Get selected payment method name
-                $payment = Context::get('payment');
-                $payment_method_name = $payment['method'];
+			// Get payment class
+			$payment_repository = new PaymentMethodRepository();
+			try {
+				$payment_method = $payment_repository->getPaymentMethod($payment_method_name, $this->module_srl);
+			}
+			catch (Exception $e) {
+				return new Object(-1, $e->getMessage());
+			}
 
-                // Get payment class
-                $payment_repository = new PaymentMethodRepository();
-                try {
-                    $payment_method = $payment_repository->getPaymentMethod($payment_method_name, $this->module_srl);
-                }
-                catch (Exception $e) {
-                    return new Object(-1, $e->getMessage());
-                }
-
-                $error_message = '';
-                if(!$payment_method->onCheckoutFormSubmit($cart, $error_message))
-                {
-                    $this->setMessage($error_message, 'error');
-                    $vid = Context::get('vid');
-                    $return_url = getNotEncodedUrl('', 'vid', $vid, 'act', 'dispShopCheckout');
-                    $this->setRedirectUrl($return_url);
-                }
-                else
-                {
-                    $this->setRedirectUrl(getNotEncodedUrl('', 'act', 'dispShopPlaceOrder'));
-                }
-            }
-            else throw new ShopException('No cart');
+			$error_message = '';
+			if(!$payment_method->onCheckoutFormSubmit($cart, $error_message))
+			{
+				$this->setMessage($error_message, 'error');
+				$vid = Context::get('vid');
+				$return_url = getNotEncodedUrl('', 'vid', $vid, 'act', 'dispShopCheckout');
+				$this->setRedirectUrl($return_url);
+			}
+			else
+			{
+				$this->setRedirectUrl(getNotEncodedUrl('', 'act', 'dispShopPlaceOrder'));
+			}
         }
 
         /*
@@ -991,7 +1016,7 @@
             $args->order_srl = $order_srl;
             $args->module_srl = $order->module_srl;
             $invoice = new Invoice($args);
-            if(!isset($invoice->invoice_srl)) $insert=true;
+            if(!isset($invoice->invoice_srl)) $insert=TRUE;
             $invoice->save();
             if($invoice->invoice_srl){
                 if(isset($order->shipment)) $order->order_status = Order::ORDER_STATUS_COMPLETED;
@@ -1031,7 +1056,7 @@
             $args->module_srl = $order->module_srl;
             $shipment = new Shipment($args);
             $shipment->order = $order;
-            if(!isset($shipment->shipment_srl)) $insert = true;
+            if(!isset($shipment->shipment_srl)) $insert = TRUE;
             try{
                 if($insert) {
                     $productsEmptyStocks = $shipment->checkAndUpdateStocks();
@@ -1074,7 +1099,7 @@
         {
             $cartRepo = new CartRepository();
             $logged_info = Context::get('logged_info');
-            $cart = $cartRepo->getCart($this->module_srl, null, $logged_info->member_srl, session_id());
+            $cart = $cartRepo->getCart($this->module_srl, NULL, $logged_info->member_srl, session_id());
 
             // Get payment class
             $payment_repository = new PaymentMethodRepository();
@@ -1116,7 +1141,7 @@
                         return new Object(-1, 'msg_invalid_request');
                     }
                     $logged_info = Context::get('logged_info');
-                    $cart = $cartRepository->getCart($this->module_info->module_srl, null, $logged_info->member_srl, session_id(), true);
+                    $cart = $cartRepository->getCart($this->module_info->module_srl, NULL, $logged_info->member_srl, session_id(), TRUE);
                     $quantity = (is_numeric(Context::get('quantity')) && Context::get('quantity') > 0 ? Context::get('quantity') : 1);
                     try {
                         $cart->addProduct($product, $quantity);
@@ -1335,7 +1360,7 @@
             if(!$target_member_srls) return new Object(-1, 'msg_invalid_request');
             $member_srls = explode(',', $target_member_srls);
             $oMemberController = &getController('member');
-            $oMemberController->memberInfo = null;
+            $oMemberController->memberInfo = NULL;
 
             foreach($member_srls as $member) {
                 $output = $oMemberController->deleteMember($member);
@@ -1657,14 +1682,14 @@
             // Load the appropriate layout:
             //  - tool: backend
             //  - service: frontend
-            if(strpos($oModule->act, "ShopTool") !== false || in_array($oModule->act, array('dispMenuAdminSiteMap'))) {
-                $oShopView->initTool($oModule, true);
+            if(strpos($oModule->act, "ShopTool") !== FALSE || in_array($oModule->act, array('dispMenuAdminSiteMap'))) {
+                $oShopView->initTool($oModule, TRUE);
             } else {
                 if(Mobile::isFromMobilePhone())
                 {
                     $oShopView = &getMobile('shop');
                 }
-                $oShopView->initService($oModule, true);
+                $oShopView->initService($oModule, TRUE);
             }
 
             return new Object();
@@ -1675,14 +1700,14 @@
             $this->module_info = Context::get('site_module_info');
             $this->module_srl = $this->module_info->index_module_srl;
             $cartRepo = new CartRepository();
-            $this->cartBeforeLogin = $cartRepo->getCart($this->module_srl, null, null, session_id(), true);
+            $this->cartBeforeLogin = $cartRepo->getCart($this->module_srl, NULL, NULL, session_id(), TRUE);
         }
 
         function triggerLoginAfter($logged_info)
         {
             $cartRepo = new CartRepository();
             if ($this->cartBeforeLogin instanceof Cart) {
-                if ($memberCart = $cartRepo->getCart($this->module_info->module_srl, null, $logged_info->member_srl, session_id()))
+                if ($memberCart = $cartRepo->getCart($this->module_info->module_srl, NULL, $logged_info->member_srl, session_id()))
                 {
                     if ($memberCart->cart_srl != $this->cartBeforeLogin->cart_srl) {
                         $memberCart->merge($this->cartBeforeLogin);
@@ -2327,7 +2352,7 @@
             $output = $oDocumentController->updateDocument($oDocument, $args);
             if(!$output->toBool())
             {
-                ShopLogger::log("Error updating page document: " . print_r($args, true) . ' ' . print_r($output));
+                ShopLogger::log("Error updating page document: " . print_r($args, TRUE) . ' ' . print_r($output));
                 return new Object(-1, 'fail_to_update');
             }
 
@@ -2342,7 +2367,7 @@
                 $output = $oModuleController->updateModule($page_module_info);
                 if(!$output->toBool())
                 {
-                    ShopLogger::log("Error updating page module: " . print_r($page_module_info, true) . ' ' . print_r($output));
+                    ShopLogger::log("Error updating page module: " . print_r($page_module_info, TRUE) . ' ' . print_r($output));
                     $this->setError($output->getError());
                     $this->setMessage($output->getMessage());
                     $error_return_url = Context::get('error_return_url');
@@ -2562,7 +2587,7 @@
 			// Don't send anything if sender and receiver email addresses are missing
 			if(!$shop->getEmail() || !$member_args->email_address)
 			{
-				ShopLogger::log("Failed to send welcome email to user. Member email is not set." . print_r($member_args, true));
+				ShopLogger::log("Failed to send welcome email to user. Member email is not set." . print_r($member_args, TRUE));
 				return;
 			}
 
@@ -2583,7 +2608,7 @@
 			$oMail->setTitle($email_subject);
 			$oMail->setContent($email_content);
 			$oMail->setSender($shop->getShopTitle(), $shop->getShopEmail());
-			$oMail->setReceiptor(false, $member_args->email_address);
+			$oMail->setReceiptor(FALSE, $member_args->email_address);
 			$oMail->send();
 		}
     }

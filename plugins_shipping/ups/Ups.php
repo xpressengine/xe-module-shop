@@ -125,18 +125,28 @@ class Ups extends ShippingMethodAbstract
 	public function getAvailableVariants(Cart $cart)
 	{
 		$shipping_address = $cart->getShippingAddress();
-		if(!$shipping_address) return array();
-
+		if(!$shipping_address)
+		{
+			$variant = new stdClass();
+			$variant->name = $this->getName();
+			$variant->display_name = $this->getDisplayName();
+			$variant->variant = null;
+			$variant->variant_display_name = 'Rates and available UPS services will show up after you enter your shipping address.';
+			$variant->price = null;
+			return array($variant);
+		}
 
 		$ups_api = new UpsAPI($this);
 		$available_rates = $ups_api->getAvailableRates($shipping_address);
 
 		$available_variants = array();
-		// TODO Filtrat si dupa enabled services - degeaba e supported, daca adminul nu l-a activat in backend
 		foreach($available_rates as $rate)
 		{
 			$service_code = $rate['service'];
 			$price = $rate['price'];
+			// Even though UPS supports a certain service for the current Cart,
+			// if the admin didn't enable it, we skip it
+			if(!in_array($service_code, $this->enabled_services)) continue;
 			$variant = new stdClass();
 			$variant->name = $this->getName();
 			$variant->display_name = $this->getDisplayName();
