@@ -982,6 +982,10 @@
 			<value xml:lang="ko"><![CDATA[Multiple select]]></value>
 			<value xml:lang="en"><![CDATA[Multiple select]]></value>
 		</item>
+		<item name="numeric">
+			<value xml:lang="ko"><![CDATA[Numeric]]></value>
+			<value xml:lang="en"><![CDATA[Numeric]]></value>
+		</item>
 	</item>
 	<item name="no_attribute">
 		<value xml:lang="ko"><![CDATA[No attributes, <a href="%s">add one!</a>]]></value>
@@ -1026,6 +1030,14 @@
 	<item name="about_attribute_default_value">
 		<value xml:lang="ko"><![CDATA[Must be one of *values*]]></value>
 		<value xml:lang="en"><![CDATA[Must be one of *values*]]></value>
+	</item>
+	<item name="show_as_sidebar_filter">
+		<value xml:lang="ko"><![CDATA[Show as sidebar filter]]></value>
+		<value xml:lang="en"><![CDATA[Show as sidebar filter]]></value>
+	</item>
+	<item name="is_filter">
+		<value xml:lang="ko"><![CDATA[Is filter]]></value>
+		<value xml:lang="en"><![CDATA[Is filter]]></value>
 	</item>
 	<item name="package_number">
 		<value xml:lang="ko"><![CDATA[Package Number]]></value>

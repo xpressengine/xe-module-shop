@@ -127,6 +127,7 @@
 
 
         <action name="procShopLogin" type="controller" ruleset="shop_login" />
+        <action name="procShopFilter" type="controller" />
         <action name="procShopDenyDelete" type="controller" />
         <action name="procShopProfileUpdate" type="controller" />
         <action name="procShopProfileImageUpload" type="controller" />

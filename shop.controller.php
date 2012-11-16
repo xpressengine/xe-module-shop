@@ -37,6 +37,21 @@
             Context::set('shop',$this->shop);
         }
 
+        public function procShopFilter()
+        {
+            if (!$goto = Context::get('goto') ? Context::get('goto') : $_SERVER['HTTP_REFERER']) {
+                throw new ShopException('Nowhere to go back to');
+            }
+            if (isset($_GET['filter']) && is_array($filters = $_GET['filter'])) {
+                /**
+                 * Context::get doesn't seem to work for arrays (such as filter)
+                 * so we must perform strict input checks to avoid injections.
+                 */
+                $goto = FrontFilters::redirectUrl($goto, $filters);
+            }
+            $this->setRedirectUrl($goto);
+        }
+
         public function procShopSort()
         {
             if (!in_array($sort = Context::get('sort'), array('price_asc', 'price_desc'))) {
@@ -476,6 +491,12 @@
             $repository = $shopModel->getAttributeRepository();
 
             $args = Context::getRequestVars();
+            $args->is_filter  = (int)(bool)$args->is_filter;
+            if ($args->is_filter) {
+                if (!in_array($args->type, array(AttributeRepository::TYPE_SELECT, AttributeRepository::TYPE_SELECT_MULTIPLE, AttributeRepository::TYPE_NUMERIC))) {
+                    $args->is_filter = 0;
+                }
+            }
             $args->module_srl = $this->module_info->module_srl;
             $logged_info = Context::get('logged_info');
             $args->member_srl = $logged_info->member_srl;
@@ -485,7 +506,7 @@
             try
             {
                 if ($attribute->attribute_srl) {
-                    $output = $repository->updateAttribute($attribute);
+                    $repository->updateAttribute($attribute);
                     $this->setMessage("success_updated");
                 }
                 else {
@@ -2611,5 +2632,6 @@
 			$oMail->setReceiptor(FALSE, $member_args->email_address);
 			$oMail->send();
 		}
+
     }
 ?>

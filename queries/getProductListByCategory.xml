@@ -15,6 +15,8 @@
         <condition operation="equal" column="p.module_srl" var="module_srl" notnull="notnull" />
         <condition operation="equal" column="p.status" var="status" pipe="and"/>
         <condition operation="equal" column="p.in_stock" var="in_stock" pipe="and"/>
+        <condition operation="less" column="p.price" var="max_price" pipe="and"/>
+        <condition operation="more" column="p.price" var="min_price" pipe="and"/>
         <group pipe="and">
             <condition operation="like" column="p.title" var="title" />
             <condition operation="like" column="p.description" var="description" pipe="or" />

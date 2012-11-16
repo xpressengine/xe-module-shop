@@ -13,7 +13,24 @@ class AttributeRepository extends BaseRepository
         TYPE_DATE = 3,
         TYPE_BOOLEAN = 4,
         TYPE_SELECT = 5,
-        TYPE_SELECT_MULTIPLE = 6;
+        TYPE_SELECT_MULTIPLE = 6,
+        TYPE_NUMERIC = 7;
+
+    public function getTypes($lang, $id=null)
+    {
+        $arr = array(
+            self::TYPE_TEXTFIELD       => $lang->types['text_field'],
+            self::TYPE_TEXTAREA        => $lang->types['textarea'],
+            self::TYPE_DATE            => $lang->types['date'],
+            self::TYPE_BOOLEAN         => $lang->types['boolean'],
+            self::TYPE_SELECT          => $lang->types['select'],
+            self::TYPE_SELECT_MULTIPLE => $lang->types['select_multiple'],
+            self::TYPE_NUMERIC         => $lang->types['numeric']
+        );
+        if (!$id) return $arr;
+        if (!array_key_exists($id, $arr)) throw new ShopException('Invalid type');
+        return $arr[$id];
+    }
 
 	/**
 	 * Insert a new attribute; returns the ID of the newly created record
@@ -363,20 +380,54 @@ class AttributeRepository extends BaseRepository
         return $output;
     }
 
-
-    public function getTypes($lang, $id=null)
+    /**
+     * Returns Attributes displayable for a specific category / set of categories, or for no category.
+     *
+     * @param $module_srl
+     * @param array $category_srls
+     * @param bool $withParents takes categories parents into account
+     * @return mixed
+     * @throws ShopException
+     */
+    public function getFilterAttributes($module_srl, array $category_srls=null, $withParents=true)
     {
-        $arr = array(
-            self::TYPE_TEXTFIELD       => $lang->types['text_field'],
-            self::TYPE_TEXTAREA        => $lang->types['textarea'],
-            self::TYPE_DATE            => $lang->types['date'],
-            self::TYPE_BOOLEAN         => $lang->types['boolean'],
-            self::TYPE_SELECT          => $lang->types['select'],
-            self::TYPE_SELECT_MULTIPLE => $lang->types['select_multiple']
-        );
-        if (!$id) return $arr;
-        if (!array_key_exists($id, $arr)) throw new ShopException('Invalid type');
-        return $arr[$id];
+        if (!is_numeric($module_srl)) throw new ShopException('module_srl must be a valid natural number');
+        $catSerials = array();
+        if ($withParents && !empty($category_srls)) {
+            $cRepo = new CategoryRepository();
+            $paths = $cRepo->getCategoryPaths($category_srls);
+            foreach ($paths as $srl=>$path) $catSerials = array_merge($catSerials, $path, array($srl));
+        }
+        else $catSerials = $category_srls;
+        $params = array('module_srl' => $module_srl);
+        if (!empty($catSerials)) $params['category_serials'] = $catSerials;
+        $aRepo = new AttributeRepository();
+        $attributes = $aRepo->get(null, 'getCategoriesAttributeFilters', null, $params);
+        return $attributes;
     }
+
+    public function getAttributeMinValue($module_srl, $attribute_srl)
+    {
+        /*$out = $this->query('getAttributeMinValue', array('attribute_srl'=>$attribute_srl));
+        return $out->data->value;*/
+        $values2 = $this->query('getAttributeMinValue', array('attribute_srl'=>$attribute_srl), true)->data;
+        $values = array(); foreach ($values2 as $i=>$v) $values[$i] = $v->value;
+        if (empty($values)) return 0;
+        $min = reset($values);
+        foreach ($values as $v) if ($v < $min) $min = $v;
+        return $min;
+    }
+
+    public function getAttributeMaxValue($module_srl, $attribute_srl)
+    {
+        $values2 = $this->query('getAttributeMaxValue', array('attribute_srl'=>$attribute_srl), true)->data;
+        $values = array(); foreach ($values2 as $i=>$v) $values[$i] = $v->value;
+        if (empty($values)) return 0;
+        $max = reset($values);
+        foreach ($values as $v) if ($v > $max) $max = $v;
+        return $max;
+    }
+
+
 
 }

@@ -560,6 +560,7 @@ class ProductRepository extends BaseRepository
         if (!isset($args->module_srl)) throw new ShopException("Missing arguments for get product list : please provide [module_srl]");
 		if (!$args->page) $args->page = 1;
         $query = ($args->category_srls && !empty($args->category_srls) ? 'getProductListByCategory' : 'getProductList');
+        $query = 'getProductList2';
         $output = $this->query($query, $args, true);
 		// Get top level products
 		$confProdSrls = $products = array();
@@ -1022,4 +1023,24 @@ class ProductRepository extends BaseRepository
 		}
 		return TRUE;
 	}
+
+    public function getMaxPrice($module_srl, $category_srl=null)
+    {
+        $params = array('module_srl' => $module_srl);
+        if ($category_srl) $params['category_srl'] = $category_srl;
+        $out = $this->query('getProductsMaxPrice', $params);
+        return isset($out->data->max) ? $out->data->max : 0;
+    }
+    public function getMinPrice($module_srl, $category_srl=null)
+    {
+        $params = array('module_srl' => $module_srl);
+        if ($category_srl) $params['category_srl'] = $category_srl;
+        $out = $this->query('getProductsMinPrice', $params);
+        return isset($out->data->max) ? $out->data->max : 0;
+    }
+
+    public function getForCategory($category_srl)
+    {
+
+    }
 }

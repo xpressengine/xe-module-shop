@@ -56,6 +56,7 @@ class shop extends ModuleObject {
         }
 
         if(!$oDB->isColumnExists("shop_cart_products","price")) return true;
+        if(!$oDB->isColumnExists("shop_attributes","is_filter")) return true;
         if(!$oDB->isColumnExists("shop_orders","transaction_id")) return true;
         if(!$oDB->isColumnExists("shop","currency_symbol")) return true;
         if(!$oDB->isColumnExists("shop_products","discount_price")) return true;
@@ -137,6 +138,10 @@ class shop extends ModuleObject {
 
         if(!$oDB->isColumnExists("shop_orders","transaction_id")) {
             $oDB->addColumn('shop_orders',"transaction_id","varchar",128);
+        }
+
+        if(!$oDB->isColumnExists("shop_attributes","is_filter")) {
+            $oDB->addColumn('shop_attributes',"is_filter","char",1);
         }
 
         if(!$oDB->isColumnExists("shop","currency_symbol")) {

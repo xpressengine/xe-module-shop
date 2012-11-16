@@ -12,9 +12,13 @@ class Attribute extends BaseItem
         $status,
         $values = array(),
         $default_value,
+        $is_filter,
         $regdate,
         $last_update,
         $category_scope = array();
+
+    /** @var AttributeRepository */
+    public $repo;
 
     public function save()
     {
@@ -24,7 +28,40 @@ class Attribute extends BaseItem
 
     public function getType($lang)
     {
-        return AttributeRepository::getTypes($lang, $this->type);
+        $repo = new AttributeRepository();
+        return $repo->getTypes($lang, $this->type);
+    }
+
+    public function getValues($delimiter='|', $trim=true)
+    {
+        $values = explode($delimiter, $this->values);
+        if ($trim) foreach ($values as $i=>$val) $values[$i] = trim($val);
+        return $values;
+    }
+
+    public function isNumeric()
+    {
+        $repo = $this->repo; return $this->type == $repo::TYPE_NUMERIC;
+    }
+
+    public function isSelect()
+    {
+        $repo = $this->repo; return $this->type == $repo::TYPE_SELECT;
+    }
+
+    public function isMultipleSelect()
+    {
+        $repo = $this->repo; return $this->type == $repo::TYPE_SELECT_MULTIPLE;
+    }
+
+    public function getMinValue()
+    {
+        return $this->repo->getAttributeMinValue($this->module_srl, $this->attribute_srl);
+    }
+
+    public function getMaxValue()
+    {
+        return $this->repo->getAttributeMaxValue($this->module_srl, $this->attribute_srl);
     }
 
 }

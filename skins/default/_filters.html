@@ -1,0 +1,94 @@
+<h3>Filters</h3>
+<div class="body-left-panel-content filters">
+    <ul>
+        <li cond=" ! isset($priceFilter[3]) " style="color: #ff4500; font-size: 10px;">No price range (missing upper price range limit)</li>
+        <li cond=" isset($priceFilter[3]) " id="price">
+            <h4>Price</h4>
+            <form action="./">
+                <input name="act" type="hidden" value="procShopFilter">
+                <div class="range-numeric" data-min="{$priceFilter[0]}" data-minvalue="{$priceFilter[1]}" data-maxvalue="{$priceFilter[2]}" data-max="{$priceFilter[3]}"></div>
+                <input class="range price1 price-half" name="filter[price][{FrontFilters::FROM_PRICE_MIN}]" class="price-half" type="text"> {$shop->getCurrencySymbol()} <span class="side-separator">-</span>
+                <input class="range price2 price-half" name="filter[price][{FrontFilters::FROM_PRICE_MAX}]" class="price-half" type="text"> {$shop->getCurrencySymbol()}
+                <input class="filter-submit" type="submit" value="Filter">
+            </form>
+        </li>
+        <li id="filter_attributes" cond="isset($filter_attributes) && !empty($filter_attributes)">
+            <h4>Attributes</h4>
+            <form action="./">
+                <input name="act" type="hidden" value="procShopFilter">
+                <ul>
+                    <!--@foreach ($filter_attributes as $attribute)-->
+                    {@ $attributeId = "filter_attribute_" . $attribute->attribute_srl }
+                    {@ $controlId = $attributeId . "_ctrl" }
+                    <li cond="$attribute->isSelect()" id="{$attributeId}">
+                        <label for="{$attributeId}">{$attribute->title}</label>
+                        <select name="filter[attributes][{$attribute->attribute_srl}]" id="{$controlId}">
+                            <option></option>
+                            <!--@foreach ($attribute->getValues() as $value)-->
+                            <option value="{$value}">{$value}</option>
+                            <!--@endforeach-->
+                        </select>
+                    </li>
+                    <li cond="$attribute->isMultipleSelect()" id="{$attributeId}">
+                        <label for="{$attributeId}">{$attribute->title}</label>
+                        <select name="filter[attributes][{$attribute->attribute_srl}]" multiple="multiple" id="{$controlId}">
+                            <!--@foreach ($attribute->getValues() as $value)-->
+                            <option value="{$value}">{$value}</option>
+                            <!--@endforeach-->
+                        </select>
+                    </li>
+                    <li cond="$attribute->isNumeric()" id="{$attributeId}">
+                        <p>{$attribute->title}</p>
+                        <div class="range-numeric" data-max="{$attribute->getMeta('max')}" data-min="{$attribute->getMeta('min')}" data-minvalue="{$attribute->getMeta('minValue')}" data-maxvalue="{$attribute->getMeta('maxValue')}"></div>
+                        <input class="range price1 price-half" name="filter[attributes][{$attribute->attribute_srl}][min]" class="price-half" type="text"> {$shop->getCurrencySymbol()} <span class="side-separator">-</span>
+                        <input class="range price2 price-half" name="filter[attributes][{$attribute->attribute_srl}][max]" class="price-half" type="text"> {$shop->getCurrencySymbol()}
+                    </li>
+                    <!--@endforeach-->
+                </ul>
+                <input class="filter-submit" type="submit" value="Filter">
+            </form>
+        </li>
+    </ul>
+</div>
+
+<script type="text/javascript">
+    jQuery(function($) {
+        $( ".range-numeric").each(function(){
+            var pr = $(this),
+                price1 = pr.siblings('.range.price1'),
+                price2 = pr.siblings('.range.price2'),
+                sliderMinValue = pr.data('min'),
+                sliderMaxValue = pr.data('max'),
+                v1 = (pr.data('minvalue') ? pr.data('minvalue') : sliderMinValue),
+                v2 = ((pr.data('minvalue') && (pr.data('minvalue') < sliderMaxValue)) ? pr.data('maxvalue') : sliderMaxValue);
+            console.log(v1, v2)
+            pr.slider({
+                range: true,
+                min: sliderMinValue,
+                max: sliderMaxValue,
+                values: [v1, v2],
+                slide: function(event, ui) {
+                    price1.val(pr.slider("values", 0));
+                    price2.val(pr.slider("values", 1));
+                }
+            });
+            price1.val(v1);
+            price2.val(v2);
+        });
+        $('.body-left-panel-content.filters>ul>li').hover(
+                function(){
+                    titles = $('h4', $(this));
+                    //originalColor = titles.css('color');
+                    originalColor = '#2D5375';
+                    $('h4', $(this)).animate({
+                        color: '#20B2F1'
+                    });
+                },
+                function(){
+                    $('h4', $(this)).animate({
+                        color: originalColor
+                    });
+                }
+        );
+    });
+</script>

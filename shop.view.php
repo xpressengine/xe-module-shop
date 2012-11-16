@@ -905,7 +905,7 @@ class shopView extends shop {
     public function dispShopHome(){
         // Products list
         $this->loadShopCategoryTree();
-        $product_repository = $this->model->getProductRepository();
+        $productRepo = $this->model->getProductRepository();
 
         if (isset($_SESSION['grid_view'])) Context::set('grid_view', $_SESSION['grid_view']);
         if (isset($_SESSION['sort'])) Context::set('sort', $_SESSION['sort']);
@@ -913,10 +913,11 @@ class shopView extends shop {
         try {
             $args = new stdClass();
             $args->module_srl = $this->module_srl;
+            FrontFilters::work($args);
             $args->status = 'enabled';
             $args->list_count = 9;
             if ($this->shop->getOutOfStockProducts() == 'N') $args->in_stock = 'Y';
-            $output = $product_repository->getFeaturedProducts($args, TRUE, TRUE);
+            $output = $productRepo->getFeaturedProducts($args, TRUE, TRUE);
             Context::set('products', $output->products);
             //Context::set('page_navigation', $output->page_navigation);
             $datasourceJS = $this->getAssociatedProductsAttributesAsJavascriptArray($output->products);
@@ -943,31 +944,32 @@ class shopView extends shop {
         if (isset($_SESSION['sort'])) Context::set('sort', $_SESSION['sort']);
 
         try {
-			$args = new stdClass();
-			$args->module_srl = $this->module_srl;
+            $args = new stdClass();
+            $args->module_srl = $this->module_srl;
+            FrontFilters::work($args);
             $args->list_count = 9;
             $args->status = 'enabled';
-            if($this->shop->getOutOfStockProducts() == 'N') $args->in_stock = 'Y';
-			$page = Context::get('page');
-			if($page) $args->page = $page;
-			$category_srl = (($category = Context::get('category')) instanceof Category ? $category->category_srl : Context::get('category_srl'));
-			if ($category_srl) $args->category_srls = array($category_srl);
+            if ($this->shop->getOutOfStockProducts() == 'N') $args->in_stock = 'Y';
+            $page = Context::get('page');
+            if ($page) $args->page = $page;
+            $category_srl = (($category = Context::get('category')) instanceof Category ? $category->category_srl : Context::get('category_srl'));
+            if ($category_srl) $args->category_srls = array($category_srl);
 
             $args->status = 'enabled';
-            if($this->shop->getOutOfStockProducts() == 'N') $args->in_stock = 'Y';
-            if($_SESSION['sort'] == 'price_asc'){
+            if ($this->shop->getOutOfStockProducts() == 'N') $args->in_stock = 'Y';
+            if ($_SESSION['sort'] == 'price_asc') {
                 $args->index = 'price';
                 $args->order_type = 'asc';
-            }elseif($_SESSION['sort'] == 'price_desc'){
+            } elseif ($_SESSION['sort'] == 'price_desc') {
                 $args->index = 'price';
                 $args->order_type = 'desc';
             }
-			$output = $productRepo->getProductList($args, TRUE, TRUE);
-			Context::set('products', $output->products);
-			Context::set('page_navigation', $output->page_navigation);
+            $output = $productRepo->getProductList($args, TRUE, TRUE);
+            Context::set('products', $output->products);
+            Context::set('page_navigation', $output->page_navigation);
 
-			$datasourceJS = $this->getAssociatedProductsAttributesAsJavascriptArray($output->products);
-			Context::set('datasourceJS', $datasourceJS);
+            $datasourceJS = $this->getAssociatedProductsAttributesAsJavascriptArray($output->products);
+            Context::set('datasourceJS', $datasourceJS);
 
             $this->setTemplateFile("product_list.html");
 		}
@@ -1134,11 +1136,12 @@ class shopView extends shop {
         $page = Context::get('page');
         $search = Context::get('q');
         $args = new stdClass();
+        $args->module_srl = $this->module_srl;
+        FrontFilters::work($args);
         $args->sku = $search;
         $args->title = $search;
         $args->description = $search;
         $args->page = $page;
-        $args->module_srl = $this->module_srl;
         $category_srl = Context::get('search_category_srl');
         if($category_srl) $args->category_srls = array($category_srl);
 

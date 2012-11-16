@@ -32,8 +32,7 @@ class ShopUtils
         return $text;
     }
 
-
-    public static function getUrl($pattern, $relative=true)
+    public static function getUrl($pattern=null, $relative=true)
     {
         return
             ($relative ? '' : getFullSiteUrl())

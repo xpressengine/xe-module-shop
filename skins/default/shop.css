@@ -769,7 +769,7 @@ table tbody tr td:last-child {
     padding: 0;
 }
 
-.body-left-panel li>span {
+.body-left-panel li > span {
     border-top: 1px solid #ececec;
     padding: 8px;
     display: block;
@@ -777,6 +777,17 @@ table tbody tr td:last-child {
 
 .body-left-panel li ul {
     display: none;
+}
+
+.body-left-panel li#filter_attributes ul {
+    display: inline-block;
+}
+
+.body-left-panel h4 {
+    font-weight: normal;
+    font-size: 1.333em;
+    margin: 1em 0 .5em;
+    color: #2D5375;
 }
 
 .body-left-panel>ul {
@@ -1490,4 +1501,22 @@ input.error, textarea.error {
 label.error {
     color: #dc143c;
     margin-left: 20px;
+}
+#sidefilters .body-left-panel-content {
+    padding: 10px;
+}
+.price-half {
+    width: 69px;
+    display: inline-block;
+    text-align: right;
+    padding-right: 10px;
+}
+span.side-separator {
+    display: inline-block!important;
+    width: 0;
+    text-align: center;
+    padding: 8px!important;
+}
+.filter-submit {
+    margin: 10px 0 20px 0;
 }

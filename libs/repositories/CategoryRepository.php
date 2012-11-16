@@ -491,6 +491,36 @@ class CategoryRepository extends BaseRepository
         return;
     }
 
+    /**
+     * Returns a bidimensional array of parent serials corresponding to each category in $category_srls
+     * @param array $category_srls
+     * @return array
+     * @throws ShopException
+     */
+    public function getCategoryPaths(array $category_srls)
+    {
+        if (empty($category_srls)) throw new ShopException('this shouldn\'t be empty');
+        $allCategories = $this->get();
+        $serials = array();
+        foreach ($category_srls as $srl) {
+            if ($cat = $this->findBySrl($allCategories, 'category_srl', $srl)) {
+                /** @var $cat Category */
+                $serials[$srl] = array();
+                while ($parent = $this->findBySrl($allCategories, 'category_srl', $cat->parent_srl)) {
+                    /** @var $parent Category */
+                    $serials[$srl][] = $parent->category_srl;
+                    $cat = $parent;
+                }
+            }
+        }
+        return $serials;
+    }
+
+    private function findBySrl(array $objects, $fieldName, $value)
+    {
+        foreach ($objects as $o) if ($o->$fieldName == $value) return $o; return null;
+    }
+
 }
 /* End of file CategoryRepository.php */
 /* Location: ./modules/shop/libs/repositories/CategoryRepository.php */

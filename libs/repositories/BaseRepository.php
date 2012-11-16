@@ -50,6 +50,11 @@ abstract class BaseRepository
      */
 
     /**
+     * examples:
+     * $categoryRepo->get(1405) //if exists, returns a single Category object corresponding for srl 1405. else null
+     * $categoryRepo->get(array(1405, 7)) //returns an array of category objects
+     * $categoryRepo->get() //returns all categories
+     * $categoryRepo->get(null, 'getCatCustom', 'CustomCategory', array('type'=>CustomCategory::TYPE_SOMETHING)) //returns CustomCategory objects from custom query with 1 custom arg
      * @param mixed  $srls A single numeric srl or an array of srls
      * @param string $query Query to use
      * @param null   $entity Return entity
@@ -57,16 +62,17 @@ abstract class BaseRepository
      * @return mixed If $srls was a single numeric, the result should be an object of type $this->entity or $fetchAs. Else we'll return an array of objects corresponding to the $srls array
      * @throws Exception
      */
-    public function get($srls, $query="get%E", $entity=null, array $extraParams=array())
+    public function get($srls=null, $query="get%E", $entity=null, array $extraParams=array())
     {
         $single = false;
         if (is_numeric($srls)) {
             $single = true;
             $srls = array($srls);
-        } elseif (!is_array($srls)) throw new ShopException('Invalid $srls input');
+        }
         if (!$entity) $entity = $this->entity;
-        if (!class_exists($entity)) throw new ShopException("Class $entity doesn't exist");
-        $output = $this->query($query, array_merge(array('srls'=>$srls), $extraParams), true);
+        if (!class_exists($entity)) throw new ShopException("Class '$entity' doesn't exist");
+        $params = ($srls ? array_merge(array('srls' => $srls), $extraParams) : $extraParams);
+        $output = $this->query($query, $params, true);
         self::rowsToEntities($output->data, $entity);
         if ($single && count($output->data) > 1) {
             throw new ShopException('Got more than 1 result, expected 1');
