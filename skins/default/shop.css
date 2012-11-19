@@ -1302,7 +1302,8 @@ li span.close-sign, li span.open-sign {
 }
 
 .socials>* {
-    margin: 0 5px 0 0;
+    vertical-align: middle;
+    margin-right: 5px;
 }
 
 .red {
