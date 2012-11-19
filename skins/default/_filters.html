@@ -61,19 +61,21 @@
                 sliderMaxValue = pr.data('max'),
                 v1 = (pr.data('minvalue') ? pr.data('minvalue') : sliderMinValue),
                 v2 = ((pr.data('minvalue') && (pr.data('minvalue') < sliderMaxValue)) ? pr.data('maxvalue') : sliderMaxValue);
-            console.log(v1, v2)
+            console.log(v1, v2);
+            var unit = (Math.ceil(sliderMaxValue) - Math.floor(sliderMinValue))/10;
             pr.slider({
                 range: true,
-                min: sliderMinValue,
-                max: sliderMaxValue,
-                values: [v1, v2],
+                min: Math.floor(sliderMinValue),
+                max: Math.ceil(sliderMaxValue),
+                values: [unit, 9 * unit],
+                step: (Math.ceil(sliderMaxValue) - Math.floor(sliderMinValue))/10,
                 slide: function(event, ui) {
-                    price1.val(pr.slider("values", 0));
-                    price2.val(pr.slider("values", 1));
+                    price1.val(ui.values[0]);
+                    price2.val(ui.values[1]);
                 }
             });
-            price1.val(v1);
-            price2.val(v2);
+            price1.val(pr.slider("values", 0));
+            price2.val(pr.slider("values", 1));
         });
         $('.body-left-panel-content.filters>ul>li').hover(
                 function(){

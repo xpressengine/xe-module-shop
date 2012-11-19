@@ -732,10 +732,6 @@ table tbody tr td:last-child {
     line-height: 1.5em;
 }
 
-.main-content p * {
-    vertical-align: middle;
-}
-
 .body-left-panel {
     font-size: 1.063em;
     margin: 0 0 10px 0;
