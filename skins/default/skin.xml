@@ -12,9 +12,9 @@
     </author>
 
     <extra_vars>
-        <var name="title" type="text">
-            <title xml:lang="en">Test</title>
-            <description xml:lang="en">This is a test extra_var; write anything, nothing will happen!</description>
+        <var name="footer_content" type="textarea">
+            <title xml:lang="en">Footer text</title>
+            <description xml:lang="en">You can also add HTML in the above textarea.</description>
         </var>
     </extra_vars>
 
