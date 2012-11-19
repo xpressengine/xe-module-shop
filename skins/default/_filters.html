@@ -1,3 +1,5 @@
+<!--%import("jquery.numeric.js")-->
+
 <h3>Filters</h3>
 <div class="body-left-panel-content filters">
     <ul>
@@ -76,6 +78,9 @@
             });
             price1.val(pr.slider("values", 0));
             price2.val(pr.slider("values", 1));
+
+            price1.numeric();
+            price2.numeric();
         });
         $('.body-left-panel-content.filters>ul>li').hover(
                 function(){
