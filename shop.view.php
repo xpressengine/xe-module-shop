@@ -987,6 +987,11 @@ class shopView extends shop {
 
         // Prepare tree for display
         $tree_config = new HtmlCategoryTreeConfig();
+        if ($this->module_info->category_product_count == 'Yes') {
+            $tree_config->showProductCount = TRUE;
+        } else {
+            $tree_config->showProductCount = FALSE;
+        }
         $tree_config->linkCategoryName = TRUE;
         $tree_config->openCloseSign = TRUE;
         $tree_config->linkGetUrlParams = array('vid', $this->mid, 'act', 'dispShop','page','');

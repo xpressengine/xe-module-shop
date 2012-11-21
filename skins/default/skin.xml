@@ -26,9 +26,15 @@
             <title xml:lang="en">Footer text</title>
             <description xml:lang="en">You can add HTML in the textarea.</description>
         </var>
-        <var name="test" type="text">
-            <title xml:lang="en">test</title>
-            <description xml:lang="en">test</description>
+        <var name="category_product_count" type="select" default="Yes">
+            <title xml:lang="en">Category product count</title>
+            <description xml:lang="en">Shows/Hides category product count in category tree list.</description>
+            <options value="Yes">
+                <title xml:lang="en">Show</title>
+            </options>
+            <options value="No">
+                <title xml:lang="en">Hide</title>
+            </options>
         </var>
     </extra_vars>
 
