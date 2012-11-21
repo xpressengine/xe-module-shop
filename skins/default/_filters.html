@@ -79,8 +79,8 @@
             price1.val(pr.slider("values", 0));
             price2.val(pr.slider("values", 1));
 
-            price1.numeric();
-            price2.numeric();
+            price1.numeric({ negative: false });
+            price2.numeric({ negative: false });
         });
         $('.body-left-panel-content.filters>ul>li').hover(
                 function(){
