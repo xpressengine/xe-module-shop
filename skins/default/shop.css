@@ -776,14 +776,20 @@ table tbody tr td:last-child {
 }
 
 .body-left-panel li#filter_attributes ul {
-    display: inline-block;
+    display: block;
+}
+
+.body-left-panel li#filter_attributes ul li {
+    line-height: 26px;
 }
 
 .body-left-panel h4 {
     font-weight: normal;
     font-size: 1.333em;
-    margin: 1em 0 .5em;
+    margin: 0 0 .75em;
+    padding: 0 0 .25em;
     color: #2D5375;
+    border-bottom: 1px dotted #ccc;
 }
 
 .body-left-panel>ul {
@@ -1503,22 +1509,55 @@ label.error {
     color: #dc143c;
     margin-left: 20px;
 }
+
 #sidefilters .body-left-panel-content {
     padding: 10px;
 }
-.price-half {
-    width: 69px;
-    display: inline-block;
-    text-align: right;
-    padding-right: 10px;
+
+.ui-slider-handle {
+    width: .5em !important;
+    top: -0.5em !important;
+    margin-left: -0.25em !important;
+    background: #30597b;
+    border: 1px solid #284e70 !important;
+    border-radius: 1px 1px 1.2em 1.2em !important;
+    -moz-border-radius: 1px 1px 1.2em 1.2em !important;
+    -webkit-border-radius: 1px 1px 10px 10px !important;
+    background: -moz-linear-gradient(top,  #30597b 0%, #264a6c 100%) !important;
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#30597b), color-stop(100%,#264a6c)) !important;
+    background: -webkit-linear-gradient(top,  #30597b 0%,#264a6c 100%) !important;
+    background: -o-linear-gradient(top,  #30597b 0%,#264a6c 100%) !important;
+    background: -ms-linear-gradient(top,  #30597b 0%,#264a6c 100%) !important;
+    background: linear-gradient(to bottom,  #30597b 0%,#264a6c 100%) !important;
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#30597b', endColorstr='#264a6c',GradientType=0
+    );
 }
+
+.ui-slider-handle:hover {
+    cursor: pointer;
+}
+
+.ui-slider {
+    height: .2em !important;
+    border-radius: 2px !important;
+    -moz-border-radius: 2px !important;
+    -webkit-border-radius: 2px !important;
+}
+
+.price-half {
+    width: 40px;
+    display: inline-block;
+    padding-right: 10px;
+    text-align: center;
+}
+
 span.side-separator {
     display: inline-block!important;
     width: 0;
     text-align: center;
     padding: 8px!important;
 }
+
 .filter-submit {
-    margin: 10px 0 20px 0;
-    display: block;
+    display: inline-block;
 }
