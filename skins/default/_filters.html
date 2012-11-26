@@ -80,13 +80,20 @@
                 range: true,
                 min: sliderMinValue,
                 max: sliderMaxValue,
-                //values: [unit, 90 * unit],
                 values: [v1, v2],
-                step: Math.ceil((sliderMaxValue - sliderMinValue) / 100),
+                step: Math.ceil(unit),
                 slide: function(event, ui) {
                     price1.val(ui.values[0]);
                     price2.val(ui.values[1]);
                 }
+            });
+
+            // update slider when user changes the input values
+            price1.blur(function() {
+                pr.slider({values: [$(this).val(),pr.slider("values", 1)]});
+            });
+            price2.blur(function() {
+                pr.slider({values: [pr.slider("values", 0),$(this).val()]});
             });
             price1.val(pr.slider("values", 0));
             price2.val(pr.slider("values", 1));
