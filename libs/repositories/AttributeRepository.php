@@ -400,7 +400,7 @@ class AttributeRepository extends BaseRepository
         }
         else $catSerials = $category_srls;
         $params = array('module_srl' => $module_srl);
-        if (!empty($catSerials)) $params['category_serials'] = $catSerials;
+        if (!empty($catSerials)) $params['category_srls'] = $catSerials;
         $aRepo = new AttributeRepository();
         $attributes = $aRepo->get(null, 'getCategoriesAttributeFilters', null, $params);
         return $attributes;
