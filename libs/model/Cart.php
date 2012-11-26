@@ -203,7 +203,7 @@ class Cart extends BaseItem implements IProductItemsContainer
         if (!$this->cart_srl) throw new ShopException('Cart is not persisted');
         //an entity-unique cache key for the current method and parameters combination
         $cacheKey = 'getProducts|' . ($n?$n:"_").(string)($onlyAvailables?'av':'all');
-        if ($ignoreCache || !$products = $this->cache[$cacheKey]) {
+        if ($ignoreCache || !$products = self::$cache[$cacheKey]) {
             $products = array();
             $shopInfo = new ShopInfo($this->module_srl);
             $checkIfInStock = ($shopInfo->getOutOfStockProducts() == 'Y');
@@ -222,7 +222,7 @@ class Cart extends BaseItem implements IProductItemsContainer
                 }
                 $products[$i] = $cartProduct;
             }
-            $this->cache[$cacheKey] = $products;
+            self::$cache[$cacheKey] = $products;
         }
         //if limit did not work:
         if ($n && $n < count($products)) {
@@ -390,11 +390,11 @@ class Cart extends BaseItem implements IProductItemsContainer
             $shipping_repository = new ShippingMethodRepository();
             $shipping = $shipping_repository->getShippingMethod($shipping_method, $this->module_srl);
 			$cacheKey = $this->cart_srl . '_shipping_cost';
-			if(!$this->cache->has($cacheKey))
+			if(!self::$cache->has($cacheKey))
 			{
-				$this->cache[$cacheKey] = $shipping->calculateShipping($this, $this->getShippingMethodVariant());
+				self::$cache[$cacheKey] = $shipping->calculateShipping($this, $this->getShippingMethodVariant());
 			}
-			$shipping_cost = $this->cache[$cacheKey];
+			$shipping_cost = self::$cache[$cacheKey];
             return $shipping_cost;
         } else return 0;
     }
@@ -659,37 +659,41 @@ class Cart extends BaseItem implements IProductItemsContainer
     public function getShippingMethodName()
     {
         $shipping_method = $this->getExtra('shipping_method');
-		if($shipping_method)
+		if(!$shipping_method)
 		{
-			return $shipping_method;
+			$shipping_repository = new ShippingMethodRepository();
+			$default_shipping = $shipping_repository->getDefault($this->module_srl, $this);
+			$this->setExtra('shipping_method', $default_shipping->name);
+
+			$shipping_method = $this->getExtra('shipping_method');
 		}
 
-		$shipping_repository = new ShippingMethodRepository();
-		$default_shipping = $shipping_repository->getDefault($this->module_srl, $this);
-		return $default_shipping->name;
+		return $shipping_method;
     }
 
 	public function getShippingMethodVariant()
 	{
 		if(!$this->getShippingMethod()->hasVariants()) return null;
 		$shipping_variant = $this->getExtra('shipping_variant');
-		if($shipping_variant)
+
+		if(!$shipping_variant)
 		{
-			return $shipping_variant;
-		}
-		// If a variant hasn't been selected yet, we just return the first one
-		$shippingRepo = new ShippingMethodRepository();
-		$shipping_methods = $shippingRepo->getAvailableShippingMethodsAndTheirPrices($this->module_srl, $this);
-		$available_keys = array_keys($shipping_methods);
-		$selected_shipping_method = $this->getShippingMethodName();
-		foreach($available_keys as $key)
-		{
-			if(strpos($key, $selected_shipping_method) !== false)
+			// If a variant hasn't been selected yet, we just return the first one
+			$shippingRepo = new ShippingMethodRepository();
+			$shipping_methods = $shippingRepo->getAvailableShippingMethodsAndTheirPrices($this->module_srl, $this);
+			$available_keys = array_keys($shipping_methods);
+			$selected_shipping_method = $this->getShippingMethodName();
+			foreach($available_keys as $key)
 			{
-				$this->setExtra('shipping_variant', $key);
-				return $key;
+				if(strpos($key, $selected_shipping_method) !== false)
+				{
+					$this->setExtra('shipping_variant', $key);
+					return $key;
+				}
 			}
 		}
+
+		return $shipping_variant;
 	}
 
     public function getPaymentMethodName()

@@ -3,12 +3,15 @@ abstract class BaseRepository
 {
     public $entity;
     /** @var ShopCache */
-    public $cache;
+    public static $cache;
 
     public function __construct()
     {
         $this->entity = $this->getEntityName();
-        $this->cache = new ShopCache();
+		if(is_null(self::$cache))
+		{
+			self::$cache = new ShopCache();
+		}
     }
 
     protected function getEntityName()

@@ -36,32 +36,39 @@ class ShippingMethodRepository extends AbstractPluginRepository
 	 */
 	public function getAvailableShippingMethodsAndTheirPrices($module_srl, Cart $cart)
 	{
-		$shop_info = new ShopInfo($module_srl);
-		$active_shipping_methods = $this->getActiveShippingMethods($module_srl);
+		$cache_key = 'available_shipping_' . $module_srl . '_' . $cart->cart_srl;
+		$available_shipping_methods = self::$cache->get($cache_key);
 
-		$available_shipping_methods = array();
-		foreach($active_shipping_methods as $shipping_method)
+		if(!$available_shipping_methods)
 		{
-			$available_variants = $shipping_method->getAvailableVariants($cart);
-			foreach($available_variants as $variant)
+			$shop_info = new ShopInfo($module_srl);
+			$active_shipping_methods = $this->getActiveShippingMethods($module_srl);
+
+			$available_shipping_methods = array();
+			foreach($active_shipping_methods as $shipping_method)
 			{
-				if(!$variant->price)
+				$available_variants = $shipping_method->getAvailableVariants($cart);
+				foreach($available_variants as $variant)
 				{
-					$key = "";
-					$value = $variant->display_name . ' - ' . $variant->variant_display_name;
-				}
-				else
-				{
-					$key = $variant->name;
-					if($variant->variant) $key .= '__' . $variant->variant;
+					if(!$variant->price)
+					{
+						$key = "";
+						$value = $variant->display_name . ' - ' . $variant->variant_display_name;
+					}
+					else
+					{
+						$key = $variant->name;
+						if($variant->variant) $key .= '__' . $variant->variant;
 
-					$value = $variant->display_name;
-					if($variant->variant) $value .= ' - ' . $variant->variant_display_name;
-					$value .= ' - ' . ShopDisplay::priceFormat($variant->price, $shop_info->getCurrencySymbol());
-				}
+						$value = $variant->display_name;
+						if($variant->variant) $value .= ' - ' . $variant->variant_display_name;
+						$value .= ' - ' . ShopDisplay::priceFormat($variant->price, $shop_info->getCurrencySymbol());
+					}
 
-				$available_shipping_methods[$key] = $value;
+					$available_shipping_methods[$key] = $value;
+				}
 			}
+			self::$cache->set($cache_key, $available_shipping_methods);
 		}
 		return $available_shipping_methods;
 	}
