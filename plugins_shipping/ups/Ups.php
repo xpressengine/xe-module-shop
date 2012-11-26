@@ -80,7 +80,15 @@ class Ups extends ShippingMethodAbstract
 		if($cart->getShippingAddress() == NULL) return 0;
 
 		$ups_api = new UpsAPI($this);
-		$shipping_cost = $ups_api->getRate($cart->getShippingAddress(), $service);
+		try
+		{
+			$shipping_cost = $ups_api->getRate($cart, $service);
+		}
+		catch(APIException $exception)
+		{
+			$shipping_cost = 0; // TODO Here maybe return something other than 0
+		}
+
 		return $shipping_cost;
 	}
 
@@ -137,7 +145,15 @@ class Ups extends ShippingMethodAbstract
 		}
 
 		$ups_api = new UpsAPI($this);
-		$available_rates = $ups_api->getAvailableRates($shipping_address);
+		try
+		{
+			$available_rates = $ups_api->getAvailableRates($cart);
+		}
+		catch(APIException $exception)
+		{
+			$available_rates = array();
+		}
+
 
 		$available_variants = array();
 		foreach($available_rates as $rate)
@@ -168,7 +184,7 @@ class UpsAPI extends APIAbstract
 		$this->ups_config = $ups_config;
 	}
 
-	public function getAvailableRates(Address $shipping_address)
+	public function getAvailableRates(Cart $cart)
 	{
 		$data = $this->getAccessRequestXML(
 		  	$this->ups_config->api_access_key
@@ -177,7 +193,7 @@ class UpsAPI extends APIAbstract
 		);
 		$data .= $this->getRatingServiceSelectionRequestXML(
 			$this->ups_config
-			, $shipping_address
+			, $cart
 			, 'Shop'
 		);
 
@@ -200,14 +216,18 @@ class UpsAPI extends APIAbstract
 			throw new APIException("UPS Error: [ErrorSeverity] - " . $error->ErrorSeverity . "; [ErrorCode] - " . $error->ErrorCode . '; [Error description] - ' . $error->ErrorDescription);
 		}
 
-		// TODO See if we can have more than one RatedShipment - the docs say no, but I thinks it's the only way to send rates for more than one service
-		$shipping_service = strip_tags($RatingServiceSelectionResponse->RatedShipment->Service->Code->asXml());
-		$shipping_cost = floatval(strip_tags($RatingServiceSelectionResponse->RatedShipment->TotalCharges->MonetaryValue->asXml()));
-		return array(array( 'service' => $shipping_service, 'price' => $shipping_cost));
+		$available_rates = array();
+		foreach($RatingServiceSelectionResponse->RatedShipment as $RatedShipment)
+		{
+			$shipping_service = strip_tags($RatedShipment->Service->Code->asXml());
+			$shipping_cost = floatval(strip_tags($RatedShipment->TotalCharges->MonetaryValue->asXml()));
+			$available_rates[] = array('service' => $shipping_service, 'price' => $shipping_cost);
+		}
+		return $available_rates;
 	}
 
 
-	public function getRate(Address $shipping_address, $service)
+	public function getRate(Cart $cart, $service)
 	{
 		if(!$service) return 0; // TODO See how to treat this - giving shipping for free is not necessarily the best idea :)
 		// Should throw AddressNotAvailable exception so I can show a message
@@ -219,7 +239,7 @@ class UpsAPI extends APIAbstract
 		);
 		$data .= $this->getRatingServiceSelectionRequestXML(
 			$this->ups_config
-			, $shipping_address
+			, $cart
 			, 'Rate'
 			, $service
 		);
@@ -263,8 +283,9 @@ class UpsAPI extends APIAbstract
 			</AccessRequest>";
 	}
 
-	public function getRatingServiceSelectionRequestXML($ups_config, Address $shipping_address, $RequestOption /* Rate or Shop */, $service = null)
+	public function getRatingServiceSelectionRequestXML($ups_config, Cart $cart, $RequestOption /* Rate or Shop */, $service = null)
 	{
+		$shipping_address = $cart->getShippingAddress();
 		$request = "<?xml version=\"1.0\" ?>
 			<RatingServiceSelectionRequest>
 				<Request>
@@ -320,10 +341,14 @@ class UpsAPI extends APIAbstract
 						</Dimensions>-->
 						<!-- Weight allowed for letters/envelopes.-->
 						<PackageWeight>
-    						<UnitOfMeasurement>
-    							<Code>KGS</Code>
-    						</UnitOfMeasurement>
-    						<Weight>2</Weight>
+    						<UnitOfMeasurement>";
+
+			$request .= "<Code>" . ($cart->getUnitOfMeasure() == ShopInfo::UNIT_OF_MEASURE_KGS ? "KGS" : "LBS") . "</Code>";
+
+
+			$cart_weight = $cart->getTotalWeight();
+    		$request .=			"</UnitOfMeasurement>
+    						<Weight>$cart_weight</Weight>
     					</PackageWeight>
 					</Package>
 					<ShipmentServiceOptions />

@@ -66,6 +66,32 @@ class ShippingMethodRepository extends AbstractPluginRepository
 		return $available_shipping_methods;
 	}
 
+	public function getDefault($module_srl, $cart = null)
+	{
+		if(!$cart)
+		{
+			return parent::getDefault($module_srl);
+		}
+
+		$shipping_methods = $this->getAvailableShippingMethodsAndTheirPrices($module_srl, $cart);
+		if(!count($shipping_methods) > 0) return null;
+
+		$shipping_method_keys = array_keys($shipping_methods);
+
+		$default_shipping = parent::getDefault($module_srl);
+
+		// We check to see if the default shipping method is available
+		foreach($shipping_method_keys as $key)
+		{
+			if(strpos($key, $default_shipping->name) !== false)
+			{
+				return $default_shipping;
+			}
+		}
+
+		return $this->getShippingMethod($shipping_method_keys[0], $module_srl);
+	}
+
 
     /**
      * Get a certain shipping method instance

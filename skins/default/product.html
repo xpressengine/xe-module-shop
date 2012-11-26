@@ -297,7 +297,7 @@
                     <b>{$lang->sku} </b>: {$product->sku}
                 </p>
                 <p>
-                    <b> {$lang->weight} </b>: {$product->weight} Kg
+                    <b> {$lang->weight} </b>: {$product->weight} {$shop->getUnitOfMeasure()}
                 </p>
             <!--<p>-->
                 <!--<b> Price </b> {ShopDisplay::priceFormat($product->price, $shop->getCurrencySymbol())}-->

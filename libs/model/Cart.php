@@ -464,12 +464,20 @@ class Cart extends BaseItem implements IProductItemsContainer
                 throw new ShopException('No billing address');
             }
         }
+		$shipping = $input['shipping'];
+		if(!isset($shipping['method']))
+		{
+			throw new ShopException("Please choose a shipping method");
+		}
+		$data['extra']['shipping_method'] = $shipping['method'];
+		$data['extra']['shipping_variant'] = $shipping['variant'];
+		// Shipping method
+
+		// Shipping address validation - if different
         if ($input['different_shipping'] == 'yes') {
-            if (!self::validateFormBlock($shipping = $input['shipping'])) {
+            if (!self::validateFormBlock($shipping)) {
                 throw new ShopException('Wrong shipping input');
             }
-            $data['extra']['shipping_method'] = $shipping['method'];
-			$data['extra']['shipping_variant'] = $shipping['variant'];
             if (is_numeric($shipping['address'])) {
                 $data['shipping_address_srl'] = $shipping['address'];
             } elseif (self::validateFormBlock($newAddress = $input['new_shipping_address'])) {
@@ -484,12 +492,6 @@ class Cart extends BaseItem implements IProductItemsContainer
                 throw new ShopException('No shipping address');
             }
         }
-		else
-		{
-			$shipping = $input['shipping'];
-			$data['extra']['shipping_method'] = $shipping['method'];
-			$data['extra']['shipping_variant'] = $shipping['variant'];
-		}
         if (self::validateFormBlock($payment = $input['payment'])) {
             $data['extra']['payment_method'] = $payment['method'];
         }
@@ -520,6 +522,12 @@ class Cart extends BaseItem implements IProductItemsContainer
         $shop = new ShopInfo($this->module_srl);
         return $shop->getCurrency();
     }
+
+	public function getUnitOfMeasure()
+	{
+		$shop = new ShopInfo($this->module_srl);
+		return $shop->getUnitOfMeasure();
+	}
 
     /**
      * @return Address|null
@@ -657,7 +665,7 @@ class Cart extends BaseItem implements IProductItemsContainer
 		}
 
 		$shipping_repository = new ShippingMethodRepository();
-		$default_shipping = $shipping_repository->getDefault($this->module_srl);
+		$default_shipping = $shipping_repository->getDefault($this->module_srl, $this);
 		return $default_shipping->name;
     }
 
@@ -732,5 +740,16 @@ class Cart extends BaseItem implements IProductItemsContainer
 	public function getCustomerLastname()
 	{
 		return $this->getBillingAddress()->lastname;
+	}
+
+	public function getTotalWeight()
+	{
+		$products = $this->getProducts();
+		$weight = 0;
+		foreach($products as $product)
+		{
+			$weight += $product->weight;
+		}
+		return $weight;
 	}
 }
