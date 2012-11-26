@@ -59,18 +59,18 @@
             var pr = $(this),
                 price1 = pr.siblings('.range.price1'),
                 price2 = pr.siblings('.range.price2'),
-                sliderMinValue = pr.data('min'),
-                sliderMaxValue = pr.data('max'),
-                v1 = (pr.data('minvalue') ? pr.data('minvalue') : sliderMinValue),
-                v2 = ((pr.data('minvalue') && (pr.data('minvalue') < sliderMaxValue)) ? pr.data('maxvalue') : sliderMaxValue);
-            //console.log(v1, v2);
-            var unit = (Math.ceil(sliderMaxValue) - Math.floor(sliderMinValue))/10;
+                sliderMinValue = Math.floor(pr.data('min')),
+                sliderMaxValue = Math.ceil(pr.data('max')),
+                v1 = Math.floor(pr.data('minvalue') ? pr.data('minvalue') : sliderMinValue),
+                v2 = Math.ceil((pr.data('minvalue') && (pr.data('minvalue') < sliderMaxValue)) ? pr.data('maxvalue') : sliderMaxValue);
+            var unit = (sliderMaxValue - sliderMinValue) / 100;
             pr.slider({
                 range: true,
-                min: Math.floor(sliderMinValue),
-                max: Math.ceil(sliderMaxValue),
-                values: [unit, 9 * unit],
-                step: (Math.ceil(sliderMaxValue) - Math.floor(sliderMinValue))/10,
+                min: sliderMinValue,
+                max: sliderMaxValue,
+                //values: [unit, 90 * unit],
+                values: [v1, v2],
+                step: Math.ceil((sliderMaxValue - sliderMinValue) / 100),
                 slide: function(event, ui) {
                     price1.val(ui.values[0]);
                     price2.val(ui.values[1]);
