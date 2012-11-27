@@ -75,11 +75,27 @@ class ProductRepository extends BaseRepository
                 if(!in_array($attribute_srl, $valid_attributes)) continue;
             }
 			$args->attribute_srl = $attribute_srl;
-			$args->attribute_value = $attribute_value;
-			$output = executeQuery('shop.insertProductAttribute', $args);
-			if(!$output->toBool())
+
+			if(is_array($attribute_value))
 			{
-				throw new ShopException($output->getMessage(), $output->getError());
+				foreach($attribute_value as $array_value)
+				{
+					$args->attribute_value = $array_value;
+					$output = executeQuery('shop.insertProductAttribute', $args);
+					if(!$output->toBool())
+					{
+						throw new ShopException($output->getMessage(), $output->getError());
+					}
+				}
+			}
+			else
+			{
+				$args->attribute_value = $attribute_value;
+				$output = executeQuery('shop.insertProductAttribute', $args);
+				if(!$output->toBool())
+				{
+					throw new ShopException($output->getMessage(), $output->getError());
+				}
 			}
 		}
 		return TRUE;
@@ -485,7 +501,27 @@ class ProductRepository extends BaseRepository
 
 		foreach($output->data as $attribute)
 		{
-			if($attribute->value) $product->attributes[$attribute->attribute_srl] = $attribute->value;
+			if($attribute->value)
+			{
+				if(!isset($product->attributes[$attribute->attribute_srl]))
+				{
+					$product->attributes[$attribute->attribute_srl] = $attribute->value;
+				}
+				else // We have an array of values (like in multiple selects)
+				{
+					if(is_array($product->attributes[$attribute->attribute_srl]))
+					{
+						$values = $product->attributes[$attribute->attribute_srl];
+					}
+					else
+					{
+						$values = array();
+						$values[] = $product->attributes[$attribute->attribute_srl];
+					}
+					$values[] = $attribute->value;
+					$product->attributes[$attribute->attribute_srl] = $values;
+				}
+			}
 			else $product->configurable_attributes[$attribute->attribute_srl] = $attribute->title;
 		}
 

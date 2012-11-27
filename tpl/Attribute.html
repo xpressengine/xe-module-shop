@@ -66,14 +66,16 @@
 
 <!--@elseif($attribute->type == AttributeRepository::TYPE_SELECT_MULTIPLE)-->
 {@ $values = explode('|', $attribute->values); }
-<select name="attribute_{$attribute->attribute_srl}"
+<select name="attribute_{$attribute->attribute_srl}[]"
         id="attribute_{$attribute->attribute_srl}"
         class="attribute {implode(' ', $attribute->category_scope)}"
         multiple="multiple"
         >
+    {@ $selected_values = $product->attributes[$attribute->attribute_srl]; }
+    <!--@if(!is_array($selected_values))-->{@ $selected_values = array($selected_values)}<!--@end-->
     <!--@foreach($values as $value)-->
     <option value="{$value}"
-    <!--@if($product->attributes[$attribute->attribute_srl]==$value)-->selected<!--@end-->>
+    <!--@if(in_array($value, $selected_values))-->selected<!--@end-->>
     {$value}
     </option>
     <!--@end-->
