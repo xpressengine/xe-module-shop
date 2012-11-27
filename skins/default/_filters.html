@@ -36,11 +36,14 @@
                     </li>
                     <li cond="$attribute->isMultipleSelect()" id="{$attributeId}" class="filter-multiple-select">
                         <label for="{$attributeId}">{$attribute->title}</label>
-                        <select class="f-right" name="filter[attributes][{$attribute->attribute_srl}][]" multiple="multiple" id="{$controlId}">
-                            <!--@foreach ($attribute->getValues() as $value)-->
-                            <option value="{$value}" selected="selected"|cond="is_array($values = $attribute->getMeta('filterValues')) && in_array($value, $values)">{$value}</option>
-                            <!--@endforeach-->
-                        </select>
+                        <ul class="multiple-select-filter-body">
+                        <!--@foreach ($attribute->getValues() as $value)-->
+                            <li>
+                                <input type="checkbox" name="filter[attributes][{$attribute->attribute_srl}][]" id="filter_{$attribute->attribute_srl}_multiple" value="{$value}" checked="checked"|cond="is_array($values = $attribute->getMeta('filterValues')) && in_array($value, $values)">
+                                <label for="filter_{$attribute->attribute_srl}_multiple">{$value}</label>
+                            </li>
+                        <!--@endforeach-->
+                        </ul>
                     </li>
                     <li cond="$attribute->isNumeric()" id="{$attributeId}" class="filter-numeric">
                         <p>{$attribute->title}</p>

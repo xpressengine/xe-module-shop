@@ -1561,7 +1561,6 @@ span.side-separator {
 .filter-submit {
     display: inline-block;
 }
-.filter-multiple-select select {
-    height: inherit;
-    float: inherit;
+.body-left-panel .filter-multiple-select li {
+    line-height: 0!important;
 }
