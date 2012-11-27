@@ -15,7 +15,8 @@ class FrontFilters
         TO_ATTRIBUTE_NUMERIC_MIN = 'minSRL',
         TO_ATTRIBUTE_NUMERIC_MAX = 'maxSRL',
         TO_ATTRIBUTE_SELECT = 'selSRL',
-        TO_ATTRIBUTE_SELECT_MULTIPLE = 'mSelSRL';
+        TO_ATTRIBUTE_SELECT_MULTIPLE = 'mSelSRL',
+        SEPARATOR_MULTIPLE = ',';
 
     //adds proper variables to $args and sets values for _filters template
     public static function work(stdClass &$args)
@@ -77,7 +78,11 @@ class FrontFilters
                 }
             }
             elseif ($attribute->isMultipleSelect()) {
-
+                $key = str_replace('SRL', $attribute->attribute_srl, self::TO_ATTRIBUTE_SELECT_MULTIPLE);
+                if (isset($_GET[$key]) && $val = $_GET[$key]) {
+                    $values = explode(self::SEPARATOR_MULTIPLE, $val);
+                    $attribute->setMeta('filterValues', $values);
+                }
             }
         }
         Context::set('filter_attributes', $attrs);
@@ -103,7 +108,7 @@ class FrontFilters
         $i = 1;
         while ((list($key, $value) = each($_GET)) && $i < 6) {
             foreach ($attributeGetPatterns as $pattern) {
-                if (preg_match("/" . str_replace('SRL', '(\d+)', $pattern) . "/i", $key, $matches)) {
+                if (preg_match("/^" . str_replace('SRL', '(\d+)', $pattern) . "$/i", $key, $matches)) {
                     $srl = $matches[1];
                     if ($pattern == self::TO_ATTRIBUTE_NUMERIC_MIN) {
                         $srlVar = 'attr_' . $i . '_range_srl';
@@ -125,6 +130,7 @@ class FrontFilters
                     elseif ($pattern == self::TO_ATTRIBUTE_SELECT_MULTIPLE) {
                         $srlVar = 'attr_' . $i . '_in_srl';
                         $val = 'attr_' . $i . '_in_value';
+                        $value = explode(self::SEPARATOR_MULTIPLE, $value);
                         $increment = true;
                     }
                     else {
@@ -145,12 +151,12 @@ class FrontFilters
         if (isset($filters['price'])) {
             $price = $filters['price'];
             $minPriceKey = self::FROM_PRICE_MIN;
-            if (isset($price[$minPriceKey]) && is_numeric($price[$minPriceKey]) && $price[$minPriceKey] > 0) {
-                $params[self::TO_PRICE_MIN] = $price[$minPriceKey];
+            if (isset($price[$minPriceKey]) && is_numeric($price[$minPriceKey])) {
+                $params[self::TO_PRICE_MIN] = ($price[$minPriceKey] > 0 ? $price[$minPriceKey] : null);
             }
             $maxPriceKey = self::FROM_PRICE_MAX;
             if (isset($price[$maxPriceKey]) && is_numeric($price[$maxPriceKey]) && $price[$maxPriceKey] > 0) {
-                //TODO: ignore if max price
+                //TODO: set to null if max price
                 $params[self::TO_PRICE_MAX] = $price[$maxPriceKey];
             }
         }
@@ -185,7 +191,7 @@ class FrontFilters
                         }
                         elseif ($attribute->isMultipleSelect()) {
                             $key = str_replace('SRL', $srl, self::TO_ATTRIBUTE_SELECT_MULTIPLE);
-                            $params[$key] = $filterValue;
+                            $params[$key] = implode(self::SEPARATOR_MULTIPLE, $filterValue);
                         }
                     }
                 }

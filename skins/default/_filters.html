@@ -25,7 +25,7 @@
                     <!--@foreach ($filter_attributes as $attribute)-->
                     {@ $attributeId = "filter_attribute_" . $attribute->attribute_srl }
                     {@ $controlId = $attributeId . "_ctrl" }
-                    <li cond="$attribute->isSelect()" id="{$attributeId}">
+                    <li cond="$attribute->isSelect()" id="{$attributeId}" class="filter-select">
                         <label for="{$attributeId}">{$attribute->title}</label>
                         <select class="f-right" name="filter[attributes][{$attribute->attribute_srl}]" id="{$controlId}">
                             <option></option>
@@ -34,15 +34,15 @@
                             <!--@endforeach-->
                         </select>
                     </li>
-                    <li cond="$attribute->isMultipleSelect()" id="{$attributeId}">
+                    <li cond="$attribute->isMultipleSelect()" id="{$attributeId}" class="filter-multiple-select">
                         <label for="{$attributeId}">{$attribute->title}</label>
-                        <select class="f-right" name="filter[attributes][{$attribute->attribute_srl}]" multiple="multiple" id="{$controlId}">
+                        <select class="f-right" name="filter[attributes][{$attribute->attribute_srl}][]" multiple="multiple" id="{$controlId}">
                             <!--@foreach ($attribute->getValues() as $value)-->
-                            <option value="{$value}">{$value}</option>
+                            <option value="{$value}" selected="selected"|cond="is_array($values = $attribute->getMeta('filterValues')) && in_array($value, $values)">{$value}</option>
                             <!--@endforeach-->
                         </select>
                     </li>
-                    <li cond="$attribute->isNumeric()" id="{$attributeId}">
+                    <li cond="$attribute->isNumeric()" id="{$attributeId}" class="filter-numeric">
                         <p>{$attribute->title}</p>
                         <div class="range-numeric" data-max="{$attribute->getMeta('max')}" data-min="{$attribute->getMeta('min')}" data-minvalue="{$attribute->getMeta('minValue')}" data-maxvalue="{$attribute->getMeta('maxValue')}"></div>
                         <input class="range price1 price-half" name="filter[attributes][{$attribute->attribute_srl}][min]" class="price-half" type="text"> {$shop->getCurrencySymbol()} <span class="side-separator">-</span>
