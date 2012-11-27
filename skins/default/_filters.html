@@ -36,7 +36,7 @@
                         <select class="f-right" name="filter[attributes][{$attribute->attribute_srl}]" id="{$controlId}">
                             <option></option>
                             <!--@foreach ($attribute->getValues() as $value)-->
-                            <option value="{$value}">{$value}</option>
+                            <option value="{$value}" selected="selected"|cond="$attribute->getMeta('filterValue') == $value">{$value}</option>
                             <!--@endforeach-->
                         </select>
                     </li>
@@ -74,7 +74,7 @@
                 sliderMinValue = Math.floor(pr.data('min')),
                 sliderMaxValue = Math.ceil(pr.data('max')),
                 v1 = Math.floor(pr.data('minvalue') ? pr.data('minvalue') : sliderMinValue),
-                v2 = Math.ceil((pr.data('minvalue') && (pr.data('minvalue') < sliderMaxValue)) ? pr.data('maxvalue') : sliderMaxValue);
+                v2 = Math.ceil((v1 < sliderMaxValue) ? pr.data('maxvalue') : sliderMaxValue);
             var unit = (sliderMaxValue - sliderMinValue) / 100;
             pr.slider({
                 range: true,

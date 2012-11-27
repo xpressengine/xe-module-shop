@@ -10,13 +10,12 @@ class FrontFilters
     const
         FROM_PRICE_MIN = 'min',
         FROM_PRICE_MAX = 'max',
-        TO_PRICE_MIN = 'filter-min',
-        TO_PRICE_MAX = 'filter-max',
-        TO_ATTRIBUTE = 'filter-aSRL',
-        TO_ATTRIBUTE_NUMERIC_MIN = 'filter-aSRL-min',
-        TO_ATTRIBUTE_NUMERIC_MAX = 'filter-aSRL-max',
-        TO_ATTRIBUTE_SELECT = 'filter-aSRL-select',
-        TO_ATTRIBUTE_SELECT_MULTIPLE = 'filter-aSRL-multiple';
+        TO_PRICE_MIN = 'minPrice',
+        TO_PRICE_MAX = 'maxPrice',
+        TO_ATTRIBUTE_NUMERIC_MIN = 'minSRL',
+        TO_ATTRIBUTE_NUMERIC_MAX = 'maxSRL',
+        TO_ATTRIBUTE_SELECT = 'selectSRL',
+        TO_ATTRIBUTE_SELECT_MULTIPLE = 'multipleSRL';
 
     //adds proper variables to $args and sets values for _filters template
     public static function work(stdClass &$args)
@@ -42,10 +41,11 @@ class FrontFilters
             $maxPrice
         );
         Context::set('priceFilter', $priceFilter);
+
         $attributeRepo = new AttributeRepository();
-        $params = array();
-        if ($catSrl = Context::get('category_srl')) $params['category_srl'] = $catSrl;
-        $attrs = $attributeRepo->getFilterAttributes($module_srl, $params);
+        $catSrls = array();
+        if (is_numeric($catSrl = Context::get('category_srl'))) $catSrls[] = $catSrl;
+        $attrs = $attributeRepo->getFilterAttributes($module_srl, $catSrls);
         foreach ($attrs as $i=>$attribute) {
             /** @var $attribute Attribute */
             if ($attribute->isNumeric()) {
@@ -64,7 +64,10 @@ class FrontFilters
                 }
             }
             elseif ($attribute->isSelect()) {
-
+                $key = str_replace('SRL', $attribute->attribute_srl, self::TO_ATTRIBUTE_SELECT);
+                if (isset($_GET[$key]) && $val = $_GET[$key]) {
+                    $attribute->setMeta('filterValue', $val);
+                }
             }
             elseif ($attribute->isMultipleSelect()) {
 
@@ -88,7 +91,7 @@ class FrontFilters
             self::TO_ATTRIBUTE_NUMERIC_MIN,
             self::TO_ATTRIBUTE_NUMERIC_MAX,
             self::TO_ATTRIBUTE_SELECT,
-            self::TO_ATTRIBUTE_SELECT
+            self::TO_ATTRIBUTE_SELECT_MULTIPLE
         );
         $i = 1;
         while ((list($key, $value) = each($_GET)) && $i < 6) {
@@ -151,21 +154,25 @@ class FrontFilters
                 if (array_key_exists($srl, $objects)) {
                     /** @var $attribute Attribute */
                     $attribute = $objects[$srl];
-                    if (is_array($filterValue)) {
+                    if ($filterValue) {
                         if ($attribute->isNumeric()) {
-                            if (isset($filterValue['min']) && ctype_digit($filterValue['min']) && $filterValue['min']) {
-                                $key = str_replace('SRL', $srl, self::TO_ATTRIBUTE_NUMERIC_MIN);
-                                $params[$key] = $filterValue['min'];
-                            }
-                            if (isset($filterValue['max']) && ctype_digit($filterValue['max']) && $filterValue['max']) {
-                                $key = str_replace('SRL', $srl, self::TO_ATTRIBUTE_NUMERIC_MAX);
-                                $params[$key] = $filterValue['max'];
+                            if (is_array($filterValue)) {
+                                if (isset($filterValue['min']) && ctype_digit($filterValue['min']) && $filterValue['min']) {
+                                    $key = str_replace('SRL', $srl, self::TO_ATTRIBUTE_NUMERIC_MIN);
+                                    $params[$key] = $filterValue['min'];
+                                }
+                                if (isset($filterValue['max']) && ctype_digit($filterValue['max']) && $filterValue['max']) {
+                                    $key = str_replace('SRL', $srl, self::TO_ATTRIBUTE_NUMERIC_MAX);
+                                    $params[$key] = $filterValue['max'];
+                                }
                             }
                         }
-                    }
-                    else {
-                        if ($filterValue) {
-                            $key = str_replace('SRL', $srl, self::TO_ATTRIBUTE);
+                        elseif ($attribute->isSelect()) {
+                            $key = str_replace('SRL', $srl, self::TO_ATTRIBUTE_SELECT);
+                            $params[$key] = $filterValue;
+                        }
+                        elseif ($attribute->isMultipleSelect()) {
+                            $key = str_replace('SRL', $srl, self::TO_ATTRIBUTE_SELECT_MULTIPLE);
                             $params[$key] = $filterValue;
                         }
                     }
@@ -174,6 +181,12 @@ class FrontFilters
         }
         //force it go to dispShop
         $params = array_merge(array('act'=>'dispShop'), $params);
+
+        //unset what's meant to be removed
+        $query = parse_url($originalUrl, PHP_URL_QUERY);
+        parse_str($query, $queryParts);
+        foreach ($queryParts as $key=>$value) if (!isset($params[$key])) unset($queryParts[$key]);
+        $originalUrl = str_replace("?$query", '?' . http_build_query($queryParts), $originalUrl);
 
         $goto = FrontFilters::http_build_url(
             $originalUrl,

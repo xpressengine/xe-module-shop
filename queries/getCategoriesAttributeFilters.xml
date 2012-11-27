@@ -20,6 +20,7 @@
         <!--<column name="MIN(convert(pa.value, UNSIGNED INTEGER))" alias="min" />-->
     </columns>
     <conditions>
+        <condition operation="equal" column="module_srl" var="module_srl" notnull="notnull" />
         <condition operation="equals" column="a.is_filter" var="is_filter" default="1" />
         <group pipe="and">
             <condition operation="in" column="s.category_srl" var="category_srls" />
