@@ -2,31 +2,25 @@
 
 <h3>Filters</h3>
 <div class="body-left-panel-content filters">
-    <ul>
-        <li cond=" ! isset($priceFilter[3]) " style="color: #ff4500; font-size: 10px;">No price range (missing upper price range limit)</li>
-        <li cond=" isset($priceFilter[3]) " id="price">
-            <h4>Filter by price:</h4>
-            <form action="./">
-                <input name="act" type="hidden" value="procShopFilter">
-                <div class="range-numeric" data-min="{$priceFilter[0]}" data-minvalue="{$priceFilter[1]}" data-maxvalue="{$priceFilter[2]}" data-max="{$priceFilter[3]}"></div>
-                <p class="clearfix a-center" style="line-height: 26px;">
-                    <span class="f-left">
-                        <input class="range price1 price-half" name="filter[price][{FrontFilters::FROM_PRICE_MIN}]" class="price-half" type="text"> {$shop->getCurrencySymbol()}
-                    </span>
-                    <span style="vertical-align: middle;">-----------</span>
-                    <span class="f-right">
-                        <input class="range price2 price-half" name="filter[price][{FrontFilters::FROM_PRICE_MAX}]" class="price-half" type="text"> {$shop->getCurrencySymbol()}
-                    </span>
-                </p>
-                <p class="a-center">
-                    <input class="filter-submit" type="submit" value="Apply filter" <!--@if(isset($filter_attributes) && !empty($filter_attributes))-->style="margin: 0 0 10px;"<!--@end-->>
-                </p>
-            </form>
-        </li>
-        <li id="filter_attributes" cond="isset($filter_attributes) && !empty($filter_attributes)">
-            <h4>Filter by attributes:</h4>
-            <form action="./">
-                <input name="act" type="hidden" value="procShopFilter">
+    <form action="./">
+        <input name="act" type="hidden" value="procShopFilter">
+        <ul>
+            <li cond=" ! isset($priceFilter[3]) " style="color: #ff4500; font-size: 10px;">No price range (missing upper price range limit)</li>
+            <li cond=" isset($priceFilter[3]) " id="price">
+                <h4>Filter by price:</h4>
+                    <div class="range-numeric" data-min="{$priceFilter[0]}" data-minvalue="{$priceFilter[1]}" data-maxvalue="{$priceFilter[2]}" data-max="{$priceFilter[3]}"></div>
+                    <p class="clearfix a-center" style="line-height: 26px;">
+                        <span class="f-left">
+                            <input class="range price1 price-half" name="filter[price][{FrontFilters::FROM_PRICE_MIN}]" class="price-half" type="text"> {$shop->getCurrencySymbol()}
+                        </span>
+                        <span style="vertical-align: middle;">-----------</span>
+                        <span class="f-right">
+                            <input class="range price2 price-half" name="filter[price][{FrontFilters::FROM_PRICE_MAX}]" class="price-half" type="text"> {$shop->getCurrencySymbol()}
+                        </span>
+                    </p>
+            </li>
+            <li id="filter_attributes" cond="isset($filter_attributes) && !empty($filter_attributes)">
+                <h4>Filter by attributes:</h4>
                 <ul>
                     <!--@foreach ($filter_attributes as $attribute)-->
                     {@ $attributeId = "filter_attribute_" . $attribute->attribute_srl }
@@ -56,17 +50,16 @@
                     </li>
                     <!--@endforeach-->
                 </ul>
-                <p class="a-center">
-                    <input class="filter-submit" type="submit" value="Apply filter">
-                </p>
-            </form>
-        </li>
-    </ul>
+            </li>
+        </ul>
+        <p class="a-center">
+            <input class="filter-submit" type="submit" value="Apply filter">
+        </p>
+    </form>
 </div>
 
 <script type="text/javascript">
-    jQuery(document).ready(function() {
-        $ = jQuery;
+    jQuery(document).ready(function($) {
         $(".range-numeric").each(function(){
             var pr = $(this),
                 price1 = pr.parent().find('.range.price1'),
@@ -74,7 +67,12 @@
                 sliderMinValue = Math.floor(pr.data('min')),
                 sliderMaxValue = Math.ceil(pr.data('max')),
                 v1 = Math.floor(pr.data('minvalue') ? pr.data('minvalue') : sliderMinValue),
-                v2 = Math.ceil((v1 < sliderMaxValue) ? pr.data('maxvalue') : sliderMaxValue);
+                v2 = Math.ceil(
+                        (v1 < sliderMaxValue) ?
+                        (pr.data('maxvalue') ? pr.data('maxvalue') : sliderMaxValue) :
+                        sliderMaxValue
+                );
+            console.log(sliderMinValue, v1, v2, sliderMaxValue);
             var unit = (sliderMaxValue - sliderMinValue) / 100;
             pr.slider({
                 range: true,

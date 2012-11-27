@@ -14,8 +14,8 @@ class FrontFilters
         TO_PRICE_MAX = 'maxPrice',
         TO_ATTRIBUTE_NUMERIC_MIN = 'minSRL',
         TO_ATTRIBUTE_NUMERIC_MAX = 'maxSRL',
-        TO_ATTRIBUTE_SELECT = 'selectSRL',
-        TO_ATTRIBUTE_SELECT_MULTIPLE = 'multipleSRL';
+        TO_ATTRIBUTE_SELECT = 'selSRL',
+        TO_ATTRIBUTE_SELECT_MULTIPLE = 'mSelSRL';
 
     //adds proper variables to $args and sets values for _filters template
     public static function work(stdClass &$args)
@@ -45,11 +45,18 @@ class FrontFilters
         $attributeRepo = new AttributeRepository();
         $catSrls = array();
         if (is_numeric($catSrl = Context::get('category_srl'))) $catSrls[] = $catSrl;
+        elseif ((Context::get('type') == 'category') && ($slug = Context::get('identifier'))) {
+            //friendly url
+            $cRepo = new CategoryRepository();
+            $cat = $cRepo->getCategoryByFriendlyUrl($slug);
+            $catSrls[] = $cat->category_srl;
+        }
         $attrs = $attributeRepo->getFilterAttributes($module_srl, $catSrls);
         foreach ($attrs as $i=>$attribute) {
             /** @var $attribute Attribute */
             if ($attribute->isNumeric()) {
                 $min = $attribute->getMinValue(); $min |= 0;
+                //if there is no max value for this attribute unset it
                 if (!$max = (int) $attribute->getMaxValue()) { unset($attrs[$i]); continue; }
                 $attribute->setMeta('min', $min);
                 $attribute->setMeta('max', $max);
@@ -143,6 +150,7 @@ class FrontFilters
             }
             $maxPriceKey = self::FROM_PRICE_MAX;
             if (isset($price[$maxPriceKey]) && is_numeric($price[$maxPriceKey]) && $price[$maxPriceKey] > 0) {
+                //TODO: ignore if max price
                 $params[self::TO_PRICE_MAX] = $price[$maxPriceKey];
             }
         }
@@ -159,11 +167,15 @@ class FrontFilters
                             if (is_array($filterValue)) {
                                 if (isset($filterValue['min']) && ctype_digit($filterValue['min']) && $filterValue['min']) {
                                     $key = str_replace('SRL', $srl, self::TO_ATTRIBUTE_NUMERIC_MIN);
-                                    $params[$key] = $filterValue['min'];
+                                    if ($filterValue['min'] != $attribute->getMinValue()) {
+                                        $params[$key] = $filterValue['min'];
+                                    }
                                 }
                                 if (isset($filterValue['max']) && ctype_digit($filterValue['max']) && $filterValue['max']) {
                                     $key = str_replace('SRL', $srl, self::TO_ATTRIBUTE_NUMERIC_MAX);
-                                    $params[$key] = $filterValue['max'];
+                                    if ($filterValue['max'] != $attribute->getMaxValue()) {
+                                        $params[$key] = $filterValue['max'];
+                                    }
                                 }
                             }
                         }
@@ -182,17 +194,27 @@ class FrontFilters
         //force it go to dispShop
         $params = array_merge(array('act'=>'dispShop'), $params);
 
-        //unset what's meant to be removed
-        $query = parse_url($originalUrl, PHP_URL_QUERY);
-        parse_str($query, $queryParts);
-        foreach ($queryParts as $key=>$value) if (!isset($params[$key])) unset($queryParts[$key]);
-        $originalUrl = str_replace("?$query", '?' . http_build_query($queryParts), $originalUrl);
-
-        $goto = FrontFilters::http_build_url(
-            $originalUrl,
-            array('query' => http_build_query($params)),
-            HTTP_URL_JOIN_QUERY
-        );
+        //unset empty filters meant to be removed
+        $originalQuery = parse_url($originalUrl, PHP_URL_QUERY);
+        parse_str($originalQuery, $originalQueryParts);
+        $newQueryParts = array_merge($originalQueryParts, $params);
+        $patterns = array(self::TO_ATTRIBUTE_NUMERIC_MIN, self::TO_ATTRIBUTE_NUMERIC_MAX, self::TO_ATTRIBUTE_SELECT, self::TO_ATTRIBUTE_SELECT_MULTIPLE);
+        foreach ($newQueryParts as $k=>$p) {
+            if (!isset($params[$k])) {
+                foreach ($patterns as $pattern) {
+                    if (preg_match("/" . str_replace('SRL', '(\d+)', $pattern) . "/i", $k)) {
+                        unset($newQueryParts[$k]);
+                    }
+                }
+            }
+        }
+        $newQuery = http_build_query($newQueryParts);
+        $goto = $originalQuery ? str_replace("?$originalQuery", "?$newQuery", $originalUrl) :
+            FrontFilters::http_build_url(
+                $originalUrl,
+                array('query' => http_build_query($params)),
+                HTTP_URL_JOIN_QUERY
+            );
         return $goto;
     }
 
