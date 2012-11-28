@@ -879,10 +879,10 @@
 			//get or create cart:
 			if ($cart = $cartRepo->getCart($this->module_info->module_srl, NULL, $logged_info->member_srl, session_id(), TRUE))
 			{
-
-				$haveShipping = (Context::get('different_shipping') == 'yes');
 				$shipping = Context::get('shipping');
-				if (!$haveShipping)
+				$usesNewShippingAddress = ($shipping["address"] == "new");
+				$hasDifferentShippng = (Context::get("different_shipping") == "yes");
+				if (!$hasDifferentShippng)
 				{
 					$billing = Context::get('billing');
 					$shipping['address'] = $billing['address'];
@@ -892,7 +892,7 @@
 					'billing'  => Context::get('billing'),
 					'new_billing_address' => Context::get('new_billing_address'),
 					'shipping' => $shipping, // MUST send shipping, otherwise shipping_method is lost
-					'new_shipping_address' => $haveShipping ? Context::get('new_shipping_address') : NULL,
+					'new_shipping_address' => $usesNewShippingAddress ? Context::get('new_shipping_address') : NULL,
 					'payment'  => Context::get('payment'),
 				));
 			}
@@ -905,7 +905,7 @@
 		 */
 		public function procShopToolRefreshCheckout()
 		{
-			$cart = null;
+			$cart = NULL;
 			try
 			{
 				$this->persistCart($cart);
@@ -920,12 +920,40 @@
 			$this->setRedirectUrl($return_url);
 		}
 
+		/**
+		 * Persist cart via Ajax
+		 */
+		public function procShopToolUpdateCheckout()
+		{
+			$cart = NULL;
+			try
+			{
+				$this->persistCart($cart);
+			}
+			catch(Exception $exception)
+			{
+				return new Object(-1, $exception->getMessage());
+			}
+
+			$this->add('cart', $cart);
+
+			$shippingRepo = new ShippingMethodRepository();
+			// Init the list of all available methods
+			$shipping_methods = $shippingRepo->getAvailableShippingMethodsAndTheirPrices($this->module_srl, $cart);
+			$this->add('shipping_methods', $shipping_methods);
+
+			// Setup the selected shipping method - check if using default value or value from cart;
+			$selected_shipping_method = $cart->getShippingMethodName();
+			$selected_shipping_method .= $cart->getShippingMethodVariant() ? '__' . $cart->getShippingMethodVariant() : '';
+			$this->add('selected_shipping_method', $selected_shipping_method);
+		}
+
         /*
          * @author Florin Ercus (dev@xpressengine.org)
          */
         public function procShopToolCheckout()
         {
-			$cart = null;
+			$cart = NULL;
 			try
 			{
 				$this->persistCart($cart);

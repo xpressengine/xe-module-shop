@@ -471,26 +471,20 @@ class Cart extends BaseItem implements IProductItemsContainer
 		}
 		$data['extra']['shipping_method'] = $shipping['method'];
 		$data['extra']['shipping_variant'] = $shipping['variant'];
+		$data['shipping_address_srl'] = $shipping['address'];
 		// Shipping method
 
 		// Shipping address validation - if different
-        if ($input['different_shipping'] == 'yes') {
-            if (!self::validateFormBlock($shipping)) {
+        if ($input['new_shipping_address']) {
+            if (!self::validateFormBlock($newAddress = $input['new_shipping_address'])) {
                 throw new ShopException('Wrong shipping input');
             }
-            if (is_numeric($shipping['address'])) {
-                $data['shipping_address_srl'] = $shipping['address'];
-            } elseif (self::validateFormBlock($newAddress = $input['new_shipping_address'])) {
-                $newAddress = new Address($newAddress);
-                if ($this->member_srl && !$addressRepo->hasDefaultAddress($this->member_srl, AddressRepository::TYPE_SHIPPING)) {
-                    $newAddress->default_shipping = 'Y';
-                }
-                $newAddress->save();
-                $data['shipping_address_srl'] = $newAddress->address_srl;
-            }
-            else {
-                throw new ShopException('No shipping address');
-            }
+			$newAddress = new Address($newAddress);
+			if ($this->member_srl && !$addressRepo->hasDefaultAddress($this->member_srl, AddressRepository::TYPE_SHIPPING)) {
+				$newAddress->default_shipping = 'Y';
+			}
+			$newAddress->save();
+			$data['shipping_address_srl'] = $newAddress->address_srl;
         }
         if (self::validateFormBlock($payment = $input['payment'])) {
             $data['extra']['payment_method'] = $payment['method'];

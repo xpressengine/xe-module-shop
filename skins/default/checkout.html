@@ -2,6 +2,67 @@
 <!--%import("jquery.validate.js")-->
 <!--%import("validator.js")-->
 
+<script type="text/javascript">
+    jQuery.fn.serializeObject = function()
+    {
+        var o = {};
+        var a = this.serializeArray();
+        jQuery.each(a, function() {
+            if (o[this.name] !== undefined) {
+                if (!o[this.name].push) {
+                    o[this.name] = [o[this.name]];
+                }
+                o[this.name].push(this.value || '');
+            } else {
+                o[this.name] = this.value || '';
+            }
+        });
+        return o;
+    };
+
+    jQuery.fn.extractObject = function() {
+        var accum = {};
+        function add(accum, namev, value) {
+            if (namev.length == 1)
+                accum[namev[0]] = value;
+            else {
+                if (accum[namev[0]] == null)
+                    accum[namev[0]] = {};
+                add(accum[namev[0]], namev.slice(1), value);
+            }
+        };
+        this.find('input, textarea, select').each(function() {
+            if(jQuery(this).attr('name'))
+            {
+                add(accum, jQuery(this).attr('name').split('.'), jQuery(this).val());
+            }
+        });
+        return accum;
+    };
+
+
+    jQuery(document).ready(function($){
+        $("#shipping_address").change(function() {
+            var cart_info = $('#big').extractObject();
+            $.exec_json('shop.procShopToolUpdateCheckout'
+                    , cart_info
+                    , function(data){
+                        if(data.error != 0)
+                        {
+                            alert("Error " + data.error + " " + data.message);
+                            return;
+                        }
+                        var cart = data.cart;
+                    }
+            );
+            alert("Changed");
+        });
+//        $("#new-address-shipping input").change(function(){
+//            alert("Changed");
+//        });
+    });
+</script>
+
 <div id="checkout" class="main-content form" cond="isset($cart) && $cart->items">
     <h1 class="underline">{$lang->checkout}</h1>
 
@@ -104,34 +165,6 @@
 
         <div id="shipping">
             <h2 class="underline">{$lang->shipping}</h2>
-            <p>
-                <label for="shipping_method">{$lang->shipping_method}</label>
-                <select id="shipping_method">
-                    <!--@foreach($shipping_methods as $key => $value)-->
-                        <option value="{$key}"
-                                <!--@if($selected_shipping_method == $key)-->
-                                selected="selected"
-                                <!--@end-->
-                                >{$value}</option>
-                    <!--@end-->
-                </select>
-                <input type="hidden" name="shipping[method]" id="shipping_method_name" value="{$cart->getShippingMethodName()}" />
-                <input type="hidden" name="shipping[variant]" id="shipping_method_variant" value="{$cart->getShippingMethodVariant()}" />
-                <script type="text/javascript">
-                    jQuery(document).ready(function($){
-                        $("#shipping_method").change(function(){
-                            $new_value = $(this).val();
-                            $shipping_info = $new_value.split("__");
-                            $("#shipping_method_name").val($shipping_info[0]);
-                            $("#shipping_method_variant").val($shipping_info[1]);
-
-                            $checkout_form = $(this).closest('form');
-                            $checkout_form.find("input[name='act']").val("procShopToolRefreshCheckout");
-                            $checkout_form.submit();
-                        });
-                    });
-                </script>
-            </p>
             <p id="shipping-address-select" style="display:none"|cond="!$needs_new_shipping">
                 <label for="shipping_address">{$lang->shipping_address}</label>
                 <select style="width: 70%;" id="shipping_address" name="shipping[address]">
@@ -196,6 +229,35 @@
                 </p>
 
             </div>
+
+            <p>
+                <label for="shipping_method">{$lang->shipping_method}</label>
+                <select id="shipping_method">
+                    <!--@foreach($shipping_methods as $key => $value)-->
+                    <option value="{$key}"
+                    <!--@if($selected_shipping_method == $key)-->
+                    selected="selected"
+                    <!--@end-->
+                    >{$value}</option>
+                    <!--@end-->
+                </select>
+                <input type="hidden" name="shipping[method]" id="shipping_method_name" value="{$cart->getShippingMethodName()}" />
+                <input type="hidden" name="shipping[variant]" id="shipping_method_variant" value="{$cart->getShippingMethodVariant()}" />
+                <script type="text/javascript">
+                    jQuery(document).ready(function($){
+                        $("#shipping_method").change(function(){
+                            $new_value = $(this).val();
+                            $shipping_info = $new_value.split("__");
+                            $("#shipping_method_name").val($shipping_info[0]);
+                            $("#shipping_method_variant").val($shipping_info[1]);
+
+                            $checkout_form = $(this).closest('form');
+                            $checkout_form.find("input[name='act']").val("procShopToolRefreshCheckout");
+                            $checkout_form.submit();
+                        });
+                    });
+                </script>
+            </p>
         </div>
 
         <div id="payment">
