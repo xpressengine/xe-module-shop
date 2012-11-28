@@ -40,26 +40,56 @@
         return accum;
     };
 
+    function persistCartAndUpdateShippingMethods()
+    {
+        var cart_info = jQuery('#big').extractObject();
+        jQuery.exec_json('shop.procShopToolUpdateCheckout'
+                , cart_info
+                , function(data){
+                    if(data.error != 0)
+                    {
+                        alert("Error " + data.error + " " + data.message);
+                        return;
+                    }
+                    var cart = data.cart;
+                    var shipping_methods = data.shipping_methods;
+                    jQuery("#shipping_method").html("");
+                    for(var shipping_method_name in shipping_methods)
+                    {
+                        var new_option = jQuery("<option></option>")
+                                .val(shipping_method_name)
+                                .html(shipping_methods[shipping_method_name]);
+
+                        if(data.selected_shipping_method == shipping_method_name)
+                            new_option.attr("selected", "selected");
+
+                        jQuery("#shipping_method").append(new_option);
+                    }
+                }
+        );
+    }
 
     jQuery(document).ready(function($){
+
         $("#shipping_address").change(function() {
-            var cart_info = $('#big').extractObject();
-            $.exec_json('shop.procShopToolUpdateCheckout'
-                    , cart_info
-                    , function(data){
-                        if(data.error != 0)
-                        {
-                            alert("Error " + data.error + " " + data.message);
-                            return;
-                        }
-                        var cart = data.cart;
-                    }
-            );
-            alert("Changed");
+            persistCartAndUpdateShippingMethods();
         });
-//        $("#new-address-shipping input").change(function(){
-//            alert("Changed");
-//        });
+
+        $("#new-address-shipping input").change(function(){
+            var new_shipping_address = $('#new-address-shipping').extractObject();
+            // Check that new shipping address form is valid
+            var shipping_address_inputs = $("#new-address-shipping input");
+            for(var i = 0; i < shipping_address_inputs.length; i++)
+            {
+                if(!$(shipping_address_inputs[i]).valid())
+                {
+                    return;
+                };
+            }
+
+            // If form passed validation, we can now update the shipping methods dropdown
+            persistCartAndUpdateShippingMethods();
+        });
     });
 </script>
 

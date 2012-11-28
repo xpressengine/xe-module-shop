@@ -54,4 +54,18 @@ GATA;
     {
         return $this->default_shipping == 'Y' ? true : false;
     }
+
+	public function isValid()
+	{
+		if(is_null($this->postal_code)
+			|| is_null($this->country)
+			|| is_null($this->firstname)
+			|| is_null($this->lastname)
+			|| is_null($this->address)
+			|| is_null($this->email)
+			|| is_null($this->city)
+		)
+			return false;
+		return true;
+	}
 }

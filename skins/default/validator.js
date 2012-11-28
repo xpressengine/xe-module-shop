@@ -39,12 +39,15 @@ jQuery(function () {
             'new_billing_address[telephone]': { required: true, phone: true },
             'new_billing_address[fax]': { phone: true },
             'new_billing_address[address]': { required: true, minlength: 10 },
+
             'new_shipping_address[firstname]': { required: '#different_shipping:checked' },
             'new_shipping_address[lastname]': { required: '#different_shipping:checked' },
             'new_shipping_address[email]': { required: '#different_shipping:checked', email: true },
             'new_shipping_address[telephone]': { required: '#different_shipping:checked', phone: true },
-            'new_shipping_address[fax]': { required: '#different_shipping:checked', phone: true },
-            'new_shipping_address[address]': { required: '#different_shipping:checked', minlength: 10 }
+            /*'new_shipping_address[fax]': { required: '#different_shipping:checked', phone: true },*/
+            'new_shipping_address[address]': { required: '#different_shipping:checked', minlength: 10 },
+            'new_shipping_address[postal_code]': { required: '#different_shipping:checked' },
+            'new_shipping_address[country]': { required: '#different_shipping:checked' }
         },
         messages: {
             'new_billing_address[firstname]': { required: 'First name is mandatory' },

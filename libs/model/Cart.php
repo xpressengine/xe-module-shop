@@ -480,11 +480,14 @@ class Cart extends BaseItem implements IProductItemsContainer
                 throw new ShopException('Wrong shipping input');
             }
 			$newAddress = new Address($newAddress);
-			if ($this->member_srl && !$addressRepo->hasDefaultAddress($this->member_srl, AddressRepository::TYPE_SHIPPING)) {
-				$newAddress->default_shipping = 'Y';
+			if($newAddress->isValid())
+			{
+				if ($this->member_srl && !$addressRepo->hasDefaultAddress($this->member_srl, AddressRepository::TYPE_SHIPPING)) {
+					$newAddress->default_shipping = 'Y';
+				}
+				$newAddress->save();
+				$data['shipping_address_srl'] = $newAddress->address_srl;
 			}
-			$newAddress->save();
-			$data['shipping_address_srl'] = $newAddress->address_srl;
         }
         if (self::validateFormBlock($payment = $input['payment'])) {
             $data['extra']['payment_method'] = $payment['method'];
