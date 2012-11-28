@@ -31,9 +31,10 @@ class FrontFilters
     {
         $productRepo = new ProductRepository();
         $maxPrice = $productRepo->getMaxPrice($module_srl);
+        $minPrice = 0;
         $priceFilter = array(
             //start value
-            $minPrice = 0,
+            $minPrice,
             //selected left value
             Context::get(self::TO_PRICE_MIN) ? Context::get(self::TO_PRICE_MIN) : $minPrice,
             //selected right value

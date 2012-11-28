@@ -5,8 +5,8 @@
     <form action="./">
         <input name="act" type="hidden" value="procShopFilter">
         <ul>
-            <li cond=" ! isset($priceFilter[3]) " style="color: #ff4500; font-size: 10px;">No price range (missing upper price range limit)</li>
-            <li cond=" isset($priceFilter[3]) " id="price">
+            <!--<li cond="!isset($priceFilter[3])" style="color: #ff4500; font-size: 10px;">No price range (missing upper price range limit)</li>-->
+            <li cond="isset($priceFilter[3])" id="price">
                 <h4>Filter by price:</h4>
                     <div class="range-numeric" data-min="{$priceFilter[0]}" data-minvalue="{$priceFilter[1]}" data-maxvalue="{$priceFilter[2]}" data-max="{$priceFilter[3]}"></div>
                     <p class="clearfix a-center" style="line-height: 26px;">
@@ -37,10 +37,10 @@
                     <li cond="$attribute->isMultipleSelect()" id="{$attributeId}" class="filter-multiple-select">
                         <label for="{$attributeId}">{$attribute->title}</label>
                         <ul class="multiple-select-filter-body">
-                        <!--@foreach ($attribute->getValues() as $value)-->
+                        <!--@foreach ($attribute->getValues() as $i=>$value)-->
                             <li>
-                                <input type="checkbox" name="filter[attributes][{$attribute->attribute_srl}][]" id="filter_{$attribute->attribute_srl}_multiple" value="{$value}" checked="checked"|cond="is_array($values = $attribute->getMeta('filterValues')) && in_array($value, $values)">
-                                <label for="filter_{$attribute->attribute_srl}_multiple">{$value}</label>
+                                <input type="checkbox" name="filter[attributes][{$attribute->attribute_srl}][{$i}]" id="filter_{$attribute->attribute_srl}_{$i}_multiple" value="{$value}" checked="checked"|cond="is_array($values = $attribute->getMeta('filterValues')) && in_array($value, $values)">
+                                <label for="filter_{$attribute->attribute_srl}_{$i}_multiple">{$value}</label>
                             </li>
                         <!--@endforeach-->
                         </ul>
