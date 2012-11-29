@@ -1564,3 +1564,17 @@ span.side-separator {
 .body-left-panel .filter-multiple-select li {
     line-height: 0!important;
 }
+
+.filterTable {
+    border: 0;
+    word-wrap: break-word;
+}
+
+.filterTable td * {
+    vertical-align: middle;
+}
+
+.filterTable td {
+    border: 0 !important;
+    padding: 0 0 10px 0;
+}

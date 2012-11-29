@@ -21,38 +21,46 @@
             </li>
             <li id="filter_attributes" cond="isset($filter_attributes) && !empty($filter_attributes)">
                 <h4>Filter by attributes:</h4>
-                <ul>
+                <table class="filterTable">
+                    <tbody>
                     <!--@foreach ($filter_attributes as $attribute)-->
                     {@ $attributeId = "filter_attribute_" . $attribute->attribute_srl }
                     {@ $controlId = $attributeId . "_ctrl" }
-                    <li cond="$attribute->isSelect()" id="{$attributeId}" class="filter-select">
-                        <label for="{$attributeId}">{$attribute->title}</label>
-                        <select class="f-right" name="filter[attributes][{$attribute->attribute_srl}]" id="{$controlId}">
-                            <option></option>
-                            <!--@foreach ($attribute->getValues() as $value)-->
-                            <option value="{$value}" selected="selected"|cond="$attribute->getMeta('filterValue') == $value">{$value}</option>
-                            <!--@endforeach-->
-                        </select>
-                    </li>
-                    <li cond="$attribute->isMultipleSelect()" id="{$attributeId}" class="filter-multiple-select">
-                        <label for="{$attributeId}">{$attribute->title}</label>
-                        <ul class="multiple-select-filter-body">
-                        <!--@foreach ($attribute->getValues() as $i=>$value)-->
-                            <li>
-                                <input type="checkbox" name="filter[attributes][{$attribute->attribute_srl}][{$i}]" id="filter_{$attribute->attribute_srl}_{$i}_multiple" value="{$value}" checked="checked"|cond="is_array($values = $attribute->getMeta('filterValues')) && in_array($value, $values)">
-                                <label for="filter_{$attribute->attribute_srl}_{$i}_multiple">{$value}</label>
-                            </li>
-                        <!--@endforeach-->
-                        </ul>
-                    </li>
-                    <li cond="$attribute->isNumeric()" id="{$attributeId}" class="filter-numeric">
+                    <tr cond="$attribute->isSelect()" id="{$attributeId}" class="filter-select">
+                        <td width="50%">
+                            <label for="{$attributeId}">{$attribute->title}</label>
+                        </td>
+                        <td>
+                            <select class="f-right" name="filter[attributes][{$attribute->attribute_srl}]" id="{$controlId}">
+                                <option></option>
+                                <!--@foreach ($attribute->getValues() as $value)-->
+                                <option value="{$value}" selected="selected"|cond="$attribute->getMeta('filterValue') == $value">{$value}</option>
+                                <!--@endforeach-->
+                            </select>
+                        </td>
+                    </tr>
+                    <tr cond="$attribute->isMultipleSelect()" id="{$attributeId}" class="filter-multiple-select">
+                        <td colspan="2">
+                            <label for="{$attributeId}">{$attribute->title}</label>
+                        </td>
+                    </tr>
+                    <!--@foreach ($attribute->getValues() as $i=>$value)-->
+                    <tr cond="$attribute->isMultipleSelect()" id="{$attributeId}" class="filter-multiple-select">
+                        <td class="multiple-select-filter-body" colspan="2">
+                            <input type="checkbox" name="filter[attributes][{$attribute->attribute_srl}][{$i}]" id="filter_{$attribute->attribute_srl}_{$i}_multiple" value="{$value}" checked="checked"|cond="is_array($values = $attribute->getMeta('filterValues')) && in_array($value, $values)">
+                            <label for="filter_{$attribute->attribute_srl}_{$i}_multiple">{$value}</label>
+                        </td>
+                    </tr>
+                    <!--@endforeach-->
+                    <tr cond="$attribute->isNumeric()" id="{$attributeId}" class="filter-numeric">
                         <p>{$attribute->title}</p>
                         <div class="range-numeric" data-max="{$attribute->getMeta('max')}" data-min="{$attribute->getMeta('min')}" data-minvalue="{$attribute->getMeta('minValue')}" data-maxvalue="{$attribute->getMeta('maxValue')}"></div>
                         <input class="range price1 price-half" name="filter[attributes][{$attribute->attribute_srl}][min]" class="price-half" type="text"> {$shop->getCurrencySymbol()} <span class="side-separator">-</span>
                         <input class="range price2 price-half" name="filter[attributes][{$attribute->attribute_srl}][max]" class="price-half" type="text"> {$shop->getCurrencySymbol()}
-                    </li>
+                    </tr>
                     <!--@endforeach-->
-                </ul>
+                    </tbody>
+                </table>
             </li>
         </ul>
         <p class="a-center">
@@ -75,7 +83,7 @@
                         (pr.data('maxvalue') ? pr.data('maxvalue') : sliderMaxValue) :
                         sliderMaxValue
                 );
-            console.log(sliderMinValue, v1, v2, sliderMaxValue);
+            //console.log(sliderMinValue, v1, v2, sliderMaxValue);
             var unit = (sliderMaxValue - sliderMinValue) / 100;
             pr.slider({
                 range: true,
