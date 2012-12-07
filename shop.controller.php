@@ -109,6 +109,32 @@
 			$this->setRedirectUrl($returnUrl);
         }
 
+        function updateShopCommentEditor($module_srl, $comment_editor_skin, $comment_editor_colorset) {
+            $oEditorModel = &getModel('editor');
+            $oModuleController = &getController('module');
+
+            $editor_config = $oEditorModel->getEditorConfig($module_srl);
+
+            $editor_config->editor_skin = 'dreditor';
+            $editor_config->content_style = 'default';
+            $editor_config->content_font = null;
+            $editor_config->comment_editor_skin = $comment_editor_skin;
+            $editor_config->sel_editor_colorset = null;
+            $editor_config->sel_comment_editor_colorset = $comment_editor_colorset;
+            $editor_config->enable_html_grant = array(1);
+            $editor_config->enable_comment_html_grant = array(1);
+            $editor_config->upload_file_grant = array(1);
+            $editor_config->comment_upload_file_grant = array(1);
+            $editor_config->enable_default_component_grant = array(1);
+            $editor_config->enable_comment_default_component_grant = array(1);
+            $editor_config->enable_component_grant = array(1);
+            $editor_config->enable_comment_component_grant = array(1);
+            $editor_config->editor_height = 500;
+            $editor_config->comment_editor_height = 100;
+            $editor_config->enable_autosave = 'N';
+            $oModuleController->insertModulePartConfig('editor',$module_srl,$editor_config);
+        }
+
         public function procShopSignToNewsletter(){
             $this->updateNewsletterExtraVar();
             $this->setMessage("Successfully signed to newsletter");
@@ -1603,7 +1629,7 @@
             $tar = new tar();
 
             $replace_path = getNumberingPath($this->module_srl,3);
-            foreach($tar_list as $key => $file) $tar->addFile($file,$replace_path,'__TEXTYLE_SKIN_PATH__');
+            foreach($tar_list as $key => $file) $tar->addFile($file,$replace_path,'__SHOP_SKIN_PATH__');
 
             $stream = $tar->toTarStream();
             $filename = 'ShopUserSkin_' . date('YmdHis') . '.tar';
@@ -1647,7 +1673,7 @@
 
             $replace_path = getNumberingPath($this->module_srl,3);
             foreach($tar->files as $key => $info) {
-                FileHandler::writeFile($skin_path . $info['name'],str_replace('__TEXTYLE_SKIN_PATH__',$replace_path,$info['file']));
+                FileHandler::writeFile($skin_path . $info['name'],str_replace('__SHOP_SKIN_PATH__',$replace_path,$info['file']));
             }
 
             FileHandler::removeFile($tar_file);
@@ -2660,6 +2686,30 @@
 			$oMail->setReceiptor(FALSE, $member_args->email_address);
 			$oMail->send();
 		}
+
+        /**
+         * @brief Comment item delete
+         **/
+        public function procShopCommentItemDelete(){
+            $comment_srl = Context::get('comment_srl');
+
+            if($comment_srl<1) return new Object(-1,'error');
+            $comment_srl = explode(',',trim($comment_srl));
+            if(count($comment_srl)<1) return new Object(-1,'msg_invalid_request');
+
+            $oCommentController = &getController('comment');
+
+            for($i=0,$c=count($comment_srl);$i<$c;$i++){
+                $output = $oCommentController->deleteComment($comment_srl[$i], $this->grant->manager);
+                if(!$output->toBool()) return $output;
+            }
+
+            $this->add('mid', Context::get('mid'));
+            $this->add('page', Context::get('page'));
+            $this->add('document_srl', $output->get('document_srl'));
+            $this->setMessage('success_deleted');
+        }
+
 
     }
 ?>

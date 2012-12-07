@@ -113,6 +113,10 @@
             $output = executeQuery('shop.insertShop', $args);
             if(!$output->toBool()) return $output;
 
+            $args->comment_editor_skin = 'xpresseditor';
+            $args->comment_editor_colorset = 'white';
+
+            $oShopController->updateShopCommentEditor($module_srl, $args->comment_editor_skin, $args->comment_editor_colorset);
 
             $oAddonAdminController->doInsert('autolink', $site_srl);
             $oAddonAdminController->doInsert('counter', $site_srl);

@@ -36,6 +36,13 @@
                 <title xml:lang="en">Hide</title>
             </options>
         </var>
+        <var name="xe_banner" type="checkbox" default="N">
+            <title xml:lang="en">XE banner</title>
+            <description xml:lang="en">Check this if you want to hide the XE Banner. Please keep in mind that we need your support in order to improve XE and spreading the word helps us a lot.</description>
+            <options value="Y">
+                <title xml:lang="en">Hide</title>
+            </options>
+        </var>
     </extra_vars>
 
 </skin>

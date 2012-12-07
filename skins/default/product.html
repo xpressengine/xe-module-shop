@@ -1,6 +1,8 @@
 <include target="_header.html" />
 <include target="_sidebar.html" />
 <include target="product_variants_datasource.html" />
+<!--%import("comments.js")-->
+<!--%import("LAB.min.js")-->
 
 <div id="fb-root"></div>
 <script>(function(d, s, id) {
@@ -30,6 +32,7 @@
                 mouseX = 0, mouseY = 0,
                 largeImages = new Array(),
                 zoomImages = new Array(),
+                current = 0;
                 currentView = 1,
                 viewable = 4,
                 zoomRatio = 3,
@@ -44,7 +47,7 @@
                 mainImage = '<img src="{$product->getPrimaryImage()->getThumbnailPath(340, 240)}" />',
                 mainImageH = 0,
                 mainImageW = 0,
-                mainImageOffset = 0,
+                mainImageOffset = 0;
                 <!--@foreach($product->images as $image)-->
                 largeImages.push('<img src="{$image->getThumbnailPath(340, 240)}" />');
                 zoomImages.push('<img src="{$image->getThumbnailPath(1020, 720)}" />');
@@ -266,7 +269,7 @@
             <div class="socials underline">
                 <div class="fb-like" data-send="false" data-layout="button_count" data-width="100" data-show-faces="false"></div>
                 <a href="https://twitter.com/share" class="twitter-share-button">Tweet</a>
-                <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+
             </div>
 
             <p class="product-stock underline">
@@ -307,6 +310,10 @@
                         <b>{$attributes[$attribute_srl]->title}</b>: {$attribute_value}
                     </p>
                 <!--@end-->
+            </div>
+            <div id="editor-box">
+                <span id="loadEditorButton"><a href="#" class="button" onclick="loadCommentForm({$product->document_srl})">{$lang->insert_comment}</a></span>
+
             </div>
         </form>
     </div>

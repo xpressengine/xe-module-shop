@@ -1029,6 +1029,18 @@ class shopView extends shop {
             Context::set('product', $product);
         }
 
+        //add product document if it does not exist  (link to comments)
+        if(!isset($product->document_srl)){
+            $documentController = getController('document');
+            $document = new stdClass();
+            $document->title = $product->product_srl;
+            $document->commentStatus = 'ALLOW';
+            $document->module_srl = $product->module_srl;
+            $output = $documentController->insertDocument($document);
+            $product->document_srl = $output->variables['document_srl'];
+            $product->repo->updateProduct($product);
+        }
+
 		// Setup Javscript datasource for linked dropdowns
 		$datasourceJS = $this->getAssociatedProductsAttributesAsJavascriptArray(array($product));
 		Context::set('datasourceJS', $datasourceJS);
@@ -1762,6 +1774,166 @@ class shopView extends shop {
 
         $shipping_form_html = $shipping_instance->getFormHtml();
         Context::set('shipping_form_html', $shipping_form_html);
+    }
+
+    /**
+     * display comment editor
+     * @return Object
+     */
+    public function dispCommentEditor()
+    {
+        $document_srl = Context::get('document_srl');
+
+        $oDocumentModel = &getModel("document");
+        $oDocument = $oDocumentModel->getDocument($document_srl);
+
+        if (!$oDocument->isExists())
+        {
+            return new Object(-1, 'msg_invalid_request');
+        }
+
+        if (!$oDocument->allowComment())
+        {
+            return new Object(-1, 'comments_disabled');
+        }
+
+        Context::set('oDocument', $oDocument);
+
+        $oModuleModel = &getModel('module');
+        $module_info = $oModuleModel->getModuleInfoByModuleSrl($oDocument->get('module_srl'));
+
+        Context::set("module_info", $module_info);
+
+        $module_path = './modules/' . $module_info->module . '/';
+        $skin_path = $module_path . 'skins/' . $module_info->skin . '/';
+
+        if(!$module_info->skin || !is_dir($skin_path))
+        {
+            $skin_path = $module_path . 'skins/default/';
+        }
+
+        $oTemplateHandler = &TemplateHandler::getInstance();
+        $html = base64_encode($oTemplateHandler->compile($skin_path, 'comment_form.html'));
+        $this->add('html', $html);
+        $this->add('message_type', 'info');
+    }
+
+    /**
+     * display modify comment
+     * @return Object
+     */
+    function dispModifyComment()
+    {
+        // allow only logged in users to comment.
+        if (!Context::get('is_logged'))
+        {
+            return new Object(-1, 'login_to_modify_comment');
+        }
+
+        $comment_srl = Context::get('comment_srl');
+
+        if (!$comment_srl)
+        {
+            return new Object(-1, 'msg_invalid_request');
+        }
+
+        $oCommentModel = &getModel('comment');
+        $oComment = $oCommentModel->getComment($comment_srl, $this->grant->manager);
+
+        if (!$oComment->isExists())
+        {
+            return $this->dispWikiMessage('msg_invalid_request');
+        }
+
+        if (!$oComment->isGranted())
+        {
+            return $this->setTemplateFile('input_password_form');
+        }
+
+        Context::set('oComment', $oComment);
+
+        $oModuleModel = &getModel('module');
+        $module_info = $oModuleModel->getModuleInfoByModuleSrl($oComment->get('module_srl'));
+
+        if (!$oComment->isGranted())
+        {
+            return new Object(-1, 'no_rights_to_modify_comment');
+        }
+
+        Context::set("module_info", $module_info);
+
+        $module_path = './modules/' . $module_info->module . '/';
+        $skin_path = $module_path . 'skins/' . $module_info->skin . '/';
+
+        if(!$module_info->skin || !is_dir($skin_path))
+        {
+            $skin_path = $module_path . 'skins/multiPost/';
+        }
+
+        $oTemplateHandler = &TemplateHandler::getInstance();
+
+        $html = base64_encode($oTemplateHandler->compile($skin_path, 'comment_form.html'));
+        $this->add('html', $html);
+
+        $this->add('html', $html);
+        $this->add('comment_srl', $oComment->comment_srl);
+    }
+
+    public function dispReplyComment()
+    {
+        $parent_srl = Context::get('comment_srl');
+
+        if (!$parent_srl)
+        {
+            return new Object(-1, 'msg_invalid_request');
+        }
+
+        $oCommentModel = &getModel('comment');
+        $oSourceComment = $oCommentModel->getComment($parent_srl, $this->grant->manager);
+
+        if (!$oSourceComment->isExists())
+        {
+            return new Object(-1, 'msg_invalid_request');
+        }
+
+        $oDocumentModel = &getModel("document");
+        $oDocument = $oDocumentModel->getDocument($oSourceComment->get('document_srl'));
+
+        if (!$oDocument->isExists())
+        {
+            return new Object(-1, 'msg_invalid_request');
+        }
+
+        if (!$oDocument->allowComment())
+        {
+            return new Object(-1, 'comments_disabled');
+        }
+
+        $oComment = $oCommentModel->getComment();
+        $oComment->add('parent_srl', $parent_srl);
+        $oComment->add('document_srl', $oSourceComment->get('document_srl'));
+        $oComment->add('module_srl', $this->module_srl);
+
+        Context::set('oComment', $oComment);
+
+        $oModuleModel = &getModel('module');
+        $module_info = $oModuleModel->getModuleInfoByModuleSrl($oDocument->get('module_srl'));
+
+        Context::set("module_info", $module_info);
+
+        $module_path = './modules/' . $module_info->module . '/';
+        $skin_path = $module_path . 'skins/' . $module_info->skin . '/';
+
+        if(!$module_info->skin || !is_dir($skin_path))
+        {
+            $skin_path = $module_path . 'skins/default/';
+        }
+
+        $oTemplateHandler = &TemplateHandler::getInstance();
+
+        $html = base64_encode($oTemplateHandler->compile($skin_path, 'comment_form.html'));
+        $this->add('html', $html);
+        $this->add('parent_srl', $parent_srl);
     }
 
 

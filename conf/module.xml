@@ -4,6 +4,9 @@
         <grant name="create" default="member">
             <title xml:lang="en">Create a shop</title>
         </grant>
+        <grant name="write_comment" default="guest">
+            <title xml:lang="en">Write a comment</title>
+        </grant>
     </grants>
     <permissions>
 
@@ -123,6 +126,8 @@
         <action name="dispShopMenu" type="view" />
         <action name="dispShopSearch" type="view" />
         <action name="dispShopViewOrder" type="view" />
+        <action name="dispCommentEditor" type="view" />
+        <action name="dispReplyComment" type="view" />
 
 
         <action name="procShopLogin" type="controller" ruleset="shop_login" />
@@ -139,6 +144,8 @@
         <action name="procShopPrintOrder" type="controller"/>
         <action name="procShopToolPrintOrder" type="controller"/>
         <action name="procShopSort" type="controller"/>
+        <action name="procShopCommentItemDelete" type="controller" />
+        <action name="procShopInsertComment" type="controller" ruleset="insert_comment" />
 
         <!-- Shop backend -->
         <action name="route" type="view" />

@@ -31,6 +31,7 @@ abstract class Product extends BaseItem
 	public $images = array();
 	public $primary_image;
 	public $primary_image_filename;
+    public $document_srl; //used to link products to xe comments
 
     /** @var ProductRepository */
     public $repo;
