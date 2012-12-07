@@ -2762,10 +2762,7 @@
             }
             if(!$output->toBool()) return $output;
 
-            $this->setMessage('success_registed');
-            $this->add('mid', Context::get('mid'));
-            $this->add('document_srl', $obj->document_srl);
-            $this->add('comment_srl', $obj->comment_srl);
+			$this->setRedirectUrl($_SERVER['HTTP_REFERER']);
         }
 
 
