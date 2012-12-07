@@ -59,9 +59,20 @@ function showCommentEditor(response, response_tags)
         '$LAB.runQueue();' +
         'jQuery("#loadEditorButton").hide();' +
         'scrollTo("#editor-box");' +
+        'jQuery("form.wikiEditor").on("submit", submitComment);' +
         '});';
 
     eval(labScript);
+}
+
+function submitComment()
+{
+    var v = xe.getApp('Validator')[0], $ = jQuery, args = [];
+    if (!v) return false;
+    var form = jQuery("form.wikiEditor")[0];
+    v.cast('VALIDATE', [form]);
+
+    jQuery("#editor-box.wikiEditor").submit();
 }
 
 function base64_decode (data) {
