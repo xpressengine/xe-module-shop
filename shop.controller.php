@@ -2710,6 +2710,64 @@
             $this->setMessage('success_deleted');
         }
 
+        /**
+         * @brief comment insert
+         **/
+        function procShopInsertComment() {
+            $oDocumentModel = &getModel('document');
+            $oCommentModel = &getModel('comment');
+            $oCommentController = &getController('comment');
+
+            if(!$this->grant->write_comment) return new Object(-1, 'msg_not_permitted');
+
+            $obj = Context::gets('document_srl','comment_srl','parent_srl','content','password','nick_name','member_srl','email_address','homepage','is_secret','notify_message');
+            $obj->module_srl = $this->module_srl;
+
+            $oDocument = $oDocumentModel->getDocument($obj->document_srl);
+            if(!$oDocument->isExists()) return new Object(-1,'msg_not_permitted');
+
+            if(!$obj->comment_srl) $obj->comment_srl = getNextSequence();
+            else $comment = $oCommentModel->getComment($obj->comment_srl, $this->grant->manager);
+
+            if($comment->comment_srl != $obj->comment_srl) {
+                if($obj->parent_srl) {
+                    $parent_comment = $oCommentModel->getComment($obj->parent_srl);
+                    if(!$parent_comment->comment_srl) return new Object(-1, 'msg_invalid_request');
+
+                    $output = $oCommentController->insertComment($obj);
+
+                } else {
+                    $output = $oCommentController->insertComment($obj);
+                }
+
+                if($output->toBool() && $this->module_info->admin_mail) {
+                    $oMail = new Mail();
+                    $oMail->setTitle($oDocument->getTitleText());
+                    $oMail->setContent( sprintf("From : <a href=\"%s#comment_%d\">%s#comment_%d</a><br/>\r\n%s", $oDocument->getPermanentUrl(), $obj->comment_srl, $oDocument->getPermanentUrl(), $obj->comment_srl, $obj->content));
+                    $oMail->setSender($obj->nick_name, $obj->email_address);
+
+                    $target_mail = explode(',',$this->module_info->admin_mail);
+                    for($i=0;$i<count($target_mail);$i++) {
+                        $email_address = trim($target_mail[$i]);
+                        if(!$email_address) continue;
+                        $oMail->setReceiptor($email_address, $email_address);
+                        $oMail->send();
+                    }
+                }
+
+            } else {
+                $obj->parent_srl = $comment->parent_srl;
+                $output = $oCommentController->updateComment($obj, $this->grant->manager);
+                $comment_srl = $obj->comment_srl;
+            }
+            if(!$output->toBool()) return $output;
+
+            $this->setMessage('success_registed');
+            $this->add('mid', Context::get('mid'));
+            $this->add('document_srl', $obj->document_srl);
+            $this->add('comment_srl', $obj->comment_srl);
+        }
+
 
     }
 ?>
