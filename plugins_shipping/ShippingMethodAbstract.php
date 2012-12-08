@@ -61,7 +61,16 @@ abstract class ShippingMethodAbstract extends AbstractPlugin
 	 * @param Cart $cart
 	 * @return array
 	 */
-	abstract public function getAvailableVariants(Cart $cart);
+	public function getAvailableVariants(Cart $cart)
+	{
+		$variant = new stdClass();
+		$variant->name = $this->getName();
+		$variant->display_name = $this->getDisplayName();
+		$variant->variant = null;
+		$variant->variant_display_name = null;
+		$variant->price = $this->calculateShipping($cart);
+		return array($variant);
+	}
 
 
 }

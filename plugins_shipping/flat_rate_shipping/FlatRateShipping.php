@@ -61,30 +61,4 @@ class FlatRateShipping extends ShippingMethodAbstract
 		}
 		return TRUE;
 	}
-
-	/**
-	 * Returns a list of available variants
-	 * The structure is:
-	 * array(
-	 *     stdclass(
-	 *         'name' => 'ups'
-	 *         , 'display_name' => 'UPS'
-	 *         , 'variant' => '01'
-	 *         , 'variant_display_name' => 'Domestic'
-	 *         ,  price => 12
-	 * ))
-	 *
-	 * @param Address $shipping_address
-	 * @return array
-	 */
-	public function getAvailableVariants(Cart $cart)
-	{
-		$variant = new stdClass();
-		$variant->name = $this->getName();
-		$variant->display_name = $this->getDisplayName();
-		$variant->variant = null;
-		$variant->variant_display_name = null;
-		$variant->price = $this->calculateShipping($cart);
-		return array($variant);
-	}
 }
