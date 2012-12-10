@@ -53,6 +53,18 @@ class TableRateShipping extends ShippingMethodAbstract
 	 */
 	public function isConfigured(&$error_message = 'msg_invalid_request')
 	{
+		if(!isset($this->serialized_table_rates))
+		{
+			$error_message = 'Please enter at least one rule for the table rates.';
+			return FALSE;
+		}
+		$table_rates = $this->getTableRates();
+		if(!(count($table_rates) > 0))
+		{
+			$error_message = 'Please enter at least one rule for the table rates.';
+			return FALSE;
+		}
+
 		return TRUE;
 	}
 
