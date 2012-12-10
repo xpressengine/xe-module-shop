@@ -52,7 +52,7 @@
                 return false;
             });
 
-            $("#delete_row").click(function(){
+            $(".delete_row").click(function(){
                 $(this).closest("tr").remove();
             });
 
@@ -85,7 +85,7 @@
             </tr>
         </thead>
         <tbody>
-            {@ $table_rates = json_decode($shipping_method->serialized_table_rates); }
+            {@ $table_rates = $shipping_method->getTableRates(); }
             <!--@if(count($table_rates) > 0)-->
                 <!--@foreach($table_rates as $table_rate)-->
                     <tr>
@@ -100,7 +100,7 @@
                             <input type="text" name="table_price[]" value="{$table_rate->price}" />
                         </td>
                         <td>
-                            <a href="#" id="delete_row">
+                            <a href="#" class="delete_row">
                                 <img src="{getFullSiteUrl()}/modules/shop/plugins_shipping/table_rate_shipping/delete.png" />
                             </a>
                         </td>
@@ -119,7 +119,7 @@
                         <input type="text" name="table_price[]" value="" />
                     </td>
                     <td>
-                        <a href="#" id="delete_row">
+                        <a href="#" class="delete_row">
                             <img src="{getFullSiteUrl()}/modules/shop/plugins_shipping/table_rate_shipping/delete.png" />
                         </a>
                     </td>
