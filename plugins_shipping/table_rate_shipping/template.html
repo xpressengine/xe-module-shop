@@ -32,7 +32,7 @@
                 // Reset all its form fields
                 var new_row = $("#table_rates tbody>tr:last");
                 new_row.find("input").val("");
-                new_row.find("input[name='row_index[]']").val($("#table_rates tbody>tr").size());
+                new_row.find("input.row_index").val($("#table_rates tbody>tr").size());
             }
 
             // When pressing tab on the last input of the last row, add a new row and focus on it
@@ -60,10 +60,10 @@
                 var table_values = $('#table_rates tbody tr').map(function() {
                     var $row = $(this);
                     return {
-                        id: $row.find('input[name="row_index[]"]').val(),
-                        country: $row.find('input[name="table_country[]"]').val(),
-                        unit: $row.find('input[name="table_unit[]"]').val(),
-                        price: $row.find('input[name="table_price[]"]').val()
+                        id: $row.find('input.row_index').val(),
+                        country: $row.find('input.table_country').val(),
+                        unit: $row.find('input.table_unit').val(),
+                        price: $row.find('input.table_price').val()
                     };
                 }).get();
 
@@ -90,14 +90,14 @@
                 <!--@foreach($table_rates as $table_rate)-->
                     <tr>
                         <td>
-                            <input type="hidden" name="row_index[]" value="{$table_rate->id}" />
-                            <input type="text" name="table_country[]" value="{$table_rate->country}" />
+                            <input type="hidden" class="row_index" value="{$table_rate->id}" />
+                            <input type="text" class="table_country" value="{$table_rate->country}" />
                         </td>
                         <td>
-                            <input type="text" name="table_unit[]" value="{$table_rate->unit}" />
+                            <input type="text" class="table_unit" value="{$table_rate->unit}" />
                         </td>
                         <td>
-                            <input type="text" name="table_price[]" value="{$table_rate->price}" />
+                            <input type="text" class="table_price" value="{$table_rate->price}" />
                         </td>
                         <td>
                             <a href="#" class="delete_row">
@@ -109,14 +109,14 @@
             <!--@else-->
                 <tr>
                     <td>
-                        <input type="hidden" name="row_index[]" value="1" />
-                        <input type="text" name="table_country[]" value="*" />
+                        <input type="hidden" class="row_index" value="1" />
+                        <input type="text" class="table_country" value="*" />
                     </td>
                     <td>
-                        <input type="text" name="table_unit[]" value="" />
+                        <input type="text" class="table_unit" value="" />
                     </td>
                     <td>
-                        <input type="text" name="table_price[]" value="" />
+                        <input type="text" class="table_price" value="" />
                     </td>
                     <td>
                         <a href="#" class="delete_row">

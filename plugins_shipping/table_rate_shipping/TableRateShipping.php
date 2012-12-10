@@ -85,9 +85,12 @@ class TableRateShipping extends ShippingMethodAbstract
 		$shipping_price = NULL;
 		foreach($table_rates as $table_rate)
 		{
-			if($unit <= $table_rate->unit)
+			if($table_rate->unit <= $unit)
 			{
 				$shipping_price = $table_rate->price;
+			}
+			else
+			{
 				break;
 			}
 		}
