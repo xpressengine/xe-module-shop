@@ -128,7 +128,7 @@
         <action name="dispShopViewOrder" type="view" />
         <action name="dispCommentEditor" type="view" />
         <action name="dispReplyComment" type="view" />
-
+        <action name="dispModifyComment" type="view" />
 
         <action name="procShopLogin" type="controller" ruleset="shop_login" />
         <action name="procShopFilter" type="controller" />

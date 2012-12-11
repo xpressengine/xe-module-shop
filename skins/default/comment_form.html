@@ -4,7 +4,7 @@
     {@ $content = htmlspecialchars($oComment->get('content'))}
     {@ $editor = $oComment->getEditor()}
     {@ $parent_srl = $oComment->get('parent_srl')}
-    {@ $buttonText = $parent_srl ? $lang->cmd_comment_registration : $lang->cmd_submit}
+    {@ $buttonText = $parent_srl ? $lang->insert_reply : $lang->update_comment}
 <!--@else-->
     {@ $document_srl = $oDocument->document_srl}
     {@ $parent_srl = ''}
@@ -15,6 +15,7 @@
 <!--@end-->
 <form action="./" method="post" ruleset="insert_comment" class="wikiEditor" >
     <input type="hidden" name="act" value="procShopInsertComment" />
+    <input type="hidden" name="module" value="shop" />
     <input type="hidden" name="mid" value="{$module_info->mid}" />
     <input type="hidden" name="document_srl" value="{$document_srl}" />
     <input type="hidden" name="parent_srl" value="{$parent_srl}" />
@@ -34,7 +35,7 @@
 			<!--@end-->
         </div>
         <div class="center">
-            <span ><input type="submit" value="{$buttonText}" accesskey="s" /></span>
+            <span><input type="submit" value="{$buttonText}" accesskey="s" /></span>
             <a href="#" onclick="if (confirm('{$lang->confirm_cancel_comment}')) hideCommentForm(); return false;" class="link-button" style="margin-top:7px">{$lang->cmd_cancel}</a>
         </div>
     </div>

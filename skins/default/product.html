@@ -312,10 +312,24 @@
                 <!--@end-->
             </div>
         </form>
-
-        <div id="editor-box">
-            <span id="loadEditorButton"><a href="#" class="button" onclick="loadCommentForm({$product->document_srl})">Add comment</a></span>
-
+    </div>
+</div>
+<div id="comment-body" class="body-two-columns main-content clearfix">
+    <div id="comments-page">
+        <div id="feedbacks">
+            <div class="feedbackTitle">
+                <span id="commentToggle">{$product->document->getCommentCount()} comments</span>
+            </div>
+            <div id="comments">
+                <!--#include("./comment.html")-->
+                <!--@if($product->document->allowComment() )-->
+                <div id="editor-box">
+                    <span id="loadEditorButton"><a href="#" class="button" onclick="loadCommentForm({$product->document_srl})">{$lang->insert_comment}</a></span>
+                </div>
+                <!--@else-->
+                <p>{$lang->disable_comment}</p>
+                <!--@end-->
+            </div>
         </div>
     </div>
 </div>

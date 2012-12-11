@@ -1578,3 +1578,20 @@ span.side-separator {
     border: 0 !important;
     padding: 0 0 10px 0;
 }
+
+#feedbacks{margin-bottom:20px;margin-top: 20px;}
+#feedbacks .item{padding-bottom:10px;border-top:1px dashed #F0F0F0}
+#feedbacks .avatar{box-shadow:rgba(0, 0, 0, 0.496094) 2px 2px 4px 0px;margin:0 7px 4px 0}
+#feedbacks .avatar img{width:32px;height:32px}
+#feedbacks .author{vertical-align:top;font-size:13px}
+#feedbacks .date{color:#999;font-size:11px;margin-bottom:2px}
+#feedbacks .links{width:285px;vertical-align:top;display: inline-block;}
+#feedbacks .links a{color:#888;border-right:1px solid #EEE;padding-right:3px;}
+#feedbacks .links a:hover{color:#FFF;background:#888}
+#feedbacks .links:last-child{border-right:none}
+.shop #feedbacks .wikiEditor .editorOption input{z-index:10}
+.meta{
+    color:#999;
+    font-size:11px;
+    display:inline-block;
+}

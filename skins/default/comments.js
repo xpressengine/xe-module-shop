@@ -209,6 +209,7 @@ function showModifyCommentForm(response, response_tags)
         'comment.append(jQuery(response["html"]));' +
         '$LAB.runQueue();' +
         'scrollTo("#" + comment.attr("id"));' +
+        'jQuery("form.wikiEditor").on("submit", submitComment);' +
         '});';
 
     eval(labScript);
@@ -272,6 +273,7 @@ function showReplyCommentEditor(response, response_tags)
         'comment.append(jQuery(response["html"]));' +
         '$LAB.runQueue();' +
         'scrollTo("#" + comment.attr("id"));' +
+        'jQuery("form.wikiEditor").on("submit", submitComment);' +
         '});';
 
     eval(labScript);

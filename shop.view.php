@@ -1040,6 +1040,12 @@ class shopView extends shop {
             $product->document_srl = $output->variables['document_srl'];
             $product->repo->updateProduct($product);
         }
+        $documentModel = getModel('document');
+        $product->document = $documentModel->getDocument($product->document_srl);
+        $product->comment_list = $_comment_list = $product->document->getComments();
+        foreach($product->comment_list as $comment){
+            $comment->variables['relativeDate'] = $this->model->zdateRelative($comment->getRegdateTime());
+        }
 
 		// Setup Javscript datasource for linked dropdowns
 		$datasourceJS = $this->getAssociatedProductsAttributesAsJavascriptArray(array($product));
@@ -1842,12 +1848,7 @@ class shopView extends shop {
 
         if (!$oComment->isExists())
         {
-            return $this->dispWikiMessage('msg_invalid_request');
-        }
-
-        if (!$oComment->isGranted())
-        {
-            return $this->setTemplateFile('input_password_form');
+            return new Object(-1, "There is no comment");
         }
 
         Context::set('oComment', $oComment);
@@ -1867,7 +1868,7 @@ class shopView extends shop {
 
         if(!$module_info->skin || !is_dir($skin_path))
         {
-            $skin_path = $module_path . 'skins/multiPost/';
+            $skin_path = $module_path . 'skins/default/';
         }
 
         $oTemplateHandler = &TemplateHandler::getInstance();

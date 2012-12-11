@@ -548,4 +548,48 @@ class shopModel extends shop
     }
 	// endregion
 
+    public function zdateRelative($date)
+    {
+        $diff = time() - $date;
+
+        if ($diff < 60){
+            return sprintf($diff > 1 ? Context::getLang('seconds_ago') : Context::getLang('second_ago'), $diff);
+        }
+
+        $diff = floor($diff/60);
+
+        if ($diff < 60){
+            return sprintf($diff > 1 ? Context::getLang('minutes_ago') : Context::getLang('minute_ago'), $diff);
+        }
+
+        $diff = floor($diff/60);
+
+        if ($diff < 24){
+            return sprintf($diff > 1 ? Context::getLang('hours_ago') : Context::getLang('hour_ago'), $diff);
+        }
+
+        $diff = floor($diff/24);
+
+        if ($diff < 7){
+            return sprintf($diff > 1 ? Context::getLang('days_ago') : Context::getLang('day_ago'), $diff);
+        }
+
+        if ($diff < 30)
+        {
+            $diff = floor($diff / 7);
+
+            return sprintf($diff > 1 ? Context::getLang('weeks_ago') : Context::getLang('week_ago'), $diff);
+        }
+
+        $diff = floor($diff/30);
+
+        if ($diff < 12){
+            return sprintf($diff > 1 ? Context::getLang('months_ago') : Context::getLang('month_ago'), $diff);
+        }
+
+        $diff = floor($diff/12);
+
+        return sprintf($diff > 1 ? Context::getLang('years_ago') : Context::getLang('year_ago'), $diff);
+    }
+
 }

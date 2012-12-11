@@ -2535,4 +2535,52 @@
     <item name="payment_error">
         <value xml:lang="en">Payment error</value>
     </item>
+    <item name="update_comment">
+        <value xml:lang="en">Update comment</value>
+    </item>
+    <item name="insert_reply">
+        <value xml:lang="en">Insert reply</value>
+    </item>
+    <item name="seconds_ago">
+        <value xml:lang="en"><![CDATA[%s seconds ago]]></value>
+    </item>
+    <item name="second_ago">
+        <value xml:lang="en">one second ago</value>
+    </item>
+    <item name="minutes_ago">
+        <value xml:lang="en"><![CDATA[%s minutes ago]]></value>
+    </item>
+    <item name="minute_ago">
+        <value xml:lang="en">one minute ago</value>
+    </item>
+    <item name="hours_ago">
+        <value xml:lang="en"><![CDATA[%s hours ago]]></value>
+    </item>
+    <item name="hour_ago">
+        <value xml:lang="en">an hour ago</value>
+    </item>
+    <item name="days_ago">
+        <value xml:lang="en"><![CDATA[%s days ago]]></value>
+    </item>
+    <item name="day_ago">
+        <value xml:lang="en">yesterday</value>
+    </item>
+    <item name="weeks_ago">
+        <value xml:lang="en"><![CDATA[%s weeks ago]]></value>
+    </item>
+    <item name="week_ago">
+        <value xml:lang="en">last week</value>
+    </item>
+    <item name="months_ago">
+        <value xml:lang="en"><![CDATA[%s months ago]]></value>
+    </item>
+    <item name="month_ago">
+        <value xml:lang="en">last month</value>
+    </item>
+    <item name="years_ago">
+        <value xml:lang="en"><![CDATA[%s years ago]]></value>
+    </item>
+    <item name="year_ago">
+        <value xml:lang="en">last year</value>
+    </item>
 </lang>
