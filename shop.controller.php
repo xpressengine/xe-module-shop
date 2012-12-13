@@ -511,10 +511,9 @@
          * @brief function for attribute insert
          * @author Florin Ercus (dev@xpressengine.org)
          */
-        public function procShopToolInsertAttribute() {
-            $shopModel = $this->model;
-            /** @var $repository AttributeRepository */
-            $repository = $shopModel->getAttributeRepository();
+        public function procShopToolInsertAttribute()
+        {
+            $repository = new AttributeRepository();
 
             $args = Context::getRequestVars();
             $args->is_filter  = (int)(bool)$args->is_filter;
@@ -540,7 +539,7 @@
                     $this->setMessage("success_registed");
                 }
             }
-            catch(Exception $e) {
+            catch (Exception $e) {
                 return new Object(-1, $e->getMessage());
             }
 
@@ -548,11 +547,78 @@
             $this->setRedirectUrl($returnUrl);
         }
 
+        /**
+         * Inserts single codes, generates bulks
+         */
+        public function procShopToolInsertCoupon()
+        {
+            $repository = new CouponRepository();
+            $args = Context::getRequestVars();
+            $args->active = (int) $args->active;
+            $args->module_srl = $this->module_info->module_srl;
+            $logged_info = Context::get('logged_info');
+            if ($logged_info->member_srl) $args->member_srl = $logged_info->member_srl;
+            $args->ip = $_SERVER['REMOTE_ADDR'];
+            $coupon = new Coupon($args);
+            try {
+                /**
+                 * Update [both]
+                 */
+                if ($coupon->isPersisted() && $exists = $repository->get($coupon->srl)) { //
+                    /** @var $exists Coupon */
+                    $coupon->type = $exists->type;
+                    $out = $coupon->save();
+                    $repository->check($out);
+                    if ($coupon->isGroup()) {
+                        $this->setMessage("Updated group <b>{$coupon->name}</b>");
+                    }
+                    elseif ($coupon->isSingle()) {
+                        $this->setMessage("Updated coupon <b>{$coupon->code}</b>");
+                    }
+                }
+                /**
+                 * Group Insert
+                 */
+                elseif (is_numeric($n = Context::get('codes_number')) && $n > 1) {
+                    $coupon->type = Coupon::TYPE_PARENT;
+                    $out = $coupon->save();
+                    $repository->check($out);
+                    $length = Context::get('code_length');
+                    $type = Context::get('code_type');
+                    $pattern = Context::get('code_pattern');
+                    if (!strstr($pattern, 'CODE')) throw new ShopException('Pattern must contain "CODE"');
+                    $pattern = str_replace('CODE', 'X', $pattern);
+                    $separateEvery = Context::get('separate_at');
+                    $coupons = $coupon->generateBulk($n, $length, $type, $pattern, $separateEvery);
+                    $this->setMessage('Generated ' . count($coupons) . ' (grouped) coupons');
+                }
+                /**
+                 * Single insert
+                 */
+                else {
+                    $coupon->type = Coupon::TYPE_SINGLE;
+                    $out = $coupon->save();
+                    $repository->check($out);
+                    $this->setMessage("Generated single coupon with code <b>{$coupon->code}</b>");
+                }
+            }
+            catch (Exception $e) {
+                $msg = $e->getMessage();
+                if (strstr($msg, 'unique_module_code')) {
+                    $msg = "Code '<b>{$coupon->code}</b>' is already in use";
+                }
+                return new Object(-1, $msg);
+            }
+            $this->setRedirectUrl(getNotEncodedUrl('', 'act', 'dispShopToolDiscountCodes', 'highlight', $coupon->srl));
+        }
+
+
         /*
         * @brief function for address insert
         * @author Dan Dragan (dev@xpressengine.org)
         */
-        public function procShopToolInsertAddress() {
+        public function procShopToolInsertAddress()
+        {
             $shopModel = $this->model;
             $addressRepository = $shopModel->getAddressRepository();
 
@@ -582,7 +648,8 @@
         * @brief function for admin account update
         * @author Dan Dragan (dev@xpressengine.org)
         */
-        public function procShopToolAccountUpdate(){
+        public function procShopToolAccountUpdate()
+        {
             $oMemberController = &getController('member');
 
             // nickname, email
@@ -606,7 +673,8 @@
         * @brief function for shop info update
         * @author Dan Dragan (dev@xpressengine.org)
         */
-        public function procShopToolInfoUpdate(){
+        public function procShopToolInfoUpdate()
+        {
             $oModuleController = &getController('module');
             $oModuleModel = &getModel('module');
             $oShopModel = &getModel('shop');
@@ -652,7 +720,8 @@
         * @brief function for discount info update
         * @author Dan Dragan (dev@xpressengine.org)
         */
-        public function procShopToolDiscountUpdate(){
+        public function procShopToolDiscountUpdate()
+        {
             $args = Context::gets('discount_min_amount','discount_type','discount_amount','discount_tax_phase');
             $args->module_srl = $this->module_srl;
             if($args->discount_amount >= $args->discount_min_amount){
@@ -677,7 +746,8 @@
             $this->setRedirectUrl($returnUrl);
         }
 
-        public function insertShopFavicon($module_srl, $source) {
+        public function insertShopFavicon($module_srl, $source)
+        {
             $oShopModel = &getModel('shop');
             $path = $oShopModel->getShopFaviconPath($module_srl);
             if(!is_dir($path)) FileHandler::makeDir($path);
@@ -685,7 +755,8 @@
             move_uploaded_file($source, $filename);
         }
 
-        public function deleteShopFavicon($module_srl){
+        public function deleteShopFavicon($module_srl)
+        {
             $oShopModel = &getModel('shop');
             $path = $oShopModel->getShopFaviconPath($module_srl);
             $filename = sprintf('%s/favicon.ico', $path);
@@ -920,10 +991,12 @@
 					'shipping' => $shipping, // MUST send shipping, otherwise shipping_method is lost
 					'new_shipping_address' => $usesNewShippingAddress ? Context::get('new_shipping_address') : NULL,
 					'payment'  => Context::get('payment'),
+                    'discount_code' => Context::get('code')
 				));
 			}
-			else
-				throw new ShopException('No cart');
+			else {
+                throw new ShopException('No cart');
+            }
 		}
 
 		/**
@@ -1329,6 +1402,26 @@
             $repository->deleteAttributes($args);
             $this->setMessage("success_deleted");
             $this->setRedirectUrl(getNotEncodedUrl('', 'act', 'dispShopToolManageAttributes'));
+        }
+
+        public function procShopToolDeleteCoupons()
+        {
+            $repository = new CouponRepository();
+            $srls = explode(',', Context::get('srls'));
+            //check if there are groups among those srls
+            foreach ($srls as $i=>$srl) {
+                /** @var $coupon Coupon */
+                if (is_numeric($srl) && $coupon = $repository->get($srl)) {
+                    if (!$coupon->parent_srl) {
+                        $repository->query('deleteCoupons', array('parent_srl'=>$coupon->srl));
+                        unset($srls[$i]);
+                    }
+                }
+                else unset($srls[$i]);
+            }
+            $repository->delete($srls);
+            $this->setMessage("success_deleted");
+            $this->setRedirectUrl(getNotEncodedUrl('', 'act', 'dispShopToolDiscountCodes'));
         }
 
         public function procShopToolFilterAttributes()

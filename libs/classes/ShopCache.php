@@ -19,7 +19,7 @@ class ShopCache implements ArrayAccess
                 throw new ShopException("Cache key '$key' already exists");
             }
         }
-        $this->data[$key] = $value;
+        return $this->data[$key] = $value;
     }
     public function add($value)
     {

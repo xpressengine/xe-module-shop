@@ -306,15 +306,27 @@
             <include target="product_items" />
         </div>
 
-        <p class="f-left">
-            <input type="submit" value="Continue"><br />
-            {$lang->co_review_order}
-        </p>
         <p class="f-right">
             Forgot something? <a class="button" href="{getUrl('act','dispShopCart')}" title="cart">Edit your cart</a>
         </p>
         <div class="clearfix"></div>
 
+        <p class="f-left">
+            <div style="clear: both; display: block">
+                <input name="code" type="text" id="code" value="discount code?" data-default="discount code?" style="color: #406685">
+                <script type="text/javascript">
+                    jQuery(function($) {
+                        var input = $('input[type=text]');
+                        input
+                          .focus(function() {if ($(this).val() == $(this).data('default')) $(this).val('')})
+                          .blur(function() { if ($(this).val() == '') $(this).val($(this).data('default')); });
+                    });
+                </script>
+            </div>
+            <BR>
+            <input type="submit" value="Continue"><br />
+            {$lang->co_review_order}
+        </p>
     </form>
 
 </div>

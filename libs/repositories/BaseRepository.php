@@ -40,7 +40,9 @@ abstract class BaseRepository
 
     public static function check($output)
     {
-        if (!is_object($output)) throw new ShopException('A valid query output is expected here');
+        if (!is_object($output)) {
+            throw new ShopException('A valid query output is expected here');
+        }
         if (!$output->toBool()) {
             throw new DbQueryException($output->getMessage(), $output->getError());
         }

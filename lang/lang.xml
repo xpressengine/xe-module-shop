@@ -172,6 +172,10 @@
 		<value xml:lang="ko"><![CDATA[Discount]]></value>
 		<value xml:lang="en"><![CDATA[Discount]]></value>
 	</item>
+	<item name="discount_code">
+		<value xml:lang="ko"><![CDATA[Discount code]]></value>
+		<value xml:lang="en"><![CDATA[Discount code]]></value>
+	</item>
 	<item name="customize">
 		<value xml:lang="ko"><![CDATA[Customize]]></value>
 		<value xml:lang="en"><![CDATA[Customize]]></value>
@@ -377,8 +381,8 @@
 		<value xml:lang="en"><![CDATA[Product Type]]></value>
 	</item>
 	<item name="no_product">
-		<value xml:lang="ko"><![CDATA[There is no product added, <a href="%s">Add a simple product</a> or <a href="%s">Add a configurable product</a>. ]]></value>
-		<value xml:lang="en"><![CDATA[There is no product added, <a href="%s">Add a simple product</a> or <a href="%s">Add a configurable product</a>. ]]></value>
+		<value xml:lang="ko"><![CDATA[There is no product added, <a href="%s">Add simple product</a> or <a href="%s">Add configurable product</a>. ]]></value>
+		<value xml:lang="en"><![CDATA[There is no product added, <a href="%s">Add simple product</a> or <a href="%s">Add configurable product</a>. ]]></value>
 	</item>
 	<item name="msg_confirm_delete_product">
 		<value xml:lang="ko"><![CDATA[Are you sure you want to delete this product?]]></value>
@@ -387,6 +391,10 @@
 	<item name="msg_confirm_delete_attribute">
 		<value xml:lang="ko"><![CDATA[Are you sure you want to delete this attribute?]]></value>
 		<value xml:lang="en"><![CDATA[Are you sure you want to delete this attribute?]]></value>
+	</item>
+	<item name="msg_confirm_delete_coupon">
+		<value xml:lang="ko"><![CDATA[Are you sure you want to delete this coupon?]]></value>
+		<value xml:lang="en"><![CDATA[Are you sure you want to delete this coupon?]]></value>
 	</item>
 	<item name="msg_confirm_delete_customer">
 		<value xml:lang="ko"><![CDATA[Are you sure you want to delete this customer?]]></value>
@@ -419,6 +427,10 @@
 	<item name="msg_confirm_delete_attributes">
 		<value xml:lang="ko"><![CDATA[Are you sure you want to delete these attributes?]]></value>
 		<value xml:lang="en"><![CDATA[Are you sure you want to delete these attributes?]]></value>
+	</item>
+	<item name="msg_confirm_delete_coupons">
+		<value xml:lang="ko"><![CDATA[Are you sure you want to delete these coupons?]]></value>
+		<value xml:lang="en"><![CDATA[Are you sure you want to delete these coupons?]]></value>
 	</item>
 	<item name="msg_confirm_delete_address">
 		<value xml:lang="ko"><![CDATA[Are you sure you want to delete this address?]]></value>
@@ -461,8 +473,8 @@
 		<value xml:lang="en"><![CDATA[Only select type attributes are able to determine configurable products]]></value>
 	</item>
 	<item name="no_config_attributes">
-		<value xml:lang="ko"><![CDATA[There are no dropdown (seclect) attributes. <a href="%s">Add an attribute</a> ]]></value>
-		<value xml:lang="en"><![CDATA[There are no dropdown (seclect) attributes. <a href="%s">Add an attribute</a> ]]></value>
+		<value xml:lang="ko"><![CDATA[There are no dropdown (seclect) attributes. <a href="%s">Add attribute</a> ]]></value>
+		<value xml:lang="en"><![CDATA[There are no dropdown (seclect) attributes. <a href="%s">Add attribute</a> ]]></value>
 	</item>
 	<item name="select_associated_products">
 		<value xml:lang="ko"><![CDATA[Select associated products]]></value>
@@ -991,6 +1003,14 @@
 		<value xml:lang="ko"><![CDATA[No attributes, <a href="%s">add one!</a>]]></value>
 		<value xml:lang="en"><![CDATA[No attributes, <a href="%s">add one!</a>]]></value>
 	</item>
+	<item name="no_coupon">
+		<value xml:lang="ko"><![CDATA[No single coupons. <a href="%s">Add</a> one?]]></value>
+		<value xml:lang="en"><![CDATA[No single coupons. <a href="%s">Add</a> one?]]></value>
+	</item>
+	<item name="no_coupon_group">
+		<value xml:lang="ko"><![CDATA[No coupon groups. <a href="%s">Add</a>?]]></value>
+		<value xml:lang="en"><![CDATA[No coupon groups. <a href="%s">Add</a>?]]></value>
+	</item>
 	<item name="no_customers">
 		<value xml:lang="ko"><![CDATA[No customers, <a href="%s">add one!</a>]]></value>
 		<value xml:lang="en"><![CDATA[No customers, <a href="%s">add one!</a>]]></value>
@@ -1007,9 +1027,21 @@
 		<value xml:lang="ko"><![CDATA[New attribute]]></value>
 		<value xml:lang="en"><![CDATA[New attribute]]></value>
 	</item>
+	<item name="new_coupon">
+		<value xml:lang="ko"><![CDATA[New coupon]]></value>
+		<value xml:lang="en"><![CDATA[New coupon]]></value>
+	</item>
 	<item name="edit_attribute">
 		<value xml:lang="ko"><![CDATA[Edit attribute]]></value>
 		<value xml:lang="en"><![CDATA[Edit attribute]]></value>
+	</item>
+	<item name="edit_coupon">
+		<value xml:lang="ko"><![CDATA[Edit coupon]]></value>
+		<value xml:lang="en"><![CDATA[Edit coupon]]></value>
+	</item>
+	<item name="edit_coupon_group">
+		<value xml:lang="ko"><![CDATA[Edit coupon]]></value>
+		<value xml:lang="en"><![CDATA[Edit coupon]]></value>
 	</item>
 	<item name="attribute_about_title">
 		<value xml:lang="ko"><![CDATA[Attribute name/title]]></value>
@@ -1623,12 +1655,16 @@
 				<value xml:lang="en"><![CDATA[Admin account]]></value>
 			</item>
 			<item name="dispShopToolConfigInfo">
-				<value xml:lang="ko"><![CDATA[Shop Configuration]]></value>
-				<value xml:lang="en"><![CDATA[Shop Configuration]]></value>
+				<value xml:lang="ko"><![CDATA[Configuration]]></value>
+				<value xml:lang="en"><![CDATA[Configuration]]></value>
 			</item>
 			<item name="dispShopToolDiscountInfo">
-				<value xml:lang="ko"><![CDATA[Shop Discount]]></value>
-				<value xml:lang="en"><![CDATA[Shop Discount]]></value>
+				<value xml:lang="ko"><![CDATA[Discount]]></value>
+				<value xml:lang="en"><![CDATA[Discount]]></value>
+			</item>
+			<item name="dispShopToolDiscountCodes">
+				<value xml:lang="ko"><![CDATA[Coupons]]></value>
+				<value xml:lang="en"><![CDATA[Coupons]]></value>
 			</item>
 			<item name="dispShopToolManageShippingMethods">
 				<value xml:lang="ko"><![CDATA[Shipping methods]]></value>
@@ -2225,16 +2261,24 @@
 		<value xml:lang="en"><![CDATA[New invoice for Order]]></value>
 	</item>
 	<item name="add_new_address">
-		<value xml:lang="ko"><![CDATA[Add a new address]]></value>
-		<value xml:lang="en"><![CDATA[Add a new address]]></value>
+		<value xml:lang="ko"><![CDATA[Add new address]]></value>
+		<value xml:lang="en"><![CDATA[Add new address]]></value>
 	</item>
 	<item name="address_management">
 		<value xml:lang="ko"><![CDATA[Address Management]]></value>
 		<value xml:lang="en"><![CDATA[Address Management]]></value>
 	</item>
 	<item name="add_new_attribute">
-		<value xml:lang="ko"><![CDATA[Add a new attribute]]></value>
-		<value xml:lang="en"><![CDATA[Add a new attribute]]></value>
+		<value xml:lang="ko"><![CDATA[Add new attribute]]></value>
+		<value xml:lang="en"><![CDATA[Add new attribute]]></value>
+	</item>
+	<item name="add_new_coupon">
+		<value xml:lang="ko"><![CDATA[Add coupon]]></value>
+		<value xml:lang="en"><![CDATA[Add coupon]]></value>
+	</item>
+	<item name="add_new_coupon_group">
+		<value xml:lang="ko"><![CDATA[Add group]]></value>
+		<value xml:lang="en"><![CDATA[Add group]]></value>
 	</item>
 	<item name="attribute_management">
 		<value xml:lang="ko"><![CDATA[Attribute Management]]></value>
@@ -2245,8 +2289,8 @@
 		<value xml:lang="en"><![CDATA[no search results]]></value>
 	</item>
 	<item name="add_new_customer">
-		<value xml:lang="ko"><![CDATA[Add a new customer]]></value>
-		<value xml:lang="en"><![CDATA[Add a new customer]]></value>
+		<value xml:lang="ko"><![CDATA[Add new customer]]></value>
+		<value xml:lang="en"><![CDATA[Add new customer]]></value>
 	</item>
 	<item name="customer_management">
 		<value xml:lang="ko"><![CDATA[Customer Management]]></value>

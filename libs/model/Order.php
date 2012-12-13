@@ -36,14 +36,20 @@ class Order extends BaseItem implements IProductItemsContainer
         $discount_amount,
         $discount_tax_phase,
         $discount_reduction_value,
+        $coupon_discount_value,
         $currency;
+
+    /** @var Cart */
+    public $cart;
 
     /** @var OrderRepository */
     public $repo;
 
     public function save()
     {
-        return $this->order_srl ? $this->repo->update($this) : $this->repo->insert($this);
+        $rez = $this->order_srl ? $this->repo->update($this) : $this->repo->insert($this);
+        if ($this->cart && $coupon = $this->cart->getCoupon()) $coupon->useOnce(true);
+        return $rez;
     }
 
     public function __construct($data=null)
@@ -51,6 +57,7 @@ class Order extends BaseItem implements IProductItemsContainer
         if ($data) {
             if($data instanceof Cart)
             {
+                $this->cart = $data;
                 $this->loadFromCart($data);
                 parent::__construct();
                 return;
@@ -90,6 +97,9 @@ class Order extends BaseItem implements IProductItemsContainer
             $this->discount_amount = $discount->getReductionValue();
             $this->discount_tax_phase = $discount->calculateBeforeApplyingVAT() ? 'pre_taxes' : 'post_taxes';
             $this->discount_reduction_value = $discount->getReductionValue();
+        }
+        if ($coupon = $cart->getCoupon()) {
+            $this->coupon_discount_value = $cart->getCouponDiscount();
         }
     }
 

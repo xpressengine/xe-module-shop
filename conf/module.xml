@@ -19,6 +19,7 @@
         <permission action="dispShopToolChangePassword" target="manager" />
         <permission action="dispShopToolConfigInfo" target="manager" />
         <permission action="dispShopToolDiscountInfo" target="manager" />
+        <permission action="dispShopToolDiscountCodes" target="manager" />
         <permission action="dispShopToolStatisticsVisitor" target="manager" />
 
 		<permission action="procShopInfoUpdate" target="manager" />
@@ -60,10 +61,17 @@
         <!-- Product attributes -->
         <permission action="dispShopToolManageAttributes" target="manager"/>
         <permission action="dispShopToolAddAttribute" target="manager"/>
+        <permission action="dispShopToolAddCoupon" target="manager"/>
+        <permission action="dispShopToolAddCouponGroup" target="manager"/>
         <permission action="dispShopToolEditAttribute" target="manager"/>
+        <permission action="dispShopToolEditCoupon" target="manager"/>
+        <permission action="dispShopToolEditCouponGroup" target="manager"/>
         <permission action="procShopToolInsertAttribute" target="manager" />
+        <permission action="procShopToolInsertCoupon" target="manager" />
         <permission action="procShopToolDeleteAttributes" target="manager" />
+        <permission action="procShopToolDeleteCoupons" target="manager" />
         <permission action="procShopToolFilterAttributes" target="manager"/>
+        <permission action="procShopToolFilterCoupons" target="manager"/>
 
         <!-- Payment methods -->
         <permission action="dispShopToolManagePaymentMethods" target="manager" />
@@ -161,6 +169,7 @@
         <action name="dispShopToolChangePassword" type="view"/>
         <action name="dispShopToolConfigInfo" type="view"/>
         <action name="dispShopToolDiscountInfo" type="view"/>
+        <action name="dispShopToolDiscountCodes" type="view"/>
         <action name="dispShopToolStatisticsVisitor" type="view"/>
 
         <action name="procShopToolLayoutConfigSkin" type="controller" />
@@ -212,10 +221,17 @@
         <!-- Product attributes -->
         <action name="dispShopToolManageAttributes" type="view"/>
         <action name="dispShopToolAddAttribute" type="view" />
+        <action name="dispShopToolAddCoupon" type="view" />
+        <action name="dispShopToolAddCouponGroup" type="view" />
         <action name="dispShopToolEditAttribute" type="view" />
+        <action name="dispShopToolEditCoupon" type="view" />
+        <action name="dispShopToolEditCouponGroup" type="view" />
         <action name="procShopToolInsertAttribute" type="controller" ruleset="insert_attribute"/>
+        <action name="procShopToolInsertCoupon" type="controller" />
         <action name="procShopToolDeleteAttributes" type="controller" />
+        <action name="procShopToolDeleteCoupons" type="controller" />
         <action name="procShopToolFilterAttributes" type="controller"/>
+        <action name="procShopToolFilterCoupons" type="controller"/>
         <action name="procShopToolFilterOrders" type="controller"/>
         <action name="procShopToolFilterInvoices" type="controller"/>
         <action name="procShopToolFilterCustomers" type="controller"/>

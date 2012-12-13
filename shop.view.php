@@ -636,15 +636,10 @@ class shopView extends shop {
 	 */
 	public function dispShopToolAddAttribute()
 	{
-		/**
-		 * @var shopModel $shopModel
-		 */
-		$shopModel = getModel('shop');
-		$attributeRepository = $shopModel->getAttributeRepository();
+		$attributeRepository = new AttributeRepository();
 		Context::set('types', $attributeRepository->getTypes(Context::get('lang')));
-
 		// Retrieve existing categories
-		$categoryRepository = $shopModel->getCategoryRepository();
+		$categoryRepository = new CategoryRepository();
 		$tree = $categoryRepository->getCategoriesTree($this->module_srl);
 
 		// Prepare tree for display
@@ -658,14 +653,62 @@ class shopView extends shop {
 		Context::set('HTML_tree', $HTML_tree);
 	}
 
-	public function dispShopToolEditAttribute()
+    public function dispShopToolAddCoupon()
+    {
+        $coupon = new Coupon();
+        $coupon->generateCode(12, RandomGenerator::TYPE_ALPHANUM, 'X', 4);
+        Context::set('object', $coupon);
+    }
+
+    public function dispShopToolEditCoupon()
+    {
+        $repo = new CouponRepository();
+        $srl = Context::get('srl');
+        if (!is_numeric($srl) || (!$coupon = $repo->get($srl))) {
+            $this->setRedirectUrl(getNotEncodedUrl('', 'act', 'dispShopToolDiscountCodes'));
+            return new Object(-1, "Invalid srl $srl for identifying coupon");
+        }
+        Context::set('object', $coupon);
+        $this->setTemplateFile('AddCoupon');
+    }
+
+    public function dispShopToolAddCouponGroup()
+    {
+        $coupon = new Coupon();
+        $coupon->generateCode(7);
+        Context::set('object', $coupon);
+    }
+
+    public function dispShopToolEditCouponGroup()
+    {
+        $repo = new CouponRepository();
+        $srl = Context::get('srl');
+        try {
+            /** @var $coupon Coupon */
+            if (!is_numeric($srl) || (!$coupon = $repo->get($srl))) throw new ShopException("No such coupon group");
+            if ($coupon->type != Coupon::TYPE_PARENT) throw new ShopException("Invalid group");
+        }
+        catch (ShopException $e) {
+            $this->setRedirectUrl(getNotEncodedUrl('', 'act', 'dispShopToolDiscountCodes'));
+            return new Object(-1, $e->getMessage());
+        }
+        Context::set('object', $coupon);
+
+        $children = $coupon->getChildren($this->module_srl);
+        Context::set('childCoupons', $children);
+
+        $codes = array();
+        /** @var $c Coupon */
+        foreach ($children as $c) $codes[] = $c->code;
+        Context::set('codesForCopy', implode("\n", $codes));
+
+        $this->setTemplateFile('AddCouponGroup');
+    }
+
+    public function dispShopToolEditAttribute()
 	{
-		/**
-		 * @var shopModel #shopModel
-		 */
-		$shopModel = getModel('shop');
-		$attributeRepository = $shopModel->getAttributeRepository();
-		$srl = Context::get('attribute_srl');
+        $srl = Context::get('attribute_srl');
+        $attributeRepository = new AttributeRepository();
 		if (!$attributes = $attributeRepository->getAttributes(array($srl))) throw new ShopException("Attribute doesn't exist");
 		$attribute = array_shift($attributes);
         if(is_array($attribute->values)) $attribute->values = implode('|', $attribute->values);
@@ -674,7 +717,7 @@ class shopView extends shop {
 		Context::set('types', $attributeRepository->getTypes(Context::get('lang')));
 
 		// Retrieve existing categories
-		$categoryRepository = $shopModel->getCategoryRepository();
+		$categoryRepository = new CategoryRepository();
 		$tree = $categoryRepository->getCategoriesTree($this->module_srl);
 
 		// Prepare tree for display
@@ -1290,6 +1333,10 @@ class shopView extends shop {
             Context::set('discounted_value', $discount->getValueDiscounted());
         }
 
+        if ($coupon = $cart->getCoupon()) {
+            Context::set('coupon', $coupon);
+        }
+
         $this->setTemplateFile('place_order.html');
     }
 
@@ -1650,6 +1697,24 @@ class shopView extends shop {
      */
     public function dispShopToolDiscountInfo(){}
 
+    /**
+     * Backend for discount codes / coupons
+     */
+    public function dispShopToolDiscountCodes() {
+        $cRepo = new CouponRepository();
+        $params1 = $params2 = array('module_srl' => $this->module_srl);
+        if (Context::get('s')) $params1['search'] = $params2['search'] = Context::get('s');
+
+        $params1['type'] = Coupon::TYPE_SINGLE;
+        $output1 = $cRepo->getList('getCouponList', Context::get('page1'), $params1);
+        Context::set('objects1', $output1->data);
+        Context::set('page_navigation1', $output1->page_navigation);
+
+        $params2['type'] = Coupon::TYPE_PARENT;
+        $output2 = $cRepo->getList('getCouponList', Context::get('page2'), $params2);
+        Context::set('objects2', $output2->data);
+        Context::set('page_navigation2', $output2->page_navigation);
+    }
 
     /**
      *

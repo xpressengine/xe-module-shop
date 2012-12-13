@@ -21,6 +21,7 @@
     <column name="discount_amount" type="float" size="20"/>
     <column name="discount_tax_phase" type="varchar" size="45"/>
     <column name="discount_reduction_value" type="float" size="20"/>
+    <column name="coupon_reduction_value" type="float" size="20"/>
     <column name="total" type="float" size="20" notnull="notnull" />
     <column name="currency" type="varchar" size="10"/>
     <column name="regdate" type="date" />

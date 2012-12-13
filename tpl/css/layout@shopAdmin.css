@@ -1287,3 +1287,27 @@ a.skipToContent{text-align:center;color:#fff;position:absolute;width:100%;font-s
 #skin_settings form p{border:0}
 #skin_settings form .q{font-weight:bold;margin:0 0 5px 0}
 #skin_settings form .a{margin:0 0 5px 0}
+
+.highlighted td {
+    background: #fffadd;
+    font-size: 15px;
+}
+.child_code {
+    display: inline-block;
+    font-weight: bold;
+    width: 200px;
+    text-align: center;
+    font-size: 12px;
+}
+#codes {
+    overflow-y: auto;
+    max-height: 300px;
+    width: 370px;
+}
+#codes li {
+    margin: 10px 0;
+    list-style-type: none;
+}
+#codes li:hover {
+    color: #ff743a;
+}

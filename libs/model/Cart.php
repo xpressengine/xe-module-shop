@@ -323,15 +323,35 @@ class Cart extends BaseItem implements IProductItemsContainer
 		return $this->getTotalBeforeDiscountWithVAT() / (1 + $shop->getVAT() / 100);
 	}
 
+    public function getCouponDiscount()
+    {
+        if (!$coupon = $this->getCoupon()) return 0;
+        $total = $this->getTotalAfterDiscountWithVAT();
+        $val = $coupon->discount_value;
+        if (is_numeric($val) && $val > 0)
+        {
+            if ($coupon->discount_type == Coupon::DISCOUNT_TYPE_FIXED_AMOUNT) {
+                if ($val > $total) return $total;
+                return $val;
+            }
+            elseif ($coupon->discount_type == Coupon::DISCOUNT_TYPE_PERCENTAGE) {
+                if ($val >= 100) return $total;
+                return $val / 100 * $total;
+            }
+        }
+        return 0;
+    }
+
 	public function getTotalAfterDiscount()
 	{
-		return $this->getTotalAfterDiscountWithVAT();
+        $result = $this->getTotalAfterDiscountWithVAT();
+        $result -= $this->getCouponDiscount();
+        return $result;
 	}
 
 	public function getTotalAfterDiscountWithVAT()
 	{
-		return $this->getTotalAfterDiscountWithoutVAT()
-			+ $this->getVATAfterDiscount();
+		return $this->getTotalAfterDiscountWithoutVAT() + $this->getVATAfterDiscount();
 	}
 
 	public function getTotalAfterDiscountWithoutVAT()
@@ -491,6 +511,20 @@ class Cart extends BaseItem implements IProductItemsContainer
         }
         if (self::validateFormBlock($payment = $input['payment'])) {
             $data['extra']['payment_method'] = $payment['method'];
+        }
+        $hasCode = false;
+        if ($code = $input['discount_code']) {
+            $codesRepo = new CouponRepository();
+            $existingCoupons = $codesRepo->getByCode($code, $this->module_srl);
+            if ($existingCoupons) {
+                /** @var $coupon Coupon */
+                $coupon = $existingCoupons[0];
+                $this->setExtra('coupon_srl', $coupon->srl);
+                $hasCode = true;
+            }
+        }
+        if (!$hasCode && $this->getExtra('coupon_srl')) {
+            $this->setExtra('coupon_srl', null);
         }
         return empty($data) ? null : $data;
     }
@@ -753,4 +787,28 @@ class Cart extends BaseItem implements IProductItemsContainer
 		}
 		return $weight;
 	}
+
+    /**
+     * @return Coupon|null
+     */
+    public function getCoupon()
+    {
+        /** @var $coupon Coupon */
+        if ((($coupon = self::$cache->get('coupon')) instanceof Coupon) && $coupon->isPersisted()) return $coupon;
+        if (is_numeric($id = $this->getExtra('coupon_srl'))) {
+            $repository = new CouponRepository;
+            if ($coupon = $repository->get($id)) {
+                //check validity of coupon daterange
+                $date1 = strtotime($coupon->valid_from && $coupon->valid_from!='null'  ? $coupon->valid_from : 'now');
+                $date2 = strtotime($coupon->valid_to && $coupon->valid_to!='null'  ? $coupon->valid_to : 'now');
+                if (time() < $date1 || time() > $date2) return null;
+                //check active
+                if (!$coupon->active) return null;
+                //check uses
+                if ($coupon->max_uses <= $coupon->uses) return null;
+                return self::$cache->set('coupon', $coupon);
+            }
+        }
+        return null;
+    }
 }

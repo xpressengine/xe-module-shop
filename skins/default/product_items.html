@@ -60,6 +60,18 @@
         </tr>
         <!-- // Discount -->
 
+        <!-- Coupon -->
+        <tr cond="$coupon = $product_container->getCoupon()">
+            <td colspan="4">
+            </td>
+            <td title="{$coupon->code}">{$lang->discount_code}</td>
+            <td cond="$coupon->discount_type == Coupon::DISCOUNT_TYPE_FIXED_AMOUNT">
+                {ShopDisplay::priceFormat(-1 * $coupon->discount_value, $shop->getCurrencySymbol())}
+            </td>
+            <td cond="$coupon->discount_type == Coupon::DISCOUNT_TYPE_PERCENTAGE">{ShopDisplay::priceFormat(-1 * $product_container->getCouponDiscount(), $shop->getCurrencySymbol())} ({$coupon->discount_value} %)</td>
+        </tr>
+        <!-- // Discount -->
+
         <!-- Shipping cost -->
         <tr cond="$product_container->getShippingMethodName()">
             <td colspan="4"></td>
