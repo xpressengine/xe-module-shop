@@ -32,16 +32,34 @@
 ul.slideshow_pagination {
 	width: 75px;
 	height:10px;
-	margin:0 auto !important;
 	text-align:center !important;
 	padding: 0;
 	position: relative;
-	top: -200px;
+	top: -40px;
     z-index: 100;
+    float: right;
 }
-ul.slideshow_pagination li 			{float:left;list-style:none;width:10px;height:10px;margin-right:5px;background:url(img/slide_page_off.png) no-repeat top left;}
-ul.slideshow_pagination li.current	{background:url(img/slide_page_on.png) no-repeat top left;}
-ul.slideshow_pagination a				{text-decoration:none;outline:none;}
+
+ul.slideshow_pagination li {
+    float:left;
+    list-style:none;
+    width:10px;
+    height:10px;
+    margin-right:5px;
+    background:url(img/slide_page_off.png) no-repeat top left;
+    text-indent: -9999px;
+    white-space: nowrap;
+}
+
+ul.slideshow_pagination li.current {
+    background:url(img/slide_page_on.png) no-repeat top left;
+}
+
+ul.slideshow_pagination a {
+    display: block;
+    text-decoration:none;
+    outline:none;
+}
 
 /* slide_widget */
 .slide_widget {
