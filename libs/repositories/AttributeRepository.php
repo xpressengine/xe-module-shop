@@ -16,6 +16,14 @@ class AttributeRepository extends BaseRepository
         TYPE_SELECT_MULTIPLE = 6,
         TYPE_NUMERIC = 7;
 
+    /**
+     * Returns all types if no $id or returns the type specified by $id.
+     *
+     * @param $lang
+     * @param null $id
+     * @return array
+     * @throws ShopException
+     */
     public function getTypes($lang, $id=null)
     {
         $arr = array(
@@ -58,7 +66,7 @@ class AttributeRepository extends BaseRepository
 	}
 
     /**
-     * Insert attribute scope
+     * Insert attribute scope (category)
      *
      * @author Dan Dragan (dev@xpressengine.org)
      * @param $attribute Attribute
@@ -78,7 +86,7 @@ class AttributeRepository extends BaseRepository
 
 
     /**
-     * Update an attribute
+     * Updates an attribute
      * @author Florin Ercus (dev@xpressengine.org)
      * @param $attribute Attribute
      * @throws Exception
@@ -102,7 +110,7 @@ class AttributeRepository extends BaseRepository
     }
 
     /**
-     * Update attribute scope
+     * Update attribute scope (category)
      *
      * @author Dan Dragan (dev@xpressengine.org)
      * @param $attribute Attribute
@@ -406,10 +414,15 @@ class AttributeRepository extends BaseRepository
         return $attributes;
     }
 
+    /**
+     * Returns the minimum value for a numeric $attribute_srl (from all products having $attribute values associated)
+     *
+     * @param $module_srl
+     * @param $attribute_srl
+     * @return int|mixed
+     */
     public function getAttributeMinValue($module_srl, $attribute_srl)
     {
-        /*$out = $this->query('getAttributeMinValue', array('attribute_srl'=>$attribute_srl));
-        return $out->data->value;*/
         $values2 = $this->query('getAttributeMinValue', array('attribute_srl'=>$attribute_srl), true)->data;
         $values = array(); foreach ($values2 as $i=>$v) $values[$i] = $v->value;
         if (empty($values)) return 0;
@@ -418,6 +431,13 @@ class AttributeRepository extends BaseRepository
         return $min;
     }
 
+    /**
+     * Returns the max value for a numeric $attribute_srl (from all products having $attribute values associated)
+     *
+     * @param $module_srl
+     * @param $attribute_srl
+     * @return int|mixed
+     */
     public function getAttributeMaxValue($module_srl, $attribute_srl)
     {
         $values2 = $this->query('getAttributeMaxValue', array('attribute_srl'=>$attribute_srl), true)->data;

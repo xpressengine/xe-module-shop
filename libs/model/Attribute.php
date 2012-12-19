@@ -20,18 +20,33 @@ class Attribute extends BaseItem
     /** @var AttributeRepository */
     public $repo;
 
+    /**
+     * Persists an attribute
+     * @return int|object
+     */
     public function save()
     {
-        $model = getModel('shop'); /* @var shopModel $model */
-        return $model->getAttributeRepository()->insertAttribute($this);
+        $repo = new AttributeRepository();
+        return $repo->insertAttribute($this);
     }
 
+    /**
+     * Returns specific attribute type
+     * @param $lang
+     * @return array
+     */
     public function getType($lang)
     {
         $repo = new AttributeRepository();
         return $repo->getTypes($lang, $this->type);
     }
 
+    /**
+     * Returns an array of values (from $this->values, which looks like "value1|value2|value3")
+     * @param string $delimiter
+     * @param bool $trim
+     * @return array
+     */
     public function getValues($delimiter='|', $trim=true)
     {
         $values = explode($delimiter, $this->values);
@@ -39,26 +54,47 @@ class Attribute extends BaseItem
         return $values;
     }
 
+    /**
+     * Checks wether the attribute is numeric
+     * @return bool
+     */
     public function isNumeric()
     {
         $repo = $this->repo; return $this->type == $repo::TYPE_NUMERIC;
     }
 
+    /**
+     * Checks wether the attribute is select
+     * @return bool
+     */
     public function isSelect()
     {
         $repo = $this->repo; return $this->type == $repo::TYPE_SELECT;
     }
 
+
+    /**
+     * Checks wether the attribute is multiple select
+     * @return bool
+     */
     public function isMultipleSelect()
     {
         $repo = $this->repo; return $this->type == $repo::TYPE_SELECT_MULTIPLE;
     }
 
+    /**
+     * Gets attribute min value (comparing all products that have the numeric $attribute associated)
+     * @return int|mixed
+     */
     public function getMinValue()
     {
         return $this->repo->getAttributeMinValue($this->module_srl, $this->attribute_srl);
     }
 
+    /**
+     * Gets attribute max value (comparing all products that have the numeric $attribute associated)
+     * @return int|mixed
+     */
     public function getMaxValue()
     {
         return $this->repo->getAttributeMaxValue($this->module_srl, $this->attribute_srl);

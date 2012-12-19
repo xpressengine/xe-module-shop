@@ -26,11 +26,19 @@ class Address extends BaseItem
     public $repo;
 
 
+    /**
+     * Saves or updates the object
+     * @return mixed|object
+     */
     public function save()
     {
         return $this->address_srl ? $this->repo->update($this) : $this->repo->insert($this);
     }
 
+    /**
+     * String representation
+     * @return string
+     */
     public function __toString()
     {
         return <<<GATA

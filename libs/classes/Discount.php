@@ -2,18 +2,51 @@
 // florin, 9/27/12 3:45 PM 
 abstract class Discount
 {
-    const DISCOUNT_TYPE_FIXED_AMOUNT = 'fixed_amount',
+    const
+        DISCOUNT_TYPE_FIXED_AMOUNT = 'fixed_amount',
         DISCOUNT_TYPE_PERCENTAGE = 'percentage',
         PHASE_BEFORE_VAT = 'pre_taxes',
         PHASE_AFTER_VAT = 'post_taxes';
 
-    private $value, $discountAmount, $minValueForDiscount, $VATPercent, $calculateBeforeApplyingVAT, $currency;
+    private
+        $value,
+        $discountAmount,
+        $minValueForDiscount,
+        $VATPercent,
+        $calculateBeforeApplyingVAT,
+        $currency;
 
+    /**
+     * Child classes must provide a name
+     * @return mixed
+     */
     abstract public function getName();
+    /**
+     * Child classes must provide a description
+     * @return mixed
+     */
     abstract public function getDescription();
+    /**
+     * Child classes must provide a validation mecanism
+     * @return mixed
+     */
     abstract protected function validate($value, $discountValue);
+    /**
+     * Child classes must provide the discount value calculus
+     * @return mixed
+     */
     abstract protected function calculate($value, $discountValue);
 
+    /**
+     * Attributes parameters to private properties using setters and validates
+     *
+     * @param $totalValue
+     * @param $discountValue
+     * @param null $minValueForDiscount
+     * @param int $VATPercent
+     * @param bool $calculateBeforeApplyingVAT
+     * @param null $currency
+     */
     public function __construct($totalValue, $discountValue, $minValueForDiscount=null, $VATPercent=0, $calculateBeforeApplyingVAT=false, $currency=null)
     {
         $this
@@ -26,6 +59,10 @@ abstract class Discount
             ->validate($this->getTotalValue(), $this->getDiscountAmount());
     }
 
+    /**
+     * Calculates total minus discount
+     * @return mixed
+     */
     public function getValueDiscounted()
     {
         if ($this->getMinValueForDiscount() > $this->getTotalValue()) {
@@ -34,6 +71,10 @@ abstract class Discount
         return $this->getTotalValue() - $this->getReductionValue();
     }
 
+    /**
+     * Calculates discount (reduction) value
+     * @return int|mixed
+     */
     public function getReductionValue()
     {
         $minValueForDiscount = $this->getMinValueForDiscount();
@@ -45,6 +86,10 @@ abstract class Discount
         return $this->calculate(( $calculateBeforeApplyingVAT == false ? $totalValue : $valueWithoutVAT ), $discountAmount);
     }
 
+    /**
+     * Removes VAT from value
+     * @return float
+     */
     public function getValueWithoutVAT()
     {
         return $this->getTotalValue() / ( 1 + $this->getVATPercent() / 100);
@@ -124,19 +169,34 @@ abstract class Discount
 }
 
 
+
 class FixedAmountDiscount extends Discount
 {
 
+    /**
+     * This is expanded from the abstract class in order to set the discount name
+     * @return string
+     */
     public function getName()
     {
         return "Fixed Amount Discount";
     }
 
+    /**
+     * Discount description
+     * @return string
+     */
     public function getDescription()
     {
         return "You get {$this->getDiscountAmount()}{$this->getCurrency()} discount when your cart value steps over {$this->getMinValueForDiscount()}{$this->getCurrency()}";
     }
 
+    /**
+     * Validates the discount
+     * @param $value
+     * @param $discountValue
+     * @throws ShopException
+     */
     protected function validate($value, $discountValue)
     {
         if ($value < $discountValue) {
@@ -144,6 +204,12 @@ class FixedAmountDiscount extends Discount
         }
     }
 
+    /**
+     * Effective discount calculus
+     * @param $value
+     * @param $discountValue
+     * @return mixed
+     */
     protected function calculate($value, $discountValue)
     {
         return $discountValue;
@@ -152,18 +218,34 @@ class FixedAmountDiscount extends Discount
 }
 
 
+
 class PercentageDiscount extends Discount
 {
+    /**
+     * This is expanded from the abstract class in order to set the discount name
+     * @return string
+     */
     public function getName()
     {
         return "Percentage Discount";
     }
 
+    /**
+     * Discount description
+     * @return string
+     */
     public function getDescription()
     {
         return "{$this->getDiscountAmount()}% of your total order gets discounted when you step over {$this->getMinValueForDiscount()}{$this->getCurrency()}";
     }
 
+
+    /**
+     * Validates the discount
+     * @param $value
+     * @param $discountValue
+     * @throws ShopException
+     */
     protected function validate($value, $discountValue)
     {
         if ($discountValue > 99.9 || $discountValue < 0.1 ) {
@@ -171,6 +253,12 @@ class PercentageDiscount extends Discount
         }
     }
 
+    /**
+     * Effective discount calculus
+     * @param $value
+     * @param $discountValue
+     * @return mixed
+     */
     protected function calculate($value, $discountValue)
     {
         return $discountValue / 100 * $value;
