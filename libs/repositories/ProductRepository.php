@@ -112,12 +112,14 @@ class ProductRepository extends BaseRepository
 	{
 		$shopModel = getModel('shop');
 		$imageRepository = $shopModel->getImageRepository();
-		foreach($product->images as $image){
-			$image->product_srl = $product->product_srl;
-			$image->module_srl = $product->module_srl;
-			$image->member_srl = $product->member_srl;
-			$imageRepository->insertImage($image);
-		}
+		if (is_array($product->images)) {
+            foreach($product->images as $image){
+                $image->product_srl = $product->product_srl;
+                $image->module_srl = $product->module_srl;
+                $image->member_srl = $product->member_srl;
+                $imageRepository->insertImage($image);
+            }
+        }
 		return TRUE;
 	}
 
