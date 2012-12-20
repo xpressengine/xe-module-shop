@@ -205,6 +205,8 @@
                         </div>
                     </td>
                 </tr>
+                <!--@else-->
+                <input type="hidden" name="price" <!--@if($product->title)--> value="{ShopDisplay::numberFormat($product->price)}"<!--@end--> />
                 <!--@endif-->
                 <!--@if(!$product->isConfigurable())-->
                 <tr>
