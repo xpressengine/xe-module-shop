@@ -595,8 +595,8 @@ class ProductRepository extends BaseRepository
     {
         if (!isset($args->module_srl)) throw new ShopException("Missing arguments for get product list : please provide [module_srl]");
 		if (!$args->page) $args->page = 1;
-        $query = ($args->category_srls && !empty($args->category_srls) ? 'getProductListByCategory' : 'getProductList');
-        $query = 'getProductList2';
+        //$query = ($args->category_srls && !empty($args->category_srls) ? 'getProductListByCategory' : 'getProductList');
+        $query = ($args->category_srls && !empty($args->category_srls) ? 'getProductList2WithCategories' : 'getProductList2');
         $output = $this->query($query, $args, true);
 		// Get top level products
 		$confProdSrls = $products = array();

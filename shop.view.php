@@ -1086,8 +1086,10 @@ class shopView extends shop {
         $documentModel = getModel('document');
         $product->document = $documentModel->getDocument($product->document_srl);
         $product->comment_list = $_comment_list = $product->document->getComments();
-        foreach($product->comment_list as $comment){
-            $comment->variables['relativeDate'] = $this->model->zdateRelative($comment->getRegdateTime());
+        if (is_array($_comment_list)) {
+            foreach ($product->comment_list as $comment){
+                $comment->variables['relativeDate'] = $this->model->zdateRelative($comment->getRegdateTime());
+            }
         }
 
 		// Setup Javscript datasource for linked dropdowns

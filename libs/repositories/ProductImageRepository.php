@@ -16,7 +16,9 @@ class ProductImageRepository extends BaseRepository
 	 */
 	public function insertImage(ProductImage &$image)
 	{
-        if ($image->image_srl) throw new ShopException('A srl must NOT be specified');
+        if ($image->image_srl) {
+            throw new ShopException('A srl must NOT be specified');
+        }
         $image->image_srl = getNextSequence();
 		if($image->file_size > 0){
 			$output = executeQuery('shop.insertImage', $image);

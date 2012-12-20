@@ -23,6 +23,18 @@
             <condition operation="like" column="title" var="title" pipe="or"/>
             <condition operation="like" column="description" var="description" pipe="or"/>
         </group>
+        <query alias="productsInCategories" operation="in" column="p.product_srl" pipe="and">
+            <tables>
+                <table name="shop_product_categories" alias="pc" />
+            </tables>
+            <columns>
+                <column name="pc.product_srl" alias="product_srl" />
+            </columns>
+            <conditions>
+                <condition operation="in" column="pc.category_srl" var="category_srls" />
+                <condition operation="null" column="p.parent_product_srl" pipe="and" />
+            </conditions>
+        </query>
 
         <!--attribute filter 1-->
         <group pipe="and">
