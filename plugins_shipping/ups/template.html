@@ -90,6 +90,10 @@
 <p>
     <label for="enabled_services">Enabled services</label>
     <select name="enabled_services[]" id="enabled_services" multiple="multiple">
+        <!--@if(!isset($shipping_method->enabled_services))-->
+        {@ $shipping_method->enabled_services = array();}
+        <!--@end-->
+
         <option value="{Ups::SERVICE_NEXT_DAY_AIR_EARLY_AM}"
             <!--@if(in_array(Ups::SERVICE_NEXT_DAY_AIR_EARLY_AM, $shipping_method->enabled_services))-->
             selected="selected"
