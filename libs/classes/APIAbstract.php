@@ -1,8 +1,28 @@
 <?php
+/**
+ * File containing the APIAbstract class
+ */
 
+/**
+ * Base class for creating API calls
+ *
+ * Contains the code for sending request to an API endpoint;
+ * Returns the response body
+ *
+ * @author Corina Udrescu (corina.udrescu@arnia.ro)
+ */
 abstract class APIAbstract
 {
-    public function request($url, $data, $skip_ssl_verify = false)
+	/**
+	 * Hides away the curl request
+	 *
+	 * @param      $url     API Endpoint to send request to
+	 * @param      $data    Request parameters - sent as POST
+	 * @param bool $skip_ssl_verify Skip SSL verification - useful for development (and local testing)
+	 * @return mixed
+	 * @throws APIException
+	 */
+	public function request($url, $data, $skip_ssl_verify = FALSE)
     {
 		if(is_string($data))
 		{

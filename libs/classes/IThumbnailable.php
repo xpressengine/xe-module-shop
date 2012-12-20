@@ -1,7 +1,11 @@
 <?php
-
+/**
+ * File containing the IThumbnailable interface
+ */
 /**
  * Interface for objects that can generate a thumbnail
+ *
+ * @author Corina Udrescu (corina.udrescu@gmail.com)
  */
 interface IThumbnailable
 {

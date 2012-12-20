@@ -1,17 +1,43 @@
 <?php
-
+/**
+ * File containing the ShopThumbnail class
+ */
+/**
+ * Models an image thumbnail; useful in template files
+ *
+ * @author Corina Udrescu (corina.udrescu@arnia.ro)
+ */
 class ShopThumbnail implements IThumbnailable
 {
+	/** @var Unique name for the thumbnail; used for generating the thumbnail filename */
     private $unique_identifier;
+	/** @var Original image full path */
     private $full_image_path;
 
-    public function __construct($unique_identifier, $full_image_path)
+	/**
+	 * Constructor
+	 *
+	 * @param $unique_identifier
+	 * @param $full_image_path
+	 */
+	public function __construct($unique_identifier, $full_image_path)
     {
         $this->unique_identifier = $unique_identifier;
         $this->full_image_path = $full_image_path;
     }
 
-    public function getThumbnailPath($width = 80, $height = 0, $thumbnail_type = '')
+	/**
+	 * Returns the path to the thumbnail image
+	 *
+	 * If a thumbnail does not already exist, it is generated,
+	 * written to disk and then the new path is returned
+	 *
+	 * @param int    $width
+	 * @param int    $height
+	 * @param string $thumbnail_type
+	 * @return mixed|string
+	 */
+	public function getThumbnailPath($width = 80, $height = 0, $thumbnail_type = '')
     {
         // If signiture height setting is omitted, create a square
         if(!$height) $height = $width;

@@ -1,5 +1,13 @@
 <?php
-
+/**
+ * File containing the IProductItemsContainer
+ */
+/**
+ * Defines a common structure for products container
+ * like an order or a cart;
+ *
+ * @author Corina Udrescu (corina.udrescu@arnia.ro)
+ */
 interface IProductItemsContainer
 {
     /**

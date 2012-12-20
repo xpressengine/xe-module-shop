@@ -1,13 +1,34 @@
 <?php
-
+/**
+ * File containing the ShopDisplay class
+ */
+/**
+ * Class used for template helper functions
+ * like formatting the price and such
+ *
+ * @author Corina Udrescu (corina.udrescu@arnia.ro)
+ */
 class ShopDisplay
 {
-    public static function priceFormat($price, $currency)
+	/**
+	 * Format a float as a price
+	 *
+	 * @param $price
+	 * @param $currency
+	 * @return string
+	 */
+	public static function priceFormat($price, $currency)
     {
         return self::numberFormat($price) . ' ' . $currency;
     }
 
-    public static function numberFormat($number)
+	/**
+	 * Format a float for display (2 decimals, . separator)
+	 *
+	 * @param $number
+	 * @return string
+	 */
+	public static function numberFormat($number)
     {
         return number_format($number, 2, '.', '');
     }
@@ -18,6 +39,7 @@ class ShopDisplay
 	 * Returned markup contains a div with a label and an input/textarea, plus a hidden field
 	 * for the final value, plus the "translate" link
 	 *
+	 * @param      $field_type
 	 * @param      $input_name
 	 * @param null $input_id
 	 * @param null $input_value
@@ -26,6 +48,8 @@ class ShopDisplay
 	 * @param      $label_value
 	 * @param      $label_class
 	 * @param      $container_class
+	 * @param null $rows
+	 * @param null $cols
 	 * @return string
 	 */
 	private static function multiLanguageFormField($field_type
@@ -71,6 +95,19 @@ class ShopDisplay
 		return '<div class="multiLanguage' . ucfirst($field_type) . ' ' . $container_class .'">' . $label . $visible_input . $hidden_input . $add_language_link . '</div>';
 	}
 
+	/**
+	 * Returns HTML code for a text input form field that supports multiple languages
+	 *
+	 * @param      $input_name
+	 * @param null $input_id
+	 * @param null $input_value
+	 * @param      $input_style
+	 * @param      $input_class
+	 * @param      $label_value
+	 * @param      $label_class
+	 * @param      $container_class
+	 * @return string
+	 */
 	public static function multiLanguageInput($input_name, $input_id = NULL, $input_value = NULL, $input_style, $input_class, $label_value, $label_class, $container_class)
 	{
 		return ShopDisplay::multiLanguageFormField('input'
@@ -80,6 +117,21 @@ class ShopDisplay
 		);
 	}
 
+	/**
+	 * Returns HTML code for a textarea form field that supports multiple languages
+	 *
+	 * @param      $input_name
+	 * @param null $input_id
+	 * @param null $input_value
+	 * @param      $input_style
+	 * @param      $input_class
+	 * @param      $label_value
+	 * @param      $label_class
+	 * @param      $container_class
+	 * @param      $rows
+	 * @param      $cols
+	 * @return string
+	 */
 	public static function multiLanguageTextarea($input_name, $input_id = NULL, $input_value = NULL, $input_style, $input_class, $label_value, $label_class, $container_class, $rows, $cols)
 	{
 		return ShopDisplay::multiLanguageFormField('textarea'
@@ -90,6 +142,12 @@ class ShopDisplay
 		);
 	}
 
+	/**
+	 * Returns the string to use in the "value" field of a multiLanguage textarea or text input
+	 *
+	 * @param $text
+	 * @return string
+	 */
 	public static function getMultiLanguageValue($text)
 	{
 		if(strpos($text, '$user_lang->') === FALSE)

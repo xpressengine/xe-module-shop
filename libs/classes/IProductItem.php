@@ -1,7 +1,12 @@
 <?php
 /**
+ * File containing the IProductItem interface
+ */
+/**
  * Defines common structure of products in an Order, Cart
  * or anything else that contains product items
+ *
+ * @author Corina Udrescu (corina.udrescu@arnia.ro)
  */
 interface IProductItem extends IThumbnailable
 {
