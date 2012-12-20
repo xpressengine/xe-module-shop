@@ -252,7 +252,7 @@
 		<value xml:lang="ko"><![CDATA[Description]]></value>
 		<value xml:lang="en"><![CDATA[Description]]></value>
 	</item>
-	<item name="about_title">
+	<item name="about_product_title">
 		<value xml:lang="ko"><![CDATA[Product name/title]]></value>
 		<value xml:lang="en"><![CDATA[Product name/title]]></value>
 	</item>
@@ -2581,6 +2581,9 @@
     </item>
     <item name="update_comment">
         <value xml:lang="en">Update comment</value>
+    </item>
+    <item name="insert_comment">
+        <value xml:lang="en">Add comment</value>
     </item>
     <item name="insert_reply">
         <value xml:lang="en">Insert reply</value>

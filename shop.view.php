@@ -1081,6 +1081,7 @@ class shopView extends shop {
             $document->module_srl = $product->module_srl;
             $output = $documentController->insertDocument($document);
             $product->document_srl = $output->variables['document_srl'];
+            unset($product->images);
             $product->repo->updateProduct($product);
         }
         $documentModel = getModel('document');

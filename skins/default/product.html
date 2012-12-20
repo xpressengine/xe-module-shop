@@ -318,13 +318,17 @@
     <div id="comments-page">
         <div id="feedbacks">
             <div class="feedbackTitle">
-                <span id="commentToggle">{$product->document->getCommentCount()} comments</span>
+                <p>
+                    <span id="commentToggle">{$product->document->getCommentCount()} comments</span>
+                </p>
             </div>
             <div id="comments">
                 <!--#include("./comment.html")-->
                 <!--@if($product->document->allowComment() )-->
                 <div id="editor-box">
-                    <span id="loadEditorButton"><a href="#" class="button" onclick="loadCommentForm({$product->document_srl})">{$lang->insert_comment}</a></span>
+                    <p>
+                        <span id="loadEditorButton"><a href="#" class="button" onclick="loadCommentForm({$product->document_srl})">{$lang->insert_comment}</a></span>
+                    </p>
                 </div>
                 <!--@else-->
                 <p>{$lang->disable_comment}</p>
