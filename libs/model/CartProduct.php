@@ -1,14 +1,31 @@
 <?php
-
+/**
+ * File containing the CartProduct class
+ */
+/**
+ * Models a product belonging to a cart;
+ *
+ * @author Corina Udrescu (corina.udrescu@arnia.ro)
+ */
 class CartProduct extends BaseItem implements IProductItem
 {
+	/** @var Reference to the original product */
     private $product;
+	/** @var int The cart quantity for this product  */
     public $quantity = 1;
+	/** @var Database id of the cart product */
     public $cart_product_srl;
+	/** @var Name of the cart product */
     public $cart_product_title;
+	/** @var Price of the cart product */
     public $cart_product_price;
 
-    public function __construct($data)
+	/**
+	 * Constructor
+	 *
+	 * @param null $data
+	 */
+	public function __construct($data)
     {
         $this->setProduct(new SimpleProduct($data));
         $this->cart_product_srl = $data->cart_product_srl;
@@ -19,19 +36,31 @@ class CartProduct extends BaseItem implements IProductItem
         parent::__construct();
     }
 
-
-    public function getRepo()
+	/**
+	 * Returns the repository for this model class
+	 *
+	 * @return null|string
+	 */
+	public function getRepo()
     {
         return "CartRepository";
     }
 
-    public function setProduct(SimpleProduct $product)
+	/**
+	 * Sets the product that was added to cart
+	 *
+	 * @param SimpleProduct $product
+	 * @return CartProduct
+	 */
+	public function setProduct(SimpleProduct $product)
     {
         $this->product = $product;
         return $this;
     }
 
     /**
+	 * Returns the product added to cart
+	 *
      * @return SimpleProduct
      */
     public function getProduct()
@@ -39,7 +68,13 @@ class CartProduct extends BaseItem implements IProductItem
         return $this->product;
     }
 
-    public function __get($property)
+	/**
+	 * Getter
+	 *
+	 * @param $property
+	 * @return mixed|null
+	 */
+	public function __get($property)
     {
         /**
          * If property is not defined, call getter, if any
@@ -80,12 +115,20 @@ class CartProduct extends BaseItem implements IProductItem
     /**
      * Price
      */
-    public function getPrice($discounted = true)
+    public function getPrice($discounted = TRUE)
     {
         return $this->product ? $this->product->getPrice($discounted) : $this->cart_product_price;
     }
 
-    function getThumbnailPath($width = 80, $height = 0, $thumbnail_type = '')
+	/**
+	 * Path to the product image thumbnail
+	 *
+	 * @param int    $width
+	 * @param int    $height
+	 * @param string $thumbnail_type
+	 * @return mixed|string
+	 */
+	function getThumbnailPath($width = 80, $height = 0, $thumbnail_type = '')
     {
         if($this->product) {
             if($this->product->parent_product_srl){
@@ -101,13 +144,15 @@ class CartProduct extends BaseItem implements IProductItem
         }
     }
 
-    /**
-     * // TODO When accesing availability like this: $cart_product->available
-     * // the default value for $checkIfInStock=true is used; This in not always correct! To investigate
-     *
-     * @param bool $checkIfInStock
-     * @return bool
-     */
+	/**
+	 * Check if product is available
+	 *
+	 * TODO When accesing availability like this: $cart_product->available
+	 * the default value for $checkIfInStock=true is used; This in not always correct! To investigate
+	 *
+	 * @internal param bool $checkIfInStock
+	 * @return bool
+	 */
     public function isAvailable()
     {
 		$shopInfo = new ShopInfo($this->product->module_srl);

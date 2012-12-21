@@ -1,8 +1,11 @@
 <?php
 /**
+ * File containing the Category related classes
+ */
+/**
  * Model class for Product Category
  *
- * @author Corina Udrescu (dev@xpressengine.org)
+ * @author Corina Udrescu (corina.udrescu@arnia.ro)
  */
 class Category extends BaseItem implements IThumbnailable
 {
@@ -39,7 +42,17 @@ class Category extends BaseItem implements IThumbnailable
 		return NULL;
 	}
 
-    public function getUrl($relative=true)
+	/**
+	 * Returns the URL to this category
+	 * for the frontend product browsing (filtered by category)
+	 *
+	 * TODO Remove this function and use the CategoryTreeNode features instead
+	 * because custom urls are already supported
+	 *
+	 * @param bool $relative
+	 * @return string
+	 */
+	public function getUrl($relative=TRUE)
     {
         if (!$this->friendly_url) return getUrl('', 'act', 'dispShop', 'vid', BaseRepository::vid(), 'category_srl', $this->category_srl);
         $repo = $this->repo;
@@ -107,7 +120,18 @@ class Category extends BaseItem implements IThumbnailable
 		$this->include_in_navigation_menu = $include_in_navigation_menu;
 	}
 
-    public function getLinkBackend($search=null, $column='title')
+	/**
+	 * Get link to current category for backend - when browsing
+	 * products filtered by category
+	 *
+	 * TODO Remove this function and use the CategoryTreeNode features instead
+	 * because custom urls are already supported
+	 *
+	 * @param null   $search
+	 * @param string $column
+	 * @return mixed
+	 */
+	public function getLinkBackend($search=NULL, $column='title')
     {
         $params = array('', 'act', 'dispShopToolManageProducts', 'category_srl', $this->category_srl);
         if ($search) {
@@ -123,7 +147,15 @@ class Category extends BaseItem implements IThumbnailable
         return call_user_func_array('getNotEncodedUrl', $params);
     }
 
-    public function getThumbnailPath($width = 80, $height = 0, $thumbnail_type = '')
+	/**
+	 * Returns path to category image thumbnail
+	 *
+	 * @param int    $width
+	 * @param int    $height
+	 * @param string $thumbnail_type
+	 * @return mixed|string
+	 */
+	public function getThumbnailPath($width = 80, $height = 0, $thumbnail_type = '')
     {
         $thumbnail = new ShopThumbnail($this->category_srl, $this->filename);
         return $thumbnail->getThumbnailPath($width, $height, $thumbnail_type);
@@ -134,7 +166,7 @@ class Category extends BaseItem implements IThumbnailable
 /**
  * Defines options for generating the HTML for a category tree
  *
- * @author Corina Udrescu (dev@xpressengine.org)
+ * @author Corina Udrescu (corina.udrescu@arnia.ro)
  */
 class HtmlCategoryTreeConfig
 {
@@ -180,7 +212,7 @@ class HtmlCategoryTreeConfig
 /**
  * Models a Product category tree hierarchy
  *
- * @author Corina Udrescu (dev@xpressengine.org)
+ * @author Corina Udrescu (corina.udrescu@arnia.ro)
  */
 class CategoryTreeNode
 {

@@ -1,38 +1,44 @@
 <?php
-
+/**
+ * File containing the CategoryRepository class
+ */
 /**
  * Handles database operations for Product Category
  *
- * @author Corina Udrescu (dev@xpressengine.org)
+ * @author Corina Udrescu (corina.udrescu@arnia.ro)
  */
 class CategoryRepository extends BaseRepository
 {
+	/** @var string Folder where the category images are saved */
 	private $category_images_folder = './files/attach/images/shop/%d/product-categories/';
 
-    /**
-     * Returns an absolute url for category with friendly_url $slug
-     *
-     * @author Florin Ercus (dev@xpressengine.org)
-     *
-     * @param $slug string
-     *
-     * @return string absolute url
-     */
-    public static function getUrl($slug, $relative=true)
+	/**
+	 * Returns an absolute url for category with friendly_url $slug
+	 *
+	 * @author Florin Ercus (dev@xpressengine.org)
+	 *
+	 * @param      $slug string
+	 *
+	 * @param bool $relative
+	 * @return string absolute url
+	 */
+    public static function getUrl($slug, $relative=TRUE)
     {
         return ShopUtils::getUrl("category/$slug", $relative);
     }
 
-    /**
-     * Retrieve a Category object from the database given a friendly url
-     *
-     * @author Florin Ercus (dev@xpressengine.org)
-     *
-     * @param $str string
-     *
-     * @return Category
-     */
-    public function getCategoryByFriendlyUrl($str, $module_srl=null)
+	/**
+	 * Retrieve a Category object from the database given a friendly url
+	 *
+	 * @author Florin Ercus (dev@xpressengine.org)
+	 *
+	 * @param      $str string
+	 *
+	 * @param null $module_srl
+	 * @throws ShopException
+	 * @return Category
+	 */
+    public function getCategoryByFriendlyUrl($str, $module_srl=NULL)
     {
         if (!is_numeric($module_srl)) {
             $info = Context::get('site_module_info');
@@ -40,7 +46,7 @@ class CategoryRepository extends BaseRepository
         }
         if (!$module_srl) throw new ShopException('Count not get module_srl');
         $output = $this->query('getCategoryByFriendlyUrl', array('friendly_url' => $str, 'module_srl'=>$module_srl));
-        return empty($output->data) ? null : new Category($output->data);
+        return empty($output->data) ? NULL : new Category($output->data);
     }
 
 	/**
@@ -48,7 +54,7 @@ class CategoryRepository extends BaseRepository
 	 *
 	 * @param Category $category Category to inserted
 	 *
-	 * @throws Exception DatabaseError.
+	 * @throws ShopException
 	 * @return category_srl int
 	 */
 	public function insertCategory(Category $category)
@@ -69,7 +75,7 @@ class CategoryRepository extends BaseRepository
 	 *
 	 * @param stdClass $args Can have the following properties: category_srl or module_srl
 	 *
-	 * @throws Exception
+	 * @throws ShopException
 	 * @return bool
 	 */
 	public function deleteCategory($args)
@@ -128,7 +134,7 @@ class CategoryRepository extends BaseRepository
 	 *
 	 * @param int $category_srl by which to select the Category
 	 *
-	 * @throws Exception
+	 * @throws ShopException
 	 * @return Category
 	 */
 	public function getCategory($category_srl)
@@ -152,7 +158,7 @@ class CategoryRepository extends BaseRepository
 	 *
 	 * @param Category $category Object to be persisted
 	 *
-	 * @throws Exception
+	 * @throws ShopException
 	 * @return boolean
 	 */
 	public function updateCategory(Category $category)
@@ -165,21 +171,27 @@ class CategoryRepository extends BaseRepository
 		return TRUE;
 	}
 
+	/**
+	 * Returns the categories as a tree structure
+	 *
+	 * @param $module_srl
+	 * @return CategoryTreeNode
+	 */
 	public function getNavigationCategoriesTree($module_srl)
 	{
-		return $this->getCategoriesTree($module_srl, true);
+		return $this->getCategoriesTree($module_srl, TRUE);
 	}
 
 	/**
 	 * Get all product categories for a module as a tree
 	 * Returns root node
 	 *
-	 * @param int $module_srl Module for which to get all categories as a tree
+	 * @param int  $module_srl Module for which to get all categories as a tree
 	 *
-	 * @throws Exception
+	 * @param bool $only_included_in_navigation_menu
 	 * @return CategoryTreeNode Tree root node
 	 */
-	public function getCategoriesTree($module_srl, $only_included_in_navigation_menu = false)
+	public function getCategoriesTree($module_srl, $only_included_in_navigation_menu = FALSE)
 	{
 		$args = new stdClass();
 		$args->module_srl = $module_srl;
@@ -189,7 +201,7 @@ class CategoryRepository extends BaseRepository
 		// Retrieve categories from database
 		try
 		{
-			$output = $this->query('shop.getCategories', $args, true);
+			$output = $this->query('shop.getCategories', $args, TRUE);
 		}
 		catch(DbQueryException $e)
 		{
@@ -237,20 +249,6 @@ class CategoryRepository extends BaseRepository
 		}
 
 		return $nodes[0];
-
-//        // Arrange hierarchically
-//        $nodes = array();
-//        $nodes[0] = new CategoryTreeNode();
-//        foreach($output->data as $pc)
-//        {
-//            $nodes[$pc->category_srl] = new CategoryTreeNode(new Category($pc));
-//            if(isset($nodes[$pc->parent_srl]))
-//            {
-//                $nodes[$pc->parent_srl]->addChild($nodes[$pc->category_srl]);
-//            }
-//        }
-//
-//        return $nodes[0];
 	}
 
     /**
@@ -299,14 +297,15 @@ class CategoryRepository extends BaseRepository
         return TRUE;
     }
 
-    /**
-     * import categories from import folder
-     * @author Dan Dragan (dev@xpressengine.org)
-     *
-     * @param $args for module_srl
-     *
-     * @return  $category_ids correlation
-     */
+	/**
+	 * import categories from import folder
+	 * @author   Dan Dragan (dev@xpressengine.org)
+	 *
+	 * @param $params
+	 * @internal param \for $args module_srl
+	 *
+	 * @return \ArrayObject|null $category_ids correlation
+	 */
     public function insertCategoriesFromImportFolder($params)
     {
         if(file_exists('./files/attach/shop/export-import/categories.csv')){
@@ -418,9 +417,11 @@ class CategoryRepository extends BaseRepository
 	}
 
     /**
-     *
+     * Increases the "order" column value of all categories under a parent
+	 *
+	 * Used for moving a category as first child under a parent node
      */
-    public function increaseCategoriesOrder($parent_srl, $order = null)
+    public function increaseCategoriesOrder($parent_srl, $order = NULL)
     {
         $args = array( 'parent_srl' => $parent_srl, 'list_order' => $order);
         $this->query('updateCategoriesIncreaseOrder', $args);
@@ -438,7 +439,14 @@ class CategoryRepository extends BaseRepository
         return $output->data->max_order;
     }
 
-    public function moveCategory($category_srl, $parent_category_srl, $target_category_srl)
+	/**
+	 * Moves a category (change its place in the hierarchy)
+	 *
+	 * @param $category_srl
+	 * @param $parent_category_srl
+	 * @param $target_category_srl
+	 */
+	public function moveCategory($category_srl, $parent_category_srl, $target_category_srl)
     {
         $category = $this->getCategory($category_srl);
 
@@ -493,6 +501,7 @@ class CategoryRepository extends BaseRepository
 
     /**
      * Returns a bidimensional array of parent serials corresponding to each category in $category_srls
+	 *
      * @param array $category_srls
      * @return array
      * @throws ShopException
@@ -516,9 +525,17 @@ class CategoryRepository extends BaseRepository
         return $serials;
     }
 
-    private function findBySrl(array $objects, $fieldName, $value)
+	/**
+	 * Find an object in an array based on the value of one of its properties
+	 *
+	 * @param array $objects
+	 * @param       $fieldName
+	 * @param       $value
+	 * @return null
+	 */
+	private function findBySrl(array $objects, $fieldName, $value)
     {
-        foreach ($objects as $o) if ($o->$fieldName == $value) return $o; return null;
+        foreach ($objects as $o) if ($o->$fieldName == $value) return $o; return NULL;
     }
 
 }

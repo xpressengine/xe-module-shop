@@ -1,27 +1,43 @@
 <?php
-
 /**
- * Defines blueprint for plugins, bet it shipping, payment, or something else
+ * File containing the AbstractPlugin abstract class
+ */
+/**
+ * Defines blueprint for plugins, be it shipping, payment, or something else
+ *
+ * @author Corina Udrescu (corina.udrescu@arnia.ro)
  *
  */
 abstract class AbstractPlugin extends BaseItem
 {
+	/** @var null Plugin instance id */
     public $id = NULL;
+	/** @var int Module srl to which instance belongs */
     public $module_srl = 0;
-    public $display_name;  /// Display name
-    public $name; /// Unique name = folder name
+	/** @var string User friendly name for instance */
+    public $display_name;
+	/** @var mixed Unique name = folder name */
+    public $name;
+	/** @var int Status - whether plugin is enabled or not */
     public $status = 0;
+	/** @var int Whether plugin is set as default */
 	public $is_default = 0;
+	/** @var Plugin custom properties - contains a name-value array serialized */
     public $properties;
 
 	/**
-	 * Checks is custom plugin parameters are set and valid;
+	 * Checks if custom plugin parameters are set and valid;
 	 * If no validation is needed, just return true;
+	 *
+	 * @param string $error_message
 	 * @return mixed
 	 */
 	public abstract function isConfigured(&$error_message = 'msg_invalid_request');
 
-    public function __construct()
+	/**
+	 * Constructor
+	 */
+	public function __construct()
     {
         $this->name = $this->getName();
         $this->display_name = $this->getDisplayName();
@@ -30,6 +46,7 @@ abstract class AbstractPlugin extends BaseItem
     /**
      * Returns the plugin's name
      * Defaults: Splits folder name into words and makes them uppercase
+	 *
      * @return string
      */
     public function getDisplayName()

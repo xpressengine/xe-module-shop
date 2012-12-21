@@ -1,9 +1,11 @@
 <?php
-
+/**
+ * File containing the ShippingMethodRepository class
+ */
 /**
  * Handles logic for Shipping
  *
- * @author Corina Udrescu (dev@xpressengine.org)
+ * @author Corina Udrescu (corina.udrescu@arnia.ro)
  */
 class ShippingMethodRepository extends AbstractPluginRepository
 {
@@ -73,7 +75,14 @@ class ShippingMethodRepository extends AbstractPluginRepository
 		return $available_shipping_methods;
 	}
 
-	public function getDefault($module_srl, $cart = null)
+	/**
+	 * Returns the default shipping method
+	 *
+	 * @param      $module_srl
+	 * @param null $cart
+	 * @return mixed|null|ShippingMethodAbstract
+	 */
+	public function getDefault($module_srl, $cart = NULL)
 	{
 		if(!$cart)
 		{
@@ -81,7 +90,7 @@ class ShippingMethodRepository extends AbstractPluginRepository
 		}
 
 		$shipping_methods = $this->getAvailableShippingMethodsAndTheirPrices($module_srl, $cart);
-		if(!count($shipping_methods) > 0) return null;
+		if(!count($shipping_methods) > 0) return NULL;
 
 		$shipping_method_keys = array_keys($shipping_methods);
 
@@ -90,7 +99,7 @@ class ShippingMethodRepository extends AbstractPluginRepository
 		// We check to see if the default shipping method is available
 		foreach($shipping_method_keys as $key)
 		{
-			if(strpos($key, $default_shipping->name) !== false)
+			if(strpos($key, $default_shipping->name) !== FALSE)
 			{
 				return $default_shipping;
 			}
@@ -100,19 +109,26 @@ class ShippingMethodRepository extends AbstractPluginRepository
 	}
 
 
-    /**
-     * Get a certain shipping method instance
-     *
-     * @param string $code Folder name of the shipping method
-     *
-     * @return ShippingMethodAbstract
-     */
+	/**
+	 * Get a certain shipping method instance
+	 *
+	 * @param $name
+	 * @param $module_srl
+	 * @internal param string $code Folder name of the shipping method
+	 *
+	 * @return ShippingMethodAbstract
+	 */
     public function getShippingMethod($name, $module_srl)
     {
         return $this->getPlugin($name, $module_srl);
     }
 
-    public function updateShippingMethod($shipping_info)
+	/**
+	 * Update shipping method properties
+	 *
+	 * @param $shipping_info
+	 */
+	public function updateShippingMethod($shipping_info)
     {
         if(isset($shipping_info->is_active))
         {
@@ -122,45 +138,95 @@ class ShippingMethodRepository extends AbstractPluginRepository
         $this->updatePlugin($shipping_info);
     }
 
-
-    function getPluginsDirectoryPath()
+	/**
+	 * Directory where shipping plugins should be put
+	 *
+	 * @return mixed|string
+	 */
+	function getPluginsDirectoryPath()
     {
         return _XE_PATH_ . 'modules/shop/plugins_shipping';
     }
 
-    function getClassNameThatPluginsMustExtend()
+	/**
+	 * Returns the name of the base class for all shipping plugins
+	 *
+	 * @return mixed|string
+	 */
+	function getClassNameThatPluginsMustExtend()
     {
         return "ShippingMethodAbstract";
     }
 
-    protected function getPluginInfoFromDatabase($name, $module_srl)
+	/**
+	 * Returns the shipping method properties from the database
+	 *
+	 * @param $name
+	 * @param $module_srl
+	 * @return mixed
+	 */
+	protected function getPluginInfoFromDatabase($name, $module_srl)
     {
         $output = $this->query('shop.getShippingMethod', array('name' => $name, 'module_srl' => $module_srl));
         return $output->data;
     }
 
-    protected function fixPlugin($name, $old_module_srl, $new_module_srl)
+	/**
+	 * Updates the module srl of a shipping method
+	 *
+	 * @param $name
+	 * @param $old_module_srl
+	 * @param $new_module_srl
+	 * @return mixed|void
+	 */
+	protected function fixPlugin($name, $old_module_srl, $new_module_srl)
     {
         $this->query('shop.fixShippingMethod', array('name' => $name, 'module_srl' => $new_module_srl, 'source_module_srl' => $old_module_srl));
     }
 
-    protected function updatePluginInfo($plugin)
+	/**
+	 * Updates the properties of a shipping method
+	 *
+	 * @param $plugin
+	 * @return mixed|void
+	 */
+	protected function updatePluginInfo($plugin)
     {
         $this->query('shop.updateShippingMethod', $plugin);
     }
 
-    protected function insertPluginInfo(AbstractPlugin $plugin)
+	/**
+	 * Insert a new shipping method
+	 *
+	 * @param AbstractPlugin $plugin
+	 * @return mixed|void
+	 */
+	protected function insertPluginInfo(AbstractPlugin $plugin)
     {
         $plugin->id = getNextSequence();
         $this->query('shop.insertShippingMethod', $plugin);
     }
 
-    protected function deletePluginInfo($name, $module_srl)
+	/**
+	 * Deletes a shipping method from the database
+	 *
+	 * @param $name
+	 * @param $module_srl
+	 * @return mixed|void
+	 */
+	protected function deletePluginInfo($name, $module_srl)
     {
         $this->query('shop.deleteShippingMethod', array('name' => $name, 'module_srl' => $module_srl));
     }
 
-    protected function getAllPluginsInDatabase($module_srl, $args)
+	/**
+	 * Returns all shipping methods in the database
+	 *
+	 * @param $module_srl
+	 * @param $args
+	 * @return mixed
+	 */
+	protected function getAllPluginsInDatabase($module_srl, $args)
     {
 		if(!$args) $args = new stdClass();
 		$args->module_srl = $module_srl;
@@ -169,12 +235,26 @@ class ShippingMethodRepository extends AbstractPluginRepository
 		return $output->data;
     }
 
-    protected function getAllActivePluginsInDatabase($module_srl)
+	/**
+	 * Returns all enabled shipping methods in the database
+	 *
+	 * @param $module_srl
+	 * @return mixed
+	 */
+	protected function getAllActivePluginsInDatabase($module_srl)
     {
         $output = $this->query('shop.getShippingMethods', array('status' => 1, 'module_srl' => $module_srl), TRUE);
 		return $output->data;
     }
 
+	/**
+	 * Updates all shipping methods' properties except for one
+	 *
+	 * @param $is_default
+	 * @param $name
+	 * @param $module_srl
+	 * @return mixed|void
+	 */
 	protected function updatePluginsAllButThis($is_default, $name, $module_srl)
 	{
 		$args = new stdClass();
