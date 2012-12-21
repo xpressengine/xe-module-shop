@@ -1,4 +1,9 @@
 <?php
+/**
+ * Base model class for Addresses
+ *
+ * @author Dan Dragan (dev@xpressengine.org)
+ */
 class Address extends BaseItem
 {
 
@@ -53,17 +58,29 @@ GATA;
 ;
     }
 
+    /**
+     * verify if the address is the default billing address
+     * @return bool
+     */
     public function isDefaultBillingAddress()
     {
         return $this->default_billing == 'Y' ? true : false;
     }
 
+    /**
+     * verify if the address is the default shipping address
+     * @return bool
+     */
     public function isDefaultShippingAddress()
     {
         return $this->default_shipping == 'Y' ? true : false;
     }
 
-	public function isValid()
+    /**
+     * verify if address is valid
+     * @return bool
+     */
+    public function isValid()
 	{
 		if(is_null($this->postal_code)
 			|| is_null($this->country)

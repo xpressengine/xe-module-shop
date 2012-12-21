@@ -2,19 +2,19 @@
     /**
      * @class  shopAdminController
      * @author Arnia (xe_dev@arnia.ro)
-     * @brief  shop module admin controller class
+     *  shop module admin controller class
      **/
 
     class shopAdminController extends shop {
 
         /**
-         * @brief Initialization
+         * Initialization
          **/
         public function init() {
         }
 
         /**
-         * @brief Shop Admin Create
+         * Shop Admin Create
          **/
         public function procShopAdminCreate() {
             $oModuleModel = getModel('module');
@@ -47,6 +47,13 @@
 			$this->setRedirectUrl($returnUrl);
         }
 
+        /**
+         * insert shop
+         * @param $domain
+         * @param $user_id_list
+         * @param null $settings
+         * @return object
+         */
         public function insertShop($domain, $user_id_list, $settings = null) {
             if(!is_array($user_id_list)) $user_id_list = array($user_id_list);
 
@@ -79,6 +86,7 @@
             if(!$output->toBool()) return $output;
             $site_srl = $output->get('site_srl');
 
+            $shop = new stdClass();
             $shop->site_srl = $site_srl;
             $shop->mid = $this->shop_mid;
             $shop->module = 'shop';
@@ -91,6 +99,7 @@
             //$module_srl = $output->get('module_srl');
             $module_srl = $shop->module_srl;
 
+            $site = new stdClass();
             $site->site_srl = $site_srl;
             $site->index_module_srl = $module_srl;
 			$site->domain = $domain;
@@ -106,6 +115,7 @@
             //$argx->list_order =
             $output = $oMemberAdminController->insertGroup($argx);
 
+            $args = new stdClass();
             $args->shop_title = $shop->browser_title;
             $args->module_srl = $module_srl;
             $args->member_srl = $member_srl;
@@ -219,10 +229,14 @@
             return $output;
         }
 
+        /**
+         * shop admin update
+         * @return object
+         */
         public function procShopAdminUpdate(){
             $vars = Context::gets('site_srl','user_id','domain','access_type','site_id','module_srl','member_srl');
             if(!$vars->site_srl) return new Object(-1,'msg_invalid_request');
-
+            $args = new stdClass();
             if($vars->access_type == 'domain') $args->domain = strtolower($vars->domain);
             else $args->domain = $vars->site_id;
             if(!$args->domain) return new Object(-1,'msg_invalid_request');
@@ -273,6 +287,7 @@
             if(!$output->toBool()) return $output;
 
             unset($args);
+            $args = new stdClass();
             $args->module_srl = $vars->module_srl;
             $args->member_srl = $admin_member_srl[0];
             $output = executeQuery('shop.updateShop', $args);
@@ -283,6 +298,10 @@
 			$this->setRedirectUrl($returnUrl);
         }
 
+        /**
+         * shop admin delete
+         * @return Object
+         */
         public function procShopAdminDelete() {
             $oModuleController = getController('module');
             $oCounterController = getController('counter');
@@ -302,7 +321,7 @@
 
             $output = $oModuleController->deleteModule($module_srl);
             if(!$output->toBool()) return $output;
-
+            $args = new stdClass();
             $args->site_srl = $oShop->site_srl;
             executeQuery('module.deleteSite', $args);
             executeQuery('module.deleteSiteAdmin', $args);
@@ -366,6 +385,11 @@
 			$this->setRedirectUrl($returnUrl);
         }
 
+        /**
+         * init shop
+         * @param $site_srl
+         * @return Object
+         */
         public function initShop($site_srl){
             $oCounterController = getController('counter');
             $oDocumentController = getController('document');
@@ -380,6 +404,7 @@
 
             $site_info = $oModuleModel->getSiteInfo($site_srl);
             $module_srl = $site_info->index_module_srl;
+            $args = new stdClass();
             $args->site_srl = $site_srl;
 
             $oShop = new ShopInfo($module_srl);
@@ -414,6 +439,7 @@
             $args->module_srl = $args->module_srl *-1;
 
             // set category
+            $obj = new stdClass();
             $obj->module_srl = $module_srl;
             $obj->title = Context::getLang('init_category_title');
             $oDocumentController->insertCategory($obj);
@@ -427,7 +453,7 @@
             }
 
             $member_info = $oMemberModel->getMemberInfoByEmailAddress($oShop->getUserId());
-
+            $doc = new stdClass();
             $doc->module_srl = $module_srl;
             $doc->title = Context::getLang('sample_title');
             $doc->tags = Context::getLang('sample_tags');

@@ -1,4 +1,7 @@
 <?php
+/**
+ * currencies declaration
+ */
 return array (
 'AED' => array ( 'numeric_code'  =>	784	, 'code' => 'AED', 'name' => t('United Arab Emirates dirham'),  'symbol' => 'د.إ', 'fraction_name' => t('Fils'), 'decimals' => 2 ),
 'AFN' => array ( 'numeric_code'  =>	971	, 'code' => 'AFN', 'name' => t('Afghan afghani'),               'symbol' => '؋', 'fraction_name' => t('Pul'), 'decimals' => 2 ),
@@ -160,6 +163,11 @@ return array (
 'ZMK' => array ( 'numeric_code'  =>	894	, 'code' => 'ZMK', 'name' => t('Zambian kwacha'), 'symbol' => 'ZK', 'fraction_name' => t('Ngwee'), 'decimals' => 2 ),
 'ZWR' => array ( 'numeric_code'  =>	0	, 'code' => 'ZWR', 'name' => t('Zimbabwean dollar'), 'symbol' => '$', 'fraction_name' => t('Cent'), 'decimals' => 2 ),
 );
+/**
+ * return string
+ * @param $string
+ * @return mixed
+ */
 function t($string){
     return $string;
 }

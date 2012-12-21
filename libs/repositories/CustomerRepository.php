@@ -7,6 +7,13 @@
  */
 class CustomerRepository extends BaseRepository
 {
+    /**
+     * get customer list
+     * @param $site_srl
+     * @param array $extraParams
+     * @return array
+     * @throws ShopException
+     */
     public function getCustomersList($site_srl, array $extraParams=array()){
       if (!$site_srl) {
           throw new ShopException("Missing arguments for get customers list : please provide [site_srl]");
@@ -31,12 +38,11 @@ class CustomerRepository extends BaseRepository
 
     /**
      * Get a memebr list for site
-     *
-     * @param int $site_srl
-     * @param int $page
-     *
-     * @return array
-     **/
+     * @param $site_srl
+     * @param $page
+     * @param array $extraParams
+     * @return object
+     */
     function getSiteMemberList($site_srl, $page, array $extraParams=array())
     {
         $params = array(
@@ -49,6 +55,11 @@ class CustomerRepository extends BaseRepository
         return $this->query('getSiteMemberList', $params, true);
     }
 
+    /**
+     * get customers subscribed to newsletter
+     * @param $site_srl
+     * @return object
+     */
     public function getNewsletterCustomers($site_srl){
         $args = new stdClass();
         $args->site_srl = $site_srl;
@@ -63,6 +74,11 @@ class CustomerRepository extends BaseRepository
         return $output;
     }
 
+    /**
+     * get member extra vars
+     * @param $member_srl
+     * @return mixed
+     */
     public function getMemberExtraVars($member_srl){
         $args = new stdClass();
         $args->member_srl = $member_srl;
@@ -70,6 +86,12 @@ class CustomerRepository extends BaseRepository
         return $output->data->extra_vars;
     }
 
+    /**
+     * update member extra vars
+     * @param $member_srl
+     * @param $extra_vars
+     * @return object
+     */
     public function updateMemberExtraVars($member_srl,$extra_vars){
         $args = new stdClass();
         $args->member_srl = $member_srl;

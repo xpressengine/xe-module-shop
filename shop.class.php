@@ -1,24 +1,24 @@
 <?php
-/**
- * @class  shop
- * @author Arnia (xe_dev@arnia.ro)
- * @brief  shop module main class
- **/
+
 
 require_once(_XE_PATH_.'modules/shop/shop.info.php');
 require_once(__DIR__ . '/libs/autoload/autoload.php');
 
 define(__XE_SHOP_DEBUG__, 0);
-
+/**
+ * @class  shop
+ * @author Arnia (xe_dev@arnia.ro)
+ *  shop module main class
+ **/
 class shop extends ModuleObject {
 
     /**
-     * @brief default mid
+     * default mid
      **/
     public $shop_mid = 'shop';
 
     /**
-     * @brief default skin
+     * default skin
      **/
     public $skin = 'default';
 
@@ -33,7 +33,7 @@ class shop extends ModuleObject {
     );
 
     /**
-     * @brief module install
+     * module install
      **/
     public function moduleInstall() {
         $oModuleController = getController('module');
@@ -45,7 +45,7 @@ class shop extends ModuleObject {
     }
 
     /**
-     * @brief check for update method
+     * check for update method
      **/
     public function checkUpdate() {
         $oDB = &DB::getInstance();
@@ -125,7 +125,7 @@ class shop extends ModuleObject {
     }
 
     /**
-     * @brief module update
+     * module update
      **/
     public function moduleUpdate() {
         $oDB = &DB::getInstance();
@@ -347,12 +347,16 @@ class shop extends ModuleObject {
     }
 
     /**
-     * @brief recompile cache
+     * recompile cache
      **/
     public function recompileCache() {
     }
 
-
+    /**
+     * check xe core version
+     * @param $requried_version
+     * @return bool
+     */
     public function checkXECoreVersion($requried_version){
         $result = version_compare(__XE_VERSION__, $requried_version, '>=');
         if ($result != 1) return false;

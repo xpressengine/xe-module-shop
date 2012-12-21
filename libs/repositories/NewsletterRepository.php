@@ -7,7 +7,12 @@
  */
 class NewsletterRepository extends BaseRepository
 {
-
+    /**
+     * insert function
+     * @param Newsletter $newsletter
+     * @return object
+     * @throws ShopException
+     */
     public function insert(Newsletter &$newsletter)
     {
         if ($newsletter->newsletter_srl) throw new ShopException('A srl must NOT be specified for the insert operation!');
@@ -15,12 +20,23 @@ class NewsletterRepository extends BaseRepository
         return $this->query('insertNewsletter', get_object_vars($newsletter));
     }
 
+    /**
+     * update function
+     * @param Newsletter $newsletter
+     * @return object
+     * @throws ShopException
+     */
     public function update(Newsletter $newsletter)
     {
         if (!is_numeric($newsletter->newsletter_srl)) throw new ShopException('You must specify a srl for the updated newsletter');
         return $this->query('updateNewsletter', get_object_vars($newsletter));
     }
 
+    /**
+     * get list of newsletters
+     * @param string $module_srl
+     * @return object
+     */
     public function getList($module_srl)
     {
         $params = array('module_srl'=> $module_srl);
@@ -29,6 +45,11 @@ class NewsletterRepository extends BaseRepository
         return $output;
     }
 
+    /**
+     * get newsletter by srl
+     * @param $newsletter_srl
+     * @return Newsletter
+     */
     public function getNewsletter($newsletter_srl){
         $args = new stdClass();
         $args->newsletter_srl = $newsletter_srl;
@@ -36,6 +57,12 @@ class NewsletterRepository extends BaseRepository
         return new Newsletter($output->data);
     }
 
+    /**
+     * delete newsletter
+     * @param $args
+     * @return object
+     * @throws ShopException
+     */
     public function deleteNewsletters($args)
     {
         if (!isset($args->newsletter_srls))throw new ShopException("Please provide newsletter_srls or module_srl.");
@@ -43,6 +70,11 @@ class NewsletterRepository extends BaseRepository
         return $this->query('deleteNewsletters',$args);
     }
 
+    /**
+     * send email to subscribers
+     * @param Newsletter $newsletter
+     * @param $site_srl
+     */
     public function sendEmailsToSubscribers(Newsletter $newsletter, $site_srl){
         $shopModel = getModel('shop');
         $customerRepository = $shopModel->getCustomerRepository();

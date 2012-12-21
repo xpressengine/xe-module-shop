@@ -2,7 +2,7 @@
 /**
  * @class  shopModel
  * @author Arnia (xe_dev@arnia.ro)
- * @brief  shop module Model class
+ *  shop module Model class
  */
 class shopModel extends shop
 {
@@ -64,13 +64,12 @@ class shopModel extends shop
         return $output->data;
     }
 
-	/**
-	 * Shop return list
-	 *
-	 * @author Arnia (dev@xpressengine.org)
-	 * @param $args array
-	 */
-	public function getShopList($args)
+    /**
+     * Shop return list
+     * @param $args
+     * @return object
+     */
+    public function getShopList($args)
 	{
 		$output = executeQueryArray('shop.getShopList', $args);
 		if(!$output->toBool())
@@ -427,15 +426,13 @@ class shopModel extends shop
     }
 
     // region Menu
-	/**
-	 * Insert a menu
-	 *
-	 * @param $site_srl
-	 * @param $title
-	 * @param $menu_title
-	 * @return object
-	 */
-	public function makeMenu($site_srl, $menu_title) {
+    /**
+     * Insert a menu
+     * @param $site_srl
+     * @param $menu_title
+     * @return object
+     */
+    public function makeMenu($site_srl, $menu_title) {
 		$args = new stdClass();
 		$args->site_srl = $site_srl;
 		$args->title = $menu_title;
@@ -511,6 +508,14 @@ class shopModel extends shop
 		$menuAdminController->makeXmlFile($menu_srl);
 	}
 
+    /**
+     * insert page
+     * @param $site_srl
+     * @param $mid
+     * @param $title
+     * @param $document_args
+     * @return mixed
+     */
     public function insertPage($site_srl, $mid, $title, $document_args)
     {
         $oModuleController = &getController('module');
@@ -548,6 +553,11 @@ class shopModel extends shop
     }
 	// endregion
 
+    /**
+     * relative date
+     * @param $date
+     * @return string
+     */
     public function zdateRelative($date)
     {
         $diff = time() - $date;

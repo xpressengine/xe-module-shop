@@ -1,4 +1,9 @@
 <?php
+/**
+ * Base model class for Customer
+ *
+ * @author Dan Dragan (dev@xpressengine.org)
+ */
 class Customer extends BaseItem
 {
 

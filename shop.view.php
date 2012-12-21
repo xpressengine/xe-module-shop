@@ -3,7 +3,7 @@
 /**
  * @class  shopView
  * @author Arnia (xe_dev@arnia.ro)
- * @brief  shop module View class
+ *  shop module View class
  **/
 
 class shopView extends shop {
@@ -14,7 +14,7 @@ class shopView extends shop {
     protected $shop;
 
     /**
-	 * @brief Initialization
+	 * Initialization
 	 **/
 	public function init() {
 		$this->model = getModel('shop');
@@ -28,7 +28,7 @@ class shopView extends shop {
 	}
 
 	/**
-	 * @brief Shop common init
+	 * Shop common init
 	 **/
 	public function initCommon($is_other_module = FALSE){
 		if(!$this->checkXECoreVersion('1.4.3')) return $this->stop(sprintf(Context::getLang('msg_requried_version'),'1.4.3'));
@@ -57,6 +57,7 @@ class shopView extends shop {
 		$preview_skin = Context::get('preview_skin');
 		if($oModuleModel->isSiteAdmin(Context::get('logged_info'))&&$preview_skin) {
 			if(is_dir($this->module_path.'skins/'.$preview_skin)) {
+                $shop_config = new stdClass();
 				$shop_config->skin = $this->module_info->skin = $preview_skin;
 			}
 		}
@@ -80,7 +81,7 @@ class shopView extends shop {
 	}
 
 	/**
-	 * @brief Shop init tool
+	 * Shop init tool
 	 **/
 	public function initTool(&$oModule, $is_other_module = FALSE){
 		if (!$oModule) $oModule = $this;
@@ -113,7 +114,7 @@ class shopView extends shop {
 	}
 
 	/**
-	 * @brief shop init service
+	 * shop init service
 	 **/
 	public function initService(&$oModule, $is_other_module = FALSE, $isMobile = FALSE){
 		if (!$oModule) $oModule = $this;
@@ -155,7 +156,7 @@ class shopView extends shop {
 		Context::set('home_url', getFullSiteUrl($this->shop->domain));
 		Context::set('profile_url', getSiteUrl($this->shop->domain,'','mid',$this->module_info->mid,'act','dispShopProfile'));
 		if(Context::get('is_logged')) Context::set('admin_url', getSiteUrl($this->shop->domain,'','mid',$this->module_info->mid,'act','dispShopToolDashboard'));
-		else Context::set('admin_url', getSiteUrl($shop->domain,'','mid','shop','act','dispShopToolLogin'));
+		else Context::set('admin_url', getSiteUrl($this->shop->domain,'','mid','shop','act','dispShopToolLogin'));
 		Context::set('shop_title', $this->shop->get('shop_title'));
 
 		// set browser title
@@ -188,7 +189,11 @@ class shopView extends shop {
         Context::set('search_categories', $flat_tree);
 	}
 
-
+    /**
+     * route
+     * @return Object|void
+     * @throws ShopException
+     */
     public function route()
     {
         try {
@@ -215,7 +220,7 @@ class shopView extends shop {
     }
 
     /**
-	 * @brief Tool dashboard
+	 * Tool dashboard
 	 **/
 	public function dispShopToolDashboard(){
 		$oCounterModel = getModel('counter');
@@ -250,6 +255,7 @@ class shopView extends shop {
 		foreach($thisWeek as $day) {
 			$v = (int)$thisWeekCounter[$day]->unique_visitor;
 			if($v && $v>$max) $max = $v;
+            $stat = new stdClass();
 			$stat->week[date("D",strtotime($day))]->this = $v;
 		}
 		foreach($lastWeek as $day) {
@@ -347,7 +353,7 @@ class shopView extends shop {
 	}
 
     /**
-     * @brief display shop tool statistics visitor
+     * display shop tool statistics visitor
      **/
     function dispShopToolStatisticsVisitor() {
         global $lang;
@@ -366,12 +372,14 @@ class shopView extends shop {
 
         $site_module_info = Context::get('site_module_info');
 
+        $xml = new stdClass();
         $xml->item = array();
         $xml->value = array(array(),array());
         $selected_count = 0;
 
         // total & today
         $counter = $oCounterModel->getStatus(array(0,date("Ymd")),$site_module_info->site_srl);
+        $total = new stdClass();
         $total->total = $counter[0]->unique_visitor;
         $total->today = $counter[date("Ymd")]->unique_visitor;
 
@@ -387,6 +395,7 @@ class shopView extends shop {
                 $i=0;
                 foreach($detail_status->list as $key => $val) {
                     $_k = substr($selected_date,0,4).'.'.sprintf('%02d',$key);
+                    $output = new stdClass();
                     $output->list[$_k]->val = $val;
                     if($selected_date == date("Ymd")&&$key == date("m")){
                         $selected_count = $val;
@@ -417,6 +426,7 @@ class shopView extends shop {
                 $detail_status = $oCounterModel->getHourlyStatus('week', $selected_date, $site_module_info->site_srl);
                 foreach($detail_status->list as $key => $val) {
                     $_k = date("Y.m.d", strtotime($key)).'('.$lang->unit_week[date('l',strtotime($key))].')';
+                    $output = new stdClass();
                     if($selected_date == date("Ymd")&&$key == date("Ymd")){
                         $selected_count = $val;
                         $output->list[$_k]->selected = true;
@@ -449,6 +459,7 @@ class shopView extends shop {
 
                 foreach($detail_status->list as $key => $val) {
                     $_k = sprintf('%02d',$key);
+                    $output = new stdClass();
                     if($selected_date == date("Ymd")&&$key == date("H")){
                         $selected_count = $val;
                         $output->list[$_k]->selected = true;
@@ -494,7 +505,7 @@ class shopView extends shop {
     }
 
 	/**
-	 * @brief Login
+	 * Login
 	 **/
 	public function dispShopToolLogin() {
 		Context::addBodyClass('logOn');
@@ -513,6 +524,7 @@ class shopView extends shop {
 				if(!file_exists($small_screenshot)) $small_screenshot = $this->module_path.'tpl/img/@small.jpg';
 
 				unset($obj);
+                $obj = new stdClass();
 				$obj->title = $info->title;
 				$obj->description = $info->description;
 				$_arr_author = array();
@@ -632,7 +644,7 @@ class shopView extends shop {
 	}
 
 	/**
-	 * @brief attribute add page
+	 * attribute add page
 	 */
 	public function dispShopToolAddAttribute()
 	{
@@ -660,6 +672,10 @@ class shopView extends shop {
         Context::set('object', $coupon);
     }
 
+    /**
+     * display shop tool edit coupon
+     * @return Object
+     */
     public function dispShopToolEditCoupon()
     {
         $repo = new CouponRepository();
@@ -679,6 +695,11 @@ class shopView extends shop {
         Context::set('object', $coupon);
     }
 
+    /**
+     * display shop tool edit coupon group
+     * @return Object
+     * @throws ShopException
+     */
     public function dispShopToolEditCouponGroup()
     {
         $repo = new CouponRepository();
@@ -734,7 +755,7 @@ class shopView extends shop {
 	}
 
 	/**
-	 * @brief Shop display product tool page
+	 * Shop display product tool page
 	 */
 	public function dispShopToolManageProducts(){
 		$module_srl = $this->module_info->module_srl;
@@ -772,7 +793,7 @@ class shopView extends shop {
     }
 
     /**
-     * @brief Shop display page for import products
+     * Shop display page for import products
      */
     public function dispShopToolImportProducts(){
         $shopModel = getModel('shop');
@@ -786,7 +807,7 @@ class shopView extends shop {
     }
 
 	/**
-	 * @brief Shop display product edit page
+	 * Shop display product edit page
 	 */
 	public function dispShopToolEditProduct(){
 		$this->dispShopToolAddProduct();
@@ -794,7 +815,7 @@ class shopView extends shop {
 	}
 
 	/**
-	 * @brief Shop display simple product add page
+	 * Shop display simple product add page
 	 */
 	public function dispShopToolAddProduct()
     {
@@ -872,7 +893,7 @@ class shopView extends shop {
 	}
 
 	/**
-	 * @brief Shop display configurable product add page
+	 * Shop display configurable product add page
 	 */
 	public function dispShopToolAddConfigurableProduct(){
 		$shopModel = getModel('shop');
@@ -883,7 +904,7 @@ class shopView extends shop {
 
 
 	/**
-	 * @brief Shop display associated products
+	 * Shop display associated products
 	 */
 	public function dispShopToolAddAssociatedProducts(){
 		$shopModel = getModel('shop');
@@ -943,7 +964,7 @@ class shopView extends shop {
 	}
 
     /**
-     * @brief Shop home page
+     * Shop home page
      **/
     public function dispShopHome(){
         // Products list
@@ -974,7 +995,7 @@ class shopView extends shop {
     }
 
 	/**
-	 * @brief Shop view products list
+	 * Shop view products list
 	 **/
 	public function dispShop() {
 
@@ -1021,6 +1042,10 @@ class shopView extends shop {
 		}
 	}
 
+    /**
+     * load shop category tree
+     * @param array $selected_categories
+     */
     protected function loadShopCategoryTree($selected_categories = array()){
         // Categories left tree
         // Retrieve existing categories
@@ -1224,6 +1249,11 @@ class shopView extends shop {
         $this->setTemplateFile("product_search.html");
     }
 
+    /**
+     * display shop view order
+     * @return Object
+     * @throws ShopException
+     */
     public function dispShopViewOrder(){
         try{
             $orderRepo = new OrderRepository();
@@ -1239,6 +1269,11 @@ class shopView extends shop {
         $this->setTemplateFile('view_order');
     }
 
+    /**
+     * display shop checkout
+     * @return Object
+     * @throws ShopException
+     */
     public function dispShopCheckout()
     {
         try {
@@ -1285,6 +1320,11 @@ class shopView extends shop {
         $this->setTemplateFile('checkout.html');
     }
 
+    /**
+     * display shop place order
+     * @return Object
+     * @throws ShopException
+     */
     public function dispShopPlaceOrder()
     {
         /** @var $cart Cart  */
@@ -1948,6 +1988,10 @@ class shopView extends shop {
         $this->add('comment_srl', $oComment->comment_srl);
     }
 
+    /**
+     * display reply comment
+     * @return Object
+     */
     public function dispReplyComment()
     {
         $parent_srl = Context::get('comment_srl');

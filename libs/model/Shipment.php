@@ -1,4 +1,9 @@
 <?php
+/**
+ * Base model class for Shipment
+ *
+ * @author Dan Dragan (dev@xpressengine.org)
+ */
 class Shipment extends BaseItem
 {
 
@@ -14,11 +19,19 @@ class Shipment extends BaseItem
     /** @var ShipmentRepository */
     public $repo;
 
+    /**
+     * save function
+     * @return object
+     */
     public function save()
     {
         return $this->shipment_srl ? $this->repo->update($this) : $this->repo->insert($this);
     }
 
+    /**
+     * check and update stocks
+     * @return array
+     */
     public function checkAndUpdateStocks()
     {
         $products = $this->order->getProducts();

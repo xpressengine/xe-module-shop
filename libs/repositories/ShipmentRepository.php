@@ -7,7 +7,12 @@
  */
 class ShipmentRepository extends BaseRepository
 {
-
+    /**
+     * insert function
+     * @param Shipment $shipment
+     * @return object
+     * @throws ShopException
+     */
     public function insert(Shipment &$shipment)
     {
         if ($shipment->shipment_srl) throw new ShopException('A srl must NOT be specified for the insert operation!');
@@ -15,12 +20,23 @@ class ShipmentRepository extends BaseRepository
         return $this->query('insertShipment', get_object_vars($shipment));
     }
 
+    /**
+     * update function
+     * @param Shipment $shipment
+     * @return object
+     * @throws ShopException
+     */
     public function update(Shipment $shipment)
     {
         if (!is_numeric($shipment->order_srl)) throw new ShopException('You must specify a srl for the updated shipment');
         return $this->query('updateShipment', get_object_vars($shipment));
     }
 
+    /**
+     * get list of shipments
+     * @param string $module_srl
+     * @return object
+     */
     public function getList($module_srl)
     {
         $params = array('module_srl'=> $module_srl, 'order_type' => 'desc');
@@ -29,6 +45,11 @@ class ShipmentRepository extends BaseRepository
         return $output;
     }
 
+    /**
+     * get shipment by order srl
+     * @param $order_srl
+     * @return null|Shipment
+     */
     public function getShipmentByOrderSrl($order_srl)
     {
         $output = $this->query('getShipmentByOrderSrl',array('order_srl'=> $order_srl));

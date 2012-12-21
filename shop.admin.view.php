@@ -2,13 +2,13 @@
     /**
      * @class  shopAdminView
      * @author Arnia (xe_dev@arnia.ro)
-     * @brief  shop module admin view class
+     *  shop module admin view class
      **/
 
     class shopAdminView extends shop {
 
         /**
-         * @brief Initialization
+         * Initialization
          **/
         public function init() {
             $oShopModel = getModel('shop');
@@ -24,7 +24,7 @@
 
             $page = Context::get('page');
             if(!$page) $page = 1;
-
+            $args = new stdClass();
             if($vars->search_target && $vars->search_keyword) {
                 $args->{'s_'.$vars->search_target} = strtolower($vars->search_keyword);
             }
