@@ -1,18 +1,33 @@
 <?php
-
+/**
+ * File containing the ShippingMethodAbstract class
+ */
+/**
+ * Base class that all shipping plugins must extend
+ */
 abstract class ShippingMethodAbstract extends AbstractPlugin
 {
     public $shipping_info;
     protected $shipping_method_dir;
     static protected $template_file_name = 'template.html';
 
-
-    public function getCode()
+	/**
+	 * Alias for getName; kept for backwards compatibility
+	 *
+	 * @return mixed
+	 */
+	public function getCode()
     {
         return $this->getName();
     }
 
-    public function getFormHtml()
+	/**
+	 * Returns the HTML of the shipping method settings
+	 * form in the admin
+	 *
+	 * @return string
+	 */
+	public function getFormHtml()
     {
         if(!file_exists($this->getPluginDir() . DIRECTORY_SEPARATOR . self::$template_file_name))
         {
@@ -23,6 +38,11 @@ abstract class ShippingMethodAbstract extends AbstractPlugin
         return $oTemplate->compile($this->getPluginDir(), self::$template_file_name);
     }
 
+	/**
+	 * Checks to see if shipping method has more types (like Standard/Priority for example)
+	 *
+	 * @return bool
+	 */
 	public function hasVariants()
 	{
 		return FALSE;
@@ -66,8 +86,8 @@ abstract class ShippingMethodAbstract extends AbstractPlugin
 		$variant = new stdClass();
 		$variant->name = $this->getName();
 		$variant->display_name = $this->getDisplayName();
-		$variant->variant = null;
-		$variant->variant_display_name = null;
+		$variant->variant = NULL;
+		$variant->variant_display_name = NULL;
 		$variant->price = $this->calculateShipping($cart);
 		return array($variant);
 	}

@@ -1,22 +1,34 @@
 <?php
-
+/**
+ * File containing the FlatRateShippingClass
+ */
 require_once dirname(__FILE__) . '/../ShippingMethodAbstract.php';
 
+/**
+ * Class for adding Flat Rate Shipping as a shipping method in XE Shop
+ *
+ * @author Corina Udrescu (corina.udrescu@arnia.ro)
+ */
 class FlatRateShipping extends ShippingMethodAbstract
 {
-    public function __construct()
+	/**
+	 * Constructor
+	 */
+	public function __construct()
     {
         $this->shipping_method_dir = _XE_PATH_ . 'modules/shop/plugins_shipping/flat_rate_shipping';
         parent::__construct();
     }
 
-    /**
-     * Calculates shipping rates
-     *
-     * @param Cart $cart SHipping cart for which to calculate shipping
-     * @param Address $shipping_address Address to which products should be shipped
-     */
-    public function calculateShipping(Cart $cart, $service = null)
+	/**
+	 * Calculates shipping rates
+	 *
+	 * @param Cart $cart SHipping cart for which to calculate shipping
+	 * @param null $service
+	 * @internal param \Address $shipping_address Address to which products should be shipped
+	 * @return int|mixed
+	 */
+    public function calculateShipping(Cart $cart, $service = NULL)
     {
         if($this->type == 'per_item')
         {
@@ -33,6 +45,7 @@ class FlatRateShipping extends ShippingMethodAbstract
 	/**
 	 * Checks is custom plugin parameters are set and valid;
 	 * If no validation is needed, just return true;
+	 * @param string $error_message
 	 * @return mixed
 	 */
 	public function isConfigured(&$error_message = 'msg_invalid_request')

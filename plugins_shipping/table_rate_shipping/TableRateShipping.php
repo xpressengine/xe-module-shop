@@ -1,5 +1,12 @@
 <?php
-
+/**
+ * File containing the TableRateShipping class
+ */
+/**
+ * Class for the Table rate shipping method
+ *
+ * @author Corina Udrescu (corina.udrescu@arnia.ro)
+ */
 class TableRateShipping extends ShippingMethodAbstract
 {
 
@@ -26,6 +33,7 @@ class TableRateShipping extends ShippingMethodAbstract
 	 * The * refers to all countries;
 	 *
 	 * @param $country_code
+	 * @return array
 	 */
 	public function getTableRatesForCountry($country_code)
 	{
@@ -44,11 +52,10 @@ class TableRateShipping extends ShippingMethodAbstract
 		return $rates_for_all_countries;
 	}
 
-
-
 	/**
 	 * Checks is custom plugin parameters are set and valid;
 	 * If no validation is needed, just return true;
+	 * @param string $error_message
 	 * @return mixed
 	 */
 	public function isConfigured(&$error_message = 'msg_invalid_request')
@@ -73,6 +80,7 @@ class TableRateShipping extends ShippingMethodAbstract
 	 *
 	 * @param Cart   $cart    Shipping cart for which to calculate shipping; includes shipping address
 	 * @param String $service Represents the specific service for which to calcualte shipping (e.g. Standard or Priority)
+	 * @return null
 	 */
 	public function calculateShipping(Cart $cart, $service = NULL)
 	{

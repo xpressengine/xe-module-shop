@@ -1,5 +1,12 @@
 <?php
-
+/**
+ * File containing the classes used for integrating UPS shipping with XE Shop
+ */
+/**
+ * Shipping plugin class for adding UPS as a shipping method in XE Shop
+ *
+ * @author Corina Udrescu (corina.udrescu@arnia.ro)
+ */
 class Ups extends ShippingMethodAbstract
 {
 	const SANDBOX_URL = 'https://wwwcie.ups.com/ups.app/xml/Rate'
@@ -56,6 +63,8 @@ class Ups extends ShippingMethodAbstract
 	/**
 	 * Checks is custom plugin parameters are set and valid;
 	 * If no validation is needed, just return true;
+	 *
+	 * @param string $error_message
 	 * @return mixed
 	 */
 	public function isConfigured(&$error_message = 'msg_invalid_request')
@@ -74,8 +83,9 @@ class Ups extends ShippingMethodAbstract
 	 *
 	 * @param Cart    $cart             SHipping cart for which to calculate shipping
 	 * @param string $service			Service for which to calculate cost (Standard, Priority etc.)
+	 * @return float|int
 	 */
-	public function calculateShipping(Cart $cart, $service = null)
+	public function calculateShipping(Cart $cart, $service = NULL)
 	{
 		if($cart->getShippingAddress() == NULL) return 0;
 
@@ -109,6 +119,10 @@ class Ups extends ShippingMethodAbstract
 		return $variants;
 	}
 
+	/**
+	 * Checks to see if shipping method has more types
+	 * For instance, for UPS we can have: Expedited, Saver etc.
+	 */
 	public function hasVariants()
 	{
 		return TRUE;
@@ -127,7 +141,8 @@ class Ups extends ShippingMethodAbstract
 	 *         ,  price => 12
 	 * ))
 	 *
-	 * @param Address $shipping_address
+	 * @param Cart $cart
+	 * @internal param \Address $shipping_address
 	 * @return array
 	 */
 	public function getAvailableVariants(Cart $cart)
@@ -138,9 +153,9 @@ class Ups extends ShippingMethodAbstract
 			$variant = new stdClass();
 			$variant->name = $this->getName();
 			$variant->display_name = $this->getDisplayName();
-			$variant->variant = null;
+			$variant->variant = NULL;
 			$variant->variant_display_name = 'Rates and available UPS services will show up after you enter your shipping address.';
-			$variant->price = null;
+			$variant->price = NULL;
 			return array($variant);
 		}
 
@@ -175,15 +190,33 @@ class Ups extends ShippingMethodAbstract
 	}
 }
 
+/**
+ * Wraps the UPS API calls
+ *
+ * @author Corina Udrescu (corina.udrescu@arnia.ro)
+ */
 class UpsAPI extends APIAbstract
 {
 	private $ups_config;
 
+	/**
+	 * Constructor
+	 *
+	 * @param Ups $ups_config
+	 */
 	public function __construct(Ups $ups_config)
 	{
 		$this->ups_config = $ups_config;
 	}
 
+	/**
+	 * Calls the Shop method of the UPS API
+	 * for a given shipping address
+	 *
+	 * @param Cart $cart
+	 * @return array
+	 * @throws APIException
+	 */
 	public function getAvailableRates(Cart $cart)
 	{
 		$data = $this->getAccessRequestXML(
@@ -201,7 +234,7 @@ class UpsAPI extends APIAbstract
 		{
 			// If using sandbox, skip SSL verify, otherwise all requests fail with:
 			// "Error [60]: SSL certificate problem, verify that the CA cert is OK"
-			$response = $this->request($this->ups_config->gateway_api, $data, true);
+			$response = $this->request($this->ups_config->gateway_api, $data, TRUE);
 		}
 		else
 		{
@@ -226,7 +259,14 @@ class UpsAPI extends APIAbstract
 		return $available_rates;
 	}
 
-
+	/**
+	 * Calls the Rate method of the UPS API
+	 *
+	 * @param Cart $cart
+	 * @param      $service
+	 * @return float|int
+	 * @throws APIException
+	 */
 	public function getRate(Cart $cart, $service)
 	{
 		if(!$service) return 0; // TODO See how to treat this - giving shipping for free is not necessarily the best idea :)
@@ -248,7 +288,7 @@ class UpsAPI extends APIAbstract
 		{
 			// If using sandbox, skip SSL verify, otherwise all requests fail with:
 			// "Error [60]: SSL certificate problem, verify that the CA cert is OK"
-			$response = $this->request($this->ups_config->gateway_api, $data, true);
+			$response = $this->request($this->ups_config->gateway_api, $data, TRUE);
 		}
 		else
 		{
@@ -266,7 +306,14 @@ class UpsAPI extends APIAbstract
 		return $shipping_cost;
 	}
 
-
+	/**
+	 * Returns the XML for authenticating the request
+	 *
+	 * @param $access_license_number
+	 * @param $userid
+	 * @param $userpassword
+	 * @return string
+	 */
 	public function getAccessRequestXML($access_license_number, $userid, $userpassword)
 	{
 		return "<?xml version=\"1.0\" ?>
@@ -283,7 +330,16 @@ class UpsAPI extends APIAbstract
 			</AccessRequest>";
 	}
 
-	public function getRatingServiceSelectionRequestXML($ups_config, Cart $cart, $RequestOption /* Rate or Shop */, $service = null)
+	/**
+	 * Generates the XML needed for the making a request to the Rating API
+	 *
+	 * @param      $ups_config
+	 * @param Cart $cart
+	 * @param      $RequestOption
+	 * @param null $service
+	 * @return string
+	 */
+	public function getRatingServiceSelectionRequestXML($ups_config, Cart $cart, $RequestOption /* Rate or Shop */, $service = NULL)
 	{
 		$shipping_address = $cart->getShippingAddress();
 		$request = "<?xml version=\"1.0\" ?>
