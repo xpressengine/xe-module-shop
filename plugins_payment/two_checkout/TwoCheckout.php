@@ -1,9 +1,21 @@
 <?php
-
+/**
+ * File containing the TwoCheckout class
+ */
+/**
+ * Class used for integrating 2Checkout with XE Shop
+ *
+ * @author Corina Udrescu (corina.udrescu@arnia.ro)
+ */
 class TwoCheckout extends PaymentMethodAbstract
 {
 	const GATEWAY_API_URL = 'https://www.2checkout.com/checkout/spurchase';
 
+	/**
+	 * Checks to see if demo mode is enabled or not in XE settings
+	 *
+	 * @return bool
+	 */
 	public function isLive()
 	{
 		if($this->use_demo_mode === 'Y') return FALSE;
@@ -48,6 +60,8 @@ class TwoCheckout extends PaymentMethodAbstract
 	 *
 	 * @param $cart
 	 * @param $module_srl
+	 * @throws PaymentProcessingException
+	 * @return void
 	 */
 	public function onOrderConfirmationPageLoad($cart, $module_srl)
 	{
@@ -132,6 +146,7 @@ class TwoCheckout extends PaymentMethodAbstract
 	/**
 	 * Checks is custom plugin parameters are set and valid;
 	 * If no validation is needed, just return true;
+	 * @param string $error_message
 	 * @return mixed
 	 */
 	public function isConfigured(&$error_message = 'msg_invalid_request')
@@ -146,6 +161,7 @@ class TwoCheckout extends PaymentMethodAbstract
 	 *
 	 * @param Cart $cart
 	 * @param      $error_message
+	 * @return mixed|void
 	 */
 	public function processPayment(Cart $cart, &$error_message)
 	{
