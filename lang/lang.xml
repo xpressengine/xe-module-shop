@@ -1,67 +1,67 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <lang>
 	<item name="welcome">
-		<value xml:lang="ko"><![CDATA[welcome %s]]></value>
+		<value xml:lang="ko"><![CDATA[%s님 환영합니다.]]></value>
 		<value xml:lang="en"><![CDATA[welcome %s]]></value>
 	</item>
 	<item name="logout">
-		<value xml:lang="ko"><![CDATA[logout]]></value>
+		<value xml:lang="ko"><![CDATA[로그아웃]]></value>
 		<value xml:lang="en"><![CDATA[logout]]></value>
 	</item>
 	<item name="login">
-		<value xml:lang="ko"><![CDATA[login]]></value>
+		<value xml:lang="ko"><![CDATA[로그인]]></value>
 		<value xml:lang="en"><![CDATA[login]]></value>
 	</item>
 	<item name="register">
-		<value xml:lang="ko"><![CDATA[register]]></value>
+		<value xml:lang="ko"><![CDATA[회원가입]]></value>
 		<value xml:lang="en"><![CDATA[register]]></value>
 	</item>
 	<item name="my_account">
-		<value xml:lang="ko"><![CDATA[My Account]]></value>
+		<value xml:lang="ko"><![CDATA[회원정보]]></value>
 		<value xml:lang="en"><![CDATA[My Account]]></value>
 	</item>
 	<item name="newsletter_already_subscribed">
-		<value xml:lang="ko"><![CDATA[You are already subscribed to our newsletter]]></value>
+		<value xml:lang="ko"><![CDATA[이미 뉴스레터를 구독하셨습니다]]></value>
 		<value xml:lang="en"><![CDATA[You are already subscribed to our newsletter]]></value>
 	</item>
 	<item name="newsletter_unsubscribe">
-		<value xml:lang="ko"><![CDATA[Unsubscribe]]></value>
+		<value xml:lang="ko"><![CDATA[구독 해지]]></value>
 		<value xml:lang="en"><![CDATA[Unsubscribe]]></value>
 	</item>
 	<item name="newsletter_subscribe">
-		<value xml:lang="ko"><![CDATA[Subscribe]]></value>
+		<value xml:lang="ko"><![CDATA[구독]]></value>
 		<value xml:lang="en"><![CDATA[Subscribe]]></value>
 	</item>
 	<item name="newsletter_in_order_to_sign_up">
-		<value xml:lang="ko"><![CDATA[In order to sign up to our newsletter you have to]]></value>
+		<value xml:lang="ko"><![CDATA[뉴스레터에 가입하기 위해서는]]></value>
 		<value xml:lang="en"><![CDATA[In order to sign up to our newsletter you have to]]></value>
 	</item>
 	<item name="home">
-		<value xml:lang="ko"><![CDATA[Home]]></value>
+		<value xml:lang="ko"><![CDATA[메인]]></value>
 		<value xml:lang="en"><![CDATA[Home]]></value>
 	</item>
 	<item name="featured_products">
-		<value xml:lang="ko"><![CDATA[Featured products]]></value>
+		<value xml:lang="ko"><![CDATA[특화 상품]]></value>
 		<value xml:lang="en"><![CDATA[Featured products]]></value>
 	</item>
 	<item name="price_ascendent">
-		<value xml:lang="ko"><![CDATA[price (asc)]]></value>
+		<value xml:lang="ko"><![CDATA[가격 (asc)]]></value>
 		<value xml:lang="en"><![CDATA[price (asc)]]></value>
 	</item>
 	<item name="price_descendent">
-		<value xml:lang="ko"><![CDATA[price (desc)]]></value>
+		<value xml:lang="ko"><![CDATA[가격 (desc)]]></value>
 		<value xml:lang="en"><![CDATA[price (desc)]]></value>
 	</item>
 	<item name="in_stock">
-		<value xml:lang="ko"><![CDATA[In stock]]></value>
+		<value xml:lang="ko"><![CDATA[재고 있음]]></value>
 		<value xml:lang="en"><![CDATA[In stock]]></value>
 	</item>
 	<item name="shopping_cart">
-		<value xml:lang="ko"><![CDATA[Shopping Cart]]></value>
+		<value xml:lang="ko"><![CDATA[장바구니]]></value>
 		<value xml:lang="en"><![CDATA[Shopping Cart]]></value>
 	</item>
 	<item name="shopping_cart_total">
-		<value xml:lang="ko"><![CDATA[Total]]></value>
+		<value xml:lang="ko"><![CDATA[총합]]></value>
 		<value xml:lang="en"><![CDATA[Total]]></value>
 	</item>
 	<item name="actions">
@@ -69,99 +69,99 @@
 		<value xml:lang="en"><![CDATA[Actions]]></value>
 	</item>
 	<item name="cart_is_empty">
-		<value xml:lang="ko"><![CDATA[is empty]]></value>
+		<value xml:lang="ko"><![CDATA[장바구니가 비었음]]></value>
 		<value xml:lang="en"><![CDATA[is empty]]></value>
 	</item>
 	<item name="no_longer_available">
-		<value xml:lang="ko"><![CDATA[Product is no longer available. Delete it from cart?]]></value>
+		<value xml:lang="ko"><![CDATA[해당 상품의 구매가 더이상 불가능합니다. 장바구니에서 지울까요?]]></value>
 		<value xml:lang="en"><![CDATA[Product is no longer available. Delete it from cart?]]></value>
 	</item>
 	<item name="total_after_discount">
-		<value xml:lang="ko"><![CDATA[Total after discount]]></value>
+		<value xml:lang="ko"><![CDATA[할인 적용 후 총합]]></value>
 		<value xml:lang="en"><![CDATA[Total after discount]]></value>
 	</item>
 	<item name="are_you_already_a_customer">
-		<value xml:lang="ko"><![CDATA[Are you already a customer?]]></value>
+		<value xml:lang="ko"><![CDATA[이미 손님이십니까?]]></value>
 		<value xml:lang="en"><![CDATA[Are you already a customer?]]></value>
 	</item>
 	<item name="user_email">
-		<value xml:lang="ko"><![CDATA[User (email)]]></value>
+		<value xml:lang="ko"><![CDATA[사용자 (email)]]></value>
 		<value xml:lang="en"><![CDATA[User (email)]]></value>
 	</item>
 	<item name="use_different_shipping_address">
-		<value xml:lang="ko"><![CDATA[Use different shipping address?]]></value>
+		<value xml:lang="ko"><![CDATA[다른 배송 주소를 사용할까요?]]></value>
 		<value xml:lang="en"><![CDATA[Use different shipping address?]]></value>
 	</item>
 	<item name="shipping_method">
-		<value xml:lang="ko"><![CDATA[Shipping method]]></value>
+		<value xml:lang="ko"><![CDATA[배송 방법]]></value>
 		<value xml:lang="en"><![CDATA[Shipping method]]></value>
 	</item>
 	<item name="payment_method">
-		<value xml:lang="ko"><![CDATA[Payment method]]></value>
+		<value xml:lang="ko"><![CDATA[지불 방법]]></value>
 		<value xml:lang="en"><![CDATA[Payment method]]></value>
 	</item>
 	<item name="order_review">
-		<value xml:lang="ko"><![CDATA[Order review]]></value>
+		<value xml:lang="ko"><![CDATA[주문 확인]]></value>
 		<value xml:lang="en"><![CDATA[Order review]]></value>
 	</item>
 	<item name="you_can_review_order">
-		<value xml:lang="ko"><![CDATA[(You can review this order before it's final)]]></value>
+		<value xml:lang="ko"><![CDATA[(주문을 확정하기 전에 다시 한번 확인하실 수 있습니다.)]]></value>
 		<value xml:lang="en"><![CDATA[(You can review this order before it's final)]]></value>
 	</item>
 	<item name="searching_for">
-		<value xml:lang="ko"><![CDATA[Searhing for %s]]></value>
+		<value xml:lang="ko"><![CDATA[검색어 %s]]></value>
 		<value xml:lang="en"><![CDATA[Searhing for %s]]></value>
 	</item>
 	<item name="renew">
-		<value xml:lang="ko"><![CDATA[Renew]]></value>
+		<value xml:lang="ko"><![CDATA[새로고침]]></value>
 		<value xml:lang="en"><![CDATA[Renew]]></value>
 	</item>
     <item name="print">
-        <value xml:lang="ko"><![CDATA[Print]]></value>
+        <value xml:lang="ko"><![CDATA[출력]]></value>
         <value xml:lang="en"><![CDATA[Print]]></value>
     </item>
 	<item name="order_number">
-		<value xml:lang="ko"><![CDATA[Order number]]></value>
+		<value xml:lang="ko"><![CDATA[주문 번호]]></value>
 		<value xml:lang="en"><![CDATA[Order number]]></value>
 	</item>
 	<item name="order_with_number">
-		<value xml:lang="ko"><![CDATA[Order #%s]]></value>
+		<value xml:lang="ko"><![CDATA[주문 번호 %s]]></value>
 		<value xml:lang="en"><![CDATA[Order #%s]]></value>
 	</item>
 	<item name="update_order">
-		<value xml:lang="ko"><![CDATA[Update order]]></value>
+		<value xml:lang="ko"><![CDATA[주문 수정]]></value>
 		<value xml:lang="en"><![CDATA[Update order]]></value>
 	</item>
 	<item name="login_to_view">
-		<value xml:lang="ko"><![CDATA[Please log in to view this page]]></value>
+		<value xml:lang="ko"><![CDATA[이 페이지를 보기 위해서는 로그인하셔야 합니다.]]></value>
 		<value xml:lang="en"><![CDATA[Please log in to view this page]]></value>
 	</item>
 	<item name="order_successfully_created">
-		<value xml:lang="ko"><![CDATA[You order has been successfully created with id %s.]]></value>
+		<value xml:lang="ko"><![CDATA[정상적으로 주문되었습니다. (주문 번호 %s.)]]></value>
 		<value xml:lang="en"><![CDATA[You order has been successfully created with id %s.]]></value>
 	</item>
 	<item name="view_just_created_order">
-		<value xml:lang="ko"><![CDATA[Go see it]]></value>
+		<value xml:lang="ko"><![CDATA[보기]]></value>
 		<value xml:lang="en"><![CDATA[Go see it]]></value>
 	</item>
 	<item name="please_check_order">
-		<value xml:lang="ko"><![CDATA[Please check your account to see if your order was successfully created. If you do not receive any information in 1 hour, please contact tech support.]]></value>
+		<value xml:lang="ko"><![CDATA[주문이 성공적으로 되었는지 계정을 확인해 보십시오. 1시간 이내로 아무런 정보도 받지 못하신다면 기술 담당자에게 연락하십시오.]]></value>
 		<value xml:lang="en"><![CDATA[Please check your account to see if your order was successfully created. If you do not receive any information in 1 hour, please contact tech support.]]></value>
 	</item>
 	<item name="please_review_order">
-		<value xml:lang="ko"><![CDATA[Please review your order. Payment will be made when you click Submit.]]></value>
+		<value xml:lang="ko"><![CDATA[주문을 다시 한 번 확인해 주십시오. 확인을 누르면 결제가 될 것입니다.]]></value>
 		<value xml:lang="en"><![CDATA[Please review your order. Payment will be made when you click Submit.]]></value>
 	</item>
 	<item name="thanks_for_order">
-		<value xml:lang="ko"><![CDATA[Thank you for your order!]]></value>
+		<value xml:lang="ko"><![CDATA[주문 해 주셔서 감사합니다!]]></value>
 		<value xml:lang="en"><![CDATA[Thank you for your order!]]></value>
 	</item>
 	<item name="billing_info">
-		<value xml:lang="ko"><![CDATA[Billing info]]></value>
+		<value xml:lang="ko"><![CDATA[지불 정보]]></value>
 		<value xml:lang="en"><![CDATA[Billing info]]></value>
 	</item>
 	<item name="products">
-		<value xml:lang="ko"><![CDATA[Products]]></value>
+		<value xml:lang="ko"><![CDATA[상품]]></value>
 		<value xml:lang="en"><![CDATA[Products]]></value>
 	</item>
 	<item name="product_no_dot">
@@ -169,131 +169,131 @@
 		<value xml:lang="en"><![CDATA[No.]]></value>
 	</item>
 	<item name="discount">
-		<value xml:lang="ko"><![CDATA[Discount]]></value>
+		<value xml:lang="ko"><![CDATA[할인]]></value>
 		<value xml:lang="en"><![CDATA[Discount]]></value>
 	</item>
 	<item name="discount_code">
-		<value xml:lang="ko"><![CDATA[Discount code]]></value>
+		<value xml:lang="ko"><![CDATA[할인 번호]]></value>
 		<value xml:lang="en"><![CDATA[Discount code]]></value>
 	</item>
 	<item name="customize">
-		<value xml:lang="ko"><![CDATA[Customize]]></value>
+		<value xml:lang="ko"><![CDATA[개인화]]></value>
 		<value xml:lang="en"><![CDATA[Customize]]></value>
 	</item>
 	<item name="page_not_found">
-		<value xml:lang="ko"><![CDATA[Page not found]]></value>
+		<value xml:lang="ko"><![CDATA[페이지를 찾을 수 없음]]></value>
 		<value xml:lang="en"><![CDATA[Page not found]]></value>
 	</item>
 	<item name="page_not_found_details">
-		<value xml:lang="ko"><![CDATA[Ooops! Can't find the page you're looking for.]]></value>
+		<value xml:lang="ko"><![CDATA[이런! 당신이 찾고자 하는 페이지를 찾을 수 없습니다.]]></value>
 		<value xml:lang="en"><![CDATA[Ooops! Can't find the page you're looking for.]]></value>
 	</item>
 	<item name="homepage">
-		<value xml:lang="ko"><![CDATA[Homepage]]></value>
+		<value xml:lang="ko"><![CDATA[홈페이지]]></value>
 		<value xml:lang="en"><![CDATA[Homepage]]></value>
 	</item>
 	<item name="view_number">
-		<value xml:lang="ko"><![CDATA[number of views]]></value>
+		<value xml:lang="ko"><![CDATA[조회 수]]></value>
 		<value xml:lang="en"><![CDATA[number of views]]></value>
 	</item>
 	<item name="prev_page">
-		<value xml:lang="ko"><![CDATA[Prev]]></value>
+		<value xml:lang="ko"><![CDATA[이전]]></value>
 		<value xml:lang="en"><![CDATA[Prev]]></value>
 	</item>
 	<item name="next_page">
-		<value xml:lang="ko"><![CDATA[Next]]></value>
+		<value xml:lang="ko"><![CDATA[다음]]></value>
 		<value xml:lang="en"><![CDATA[Next]]></value>
 	</item>
 	<item name="recent_tags">
-		<value xml:lang="ko"><![CDATA[Recent Tags]]></value>
+		<value xml:lang="ko"><![CDATA[최근 태그]]></value>
 		<value xml:lang="en"><![CDATA[Recent Tags]]></value>
 	</item>
 	<item name="subscribe">
-		<value xml:lang="ko"><![CDATA[Subscribe]]></value>
+		<value xml:lang="ko"><![CDATA[구독]]></value>
 		<value xml:lang="en"><![CDATA[Subscribe]]></value>
 	</item>
 	<item name="viewed">
-		<value xml:lang="ko"><![CDATA[viewed]]></value>
+		<value xml:lang="ko"><![CDATA[조회 됨]]></value>
 		<value xml:lang="en"><![CDATA[viewed]]></value>
 	</item>
 	<item name="time">
-		<value xml:lang="ko"><![CDATA[time]]></value>
+		<value xml:lang="ko"><![CDATA[시간]]></value>
 		<value xml:lang="en"><![CDATA[time]]></value>
 	</item>
 	<item name="times">
-		<value xml:lang="ko"><![CDATA[times]]></value>
+		<value xml:lang="ko"><![CDATA[배]]></value>
 		<value xml:lang="en"><![CDATA[times]]></value>
 	</item>
 	<item name="admin_shop">
-		<value xml:lang="ko"><![CDATA[Manage shop]]></value>
+		<value xml:lang="ko"><![CDATA[상점 관리]]></value>
 		<value xml:lang="en"><![CDATA[Manage shop]]></value>
 	</item>
 	<item name="dashboard">
-		<value xml:lang="ko"><![CDATA[Dashboard]]></value>
+		<value xml:lang="ko"><![CDATA[대시보드]]></value>
 		<value xml:lang="en"><![CDATA[Dashboard]]></value>
 	</item>
 	<item name="shop">
-		<value xml:lang="ko"><![CDATA[Shop]]></value>
+		<value xml:lang="ko"><![CDATA[상점]]></value>
 		<value xml:lang="en"><![CDATA[Shop]]></value>
 	</item>
 	<item name="about_shop">
-		<value xml:lang="ko"><![CDATA[Shop is a e-shop module running on XpressEngine.]]></value>
+		<value xml:lang="ko"><![CDATA[상점 모듈은 XpressEngine에서 작동되고 있습니다.]]></value>
 		<value xml:lang="en"><![CDATA[Shop is a e-shop module running on XpressEngine.]]></value>
 	</item>
 	<item name="msg_requried_version">
-		<value xml:lang="ko"><![CDATA[Shop requires XE core version equal to or greater than %s.]]></value>
+		<value xml:lang="ko"><![CDATA[상점 모듈은 %s. 버전 이상의 XE Core에서만 작동합니다.]]></value>
 		<value xml:lang="en"><![CDATA[Shop requires XE core version equal to or greater than %s.]]></value>
 	</item>
 	<item name="title">
-		<value xml:lang="ko"><![CDATA[Title]]></value>
+		<value xml:lang="ko"><![CDATA[제목]]></value>
 		<value xml:lang="en"><![CDATA[Title]]></value>
 	</item>
 	<item name="description">
-		<value xml:lang="ko"><![CDATA[Description]]></value>
+		<value xml:lang="ko"><![CDATA[설명]]></value>
 		<value xml:lang="en"><![CDATA[Description]]></value>
 	</item>
 	<item name="about_product_title">
-		<value xml:lang="ko"><![CDATA[Product name/title]]></value>
+		<value xml:lang="ko"><![CDATA[상품명]]></value>
 		<value xml:lang="en"><![CDATA[Product name/title]]></value>
 	</item>
 	<item name="about_description">
-		<value xml:lang="ko"><![CDATA[Enter description]]></value>
+		<value xml:lang="ko"><![CDATA[설명 입력]]></value>
 		<value xml:lang="en"><![CDATA[Enter description]]></value>
 	</item>
 	<item name="short_description">
-		<value xml:lang="ko"><![CDATA[Short description]]></value>
+		<value xml:lang="ko"><![CDATA[요약 설명]]></value>
 		<value xml:lang="en"><![CDATA[Short description]]></value>
 	</item>
 	<item name="about_short_description">
-		<value xml:lang="ko"><![CDATA[Enter short description]]></value>
+		<value xml:lang="ko"><![CDATA[요약 설명 입력]]></value>
 		<value xml:lang="en"><![CDATA[Enter short description]]></value>
 	</item>
 	<item name="sku">
-		<value xml:lang="ko"><![CDATA[SKU]]></value>
+		<value xml:lang="ko"><![CDATA[재고 관리 코드]]></value>
 		<value xml:lang="en"><![CDATA[SKU]]></value>
 	</item>
 	<item name="about_sku">
-		<value xml:lang="ko"><![CDATA[Enter unique id code]]></value>
+		<value xml:lang="ko"><![CDATA[재고 관리 코드 입력]]></value>
 		<value xml:lang="en"><![CDATA[Enter unique id code]]></value>
 	</item>
 	<item name="weight">
-		<value xml:lang="ko"><![CDATA[Weight]]></value>
+		<value xml:lang="ko"><![CDATA[무게]]></value>
 		<value xml:lang="en"><![CDATA[Weight]]></value>
 	</item>
 	<item name="about_weight">
-		<value xml:lang="ko"><![CDATA[Enter product weight]]></value>
+		<value xml:lang="ko"><![CDATA[상품 무게 입력]]></value>
 		<value xml:lang="en"><![CDATA[Enter product weight]]></value>
 	</item>
 	<item name="status">
-		<value xml:lang="ko"><![CDATA[Status]]></value>
+		<value xml:lang="ko"><![CDATA[상태]]></value>
 		<value xml:lang="en"><![CDATA[Status]]></value>
 	</item>
 	<item name="enabled">
-		<value xml:lang="ko"><![CDATA[Enabled]]></value>
+		<value xml:lang="ko"><![CDATA[가능]]></value>
 		<value xml:lang="en"><![CDATA[Enabled]]></value>
 	</item>
 	<item name="disabled">
-		<value xml:lang="ko"><![CDATA[Disabled]]></value>
+		<value xml:lang="ko"><![CDATA[불가능]]></value>
 		<value xml:lang="en"><![CDATA[Disabled]]></value>
 	</item>
 	<item name="friendly_url">
@@ -301,43 +301,43 @@
 		<value xml:lang="en"><![CDATA[Friendly URL]]></value>
 	</item>
 	<item name="about_friendly_url">
-		<value xml:lang="ko"><![CDATA[Enter unique friendly url]]></value>
+		<value xml:lang="ko"><![CDATA[Friendly URL 입력]]></value>
 		<value xml:lang="en"><![CDATA[Enter unique friendly url]]></value>
 	</item>
 	<item name="price">
-		<value xml:lang="ko"><![CDATA[Price]]></value>
+		<value xml:lang="ko"><![CDATA[가격]]></value>
 		<value xml:lang="en"><![CDATA[Price]]></value>
 	</item>
 	<item name="discount_price">
-		<value xml:lang="ko"><![CDATA[Discount Price]]></value>
+		<value xml:lang="ko"><![CDATA[할인가]]></value>
 		<value xml:lang="en"><![CDATA[Discount Price]]></value>
 	</item>
 	<item name="about_price">
-		<value xml:lang="ko"><![CDATA[Product price]]></value>
+		<value xml:lang="ko"><![CDATA[상품가]]></value>
 		<value xml:lang="en"><![CDATA[Product price]]></value>
 	</item>
 	<item name="about_discount_price">
-		<value xml:lang="ko"><![CDATA[Product discount price]]></value>
+		<value xml:lang="ko"><![CDATA[할인가 입력]]></value>
 		<value xml:lang="en"><![CDATA[Product discount price]]></value>
 	</item>
 	<item name="qty">
-		<value xml:lang="ko"><![CDATA[Quantity]]></value>
+		<value xml:lang="ko"><![CDATA[수량]]></value>
 		<value xml:lang="en"><![CDATA[Quantity]]></value>
 	</item>
 	<item name="about_qty">
-		<value xml:lang="ko"><![CDATA[Product qty]]></value>
+		<value xml:lang="ko"><![CDATA[상품 수량]]></value>
 		<value xml:lang="en"><![CDATA[Product qty]]></value>
 	</item>
 	<item name="is_featured">
-		<value xml:lang="ko"><![CDATA[Is featured]]></value>
+		<value xml:lang="ko"><![CDATA[특화 됨]]></value>
 		<value xml:lang="en"><![CDATA[Is featured]]></value>
 	</item>
 	<item name="yes">
-		<value xml:lang="ko"><![CDATA[Yes]]></value>
+		<value xml:lang="ko"><![CDATA[예]]></value>
 		<value xml:lang="en"><![CDATA[Yes]]></value>
 	</item>
 	<item name="no">
-		<value xml:lang="ko"><![CDATA[No]]></value>
+		<value xml:lang="ko"><![CDATA[아니오]]></value>
 		<value xml:lang="en"><![CDATA[No]]></value>
 	</item>
 	<item name="id">
@@ -345,39 +345,39 @@
 		<value xml:lang="en"><![CDATA[Id]]></value>
 	</item>
 	<item name="name">
-		<value xml:lang="ko"><![CDATA[Name]]></value>
+		<value xml:lang="ko"><![CDATA[이름]]></value>
 		<value xml:lang="en"><![CDATA[Name]]></value>
 	</item>
 	<item name="about_name">
-		<value xml:lang="ko"><![CDATA[Add your Full name]]></value>
+		<value xml:lang="ko"><![CDATA[이름을 입력하세요.]]></value>
 		<value xml:lang="en"><![CDATA[Add your Full name]]></value>
 	</item>
 	<item name="about_user_id">
-		<value xml:lang="ko"><![CDATA[User Id]]></value>
+		<value xml:lang="ko"><![CDATA[사용자 Id]]></value>
 		<value xml:lang="en"><![CDATA[User Id]]></value>
 	</item>
 	<item name="about_nick_name">
-		<value xml:lang="ko"><![CDATA[Nick Name]]></value>
+		<value xml:lang="ko"><![CDATA[별명]]></value>
 		<value xml:lang="en"><![CDATA[Nick Name]]></value>
 	</item>
 	<item name="about_password">
-		<value xml:lang="ko"><![CDATA[Password]]></value>
+		<value xml:lang="ko"><![CDATA[비밀번호]]></value>
 		<value xml:lang="en"><![CDATA[Password]]></value>
 	</item>
 	<item name="change_password">
-		<value xml:lang="ko"><![CDATA[Change existing password]]></value>
+		<value xml:lang="ko"><![CDATA[비밀번호 변경]]></value>
 		<value xml:lang="en"><![CDATA[Change existing password]]></value>
 	</item>
 	<item name="customer_about_email_address">
-		<value xml:lang="ko"><![CDATA[Email address]]></value>
+		<value xml:lang="ko"><![CDATA[이메일 주소]]></value>
 		<value xml:lang="en"><![CDATA[Email address]]></value>
 	</item>
 	<item name="product">
-		<value xml:lang="ko"><![CDATA[Product]]></value>
+		<value xml:lang="ko"><![CDATA[상품]]></value>
 		<value xml:lang="en"><![CDATA[Product]]></value>
 	</item>
 	<item name="product_type">
-		<value xml:lang="ko"><![CDATA[Product Type]]></value>
+		<value xml:lang="ko"><![CDATA[상품 종류]]></value>
 		<value xml:lang="en"><![CDATA[Product Type]]></value>
 	</item>
 	<item name="no_product">
@@ -2049,8 +2049,8 @@
 		<value xml:lang="en"><![CDATA[Skip body]]></value>
 	</item>
 	<item name="read_more">
-		<value xml:lang="ko"><![CDATA[Continue reading »]]></value>
-		<value xml:lang="en"><![CDATA[Continue reading »]]></value>
+		<value xml:lang="ko"><![CDATA[Continue reading ≫]]></value>
+		<value xml:lang="en"><![CDATA[Continue reading ≫]]></value>
 	</item>
 	<item name="share_this_article">
 		<value xml:lang="ko"><![CDATA[Share this article]]></value>
