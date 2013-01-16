@@ -71,7 +71,7 @@
             $_SESSION['grid_view'] = $sess;
             $this->setRedirectUrlIfNoReferer(getNotEncodedUrl('', 'act', 'dispShopHome'));
         }
-        /**
+
         public function procShopLogin($user_id = NULL, $password = NULL, $keep_signed = NULL) {
             $oMemberController = getController('member');
 
