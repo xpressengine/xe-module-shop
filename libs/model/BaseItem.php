@@ -4,7 +4,7 @@ abstract class BaseItem
     /** @var BaseRepository */
     public $repo;
     /** @var ShopCache */
-    public $cache;
+    public static $cache;
 
     protected $meta = array();
 
@@ -29,14 +29,17 @@ abstract class BaseItem
         /**
          * Look for srl field if it's not already set in class $meta
          */
+        $reflection = new ReflectionClass($this);
         if ($srlField = $this->getMeta('srl')) { //if srl is given
-            $reflection = new ReflectionClass($this);
             if (!$reflection->hasProperty($srlField)) {
                 throw new ShopException("Srl field '$srlField' doesn't exist");
             }
         }
+        elseif ($reflection->hasProperty('srl')) {
+            $this->setMeta('srl', 'srl');
+        }
         else { //else return the first _srl field
-            foreach ($this as $field=> $value) {
+            foreach ($this as $field => $value) {
                 if (substr($field, strlen($field) - 4, strlen($field)) === '_srl') {
                     $this->setMeta('srl', $field);
                     break;
@@ -55,7 +58,11 @@ abstract class BaseItem
             else throw new ShopException("No such {$this->repo->entity} srl $data");
         }
 
-        $this->cache = new ShopCache();
+		if(is_null(self::$cache))
+		{
+			self::$cache = new ShopCache();
+		}
+
     }
 
     public function copy(BaseItem $o)
@@ -100,10 +107,15 @@ abstract class BaseItem
      *
      * @return bool
      */
-    public function isPersisted()
+    public function isPersisted($checkDB=false)
     {
         $srl = $this->getMeta('srl');
-        return is_numeric($this->$srl);
+        if (!is_numeric($this->$srl)) return false;
+        if ($checkDB) {
+            $object = $this->repo->get($this->$srl);
+            if (!$object) return false;
+        }
+        return true;
     }
 
     public function getMeta($key)
@@ -127,11 +139,25 @@ abstract class BaseItem
         return $this->isPersisted() ? $this->update() : $this->insert();
     }
 
+    private function addPrivatesToParams(&$params)
+    {
+        if (is_array($privates = $this->getMeta('privates'))) {
+            //we have properties that are protected from normal get/set (wrapped in magic methods)
+            foreach ($privates as $private) {
+                if ($this->$private !== null && !isset($params[$private])) {
+                    $params[$private] = $this->$private;
+                }
+            }
+        }
+    }
+
     public function update($query='update%E')
     {
         $entity = get_called_class();
         if (!$this->isPersisted()) throw new ShopException("No $entity srl for update");
-        return $this->query($query, get_object_vars($this));
+        $params = get_object_vars($this);
+        $this->addPrivatesToParams($params);
+        return $this->query($query, $params);
     }
 
     public function insert($query='insert%E')
@@ -140,7 +166,8 @@ abstract class BaseItem
         if ($this->isPersisted()) throw new ShopException("$entity already persisted, can't insert.");
         $srl = $this->getMeta('srl');
         $this->$srl = getNextSequence();
-        return $this->query($query, get_object_vars($this));
+        $params = get_object_vars($this);
+        return $this->query($query, $params);
     }
 
     public function delete($query='delete%Es')

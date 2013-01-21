@@ -7,38 +7,16 @@
 
 <div id="footer">
     <div class="footer">
-        <div class="layout-centered clearfix">
-            <div class="footer-box" style="width: 500px;">
-                <h3>About your company</h3>
-                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
-            </div>
-            <div class="footer-box" style="width: 200px;">
-                <h3>Customer service</h3>
-                <ul>
-                    <li>
-                        <p>Delivery Information</p>
-                    </li>
-                    <li>
-                        <p>Gift vouchers</p>
-                    </li>
-                    <li>
-                        <p>Affiliates</p>
-                    </li>
-                    <li>
-                        <p>Specials</p>
-                    </li>
-                    <li>
-                        <p>Returns</p>
-                    </li>
-                </ul>
-            </div>
-            <div class="footer-box" style="width: 200px;">
-                <p>
-
-                </p>
-                <p>
-                    <a href="">RSS Feed</a>
-                </p>
+        <div class="layout-centered">
+            <div id="footerStaticHeight" class="clearfix">
+                <!--@if($module_info->footer_content == '')-->
+                    <div class="footer-box" style="width: 500px;">
+                        <h3>About your company</h3>
+                        <p> You can add your own custom content here. </p>
+                    </div>
+                <!--@else-->
+                    {$module_info->footer_content}
+                <!--@end-->
             </div>
         </div>
     </div>

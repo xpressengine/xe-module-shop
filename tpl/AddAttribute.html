@@ -80,14 +80,22 @@
                                 </select>
                                 <script type="text/javascript">
                                     (function( $ ){
-                                        $.fn.settingsVisibility = function(){
-                                            var selected = jQuery('option:selected', this);
-                                            var trs = jQuery('#valuesTr,#valueTr');
+                                        $.fn.settingsVisibility = function() {
+                                            var selected = $('option:selected', this);
+                                            var trs = $('#valuesTr,#valueTr');
+                                            var showAsFilter = $('#showAsFilter');
                                             if (selected.val() == 5 || selected.val() == 6) {
-                                                trs.show();
-                                                trs.trRedLabels(1500);
+                                                showAsFilter.show(400).trRedLabels(1500);
+                                                trs.show(400).trRedLabels(1500);
                                             }
-                                            else trs.hide();
+                                            else if (selected.val() == 7) {
+                                                trs.hide();
+                                                showAsFilter.show(400).trRedLabels(1500);
+                                            }
+                                            else {
+                                                trs.hide();
+                                                showAsFilter.hide();
+                                            }
                                         };
                                         $.fn.trRedLabels = function(milis){
                                             var target = $('th label', this);
@@ -128,6 +136,18 @@
                             <div class="fItem">
                                 <label class="iLabel" for="default_value">{$lang->about_attribute_default_value}</label>
                                 <input type="text" id="default_value" name="default_value" style="width:200px" class="iText iText" title="{$lang->about_attribute_default_value}" value="{$attribute->default_value}"/>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <tr id="showAsFilter">
+                        <th scope="row">
+                            <label for="values">{$lang->is_filter}</label>
+                        </th>
+                        <td class="title">
+                            <div class="fItem">
+                                <label class="iLabel" for="is_filter" style="margin-left: 20px;">{$lang->show_as_sidebar_filter}</label>
+                                <input type="checkbox" id="is_filter" name="is_filter" checked="checked"|cond="$attribute->is_filter">
                             </div>
                         </td>
                     </tr>

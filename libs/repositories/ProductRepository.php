@@ -10,13 +10,25 @@ class ProductRepository extends BaseRepository
     const PRODUCT_CONTENT_PATH = './files/attach/contents/shop/%d/product-contents/%d/';
 
 	/**
-	 * Insert a new Product  returns the ID of the newly created record
-	 *
-	 * @author Dan Dragan (dev@xpressengine.org)
-	 * @param $product Product
-	 * @return int
-	 */
-	public function insertProduct(Product $product)
+
+    /**
+     * Returns an absolute url for product with friendly_url $slug
+     * @param $slug
+     * @param bool $relative
+     * @return string
+     */
+    public static function getUrl($slug, $relative=true)
+    {
+        return ShopUtils::getUrl("product/$slug", $relative);
+    }
+
+    /**
+     * Insert a new Product  returns the ID of the newly created record
+     * @param Product $product
+     * @return mixed
+     * @throws ShopException
+     */
+    public function insertProduct(Product $product)
 	{
 		$product->product_srl = getNextSequence();
 
@@ -36,17 +48,19 @@ class ProductRepository extends BaseRepository
 			if($product->product_type == 'configurable') $this->insertProductConfigurableAttributes($product);
 			$this->insertProductImages($product);
 		}
+
+        $slug = ShopUtils::slugify($product->title);
+
 		return $product->product_srl;
 	}
 
-	/**
-	 * Insert product attributes
-	 *
-	 * @author Corina Udrescu (dev@xpressengine.org)
-	 * @param $product Product
-	 * @return boolean
-	 */
-	public function insertProductAttributes(Product $product)
+    /**
+     * Insert product attributes
+     * @param Product $product
+     * @return bool
+     * @throws ShopException
+     */
+    public function insertProductAttributes(Product $product)
 	{
 		$valid_attributes = $this->getProductCategoriesAttributes($product);
 
@@ -60,11 +74,27 @@ class ProductRepository extends BaseRepository
                 if(!in_array($attribute_srl, $valid_attributes)) continue;
             }
 			$args->attribute_srl = $attribute_srl;
-			$args->attribute_value = $attribute_value;
-			$output = executeQuery('shop.insertProductAttribute', $args);
-			if(!$output->toBool())
+
+			if(is_array($attribute_value))
 			{
-				throw new ShopException($output->getMessage(), $output->getError());
+				foreach($attribute_value as $array_value)
+				{
+					$args->attribute_value = $array_value;
+					$output = executeQuery('shop.insertProductAttribute', $args);
+					if(!$output->toBool())
+					{
+						throw new ShopException($output->getMessage(), $output->getError());
+					}
+				}
+			}
+			else
+			{
+				$args->attribute_value = $attribute_value;
+				$output = executeQuery('shop.insertProductAttribute', $args);
+				if(!$output->toBool())
+				{
+					throw new ShopException($output->getMessage(), $output->getError());
+				}
 			}
 		}
 		return TRUE;
@@ -81,23 +111,24 @@ class ProductRepository extends BaseRepository
 	{
 		$shopModel = getModel('shop');
 		$imageRepository = $shopModel->getImageRepository();
-		foreach($product->images as $image){
-			$image->product_srl = $product->product_srl;
-			$image->module_srl = $product->module_srl;
-			$image->member_srl = $product->member_srl;
-			$imageRepository->insertImage($image);
-		}
+		if (is_array($product->images)) {
+            foreach($product->images as $image){
+                $image->product_srl = $product->product_srl;
+                $image->module_srl = $product->module_srl;
+                $image->member_srl = $product->member_srl;
+                $imageRepository->insertImage($image);
+            }
+        }
 		return TRUE;
 	}
 
-	/**
-	 * Insert product configurable attributes
-	 *
-	 * @author Dan Dragan (dev@xpressengine.org)
-	 * @param $product Product
-	 * @return boolean
-	 */
-	public function insertProductConfigurableAttributes(Product $product)
+    /**
+     * Insert product configurable attributes
+     * @param Product $product
+     * @return bool
+     * @throws ShopException
+     */
+    public function insertProductConfigurableAttributes(Product $product)
 	{
 		$args = new stdClass();
 		$args->product_srl = $product->product_srl;
@@ -109,16 +140,15 @@ class ProductRepository extends BaseRepository
 		return TRUE;
 	}
 
-	/**
-	 * Given a product, returns all attributes the
-	 * product can have according to the categories
-	 * it belongs to
-	 *
-	 * @author Corina Udrescu (dev@xpressengine.org)
-	 * @param $product_srl
-	 * @returns array
-	 */
-	public function getProductCategoriesAttributes(Product $product)
+    /**
+     * Given a product, returns all attributes the
+     * product can have according to the categories
+     * it belongs to
+     * @param Product $product
+     * @return array
+     * @throws ShopException
+     */
+    public function getProductCategoriesAttributes(Product $product)
 	{
 		$args = new stdClass();
 		$args->category_srls = $product->categories;
@@ -150,14 +180,13 @@ class ProductRepository extends BaseRepository
 
 	}
 
-	/**
-	 * Insert product categories
-	 *
-	 * @author Dan Dragan (dev@xpressengine.org)
-	 * @param $product Product
-	 * @return boolean
-	 */
-	public function insertProductCategories(Product $product)
+    /**
+     * Insert product categories
+     * @param Product $product
+     * @return bool
+     * @throws ShopException
+     */
+    public function insertProductCategories(Product $product)
 	{
 		$args = new stdClass();
 		$args->product_srl = $product->product_srl;
@@ -181,10 +210,8 @@ class ProductRepository extends BaseRepository
 
     /**
      * Updates product category count
-     *
-     * @author Dan Dragan (dev@xpressengine.org)
      * @param $args
-     * @throws Exception
+     * @throws ShopException
      */
     public function updateProductCategoryCount($args){
         $shopInfo = new ShopInfo($args->module_srl);
@@ -210,16 +237,16 @@ class ProductRepository extends BaseRepository
         }
     }
 
-	/**
-	 * Deletes a product by $product_srl or $module_srl
-	 *
-	 * @author Dan Dragan (dev@xpressengine.org)
-	 * @param $args array
-	 */
+    /**
+     * Deletes a product by $product_srl or $module_srl
+     * @param $args
+     * @return bool
+     * @throws ShopException
+     */
     public function deleteProduct($args)
-    {
-        if (is_array($args)) $args = (object)$args;
-        if (!isset($args->product_srl)) {
+	{
+        if (is_array($args)) $args = (object) $args;
+		if(!isset($args->product_srl)) {
             throw new ShopException("Missing arguments for Product delete: please provide [product_srl] or [module_srl]");
         }
         $product = $this->getProduct($args->product_srl);
@@ -251,9 +278,9 @@ class ProductRepository extends BaseRepository
 
     /**
      * Deletes more products by $product_srls
-     *
-     * @author Dan Dragan (dev@xpressengine.org)
-     * @param $args array
+     * @param $args
+     * @return bool
+     * @throws ShopException
      */
     public function deleteProducts($args)
     {
@@ -290,10 +317,9 @@ class ProductRepository extends BaseRepository
 
     /**
      * Delete product categories
-     *
-     * @author Dan Dragan (dev@xpressengine.org)
-     * @param $product Product
-     * @return boolean
+     * @param Product $product
+     * @return bool
+     * @throws ShopException
      */
     public function deleteProductCategories(Product &$product)
     {
@@ -334,14 +360,13 @@ class ProductRepository extends BaseRepository
 		return $this->query('deleteAssociatedProducts', array('parent_product_srls' => $product->product_srl));
 	}
 
-	/**
-	 * Delete product attributes
-	 *
-	 * @author Corina Udrescu (dev@xpressengine.org)
-	 * @param $product Product
-	 * @return boolean
-	 */
-	public function deleteProductAttributes(Product &$product)
+    /**
+     * Delete product attributes
+     * @param Product $product
+     * @return bool
+     * @throws ShopException
+     */
+    public function deleteProductAttributes(Product &$product)
 	{
 		if(!$product->product_srl) {
 			throw new ShopException("Invalid arguments! Please provide product_srl for delete atrributes.");
@@ -357,14 +382,13 @@ class ProductRepository extends BaseRepository
 		return TRUE;
 	}
 
-	/**
-	 * Delete product images
-	 *
-	 * @author Dan Dragan (dev@xpressengine.org)
-	 * @param $product Product
-	 * @return boolean
-	 */
-	public function deleteProductImages(Product &$product)
+    /**
+     * Delete product images
+     * @param Product $product
+     * @return bool
+     * @throws ShopException
+     */
+    public function deleteProductImages(Product &$product)
 	{
 		if(!$product->product_srl)
 		{
@@ -383,14 +407,14 @@ class ProductRepository extends BaseRepository
 		return TRUE;
 	}
 
-	/**
-	 * Retrieve a Product object from the database given a srl
-	 *
-	 * @author Dan Dragan (dev@xpressengine.org)
-	 * @param $product_srl int
-	 * @return Product
-	 */
-	public function getProduct($product_srl, $loadImages = true)
+    /**
+     * Retrieve a Product object from the database given a srl
+     * @param $product_srl
+     * @param bool $loadImages
+     * @return ConfigurableProduct|null|SimpleProduct
+     * @throws ShopException
+     */
+    public function getProduct($product_srl, $loadImages = true)
 	{
 		$args = new stdClass();
 		$args->product_srl = $product_srl;
@@ -425,16 +449,19 @@ class ProductRepository extends BaseRepository
 
     /**
      * Retrieve a Product object from the database given a friendly url string
-     *
-     * @author Florin Ercus (dev@xpressengine.org)
-     *
-     * @param $str string
-     *
-     * @return Product
+     * @param $str
+     * @param null $module_srl
+     * @return null|SimpleProduct
+     * @throws ShopException
      */
-    public function getProductByFriendlyUrl($str)
+    public function getProductByFriendlyUrl($str, $module_srl=null)
     {
-        $output = $this->query('getProductByFriendlyUrl', array('friendly_url' => $str));
+        if (!is_numeric($module_srl)) { //get current module_srl
+            $info = Context::get('site_module_info');
+            $module_srl = $info->index_module_srl;
+        }
+        if (!$module_srl) throw new ShopException('Count not get module_srl');
+        $output = $this->query('getProductByFriendlyUrl', array('friendly_url' => $str, 'module_srl' => $module_srl));
         if (empty($output->data)){
             return NULL;
         }elseif ($output->data->product_type == "simple"){
@@ -448,10 +475,9 @@ class ProductRepository extends BaseRepository
 
     /**
      * Retrieve product categories
-     *
-     * @author Dan Dragan (dev@xpressengine.org)
-     * @param $product Product
-     * @return boolean
+     * @param Product $product
+     * @return bool
+     * @throws ShopException
      */
     public function getProductCategories(Product &$product)
     {
@@ -469,14 +495,13 @@ class ProductRepository extends BaseRepository
         return TRUE;
     }
 
-	/**
-	 * Retrieve product attributes
-	 *
-	 * @author Corina Udrescu (dev@xpressengine.org)
-	 * @param $product Product
-	 * @return boolean
-	 */
-	public function getProductAttributes(Product &$product)
+    /**
+     * Retrieve product attributes
+     * @param Product $product
+     * @return bool
+     * @throws ShopException
+     */
+    public function getProductAttributes(Product &$product)
 	{
 		$args = new stdClass();
 		$args->product_srl = $product->product_srl;
@@ -488,21 +513,40 @@ class ProductRepository extends BaseRepository
 
 		foreach($output->data as $attribute)
 		{
-			if($attribute->value) $product->attributes[$attribute->attribute_srl] = $attribute->value;
+			if($attribute->value)
+			{
+				if(!isset($product->attributes[$attribute->attribute_srl]))
+				{
+					$product->attributes[$attribute->attribute_srl] = $attribute->value;
+				}
+				else // We have an array of values (like in multiple selects)
+				{
+					if(is_array($product->attributes[$attribute->attribute_srl]))
+					{
+						$values = $product->attributes[$attribute->attribute_srl];
+					}
+					else
+					{
+						$values = array();
+						$values[] = $product->attributes[$attribute->attribute_srl];
+					}
+					$values[] = $attribute->value;
+					$product->attributes[$attribute->attribute_srl] = $values;
+				}
+			}
 			else $product->configurable_attributes[$attribute->attribute_srl] = $attribute->title;
 		}
 
 		return TRUE;
 	}
 
-	/**
-	 * Retrieve product images
-	 *
-	 * @author Dan Dragan (dev@xpressengine.org)
-	 * @param $product Product
-	 * @return boolean
-	 */
-	public function getProductImages(Product &$product)
+    /**
+     * Retrieve product images
+     * @param Product $product
+     * @return bool
+     * @throws ShopException
+     */
+    public function getProductImages(Product &$product)
 	{
 		$args = new stdClass();
 		$args->product_srl = $product->product_srl;
@@ -523,14 +567,13 @@ class ProductRepository extends BaseRepository
 		return TRUE;
 	}
 
-	/**
-	 * Create product from parent product
-	 *
-	 * @author Dan Dragan (dev@xpressengine.org)
-	 * @param $product Product , $combination array
-	 * @return $product
-	 */
-	public function createProductFromParent(ConfigurableProduct $parent_product, array $values)
+    /**
+     * Create product from parent product
+     * @param ConfigurableProduct $parent_product
+     * @param array $values
+     * @return SimpleProduct
+     */
+    public function createProductFromParent(ConfigurableProduct $parent_product, array $values)
 	{
 		$product = new SimpleProduct();
 		$product->member_srl = $parent_product->member_srl;
@@ -549,20 +592,21 @@ class ProductRepository extends BaseRepository
 		return $product;
 	}
 
-	/**
-	 * Retrieve a Product List object from the database given a module_srl
-	 * @author Dan Dragan (dev@xpressengine.org)
-	 *
-	 * @param stdClass $args Must have: module_srl; Can have: page, category_srl
-	 *
-	 * @throws Exception
-	 * @return stdClass $output
-	 */
+    /**
+     * Retrieve a Product List object from the database given a module_srl
+     * @param $args
+     * @param bool $loadAttributes
+     * @param bool $loadImages
+     * @param null $orderBy
+     * @return object
+     * @throws ShopException
+     */
     public function getProductList($args, $loadAttributes = FALSE, $loadImages = FALSE, $orderBy=null)
     {
         if (!isset($args->module_srl)) throw new ShopException("Missing arguments for get product list : please provide [module_srl]");
 		if (!$args->page) $args->page = 1;
-        $query = ($args->category_srls && !empty($args->category_srls) ? 'getProductListByCategory' : 'getProductList');
+        //$query = ($args->category_srls && !empty($args->category_srls) ? 'getProductListByCategory' : 'getProductList');
+        $query = ($args->category_srls && !empty($args->category_srls) ? 'getProductList2WithCategories' : 'getProductList2');
         $output = $this->query($query, $args, true);
 		// Get top level products
 		$confProdSrls = $products = array();
@@ -598,13 +642,11 @@ class ProductRepository extends BaseRepository
      * Retrieve only featured products
      *
      * // TODO Stop duplicating code - should call getProductsList instead
-     *
-     * @author Dan Dragan (dev@xpressengine.org)
-     *
-     * @param stdClass $args Must have: module_srl; Can have: page, category_srl
-     *
-     * @throws Exception
-     * @return stdClass $output
+     * @param $args
+     * @param bool $loadAttributes
+     * @param bool $loadImages
+     * @return object
+     * @throws ShopException
      */
     public function getFeaturedProducts($args, $loadAttributes = FALSE, $loadImages = FALSE){
         if (!isset($args->module_srl)) throw new ShopException("Missing arguments for get product list : please provide [module_srl]");
@@ -641,16 +683,13 @@ class ProductRepository extends BaseRepository
         return $output;
     }
 
-	/**
-	 * Retrieve a all products and all product information by module_srl
-	 * @author Dan Dragan (dev@xpressengine.org)
-	 *
-	 * @param stdClass $args Must have: module_srl;
-	 *
-	 * @throws Exception
-	 * @return Array $products
-	 */
-	public function getAllProducts($args){
+    /**
+     * Retrieve a all products and all product information by module_srl
+     * @param $args
+     * @return array
+     * @throws ShopException
+     */
+    public function getAllProducts($args){
 		if(!isset($args->module_srl))
 			throw new ShopException("Missing arguments for get product list : please provide [module_srl]");
 
@@ -753,11 +792,7 @@ class ProductRepository extends BaseRepository
 
     /**
      * import products from import folder
-     * @author Dan Dragan (dev@xpressengine.org)
-     *
-     * @param $args for module_srl and member_srl
-     *
-     * @return  boolean
+     * @param $params
      */
     public function insertProductsFromImportFolder($params)
     {
@@ -851,15 +886,13 @@ class ProductRepository extends BaseRepository
         }
     }
 
-	/**
-	 * Update a product
-	 *
-	 * @author   Dan Dragan (dev@xpressengine.org)
-	 * @param $product Product
-	 * @throws Exception
-	 * @return boolean
-	 */
-	public function updateProduct(Product $product)
+    /**
+     * Update a product
+     * @param Product $product
+     * @return bool
+     * @throws ShopException
+     */
+    public function updateProduct(Product $product)
 	{
         if($product->discount_price >= $product->price){
             throw new ShopException("Discount price is bigger than normal price");
@@ -905,14 +938,13 @@ class ProductRepository extends BaseRepository
 		return TRUE;
 	}
 
-	/**
-	 * Update product images
-	 *
-	 * @author Dan Dragan (dev@xpressengine.org)
-	 * @param $product Product
-	 * @return boolean
-	 */
-	public function updateProductImages(Product &$product)
+    /**
+     * Update product images
+     * @param Product $product
+     * @return bool
+     * @throws ShopException
+     */
+    public function updateProductImages(Product &$product)
 	{
 		$args = new stdClass();
 		$args->image_srls = $product->delete_images;
@@ -938,14 +970,12 @@ class ProductRepository extends BaseRepository
 		return TRUE;
 	}
 
-	/**
-	 * Set primary image
-	 *
-	 * @author Dan Dragan (dev@xpressengine.org)
-	 * @param $product Product
-	 * @return boolean
-	 */
-	public function updatePrimaryImage($product)
+    /**
+     * Set primary image
+     * @param $product
+     * @throws ShopException
+     */
+    public function updatePrimaryImage($product)
 	{
 		$args = new stdClass();
 		$args->product_srl = $product->product_srl;
@@ -966,14 +996,13 @@ class ProductRepository extends BaseRepository
 		}
 	}
 
-	/**
-	 * Set primary image filename for product
-	 *
-	 * @author Dan Dragan (dev@xpressengine.org)
-	 * @param $product Product
-	 * @return boolean
-	 */
-	public function updatePrimaryImageFilename($product)
+    /**
+     * Set primary image filename for product
+     * @param $product
+     * @return bool
+     * @throws ShopException
+     */
+    public function updatePrimaryImageFilename($product)
 	{
 		$args = new stdClass();
 		$args->product_srl = $product->product_srl;
@@ -989,13 +1018,12 @@ class ProductRepository extends BaseRepository
 	}
 
     /**
-	 * Set new primary image for product in case of deletion
-	 *
-	 * @author Dan Dragan (dev@xpressengine.org)
-	 * @param $product Product
-	 * @return boolean
-	 */
-	public function setNewPrimaryImage($product)
+     * Set new primary image for product in case of deletion
+     * @param $product
+     * @return bool
+     * @throws ShopException
+     */
+    public function setNewPrimaryImage($product)
 	{
 		$args = new stdClass();
 		$args->product_srl = $product->product_srl;
@@ -1019,6 +1047,42 @@ class ProductRepository extends BaseRepository
 		}
 		return TRUE;
 	}
+
+    /**
+     * get maximum price
+     * @param $module_srl
+     * @param null $category_srl
+     * @return int
+     */
+    public function getMaxPrice($module_srl, $category_srl=null)
+    {
+        $params = array('module_srl' => $module_srl);
+        if ($category_srl) $params['category_srl'] = $category_srl;
+        $out = $this->query('getProductsMaxPrice', $params);
+        return isset($out->data->max) ? $out->data->max : 0;
+    }
+
+    /**
+     * get minimum price
+     * @param $module_srl
+     * @param null $category_srl
+     * @return int
+     */
+    public function getMinPrice($module_srl, $category_srl=null)
+    {
+        $params = array('module_srl' => $module_srl);
+        if ($category_srl) $params['category_srl'] = $category_srl;
+        $out = $this->query('getProductsMinPrice', $params);
+        return isset($out->data->max) ? $out->data->max : 0;
+    }
+
+    /**
+     * @param $category_srl
+     */
+    public function getForCategory($category_srl)
+    {
+
+    }
 
     /**
      * Save the content for a downloadable product, as a file

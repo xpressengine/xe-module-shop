@@ -1,20 +1,114 @@
 <?php
-
+/**
+ * File containing the AbstractPluginRepository class
+ */
+/**
+ * Base class for repositories for plugin object
+ *
+ * Used for example for the Shipping methods and Payment methods
+ *
+ * @author Corina Udrescu (corina.udrescu@arnia.ro)
+ */
 abstract class AbstractPluginRepository extends BaseRepository
 {
-    abstract function getPluginsDirectoryPath();
-    abstract function getClassNameThatPluginsMustExtend();
+	/**
+	 * Returns path where plugins need to be placed in order to be loaded
+	 *
+	 * @return mixed
+	 */
+	abstract function getPluginsDirectoryPath();
 
-    abstract protected function getPluginInfoFromDatabase($name, $module_srl);
-    abstract protected function updatePluginInfo($plugin);
-    abstract protected function insertPluginInfo(AbstractPlugin $plugin);
-    abstract protected function deletePluginInfo($name, $module_srl);
-    abstract protected function getAllPluginsInDatabase($module_srl, $args);
-    abstract protected function getAllActivePluginsInDatabase($module_srl);
-    abstract protected function fixPlugin($name, $old_module_srl, $new_module_srl);
+	/**
+	 * Name of the base class for a type of plugin; for example: ShippingMethodAbstract, PaymentMethodAbstract
+	 *
+	 * This is a class that all new plugins need to extend in order to be recognized
+	 *
+	 * @return mixed
+	 */
+	abstract function getClassNameThatPluginsMustExtend();
+
+	/**
+	 * Loads plugin properties from the database
+	 *
+	 * @param $name
+	 * @param $module_srl
+	 * @return mixed
+	 */
+	abstract protected function getPluginInfoFromDatabase($name, $module_srl);
+
+	/**
+	 * Updates plugin info
+	 *
+	 * @param $plugin
+	 * @return mixed
+	 */
+	abstract protected function updatePluginInfo($plugin);
+
+	/**
+	 * Inserts a new plugin in the database
+	 *
+	 * @param AbstractPlugin $plugin
+	 * @return mixed
+	 */
+	abstract protected function insertPluginInfo(AbstractPlugin $plugin);
+
+	/**
+	 * Deletes a plugin from the database
+	 *
+	 * @param $name
+	 * @param $module_srl
+	 * @return mixed
+	 */
+	abstract protected function deletePluginInfo($name, $module_srl);
+
+	/**
+	 * Returns a list of all plugins in the database
+	 *
+	 * @param $module_srl
+	 * @param $args
+	 * @return mixed
+	 */
+	abstract protected function getAllPluginsInDatabase($module_srl, $args);
+
+	/**
+	 * Returns a list of all enabled plugins in the database
+	 *
+	 * @param $module_srl
+	 * @return mixed
+	 */
+	abstract protected function getAllActivePluginsInDatabase($module_srl);
+
+	/**
+	 * Method used for backwards compatibility - sets a module srl
+	 * for plugins that don't have one
+	 *
+	 * @param $name
+	 * @param $old_module_srl
+	 * @param $new_module_srl
+	 * @return mixed
+	 */
+	abstract protected function fixPlugin($name, $old_module_srl, $new_module_srl);
+
+	/**
+	 * Updates all plugins but one at once; used for making a module default,
+	 * by first unsetting the default property of all plugins except the one updated
+	 *
+	 * @param $is_default
+	 * @param $name
+	 * @param $module_srl
+	 * @return mixed
+	 */
 	abstract protected function updatePluginsAllButThis($is_default, $name, $module_srl);
 
-    protected function getPluginInstanceByName($plugin_name, $module_srl)
+	/**
+	 * Returns a plugin instance given its name
+	 *
+	 * @param $plugin_name
+	 * @param $module_srl
+	 * @return mixed
+	 * @throws ShopException
+	 */
+	protected function getPluginInstanceByName($plugin_name, $module_srl)
     {
         // Skip files (we are only interested in the folders)
         if(!is_dir($this->getPluginsDirectoryPath() . DIRECTORY_SEPARATOR . $plugin_name))
@@ -46,12 +140,24 @@ abstract class AbstractPluginRepository extends BaseRepository
         return $plugin_instance;
     }
 
-    private function getPluginsByFolder()
+	/**
+	 * Returns a list of all plugins in the plugins folder
+	 *
+	 * @return string[]
+	 */
+	private function getPluginsByFolder()
     {
         return FileHandler::readDir($this->getPluginsDirectoryPath());
     }
 
-    protected function getPluginInstanceFromProperties($data)
+	/**
+	 * Creates a new plugin instance and populates it with
+	 * properties saved in the database
+	 *
+	 * @param $data
+	 * @return mixed
+	 */
+	protected function getPluginInstanceFromProperties($data)
     {
         $data->properties = unserialize($data->props);
         unset($data->props);
@@ -61,7 +167,14 @@ abstract class AbstractPluginRepository extends BaseRepository
         return $plugin;
     }
 
-    public function getPlugin($name, $module_srl)
+	/**
+	 * Returns a plugin instance
+	 *
+	 * @param $name
+	 * @param $module_srl
+	 * @return mixed
+	 */
+	public function getPlugin($name, $module_srl)
     {
         $data = $this->getPluginInfoFromDatabase($name, $module_srl);
 
@@ -92,7 +205,15 @@ abstract class AbstractPluginRepository extends BaseRepository
         return $this->getPlugin($name, $module_srl);
     }
 
-    public function installPlugin($name, $module_srl)
+	/**
+	 * Installs a new plugin - that is saves its basic info in the database
+	 * otherwise the plugin would just exist in disk
+	 *
+	 * @param $name
+	 * @param $module_srl
+	 * @return mixed
+	 */
+	public function installPlugin($name, $module_srl)
     {
         return $this->getPlugin($name, $module_srl);
     }
@@ -139,7 +260,7 @@ abstract class AbstractPluginRepository extends BaseRepository
 				$plugin_instance = $this->getPluginInstanceFromProperties($data);
 				if($plugin_instance->isConfigured())
 				{
-					$active_plugins[] = $this->getPluginInstanceFromProperties($data);
+					$active_plugins[] = $plugin_instance;
 				}
             }
             catch(Exception $e)
@@ -151,17 +272,17 @@ abstract class AbstractPluginRepository extends BaseRepository
         return $active_plugins;
     }
 
-    /**
-     *
-     * Updates a plugin
-     *
-     * Status: active = 1; inactive = 0
-     *
-     * @author Daniel Ionescu (dev@xpressengine.org)
-     * @param  $plugin
-     * @throws exception
-     * @return boolean
-     */
+	/**
+	 *
+	 * Updates a plugin
+	 *
+	 * Status: active = 1; inactive = 0
+	 *
+	 * @author Daniel Ionescu (dev@xpressengine.org)
+	 * @param \AbstractPlugin $plugin
+	 * @throws ShopException
+	 * @return boolean
+	 */
     public function updatePlugin(AbstractPlugin $plugin)
     {
         if(!isset($plugin->name))
@@ -177,16 +298,34 @@ abstract class AbstractPluginRepository extends BaseRepository
         $this->updatePluginInfo($plugin);
     }
 
-    public function insertPlugin($plugin)
+	/**
+	 * Wrapper method
+	 *
+	 * @param $plugin
+	 */
+	public function insertPlugin($plugin)
     {
         $this->insertPluginInfo($plugin);
     }
 
-    public function deletePlugin($name, $module_srl)
+	/**
+	 * Wrapper method
+	 *
+	 * @param $name
+	 * @param $module_srl
+	 */
+	public function deletePlugin($name, $module_srl)
     {
         $this->deletePluginInfo($name, $module_srl);
     }
 
+	/**
+	 * Sets a module as default
+	 *
+	 * @param $name
+	 * @param $module_srl
+	 * @return ArgumentException
+	 */
 	public function setDefault($name, $module_srl)
 	{
 		if(!isset($name) || !isset($module_srl))
@@ -207,6 +346,12 @@ abstract class AbstractPluginRepository extends BaseRepository
 		$this->updatePlugin($plugin);
 	}
 
+	/**
+	 * Returns the default plugin for a module_srl
+	 *
+	 * @param $module_srl
+	 * @return mixed|null
+	 */
 	public function getDefault($module_srl)
 	{
 		$args = new stdClass();
@@ -214,7 +359,7 @@ abstract class AbstractPluginRepository extends BaseRepository
 		$plugin_info = $this->getAllPluginsInDatabase($module_srl, $args);
 		if(!$plugin_info)
 		{
-			return null;
+			return NULL;
 		}
 		return $this->getPluginInstanceFromProperties($plugin_info[0]);
 	}
@@ -223,7 +368,7 @@ abstract class AbstractPluginRepository extends BaseRepository
      * Deletes plugins from DB if they do not have a folder with a corresponding name
      */
     public function sanitizePlugins($module_srl) {
-        $pgByDatabase = $this->getAllPluginsInDatabase($module_srl, null);
+        $pgByDatabase = $this->getAllPluginsInDatabase($module_srl, NULL);
         $pgByFolders = $this->getPluginsByFolder();
 
         foreach ($pgByDatabase as $obj) {

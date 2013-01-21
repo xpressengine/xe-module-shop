@@ -1,5 +1,17 @@
 <?php
-
+/**
+ * File containing the OrderProduct class
+ */
+/**
+ * Class that models a product that belongs to an order
+ *
+ * An "order product" represents a snapshot of a product
+ * at a given time. Once an order is placed, the data it holds cannot
+ * change; that is why this object does not use a reference to a Product
+ * but instead copies all of its fields.
+ *
+ * @author Corina Udrescu (corina.udrescu@arnia.ro)
+ */
 class OrderProduct extends BaseItem implements IProductItem
 {
     public $order_srl;
@@ -25,6 +37,9 @@ class OrderProduct extends BaseItem implements IProductItem
     public $regdate;
     public $last_update;
 
+	/**
+	 * Repository for this model class
+	 */
     public function getRepo()
     {
         return "OrderRepository";
@@ -54,7 +69,15 @@ class OrderProduct extends BaseItem implements IProductItem
         return $this->price;
     }
 
-    function getThumbnailPath($width = 80, $height = 0, $thumbnail_type = '')
+	/**
+	 * Returns path to product image thumbnail
+	 *
+	 * @param int    $width
+	 * @param int    $height
+	 * @param string $thumbnail_type
+	 * @return mixed|string
+	 */
+	function getThumbnailPath($width = 80, $height = 0, $thumbnail_type = '')
     {
         $thumbnail = new ShopThumbnail($this->order_srl, $this->primary_image_filename);
         return $thumbnail->getThumbnailPath($width, $height, $thumbnail_type);

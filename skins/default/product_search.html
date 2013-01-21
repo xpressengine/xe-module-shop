@@ -31,11 +31,11 @@
             <ul>
             <!--@foreach($products as $product)-->
             <li id="product_{$product->product_srl}" class="product {$product->product_type} clearfix">
-                <a href="{getUrl('vid', $mid, 'act', 'dispShopProduct', 'product_srl', $product->product_srl, 'category_srl', $category_srl)}" class="product-link">
+                <a href="{$product->getUrl()}" class="product-link">
                     <img src="{$product->getPrimaryImage()->getThumbnailPath(100)}" />
                 </a>
                 <h2>
-                    <a href="{getUrl('vid', $mid, 'act', 'dispShopProduct', 'product_srl', $product->product_srl, 'category_srl', $category_srl)}" class="product-link">
+                    <a href="{$product->getUrl()}" class="product-link">
                         {$product->title}
                     </a>
                 </h2>

@@ -1,9 +1,14 @@
 <?php
 /**
+ * File containing classes used for integrating Paypal Payments Standard with XE Shop
+ */
+/**
  * Plugin for doing payments in XE Shop
  * using Paypal Payments Standard
  *
  * https://cms.paypal.com/cms_content/US/en_US/files/developer/PP_WebsitePaymentsStandard_IntegrationGuide.pdf
+ *
+ * @author Corina Udrescu (corina.udrescu@arnia.ro)
  */
 class PaypalPaymentsStandard extends PaymentMethodAbstract
 {
@@ -38,24 +43,26 @@ class PaypalPaymentsStandard extends PaymentMethodAbstract
      *
      * @param Cart $cart
      * @param $error_message
-     */
+	 * @return mixed|void
+	 */
     public function processPayment(Cart $cart, &$error_message)
     {
     }
 
-    /**
-     * Page where user is redirected back to after
-     * he completed the payment on the Paypal website
-     *
-     * If an order has not been created, we create it now
-     * If payment is complete, we update order status to Processing
-     *
-     * If an error occurred, we show it to the user
-     *
-     * @param $cart
-     * @param $module_srl
-     * @throws Exception
-     */
+	/**
+	 * Page where user is redirected back to after
+	 * he completed the payment on the Paypal website
+	 *
+	 * If an order has not been created, we create it now
+	 * If payment is complete, we update order status to Processing
+	 *
+	 * If an error occurred, we show it to the user
+	 *
+	 * @param $cart
+	 * @param $module_srl
+	 * @throws NetworkErrorException
+	 * @return void
+	 */
     public function onOrderConfirmationPageLoad($cart, $module_srl)
     {
         // Retrieve unique transaction id
@@ -100,12 +107,13 @@ class PaypalPaymentsStandard extends PaymentMethodAbstract
         }
     }
 
-    /**
-     * Given a transaction id, checks if an order was created or not for it
-     * (from an IPN call, for instance)
-     *
-     * @return boolean
-     */
+	/**
+	 * Given a transaction id, checks if an order was created or not for it
+	 * (from an IPN call, for instance)
+	 *
+	 * @param $transaction_id
+	 * @return boolean
+	 */
     private function orderCreatedForThisTransaction($transaction_id)
     {
         $orderRepository = new OrderRepository();
@@ -124,7 +132,12 @@ class PaypalPaymentsStandard extends PaymentMethodAbstract
             && $cart->getTransactionId() == $transaction_id;
     }
 
-    private function redirectUserToOrderUnsuccessfulPageAndShowHimTheErrorMessage($error_message)
+	/**
+	 * Redirects the user to an error page, informing him why the payment failed
+	 *
+	 * @param $error_message
+	 */
+	private function redirectUserToOrderUnsuccessfulPageAndShowHimTheErrorMessage($error_message)
     {
         $shopController = getController('shop');
         $shopController->setMessage($error_message, "error");
@@ -146,20 +159,6 @@ class PaypalPaymentsStandard extends PaymentMethodAbstract
         $response = $paypalAPI->request($this->gateway_api, $params);
         $response_array = explode("\n", $response);
         return new PDTResponse($response_array);
-    }
-
-    private function createNewOrderAndDeleteExistingCart($cart, $transaction_id)
-    {
-        $order = new Order($cart);
-        $order->transaction_id = $transaction_id;
-        $order->save(); //obtain srl
-        $order->saveCartProducts($cart);
-		Order::sendNewOrderEmails($order->order_srl);
-        $cart->delete();
-
-        Context::set('order_srl', $order->order_srl);
-        // Override cart, otherwise it would still show up with products
-        Context::set('cart', NULL);
     }
 
     /**
@@ -244,7 +243,7 @@ class PaypalPaymentsStandard extends PaymentMethodAbstract
     }
 
     /**
-     * Post all reveive data to paypal for it to confirm
+     * Post all received data to paypal for it to confirm
      * it was issued by Paypal and not by someone else
      */
     private function postDataBackToPaypalToValidateSenderIdentity($posted_data)
@@ -267,14 +266,6 @@ class PaypalPaymentsStandard extends PaymentMethodAbstract
         return new IPNPaymentInfo($paypal_info);
     }
 
-    private function markTransactionAsFailedInUserCart($cart_srl, $transaction_id, $error_message)
-    {
-        $cart = new Cart($cart_srl);
-        $cart->setExtra("transaction_id", $transaction_id);
-        $cart->setExtra("transaction_message", $error_message);
-        $cart->save();
-    }
-
 	/**
 	 * Make sure all mandatory fields are set
 	 */
@@ -283,12 +274,17 @@ class PaypalPaymentsStandard extends PaymentMethodAbstract
 		if(!isset($this->business_account) || !isset($this->pdt_token) || !isset($this->gateway_api))
 		{
 			$error_message = 'msg_paypal_standard_missing_fields';
-			return false;
+			return FALSE;
 		}
-		return true;
+		return TRUE;
 	}
 }
 
+/**
+ * Wraps commonly used properties sent by IPN
+ *
+ * @author Corina Udrescu (corina.udrescu@arnia.ro)
+ */
 class IPNPaymentInfo
 {
     public $payment_status;
@@ -300,7 +296,10 @@ class IPNPaymentInfo
     public $payer_email;
     public $cart_srl;
 
-    public function __construct($paypal_info)
+	/**
+	 * @param $paypal_info
+	 */
+	public function __construct($paypal_info)
     {
         $this->payment_status = $paypal_info['payment_status'];
         $this->payment_amount = $paypal_info['mc_gross'];
@@ -327,56 +326,111 @@ class IPNPaymentInfo
         return $this->txn_type == 'cart';
     }
 
-    public function paymentReceiverIsMe($my_business_account_email_address)
+	/**
+	 * Checks that the payee sent by IPN is valid
+	 *
+	 * @param $my_business_account_email_address
+	 * @return bool
+	 */
+	public function paymentReceiverIsMe($my_business_account_email_address)
     {
         return $this->receiver_email == $my_business_account_email_address;
     }
 
-    public function paymentIsComplete()
+	/**
+	 * Checks that payment was executed successfully
+	 *
+	 * @return bool
+	 */
+	public function paymentIsComplete()
     {
         return $this->payment_status == 'Completed';
     }
 
-    public function paymentIsForTheCorrectAmount($cart_total_amount, $shop_currency)
+	/**
+	 * Checks that the total amount received from the IPN is correct
+	 *
+	 * @param $cart_total_amount
+	 * @param $shop_currency
+	 * @return bool
+	 */
+	public function paymentIsForTheCorrectAmount($cart_total_amount, $shop_currency)
     {
         return $cart_total_amount == $this->payment_amount
             && $shop_currency == $this->payment_currency;
     }
 }
 
+/**
+ * Models a response from IPN
+ */
 class IPNIdentityValidationResponse
 {
     public $response;
 
-    public function __construct($response)
+	/**
+	 * @param $response
+	 */
+	public function __construct($response)
     {
         $this->response = $response;
     }
 
-    public function isVerified()
+	/**
+	 * Checks that the response validated the data
+	 *
+	 *
+	 * @return bool
+	 */
+	public function isVerified()
     {
         return $this->response == 'VERIFIED';
     }
 }
 
+/**
+ * Models a response from PDT
+ */
 class PDTResponse
 {
-    public $response_array = null;
+    public $response_array = NULL;
 
-    public function __construct($response_array)
+	/**
+	 * Constructor
+	 *
+	 * @param $response_array
+	 */
+	public function __construct($response_array)
     {
         $this->response_array = $response_array;
     }
 
-    public function requestWasSuccessful()
+	/**
+	 * Checks if the request was successful
+	 *
+	 * @return bool
+	 */
+	public function requestWasSuccessful()
     {
         return $this->response_array[0] == 'SUCCESS';
     }
 }
 
-class PaypalPaymentsStandardAPI extends PaymentAPIAbstract
+/**
+ * Wrapper for the Paypal Payments Standard API
+ *
+ * @author Corina Udrescu (corina.udrescu@arnia.ro)
+ */
+class PaypalPaymentsStandardAPI extends APIAbstract
 {
-    private function processArray($data, $function_name)
+	/**
+	 * Calls a given function for every element in $data
+	 *
+	 * @param $data
+	 * @param $function_name
+	 * @return array
+	 */
+	private function processArray($data, $function_name)
     {
         $new_data = array();
         $keys = array_keys($data);
@@ -387,12 +441,24 @@ class PaypalPaymentsStandardAPI extends PaymentAPIAbstract
         return $new_data;
     }
 
-    public function decodeArray($data)
+	/**
+	 * Decodes all elements of an array
+	 *
+	 * @param $data
+	 * @return array
+	 */
+	public function decodeArray($data)
     {
         return $this->processArray($data, 'urldecode');
     }
 
-    public function encodeArray($data)
+	/**
+	 * Encodes all elements of an array
+	 *
+	 * @param $data
+	 * @return array
+	 */
+	public function encodeArray($data)
     {
         return $this->processArray($data, 'urlencode');
     }

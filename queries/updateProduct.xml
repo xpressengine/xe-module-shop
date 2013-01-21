@@ -5,6 +5,7 @@
     <columns>
         <column name="member_srl" var="member_srl" filter="number" />
         <column name="module_srl" var="module_srl" filter="number" />
+        <column name="document_srl" var="document_srl" filter="number" />
         <column name="parent_product_srl" var="parent_product_srl" filter="number" />
         <column name="product_type" var="product_type" />
         <column name="title" var="title" />

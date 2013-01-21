@@ -101,6 +101,26 @@
                     </tr>
 
                     <tr>
+                        <th scope="row"><label for="unit_of_measure">{$lang->unit_of_measure}</label></th>
+                        <td>
+                            <select id="unit_of_measure" name="unit_of_measure">
+                                <option value="{ShopInfo::UNIT_OF_MEASURE_KGS}"
+                                    <!--@if($shop->getUnitOfMeasure()==ShopInfo::UNIT_OF_MEASURE_KGS)-->
+                                        selected="selected"
+                                <!--@end-->>
+                                {ShopInfo::UNIT_OF_MEASURE_KGS}
+                                </option>
+                                <option value="{ShopInfo::UNIT_OF_MEASURE_LBS}"
+                                <!--@if($shop->getUnitOfMeasure()==ShopInfo::UNIT_OF_MEASURE_LBS)-->
+                                selected="selected"
+                                <!--@end-->>
+                                {ShopInfo::UNIT_OF_MEASURE_LBS}
+                                </option>
+                            </select>
+                        </td>
+                    </tr>
+
+                    <tr>
                         <th scope="row"><label for="currency">{$lang->currency}</label></th>
                         <td>
                             <select id="currency" name="currency">

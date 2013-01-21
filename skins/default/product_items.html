@@ -23,8 +23,13 @@
             <!--@if($product instanceof IProductItem)-->
             <tr>
                 <td class="a-center">{@ ++$i;}{$i}</td>
+                <!--@if ($product instanceof OrderProduct) -->
                 <td><p><img src="{$product->getThumbnailPath(70)}" /></p></td>
                 <td>{$product->getTitle()}</td>
+                <!--@else-->
+                <td><p><a target="_blank" href="{$product->getProduct()->getUrl()}"><img src="{$product->getThumbnailPath(70)}" /></a></p></td>
+                <td><a target="_blank" href="{$product->getProduct()->getUrl()}">{$product->getTitle()}</a></td>
+                <!--@end-->
                 <td class="a-center">{$product->getQuantity()}</td>
                 <td class="a-center">{ShopDisplay::priceFormat($product->getPrice(), $shop->getCurrencySymbol())}</td>
                 <td class="a-center">{ShopDisplay::priceFormat($product->getPrice() * $product->getQuantity(), $shop->getCurrencySymbol())}</td>
@@ -55,8 +60,20 @@
         </tr>
         <!-- // Discount -->
 
+        <!-- Coupon -->
+        <tr cond="$coupon = $product_container->getCoupon()">
+            <td colspan="4">
+            </td>
+            <td title="{$coupon->code}">{$lang->discount_code}</td>
+            <td cond="$coupon->discount_type == Coupon::DISCOUNT_TYPE_FIXED_AMOUNT">
+                {ShopDisplay::priceFormat(-1 * $coupon->discount_value, $shop->getCurrencySymbol())}
+            </td>
+            <td cond="$coupon->discount_type == Coupon::DISCOUNT_TYPE_PERCENTAGE">{ShopDisplay::priceFormat(-1 * $product_container->getCouponDiscount(), $shop->getCurrencySymbol())} ({$coupon->discount_value} %)</td>
+        </tr>
+        <!-- // Discount -->
+
         <!-- Shipping cost -->
-        <tr cond="$cart->getShippingMethodName()">
+        <tr cond="$product_container->getShippingMethodName()">
             <td colspan="4"></td>
             <td>{$lang->shipping}</td>
             <td>

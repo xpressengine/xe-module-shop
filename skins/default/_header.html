@@ -98,7 +98,7 @@
 </div>
 <div id="header">
     <div class="layout-centered clearfix">
-        <a id="header-logo" class="f-left" href="{getUrl('', 'act', 'dispShopHome')}"><img src="img/logo.gif" title="My Store" alt="My Store"/></a>
+        <a id="header-logo" class="f-left" href="{ShopUtils::getUrl()}"><img src="img/logo.gif" title="My Store" alt="My Store"/></a>
         <!-- Search box -->
         <form action="./">
             <p id="header-search" class="f-left">
@@ -144,13 +144,12 @@
             //ctrl + shift + s
             if (e.which == 83 && e.shiftKey && e.ctrlKey) {
                 e.preventDefault();
-                $.get("{getUrl('act', 'procShopToolResetSkin')}", {}, function(data) {
+                $.get("{getNotEncodedUrl('act', 'procShopToolResetSkin')}", {}, function(data) {
                     window.location.reload();
                 });
             }
         });
     });
-
 </script>
 
 <div id="top_links">

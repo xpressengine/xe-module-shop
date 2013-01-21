@@ -33,6 +33,7 @@
                     <!--@end-->
                 <!--@end-->
             <!--@end-->
+            <li><a href="{getUrl('act','procShopToolPrintOrder','order_srl',$order->order_srl)}" target="_blank">{$lang->print}</a></li>
             <!--@if($order->order_status != Order::ORDER_STATUS_HOLD)-->
                 <!-- <li><a href="{getUrl('act','dispShopToolReorder','order_srl',$order->order_srl)}">{$lang->reorder}</a></li>    -->
             <!--@end-->

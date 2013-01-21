@@ -11,6 +11,13 @@
         <p>{$XE_VALIDATOR_MESSAGE}</p>
     </div>
     <!-- /contentHeader -->
+    <!-- contentNavigation -->
+    <div class="contentNavigation" cond="!empty($order)">
+        <ul class="sortDefault">
+            <li><a href="{getUrl('act','procShopToolPrintOrder','order_srl',$order->order_srl)}" target="_blank">{$lang->print}</a></li>
+        </ul>
+    </div>
+    <!-- /contentNavigation -->
     <form action="./" method="post" class="">
         <input type="hidden" name="act" value="procShopToolInsertInvoice" />
         <input type="hidden" name="order_srl" value="{$order->order_srl}" />

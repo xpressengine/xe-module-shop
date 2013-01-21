@@ -4,6 +4,14 @@ class ShopAutoloader
 {
     protected $bulkPath = '../classes';
 
+    /**
+     * Constructor sets classes path
+     *
+     * When a class is not found, the spl_autoload_register
+     * sends to the loader function below with $class set to the missing class name.
+     *
+     * @param null $bulkPath
+     */
     public function __construct($bulkPath=null)
     {
         //todo: test against static methods
@@ -11,6 +19,11 @@ class ShopAutoloader
         if ($bulkPath) $this->bulkPath = $bulkPath;
     }
 
+    /**
+     * Loader checks if the missing $class exists in our classes path ($bulkPath)
+     *
+     * @param $class
+     */
     protected function loader($class)
     {
         //if the class is in the /classes dir then we load it
@@ -81,6 +94,12 @@ class ShopAutoloader
         }
     }
 
+    /**
+     * Checks wether the missing class was needed in the shop
+     * module or somewhere else.
+     *
+     * @return bool
+     */
     protected function isCalledFromShop()
     {
         $backTrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);

@@ -4,10 +4,9 @@ class ShopCache implements ArrayAccess
 {
     private $data = array();
 
-
     public function has($key)
     {
-        return isset($this->data[$key]);
+		return array_key_exists($key, $this->data);
     }
     public function get($key)
     {
@@ -20,7 +19,7 @@ class ShopCache implements ArrayAccess
                 throw new ShopException("Cache key '$key' already exists");
             }
         }
-        $this->data[$key] = $value;
+        return $this->data[$key] = $value;
     }
     public function add($value)
     {

@@ -25,10 +25,15 @@
             </p>
         </div>
     </div>
+    <!--@if($module_info->xe_banner == 'Yes')-->
     <div class="body-left-panel">
         <div class="body-left-panel-content a-center" style="border-top:1px solid #cacaca;">
             <a href="http://www.xpressengine.org/"><img src="img/banner.jpg" alt="Built with XpressEngine" title="Built with XpressEngine" style="border: 0;"/></a>
         </div>
+    </div>
+    <!--@end-->
+    <div class="body-left-panel" id="sidefilters">
+        <include target="_filters.html" />
     </div>
 </div>
 <!--@else-->

@@ -15,11 +15,9 @@ class AddressRepository extends BaseRepository
 
     /**
      * insert Address
-     *
-     * @author Dan Dragan   (dev@xpressengine.org)
      * @param Address $address
-     * @return mixed
-     * @throws Exception
+     * @return object
+     * @throws ShopException
      */
     public function insert(Address &$address)
     {
@@ -30,11 +28,9 @@ class AddressRepository extends BaseRepository
 
     /**
      * update Address
-     *
-     * @author Dan Dragan     (dev@xpressengine.org)
      * @param Address $address
-     * @return mixed
-     * @throws Exception
+     * @return object
+     * @throws ShopException
      */
     public function update(Address &$address)
     {
@@ -86,11 +82,10 @@ class AddressRepository extends BaseRepository
 
     /**
      * return all addresses separated into default and additional addresses
-     *
-     * @author Dan Dragan   (dev@xpressengine.org)
      * @param $member_srl
-     * @param $returnBulk boolean Tells wether to return a simple array of addresses or mark them accordingly (default billing etc)
-     * @return stdClass
+     * @param bool $returnBulk
+     * @param bool $refresh
+     * @return array|null|stdClass
      */
     public function getAddresses($member_srl, $returnBulk=false, $refresh=false)
     {
@@ -125,11 +120,9 @@ class AddressRepository extends BaseRepository
 
     /**
      * Get address list method with pagination
-     *
-     * @author Dan Dragan (dev@xpressengine.org)
      * @param $member_srl
-     * @return object that contains array of addresses and pagination
-     * @throws Exception
+     * @return object
+     * @throws ShopException
      */
     public function getAddressesList($member_srl)
     {
@@ -163,6 +156,13 @@ class AddressRepository extends BaseRepository
         return $this->query('deleteAddress',array('address_srl' => $address_srl));
     }
 
+    /**
+     * verify if it has a default address
+     * @param $member_srl
+     * @param int $type
+     * @return bool
+     * @throws ShopException
+     */
     public function hasDefaultAddress($member_srl, $type=self::TYPE_BILLING)
     {
         if (!in_array($type, array(self::TYPE_BILLING, self::TYPE_SHIPPING))) throw new ShopException('Type should be "billing" or "shipping"');

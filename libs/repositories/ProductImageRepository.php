@@ -7,16 +7,17 @@
  */
 class ProductImageRepository extends BaseRepository
 {
-	/**
-	 * Insert a new image; returns the ID of the newly created record
-	 *
-	 * @author Dan Dragan (dev@xpressengine.org)
-	 * @param $image ProductImage
-	 * @return int
-	 */
-	public function insertImage(ProductImage &$image)
+    /**
+     * Insert a new image; returns the ID of the newly created record
+     * @param ProductImage $image
+     * @return object
+     * @throws ShopException
+     */
+    public function insertImage(ProductImage &$image)
 	{
-        if ($image->image_srl) throw new ShopException('A srl must NOT be specified');
+        if ($image->image_srl) {
+            throw new ShopException('A srl must NOT be specified');
+        }
         $image->image_srl = getNextSequence();
 		if($image->file_size > 0){
 			$output = executeQuery('shop.insertImage', $image);
@@ -58,13 +59,13 @@ class ProductImageRepository extends BaseRepository
 
 	}
 
-	/**
-	 * Retrieve a Images object from the database by image_srls
-	 * @author Dan Dragan (dev@xpressengine.org)
-	 * @param $image_srls array
-	 * @return ProductImage list
-	 */
-	public function getImages($image_srls)
+    /**
+     * Retrieve a Images object from the database by image_srls
+     * @param $image_srls
+     * @return mixed
+     * @throws ShopException
+     */
+    public function getImages($image_srls)
 	{
 		$args = new stdClass();
 		$args->image_srls = $image_srls;
@@ -74,13 +75,12 @@ class ProductImageRepository extends BaseRepository
 	}
 
 
-	/**
-	 * Create Image list from uploaded files
-	 * @author Dan Dragan (dev@xpressengine.org)
-	 * $params array $files
-	 * @return array $images
-	 */
-	public function createImagesUploadedFiles(Array $files)
+    /**
+     * Create Image list from uploaded files
+     * @param array $files
+     * @return array
+     */
+    public function createImagesUploadedFiles(Array $files)
 	{
 		$args = new stdClass();
 		foreach($files as $file){

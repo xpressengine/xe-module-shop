@@ -4,7 +4,8 @@
 <div id="my_account" class="body-two-columns main-content clearfix">
     <div id="MyAccountInfo">
         <h1 class="underline">{sprintf($lang->order_with_number, $order->order_srl)}</h1>
-        <a class="button" title="This will fill your cart with the products existing on this order so you can buy them again" href="{getUrl('','act','procShopRenewOrder','order_srl',$order->order_srl)}">{$lang->update_order}</a>
+        <a class="button" title="This will fill your cart with the products existing on this order so you can buy them again" href="{getUrl('','act','procShopRenewOrder','order_srl',$order->order_srl)}">{$lang->renew}</a>
+        <a class="button" title="Print order" target="_blank" href="{getUrl('','act','procShopPrintOrder','order_srl',$order->order_srl)}">{$lang->print}</a>
     </div>
 
     <div class="viewOrder">
@@ -30,7 +31,7 @@
 
 
         <h2>{$lang->shipping_info}</h2>
-        <p>{$lang->shipping_method_used} <b>{ucwords(str_replace('_', ' ', $order->shipping_method))}</b></p>
+        <p>{$lang->shipping_method_used} <b>{ucwords(str_replace('_', ' ', $order->shipping_method))}</b>{$order->getShippingMethodVariant() ? ' - ' . $order->getShippingMethodVariant() : ''}</p>
 
 
         <h2>{$lang->items_ordered}</h2>

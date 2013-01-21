@@ -7,7 +7,10 @@
  */
 class GuestRepository extends BaseRepository
 {
-
+    /**
+     * create or retrieve guest
+     * @return Guest
+     */
     public function createOrRetrieve()
     {
         return new Guest(array(

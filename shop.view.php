@@ -3,7 +3,7 @@
 /**
  * @class  shopView
  * @author Arnia (xe_dev@arnia.ro)
- * @brief  shop module View class
+ *  shop module View class
  **/
 
 class shopView extends shop {
@@ -14,7 +14,7 @@ class shopView extends shop {
     protected $shop;
 
     /**
-	 * @brief Initialization
+	 * Initialization
 	 **/
 	public function init() {
 		$this->model = getModel('shop');
@@ -28,7 +28,7 @@ class shopView extends shop {
 	}
 
 	/**
-	 * @brief Shop common init
+	 * Shop common init
 	 **/
 	public function initCommon($is_other_module = FALSE){
 		if(!$this->checkXECoreVersion('1.4.3')) return $this->stop(sprintf(Context::getLang('msg_requried_version'),'1.4.3'));
@@ -44,7 +44,7 @@ class shopView extends shop {
 			if($site_srl) {
 				$this->module_srl = $site_module_info->index_module_srl;
 				$this->module_info = $oModuleModel->getModuleInfoByModuleSrl($this->module_srl);
-				if (!$is_other_module){
+				if (!$is_other_module) {
 					Context::set('module_info',$this->module_info);
 					Context::set('mid',$this->module_info->mid);
 					Context::set('current_module_info',$this->module_info);
@@ -57,6 +57,7 @@ class shopView extends shop {
 		$preview_skin = Context::get('preview_skin');
 		if($oModuleModel->isSiteAdmin(Context::get('logged_info'))&&$preview_skin) {
 			if(is_dir($this->module_path.'skins/'.$preview_skin)) {
+                $shop_config = new stdClass();
 				$shop_config->skin = $this->module_info->skin = $preview_skin;
 			}
 		}
@@ -80,7 +81,7 @@ class shopView extends shop {
 	}
 
 	/**
-	 * @brief Shop init tool
+	 * Shop init tool
 	 **/
 	public function initTool(&$oModule, $is_other_module = FALSE){
 		if (!$oModule) $oModule = $this;
@@ -96,10 +97,7 @@ class shopView extends shop {
 
 		$info = Context::getDBInfo();
 
-
-
-
-		if ($is_other_module){
+		if ($is_other_module) {
 			$oModule->setLayoutPath($this->module_path.'tpl');
 			$oModule->setLayoutFile('_tool_layout');
 		}else{
@@ -116,7 +114,7 @@ class shopView extends shop {
 	}
 
 	/**
-	 * @brief shop init service
+	 * shop init service
 	 **/
 	public function initService(&$oModule, $is_other_module = FALSE, $isMobile = FALSE){
 		if (!$oModule) $oModule = $this;
@@ -158,7 +156,7 @@ class shopView extends shop {
 		Context::set('home_url', getFullSiteUrl($this->shop->domain));
 		Context::set('profile_url', getSiteUrl($this->shop->domain,'','mid',$this->module_info->mid,'act','dispShopProfile'));
 		if(Context::get('is_logged')) Context::set('admin_url', getSiteUrl($this->shop->domain,'','mid',$this->module_info->mid,'act','dispShopToolDashboard'));
-		else Context::set('admin_url', getSiteUrl($shop->domain,'','mid','shop','act','dispShopToolLogin'));
+		else Context::set('admin_url', getSiteUrl($this->shop->domain,'','mid','shop','act','dispShopToolLogin'));
 		Context::set('shop_title', $this->shop->get('shop_title'));
 
 		// set browser title
@@ -191,9 +189,38 @@ class shopView extends shop {
         Context::set('search_categories', $flat_tree);
 	}
 
+    /**
+     * route
+     * @return Object|void
+     * @throws ShopException
+     */
+    public function route()
+    {
+        try {
+            if (!$type = Context::get('type')) throw new ShopException('Routing: no type');
+            if (!$identifier = Context::get('identifier')) throw new ShopException('Routing: no identifier');
+            if ($type == 'product') {
+                $repo = new ProductRepository();
+                if (!$product = $repo->getProductByFriendlyUrl($identifier)) throw new ShopException('Product does not exist');
+                Context::set('product', $product);
+                return $this->dispShopProduct();
+            }
+            elseif ($type == 'category') {
+                $repo = new CategoryRepository();
+                if (!$cat = $repo->getCategoryByFriendlyUrl($identifier)) throw new ShopException('Category does not exist');
+                Context::set('category', $cat);
+                return $this->dispShop();
+            }
+            else throw new ShopException("Routing: invalid type: $type");
+        }
+        catch (ShopException $e) {
+            $this->setRedirectUrl(getNotEncodedUrl('', 'act', 'dispShopHome'));
+            return new Object(-1, $e->getMessage());
+        }
+    }
 
-	/**
-	 * @brief Tool dashboard
+    /**
+	 * Tool dashboard
 	 **/
 	public function dispShopToolDashboard(){
 		$oCounterModel = getModel('counter');
@@ -228,6 +255,7 @@ class shopView extends shop {
 		foreach($thisWeek as $day) {
 			$v = (int)$thisWeekCounter[$day]->unique_visitor;
 			if($v && $v>$max) $max = $v;
+            $stat = new stdClass();
 			$stat->week[date("D",strtotime($day))]->this = $v;
 		}
 		foreach($lastWeek as $day) {
@@ -325,7 +353,7 @@ class shopView extends shop {
 	}
 
     /**
-     * @brief display shop tool statistics visitor
+     * display shop tool statistics visitor
      **/
     function dispShopToolStatisticsVisitor() {
         global $lang;
@@ -344,12 +372,14 @@ class shopView extends shop {
 
         $site_module_info = Context::get('site_module_info');
 
+        $xml = new stdClass();
         $xml->item = array();
         $xml->value = array(array(),array());
         $selected_count = 0;
 
         // total & today
         $counter = $oCounterModel->getStatus(array(0,date("Ymd")),$site_module_info->site_srl);
+        $total = new stdClass();
         $total->total = $counter[0]->unique_visitor;
         $total->today = $counter[date("Ymd")]->unique_visitor;
 
@@ -365,6 +395,7 @@ class shopView extends shop {
                 $i=0;
                 foreach($detail_status->list as $key => $val) {
                     $_k = substr($selected_date,0,4).'.'.sprintf('%02d',$key);
+                    $output = new stdClass();
                     $output->list[$_k]->val = $val;
                     if($selected_date == date("Ymd")&&$key == date("m")){
                         $selected_count = $val;
@@ -395,6 +426,7 @@ class shopView extends shop {
                 $detail_status = $oCounterModel->getHourlyStatus('week', $selected_date, $site_module_info->site_srl);
                 foreach($detail_status->list as $key => $val) {
                     $_k = date("Y.m.d", strtotime($key)).'('.$lang->unit_week[date('l',strtotime($key))].')';
+                    $output = new stdClass();
                     if($selected_date == date("Ymd")&&$key == date("Ymd")){
                         $selected_count = $val;
                         $output->list[$_k]->selected = true;
@@ -427,6 +459,7 @@ class shopView extends shop {
 
                 foreach($detail_status->list as $key => $val) {
                     $_k = sprintf('%02d',$key);
+                    $output = new stdClass();
                     if($selected_date == date("Ymd")&&$key == date("H")){
                         $selected_count = $val;
                         $output->list[$_k]->selected = true;
@@ -472,7 +505,7 @@ class shopView extends shop {
     }
 
 	/**
-	 * @brief Login
+	 * Login
 	 **/
 	public function dispShopToolLogin() {
 		Context::addBodyClass('logOn');
@@ -491,6 +524,7 @@ class shopView extends shop {
 				if(!file_exists($small_screenshot)) $small_screenshot = $this->module_path.'tpl/img/@small.jpg';
 
 				unset($obj);
+                $obj = new stdClass();
 				$obj->title = $info->title;
 				$obj->description = $info->description;
 				$_arr_author = array();
@@ -610,19 +644,14 @@ class shopView extends shop {
 	}
 
 	/**
-	 * @brief attribute add page
+	 * attribute add page
 	 */
 	public function dispShopToolAddAttribute()
 	{
-		/**
-		 * @var shopModel $shopModel
-		 */
-		$shopModel = getModel('shop');
-		$attributeRepository = $shopModel->getAttributeRepository();
+		$attributeRepository = new AttributeRepository();
 		Context::set('types', $attributeRepository->getTypes(Context::get('lang')));
-
 		// Retrieve existing categories
-		$categoryRepository = $shopModel->getCategoryRepository();
+		$categoryRepository = new CategoryRepository();
 		$tree = $categoryRepository->getCategoriesTree($this->module_srl);
 
 		// Prepare tree for display
@@ -636,14 +665,71 @@ class shopView extends shop {
 		Context::set('HTML_tree', $HTML_tree);
 	}
 
-	public function dispShopToolEditAttribute()
+    public function dispShopToolAddCoupon()
+    {
+        $coupon = new Coupon();
+        $coupon->generateCode(12, RandomGenerator::TYPE_ALPHANUM, 'X', 4);
+        Context::set('object', $coupon);
+    }
+
+    /**
+     * display shop tool edit coupon
+     * @return Object
+     */
+    public function dispShopToolEditCoupon()
+    {
+        $repo = new CouponRepository();
+        $srl = Context::get('srl');
+        if (!is_numeric($srl) || (!$coupon = $repo->get($srl))) {
+            $this->setRedirectUrl(getNotEncodedUrl('', 'act', 'dispShopToolDiscountCodes'));
+            return new Object(-1, "Invalid srl $srl for identifying coupon");
+        }
+        Context::set('object', $coupon);
+        $this->setTemplateFile('AddCoupon');
+    }
+
+    public function dispShopToolAddCouponGroup()
+    {
+        $coupon = new Coupon();
+        $coupon->generateCode(7);
+        Context::set('object', $coupon);
+    }
+
+    /**
+     * display shop tool edit coupon group
+     * @return Object
+     * @throws ShopException
+     */
+    public function dispShopToolEditCouponGroup()
+    {
+        $repo = new CouponRepository();
+        $srl = Context::get('srl');
+        try {
+            /** @var $coupon Coupon */
+            if (!is_numeric($srl) || (!$coupon = $repo->get($srl))) throw new ShopException("No such coupon group");
+            if ($coupon->type != Coupon::TYPE_PARENT) throw new ShopException("Invalid group");
+        }
+        catch (ShopException $e) {
+            $this->setRedirectUrl(getNotEncodedUrl('', 'act', 'dispShopToolDiscountCodes'));
+            return new Object(-1, $e->getMessage());
+        }
+        Context::set('object', $coupon);
+
+        $children = $coupon->getChildren($this->module_srl);
+        Context::set('childCoupons', $children);
+
+        $codes = array();
+        /** @var $c Coupon */
+        foreach ($children as $c) $codes[] = $c->code;
+        Context::set('codesForCopy', implode("\n", $codes));
+
+        $this->setTemplateFile('AddCouponGroup');
+    }
+
+    public function dispShopToolEditAttribute()
 	{
-		/**
-		 * @var shopModel #shopModel
-		 */
-		$shopModel = getModel('shop');
-		$attributeRepository = $shopModel->getAttributeRepository();
-		$srl = Context::get('attribute_srl');
+        $srl = Context::get('attribute_srl');
+        $attributeRepository = new AttributeRepository();
 		if (!$attributes = $attributeRepository->getAttributes(array($srl))) throw new ShopException("Attribute doesn't exist");
 		$attribute = array_shift($attributes);
         if(is_array($attribute->values)) $attribute->values = implode('|', $attribute->values);
@@ -652,7 +738,7 @@ class shopView extends shop {
 		Context::set('types', $attributeRepository->getTypes(Context::get('lang')));
 
 		// Retrieve existing categories
-		$categoryRepository = $shopModel->getCategoryRepository();
+		$categoryRepository = new CategoryRepository();
 		$tree = $categoryRepository->getCategoriesTree($this->module_srl);
 
 		// Prepare tree for display
@@ -669,7 +755,7 @@ class shopView extends shop {
 	}
 
 	/**
-	 * @brief Shop display product tool page
+	 * Shop display product tool page
 	 */
 	public function dispShopToolManageProducts(){
 		$module_srl = $this->module_info->module_srl;
@@ -707,7 +793,7 @@ class shopView extends shop {
     }
 
     /**
-     * @brief Shop display page for import products
+     * Shop display page for import products
      */
     public function dispShopToolImportProducts(){
         $shopModel = getModel('shop');
@@ -721,7 +807,7 @@ class shopView extends shop {
     }
 
 	/**
-	 * @brief Shop display product edit page
+	 * Shop display product edit page
 	 */
 	public function dispShopToolEditProduct(){
 		$this->dispShopToolAddProduct();
@@ -729,9 +815,10 @@ class shopView extends shop {
 	}
 
 	/**
-	 * @brief Shop display simple product add page
+	 * Shop display simple product add page
 	 */
-	public function dispShopToolAddProduct(){
+	public function dispShopToolAddProduct()
+    {
 		$args = Context::getRequestVars();
 		if(isset($args->configurable_attributes))
 		{
@@ -809,7 +896,7 @@ class shopView extends shop {
 	}
 
 	/**
-	 * @brief Shop display configurable product add page
+	 * Shop display configurable product add page
 	 */
 	public function dispShopToolAddConfigurableProduct(){
 		$shopModel = getModel('shop');
@@ -820,7 +907,7 @@ class shopView extends shop {
 
 
     /**
-	 * @brief Shop display associated products
+	 * Shop display associated products
 	 */
 	public function dispShopToolAddAssociatedProducts(){
 		$shopModel = getModel('shop');
@@ -880,12 +967,12 @@ class shopView extends shop {
 	}
 
     /**
-     * @brief Shop home page
+     * Shop home page
      **/
     public function dispShopHome(){
         // Products list
         $this->loadShopCategoryTree();
-        $product_repository = $this->model->getProductRepository();
+        $productRepo = $this->model->getProductRepository();
 
         if (isset($_SESSION['grid_view'])) Context::set('grid_view', $_SESSION['grid_view']);
         if (isset($_SESSION['sort'])) Context::set('sort', $_SESSION['sort']);
@@ -893,10 +980,11 @@ class shopView extends shop {
         try {
             $args = new stdClass();
             $args->module_srl = $this->module_srl;
+            FrontFilters::work($args);
             $args->status = 'enabled';
             $args->list_count = 9;
             if ($this->shop->getOutOfStockProducts() == 'N') $args->in_stock = 'Y';
-            $output = $product_repository->getFeaturedProducts($args, TRUE, TRUE);
+            $output = $productRepo->getFeaturedProducts($args, TRUE, TRUE);
             Context::set('products', $output->products);
             //Context::set('page_navigation', $output->page_navigation);
             $datasourceJS = $this->getAssociatedProductsAttributesAsJavascriptArray($output->products);
@@ -910,7 +998,7 @@ class shopView extends shop {
     }
 
 	/**
-	 * @brief Shop view products list
+	 * Shop view products list
 	 **/
 	public function dispShop() {
 
@@ -923,31 +1011,32 @@ class shopView extends shop {
         if (isset($_SESSION['sort'])) Context::set('sort', $_SESSION['sort']);
 
         try {
-			$args = new stdClass();
-			$args->module_srl = $this->module_srl;
+            $args = new stdClass();
+            $args->module_srl = $this->module_srl;
+            FrontFilters::work($args);
             $args->list_count = 9;
             $args->status = 'enabled';
-            if($this->shop->getOutOfStockProducts() == 'N') $args->in_stock = 'Y';
-			$page = Context::get('page');
-			if($page) $args->page = $page;
-			$category_srl = Context::get('category_srl');
-			if($category_srl) $args->category_srls = array($category_srl);
+            if ($this->shop->getOutOfStockProducts() == 'N') $args->in_stock = 'Y';
+            $page = Context::get('page');
+            if ($page) $args->page = $page;
+            $category_srl = (($category = Context::get('category')) instanceof Category ? $category->category_srl : Context::get('category_srl'));
+            if ($category_srl) $args->category_srls = array($category_srl);
 
             $args->status = 'enabled';
-            if($this->shop->getOutOfStockProducts() == 'N') $args->in_stock = 'Y';
-            if($_SESSION['sort'] == 'price_asc'){
+            if ($this->shop->getOutOfStockProducts() == 'N') $args->in_stock = 'Y';
+            if ($_SESSION['sort'] == 'price_asc') {
                 $args->index = 'price';
                 $args->order_type = 'asc';
-            }elseif($_SESSION['sort'] == 'price_desc'){
+            } elseif ($_SESSION['sort'] == 'price_desc') {
                 $args->index = 'price';
                 $args->order_type = 'desc';
             }
-			$output = $productRepo->getProductList($args, TRUE, TRUE);
-			Context::set('products', $output->products);
-			Context::set('page_navigation', $output->page_navigation);
+            $output = $productRepo->getProductList($args, TRUE, TRUE);
+            Context::set('products', $output->products);
+            Context::set('page_navigation', $output->page_navigation);
 
-			$datasourceJS = $this->getAssociatedProductsAttributesAsJavascriptArray($output->products);
-			Context::set('datasourceJS', $datasourceJS);
+            $datasourceJS = $this->getAssociatedProductsAttributesAsJavascriptArray($output->products);
+            Context::set('datasourceJS', $datasourceJS);
 
             $this->setTemplateFile("product_list.html");
 		}
@@ -956,6 +1045,10 @@ class shopView extends shop {
 		}
 	}
 
+    /**
+     * load shop category tree
+     * @param array $selected_categories
+     */
     protected function loadShopCategoryTree($selected_categories = array()){
         // Categories left tree
         // Retrieve existing categories
@@ -965,6 +1058,11 @@ class shopView extends shop {
 
         // Prepare tree for display
         $tree_config = new HtmlCategoryTreeConfig();
+        if ($this->module_info->category_product_count == 'Yes') {
+            $tree_config->showProductCount = TRUE;
+        } else {
+            $tree_config->showProductCount = FALSE;
+        }
         $tree_config->linkCategoryName = TRUE;
         $tree_config->openCloseSign = TRUE;
         $tree_config->linkGetUrlParams = array('vid', $this->mid, 'act', 'dispShop','page','');
@@ -989,14 +1087,39 @@ class shopView extends shop {
 	 */
 	public function dispShopProduct()
 	{
-		$product_srl = Context::get('product_srl');
+        /** @var $product Product */
+        if ($product = Context::get('product')) {
+            //came from from routing
+            if (!($product instanceof Product) || !$product->isPersisted()) throw new ShopException('Wrong product');
+        }
+		else {
+            if (!$product_srl = Context::get('product_srl')) throw new ShopException('Could not identify product');
+            $product_repository = new ProductRepository();
+            $product = $product_repository->getProduct($product_srl);
+            if (!$product instanceof Product) throw new ShopException('Product does not exist');
+            Context::set('product', $product);
+        }
 
-		/** @var shopModel $shopModel */
-		$shopModel = getModel('shop');
-		$product_repository = $shopModel->getProductRepository();
-
-		$product = $product_repository->getProduct($product_srl);
-		Context::set('product', $product);
+        //add product document if it does not exist  (link to comments)
+        if(!isset($product->document_srl)){
+            $documentController = getController('document');
+            $document = new stdClass();
+            $document->title = $product->product_srl;
+            $document->commentStatus = 'ALLOW';
+            $document->module_srl = $product->module_srl;
+            $output = $documentController->insertDocument($document);
+            $product->document_srl = $output->variables['document_srl'];
+            unset($product->images);
+            $product->repo->updateProduct($product);
+        }
+        $documentModel = getModel('document');
+        $product->document = $documentModel->getDocument($product->document_srl);
+        $product->comment_list = $_comment_list = $product->document->getComments();
+        if (is_array($_comment_list)) {
+            foreach ($product->comment_list as $comment){
+                $comment->variables['relativeDate'] = $this->model->zdateRelative($comment->getRegdateTime());
+            }
+        }
 
 		// Setup Javscript datasource for linked dropdowns
 		$datasourceJS = $this->getAssociatedProductsAttributesAsJavascriptArray(array($product));
@@ -1005,14 +1128,14 @@ class shopView extends shop {
 		// Setup attributes names for display
 		if(count($product->attributes))
 		{
-			$attribute_repository = $shopModel->getAttributeRepository();
+			$attribute_repository = new AttributeRepository();
 			$attributes = $attribute_repository->getAttributes(array_keys($product->attributes));
 			Context::set('attributes', $attributes);
 		}
 
 		// Categories left tree
 		// Retrieve existing categories
-		$category_repository = $shopModel->getCategoryRepository();
+		$category_repository = new CategoryRepository();
 		$tree = $category_repository->getNavigationCategoriesTree($this->module_srl);
 
 		// Prepare tree for display
@@ -1110,11 +1233,12 @@ class shopView extends shop {
         $page = Context::get('page');
         $search = Context::get('q');
         $args = new stdClass();
+        $args->module_srl = $this->module_srl;
+        FrontFilters::work($args);
         $args->sku = $search;
         $args->title = $search;
         $args->description = $search;
         $args->page = $page;
-        $args->module_srl = $this->module_srl;
         $category_srl = Context::get('search_category_srl');
         if($category_srl) $args->category_srls = array($category_srl);
 
@@ -1128,11 +1252,31 @@ class shopView extends shop {
         $this->setTemplateFile("product_search.html");
     }
 
+    /**
+     * display shop view order
+     * @return Object
+     * @throws ShopException
+     */
     public function dispShopViewOrder(){
+        try{
+            $orderRepo = new OrderRepository();
+            $order = $orderRepo->getOrderBySrl(Context::get('order_srl'));
+            $logged_info = Context::get('logged_info');
+            if($order->member_srl != $logged_info->member_srl) throw new ShopException("This order does not belong to you");
+        }
+        catch (Exception $e) {
+            $this->setRedirectUrl(getNotEncodedUrl('', 'act', 'dispShopHome'));
+            return new Object(-1, $e->getMessage());
+        }
         $this->dispShopToolViewOrder();
         $this->setTemplateFile('view_order');
     }
 
+    /**
+     * display shop checkout
+     * @return Object
+     * @throws ShopException
+     */
     public function dispShopCheckout()
     {
         try {
@@ -1152,13 +1296,14 @@ class shopView extends shop {
         $shippingRepo = new ShippingMethodRepository();
         $paymentRepo = new PaymentMethodRepository();
 
-        //shipping methods
-        $shipping = array();
-        /** @var $shippingMethod ShippingMethodAbstract */
-        foreach ($shippingRepo->getActiveShippingMethods($this->module_srl) as $shippingMethod) {
-            $shipping[$shippingMethod->getCode()] = $shippingMethod->getDisplayName();
-        }
-        Context::set('shipping_methods', $shipping);
+		// Init the list of all available methods
+		$shipping_methods = $shippingRepo->getAvailableShippingMethodsAndTheirPrices($this->module_srl, $cart);
+        Context::set('shipping_methods', $shipping_methods);
+
+		// Setup the selected shipping method - check if using default value or value from cart;
+		$selected_shipping_method = $cart->getShippingMethodName();
+		$selected_shipping_method .= $cart->getShippingMethodVariant() ? '__' . $cart->getShippingMethodVariant() : '';
+		Context::set('selected_shipping_method', $selected_shipping_method);
 
         // payment methods
         $payment_methods = $paymentRepo->getActivePaymentMethods($this->module_srl);
@@ -1178,11 +1323,22 @@ class shopView extends shop {
         $this->setTemplateFile('checkout.html');
     }
 
+    /**
+     * display shop place order
+     * @return Object
+     * @throws ShopException
+     */
     public function dispShopPlaceOrder()
     {
         /** @var $cart Cart  */
-        if ((!$cart = Context::get('cart')) || !$cart->items) {
-            throw new ShopException("No cart, you shouldn't be here");
+        try {
+            if ((!$cart = Context::get('cart')) || !$cart->items) {
+                throw new ShopException("Cart doesn't exist anymore.");
+            }
+        }
+        catch (Exception $e) {
+            $this->setRedirectUrl(getNotEncodedUrl('', 'act', 'dispShopHome'));
+            return new Object(-1, $e->getMessage());
         }
 
         // 1. Setup payment info
@@ -1210,7 +1366,9 @@ class shopView extends shop {
         $shipping_method_name = $cart->getShippingMethodName();
         $shipping_repository = new ShippingMethodRepository();
         $shipping_method = $shipping_repository->getShippingMethod($shipping_method_name, $this->module_srl);
-        Context::set('shipping_method', $shipping_method->getDisplayName());
+        Context::set('shipping_method_name', $shipping_method->getDisplayName());
+		$shipping_variants = $shipping_method->getVariants();
+		Context::set('shipping_method_variant', $shipping_variants[$cart->getShippingMethodVariant()]);
 
         Context::set('extra', $cart->getExtraArray());
         Context::set('cart_products', $cart->getProducts());
@@ -1221,6 +1379,10 @@ class shopView extends shop {
             Context::set('discounted_value', $discount->getValueDiscounted());
         }
 
+        if ($coupon = $cart->getCoupon()) {
+            Context::set('coupon', $coupon);
+        }
+
         $this->setTemplateFile('place_order.html');
     }
 
@@ -1229,14 +1391,18 @@ class shopView extends shop {
         $cart = Context::get('cart');
 
         $payment_method_name = Context::get('payment_method_name');
-        if($payment_method_name)
-        {
+        if ($payment_method_name) {
             $payment_repository = new PaymentMethodRepository();
             $payment_method = $payment_repository->getPaymentMethod($payment_method_name, $this->module_srl);
-            try
-            {
+            try {
                 $payment_method->onOrderConfirmationPageLoad($cart, $this->module_srl);
             }
+			catch(PaymentProcessingException $exception)
+			{
+				Context::set('error_details', $exception->getMessage());
+				$this->setTemplateFile("order_failed");;
+				return;
+			}
             catch(NetworkErrorException $exception)
             {
                 $this->setTemplateFile("order_confirmation_coming_soon");
@@ -1577,6 +1743,24 @@ class shopView extends shop {
      */
     public function dispShopToolDiscountInfo(){}
 
+    /**
+     * Backend for discount codes / coupons
+     */
+    public function dispShopToolDiscountCodes() {
+        $cRepo = new CouponRepository();
+        $params1 = $params2 = array('module_srl' => $this->module_srl);
+        if (Context::get('s')) $params1['search'] = $params2['search'] = Context::get('s');
+
+        $params1['type'] = Coupon::TYPE_SINGLE;
+        $output1 = $cRepo->getList('getCouponList', Context::get('page1'), $params1);
+        Context::set('objects1', $output1->data);
+        Context::set('page_navigation1', $output1->page_navigation);
+
+        $params2['type'] = Coupon::TYPE_PARENT;
+        $output2 = $cRepo->getList('getCouponList', Context::get('page2'), $params2);
+        Context::set('objects2', $output2->data);
+        Context::set('page_navigation2', $output2->page_navigation);
+    }
 
     /**
      *
@@ -1709,7 +1893,164 @@ class shopView extends shop {
         Context::set('shipping_form_html', $shipping_form_html);
     }
 
+    /**
+     * display comment editor
+     * @return Object
+     */
+    public function dispCommentEditor()
+    {
+        $document_srl = Context::get('document_srl');
+
+        $oDocumentModel = &getModel("document");
+        $oDocument = $oDocumentModel->getDocument($document_srl);
+
+        if (!$oDocument->isExists())
+        {
+            return new Object(-1, 'msg_invalid_request');
+        }
+
+        if (!$oDocument->allowComment())
+        {
+            return new Object(-1, 'comments_disabled');
+        }
+
+        Context::set('oDocument', $oDocument);
+
+        $oModuleModel = &getModel('module');
+        $module_info = $oModuleModel->getModuleInfoByModuleSrl($oDocument->get('module_srl'));
+
+        Context::set("module_info", $module_info);
+
+        $module_path = './modules/' . $module_info->module . '/';
+        $skin_path = $module_path . 'skins/' . $module_info->skin . '/';
+
+        if(!$module_info->skin || !is_dir($skin_path))
+        {
+            $skin_path = $module_path . 'skins/default/';
+        }
+
+        $oTemplateHandler = &TemplateHandler::getInstance();
+        $html = base64_encode($oTemplateHandler->compile($skin_path, 'comment_form.html'));
+        $this->add('html', $html);
+        $this->add('message_type', 'info');
+    }
+
+    /**
+     * display modify comment
+     * @return Object
+     */
+    function dispModifyComment()
+    {
+        // allow only logged in users to comment.
+        if (!Context::get('is_logged'))
+        {
+            return new Object(-1, 'login_to_modify_comment');
+        }
+
+        $comment_srl = Context::get('comment_srl');
+
+        if (!$comment_srl)
+        {
+            return new Object(-1, 'msg_invalid_request');
+        }
+
+        $oCommentModel = &getModel('comment');
+        $oComment = $oCommentModel->getComment($comment_srl, $this->grant->manager);
+
+        if (!$oComment->isExists())
+        {
+            return new Object(-1, "There is no comment");
+        }
+
+        Context::set('oComment', $oComment);
+
+        $oModuleModel = &getModel('module');
+        $module_info = $oModuleModel->getModuleInfoByModuleSrl($oComment->get('module_srl'));
+
+        if (!$oComment->isGranted())
+        {
+            return new Object(-1, 'no_rights_to_modify_comment');
+        }
+
+        Context::set("module_info", $module_info);
+
+        $module_path = './modules/' . $module_info->module . '/';
+        $skin_path = $module_path . 'skins/' . $module_info->skin . '/';
+
+        if(!$module_info->skin || !is_dir($skin_path))
+        {
+            $skin_path = $module_path . 'skins/default/';
+        }
+
+        $oTemplateHandler = &TemplateHandler::getInstance();
+
+        $html = base64_encode($oTemplateHandler->compile($skin_path, 'comment_form.html'));
+        $this->add('html', $html);
+
+        $this->add('html', $html);
+        $this->add('comment_srl', $oComment->comment_srl);
+    }
+
+    /**
+     * display reply comment
+     * @return Object
+     */
+    public function dispReplyComment()
+    {
+        $parent_srl = Context::get('comment_srl');
+
+        if (!$parent_srl)
+        {
+            return new Object(-1, 'msg_invalid_request');
+        }
+
+        $oCommentModel = &getModel('comment');
+        $oSourceComment = $oCommentModel->getComment($parent_srl, $this->grant->manager);
+
+        if (!$oSourceComment->isExists())
+        {
+            return new Object(-1, 'msg_invalid_request');
+        }
+
+        $oDocumentModel = &getModel("document");
+        $oDocument = $oDocumentModel->getDocument($oSourceComment->get('document_srl'));
+
+        if (!$oDocument->isExists())
+        {
+            return new Object(-1, 'msg_invalid_request');
+        }
+
+        if (!$oDocument->allowComment())
+        {
+            return new Object(-1, 'comments_disabled');
+        }
+
+        $oComment = $oCommentModel->getComment();
+        $oComment->add('parent_srl', $parent_srl);
+        $oComment->add('document_srl', $oSourceComment->get('document_srl'));
+        $oComment->add('module_srl', $this->module_srl);
+
+        Context::set('oComment', $oComment);
+
+        $oModuleModel = &getModel('module');
+        $module_info = $oModuleModel->getModuleInfoByModuleSrl($oDocument->get('module_srl'));
+
+        Context::set("module_info", $module_info);
+
+        $module_path = './modules/' . $module_info->module . '/';
+        $skin_path = $module_path . 'skins/' . $module_info->skin . '/';
+
+        if(!$module_info->skin || !is_dir($skin_path))
+        {
+            $skin_path = $module_path . 'skins/default/';
+        }
+
+        $oTemplateHandler = &TemplateHandler::getInstance();
+
+        $html = base64_encode($oTemplateHandler->compile($skin_path, 'comment_form.html'));
+        $this->add('html', $html);
+        $this->add('parent_srl', $parent_srl);
+    }
+
 
 }
-?>
-

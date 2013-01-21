@@ -95,10 +95,22 @@
                         <label for="title">{$lang->title}</label>
                     </th>
                     <td class="title">
-                            {ShopDisplay::multiLanguageInput('title', 'title', $product->title, null, 'iText', $lang->about_title, 'iLabel', 'fItem')}
+                        {ShopDisplay::multiLanguageInput('title', 'title', $product->title, 'width:517px', 'iText', $lang->about_product_title, 'iLabel', 'fItem')}
                     </td>
                 </tr>
                 <!--@if(!$product->parent_product_srl)-->
+                <tr style="font-size: 10px">
+                    <th scope="row" title="{$lang->about_friendly_url}">
+                        <label for="friendly_url">{$lang->friendly_url}</label>
+                    </th>
+                    <td class="title">
+                        <div class="fItem">
+                            <span>{call_user_func(array($product->repo, getUrl), '')}</span>
+                            <input data-ajaxcheck="{getNotEncodedUrl('', 'act', 'procShopToolCheckFriendlyUrlAvailability')}" type="text" id="friendly_url" name="friendly_url" style="width:417px;" class="iText iText" title="{$lang->about_friendly_url}" value="{$product->friendly_url}"|cond="$product->title" />
+                            <span id="availability" class="available"></span>
+                        </div>
+                    </td>
+                </tr>
                 <tr>
                     <th scope="row">
                         <label for="description">{$lang->description}</label>
@@ -176,7 +188,7 @@
                     <td class="title">
                         <div class="fItem">
                             <label class="iLabel" for="weight">{$lang->about_weight}</label>
-                            <input type="text" id="weight" name="weight" style="width:200px" class="iText iText" title="{$lang->about_weight}" <!--@if($product->title)-->value="{number_format($product->weight,2, '.', '')}"<!--@end--> /> kg
+                            <input type="text" id="weight" name="weight" style="width:200px" class="iText iText" title="{$lang->about_weight}" <!--@if($product->title)-->value="{number_format($product->weight,2, '.', '')}"<!--@end--> /> {$shop->getUnitOfMeasure()}
                         </div>
                     </td>
                 </tr>
@@ -197,17 +209,6 @@
                     </td>
                 </tr>
                 <!--@if(!$product->parent_product_srl)-->
-                <tr cond="false">
-                    <th scope="row">
-                        <label for="friendly_url">{$lang->friendly_url}</label>
-                    </th>
-                    <td class="title">
-                        <div class="fItem">
-                            <label class="iLabel" for="friendly_url">{$lang->about_friendly_url}</label>
-                            <input type="text" id="friendly_url" name="friendly_url" style="width:200px" class="iText iText" title="{$lang->about_friendly_url}" <!--@if($product->title)-->value="{$product->friendly_url}"<!--@end--> />
-                        </div>
-                    </td>
-                </tr>
                 <tr>
                     <th scope="row">
                         <label for="price">{$lang->price}</label>
@@ -231,6 +232,8 @@
                         </div>
                     </td>
                 </tr>
+                <!--@else-->
+                <input type="hidden" name="price" <!--@if($product->title)--> value="{ShopDisplay::numberFormat($product->price)}"<!--@end--> />
                 <!--@endif-->
                 <!--@if(!$product->isConfigurable() && !$product->isDownloadable())-->
                 <tr>

@@ -203,7 +203,7 @@ class Cart extends BaseItem implements IProductItemsContainer
         if (!$this->cart_srl) throw new ShopException('Cart is not persisted');
         //an entity-unique cache key for the current method and parameters combination
         $cacheKey = 'getProducts|' . ($n?$n:"_").(string)($onlyAvailables?'av':'all');
-        if ($ignoreCache || !$products = $this->cache[$cacheKey]) {
+        if ($ignoreCache || !$products = self::$cache[$cacheKey]) {
             $products = array();
             $shopInfo = new ShopInfo($this->module_srl);
             $checkIfInStock = ($shopInfo->getOutOfStockProducts() == 'Y');
@@ -222,7 +222,7 @@ class Cart extends BaseItem implements IProductItemsContainer
                 }
                 $products[$i] = $cartProduct;
             }
-            $this->cache[$cacheKey] = $products;
+            self::$cache[$cacheKey] = $products;
         }
         //if limit did not work:
         if ($n && $n < count($products)) {
@@ -323,15 +323,35 @@ class Cart extends BaseItem implements IProductItemsContainer
 		return $this->getTotalBeforeDiscountWithVAT() / (1 + $shop->getVAT() / 100);
 	}
 
+    public function getCouponDiscount()
+    {
+        if (!$coupon = $this->getCoupon()) return 0;
+        $total = $this->getTotalAfterDiscountWithVAT();
+        $val = $coupon->discount_value;
+        if (is_numeric($val) && $val > 0)
+        {
+            if ($coupon->discount_type == Coupon::DISCOUNT_TYPE_FIXED_AMOUNT) {
+                if ($val > $total) return $total;
+                return $val;
+            }
+            elseif ($coupon->discount_type == Coupon::DISCOUNT_TYPE_PERCENTAGE) {
+                if ($val >= 100) return $total;
+                return $val / 100 * $total;
+            }
+        }
+        return 0;
+    }
+
 	public function getTotalAfterDiscount()
 	{
-		return $this->getTotalAfterDiscountWithVAT();
+        $result = $this->getTotalAfterDiscountWithVAT();
+        $result -= $this->getCouponDiscount();
+        return $result;
 	}
 
 	public function getTotalAfterDiscountWithVAT()
 	{
-		return $this->getTotalAfterDiscountWithoutVAT()
-			+ $this->getVATAfterDiscount();
+		return $this->getTotalAfterDiscountWithoutVAT() + $this->getVATAfterDiscount();
 	}
 
 	public function getTotalAfterDiscountWithoutVAT()
@@ -393,7 +413,13 @@ class Cart extends BaseItem implements IProductItemsContainer
         if($shipping_method){
             $shipping_repository = new ShippingMethodRepository();
             $shipping = $shipping_repository->getShippingMethod($shipping_method, $this->module_srl);
-            return $shipping->calculateShipping($this, $this->getShippingAddress());
+			$cacheKey = $this->cart_srl . '_shipping_cost';
+			if(!self::$cache->has($cacheKey))
+			{
+				self::$cache[$cacheKey] = $shipping->calculateShipping($this, $this->getShippingMethodVariant());
+			}
+			$shipping_cost = self::$cache[$cacheKey];
+            return $shipping_cost;
         } else return 0;
     }
 
@@ -462,32 +488,47 @@ class Cart extends BaseItem implements IProductItemsContainer
                 throw new ShopException('No billing address');
             }
         }
-        if ($input['different_shipping'] == 'yes') {
-            if (!self::validateFormBlock($shipping = $input['shipping'])) {
+		$shipping = $input['shipping'];
+		if(!isset($shipping['method']))
+		{
+			throw new ShopException("Please choose a shipping method");
+		}
+		$data['extra']['shipping_method'] = $shipping['method'];
+		$data['extra']['shipping_variant'] = $shipping['variant'];
+		$data['shipping_address_srl'] = $shipping['address'];
+		// Shipping method
+
+		// Shipping address validation - if different
+        if ($input['new_shipping_address']) {
+            if (!self::validateFormBlock($newAddress = $input['new_shipping_address'])) {
                 throw new ShopException('Wrong shipping input');
             }
-            $data['extra']['shipping_method'] = $shipping['method'];
-            if (is_numeric($shipping['address'])) {
-                $data['shipping_address_srl'] = $shipping['address'];
-            } elseif (self::validateFormBlock($newAddress = $input['new_shipping_address'])) {
-                $newAddress = new Address($newAddress);
-                if ($this->member_srl && !$addressRepo->hasDefaultAddress($this->member_srl, AddressRepository::TYPE_SHIPPING)) {
-                    $newAddress->default_shipping = 'Y';
-                }
-                $newAddress->save();
-                $data['shipping_address_srl'] = $newAddress->address_srl;
-            }
-            else {
-                throw new ShopException('No shipping address');
-            }
+			$newAddress = new Address($newAddress);
+			if($newAddress->isValid())
+			{
+				if ($this->member_srl && !$addressRepo->hasDefaultAddress($this->member_srl, AddressRepository::TYPE_SHIPPING)) {
+					$newAddress->default_shipping = 'Y';
+				}
+				$newAddress->save();
+				$data['shipping_address_srl'] = $newAddress->address_srl;
+			}
         }
-		else
-		{
-			$shipping = $input['shipping'];
-			$data['extra']['shipping_method'] = $shipping['method'];
-		}
         if (self::validateFormBlock($payment = $input['payment'])) {
             $data['extra']['payment_method'] = $payment['method'];
+        }
+        $hasCode = false;
+        if ($code = $input['discount_code']) {
+            $codesRepo = new CouponRepository();
+            $existingCoupons = $codesRepo->getByCode($code, $this->module_srl);
+            if ($existingCoupons) {
+                /** @var $coupon Coupon */
+                $coupon = $existingCoupons[0];
+                $this->setExtra('coupon_srl', $coupon->srl);
+                $hasCode = true;
+            }
+        }
+        if (!$hasCode && $this->getExtra('coupon_srl')) {
+            $this->setExtra('coupon_srl', null);
         }
         return empty($data) ? null : $data;
     }
@@ -516,6 +557,12 @@ class Cart extends BaseItem implements IProductItemsContainer
         $shop = new ShopInfo($this->module_srl);
         return $shop->getCurrency();
     }
+
+	public function getUnitOfMeasure()
+	{
+		$shop = new ShopInfo($this->module_srl);
+		return $shop->getUnitOfMeasure();
+	}
 
     /**
      * @return Address|null
@@ -632,18 +679,57 @@ class Cart extends BaseItem implements IProductItemsContainer
         return $this->getExtra('transaction_message');
     }
 
+	public function getShippingMethod()
+	{
+		$shipping_repository = new ShippingMethodRepository();
+		$shipping_method_name = $this->getExtra('shipping_method');
+		if($shipping_method_name)
+		{
+			return $shipping_repository->getShippingMethod($shipping_method_name, $this->module_srl);
+		}
+		$default_shipping = $shipping_repository->getDefault($this->module_srl);
+		return $default_shipping;
+	}
+
     public function getShippingMethodName()
     {
         $shipping_method = $this->getExtra('shipping_method');
-		if($shipping_method)
+		if(!$shipping_method)
 		{
-			return $shipping_method;
+			$shipping_repository = new ShippingMethodRepository();
+			$default_shipping = $shipping_repository->getDefault($this->module_srl, $this);
+			$this->setExtra('shipping_method', $default_shipping->name);
+
+			$shipping_method = $this->getExtra('shipping_method');
 		}
 
-		$shipping_repository = new ShippingMethodRepository();
-		$default_shipping = $shipping_repository->getDefault($this->module_srl);
-		return $default_shipping->name;
+		return $shipping_method;
     }
+
+	public function getShippingMethodVariant()
+	{
+		if(!$this->getShippingMethod()->hasVariants()) return null;
+		$shipping_variant = $this->getExtra('shipping_variant');
+
+		if(!$shipping_variant)
+		{
+			// If a variant hasn't been selected yet, we just return the first one
+			$shippingRepo = new ShippingMethodRepository();
+			$shipping_methods = $shippingRepo->getAvailableShippingMethodsAndTheirPrices($this->module_srl, $this);
+			$available_keys = array_keys($shipping_methods);
+			$selected_shipping_method = $this->getShippingMethodName();
+			foreach($available_keys as $key)
+			{
+				if(strpos($key, $selected_shipping_method) !== false)
+				{
+					$this->setExtra('shipping_variant', $key);
+					return $key;
+				}
+			}
+		}
+
+		return $shipping_variant;
+	}
 
     public function getPaymentMethodName()
     {
@@ -694,6 +780,41 @@ class Cart extends BaseItem implements IProductItemsContainer
 	{
 		return $this->getBillingAddress()->lastname;
 	}
+
+	public function getTotalWeight()
+	{
+		$products = $this->getProducts();
+		$weight = 0;
+		foreach($products as $product)
+		{
+			$weight += $product->weight;
+		}
+		return $weight;
+	}
+
+    /**
+     * @return Coupon|null
+     */
+    public function getCoupon()
+    {
+        /** @var $coupon Coupon */
+        if ((($coupon = self::$cache->get('coupon')) instanceof Coupon) && $coupon->isPersisted()) return $coupon;
+        if (is_numeric($id = $this->getExtra('coupon_srl'))) {
+            $repository = new CouponRepository;
+            if ($coupon = $repository->get($id)) {
+                //check validity of coupon daterange
+                $date1 = strtotime($coupon->valid_from && $coupon->valid_from!='null'  ? $coupon->valid_from : 'now');
+                $date2 = strtotime($coupon->valid_to && $coupon->valid_to!='null'  ? $coupon->valid_to : 'now');
+                if (time() < $date1 || time() > $date2) return null;
+                //check active
+                if (!$coupon->active) return null;
+                //check uses
+                if ($coupon->max_uses <= $coupon->uses) return null;
+                return self::$cache->set('coupon', $coupon);
+            }
+        }
+        return null;
+    }
 
     public function hasDownloadableProducts(){
         /** @var $cartProduct CartProduct */

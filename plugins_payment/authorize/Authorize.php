@@ -1,8 +1,15 @@
 <?php
-
+/**
+ * File containing the Authorize.NET payment plugin class
+ */
 require_once dirname(__FILE__) . '/../PaymentMethodAbstract.php';
 require_once dirname(__FILE__) . '/anet_php_sdk/AuthorizeNet.php';
 
+/**
+ * Class for integrating Authorize.NET payment gateway in XE Shop
+ *
+ * @author Corina Udrescu (corina.udrescu@arnia.ro)
+ */
 class Authorize extends PaymentMethodAbstract
 {
     const APPROVED = 1,
@@ -10,12 +17,23 @@ class Authorize extends PaymentMethodAbstract
         ERROR = 3,
         HELD_FOR_REVIEW = 4;
 
-    public function getDisplayName()
+	/**
+	 * User friendly name for this payment plugin
+	 *
+	 * @return string
+	 */
+	public function getDisplayName()
     {
         return 'Authorize.net AIM';
     }
 
-    public function getSelectPaymentHtml()
+	/**
+	 * HTML to display on the checkout page to the user
+	 * when listing the available payment methods
+	 *
+	 * @return string
+	 */
+	public function getSelectPaymentHtml()
     {
         return '<img src="modules/shop/plugins_payment/authorize/visa_mastercard.gif"
                     align="left"
@@ -77,7 +95,14 @@ class Authorize extends PaymentMethodAbstract
 //
 //    }
 
-    public function processPayment(Cart $cart, &$error_message)
+	/**
+	 * Process the payment
+	 *
+	 * @param Cart $cart
+	 * @param      $error_message
+	 * @return bool|mixed
+	 */
+	public function processPayment(Cart $cart, &$error_message)
     {
 		$cc_number = Context::get('cc_number');
 		$cc_exp_month = Context::get('cc_exp_month');
@@ -85,10 +110,10 @@ class Authorize extends PaymentMethodAbstract
 		$cc_cvv = Context::get('cc_cvv');
 
 		// Unset credit card info so that XE won't put it in session
-		Context::set('cc_number', null);
-		Context::set('cc_exp_month', null);
-		Context::set('cc_exp_year', null);
-		Context::set('cc_cvv', null);
+		Context::set('cc_number', NULL);
+		Context::set('cc_exp_month', NULL);
+		Context::set('cc_exp_year', NULL);
+		Context::set('cc_cvv', NULL);
 
 		if(!$cc_number)
 		{
@@ -145,7 +170,7 @@ class Authorize extends PaymentMethodAbstract
         if ($response->approved) {
             return TRUE;
         } else {
-			ShopLogger::log("Authorize.NET transaction failed: " . print_r($response, true));
+			ShopLogger::log("Authorize.NET transaction failed: " . print_r($response, TRUE));
             $error_message = "There was a problem with charging your credit card; Please try again or try a different payment method";
             return FALSE;
         }
@@ -159,9 +184,9 @@ class Authorize extends PaymentMethodAbstract
 		if(!isset($this->api_login_id) || !isset($this->transaction_key) || !isset($this->gateway_api_url))
 		{
 			$error_message = 'msg_authorize_missing_fields';
-			return false;
+			return FALSE;
 		}
-		return true;
+		return TRUE;
 	}
 }
 

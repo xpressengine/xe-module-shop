@@ -1,17 +1,37 @@
 <?php
-
+/**
+ * File containing the ShopMenu class
+ */
+/**
+ * Class representing a menu used in an XE shop
+ *
+ * Menus can be added from shop backend;
+ * they use the XE Core menu mechanism
+ *
+ * @author Corina Udrescu (corina.udrescu@arnia.ro)
+ */
 class ShopMenu
 {
     const MENU_TYPE_HEADER = 'header_menu',
             MENU_TYPE_FOOTER = 'footer_menu';
 
-    private $_menu = null;
+    private $_menu = NULL;
 
-    public function __construct($menu_srl)
+	/**
+	 * Constructor
+	 *
+	 * Checks to see if a menu cache file exists, and
+	 * if not it creates it <br />
+	 * Loads the menu from the cache file and saves it
+	 * in the $_menu private property
+	 *
+	 * @param $menu_srl
+	 */
+	public function __construct($menu_srl)
     {
         if(!isset($menu_srl))
         {
-            return null;
+            return NULL;
         }
         /**
          * @var menuAdminModel $menuModel
@@ -30,7 +50,15 @@ class ShopMenu
         return $menu;
     }
 
-    public function getHtml()
+	/**
+	 * Returns the HTML code for displaying a menu
+	 *
+	 * This is in order to hide the menu logic from
+	 * the template files
+	 *
+	 * @return string
+	 */
+	public function getHtml()
     {
         $menu_html = '<ul>';
         if($this->_menu)

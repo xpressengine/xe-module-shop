@@ -8,6 +8,7 @@
     <column name="status" type="char" size="1" default="Y" />
     <column name="default_value" type="varchar" size="255" />
     <column name="values" type="text" />
+    <column name="is_filter" type="text" />
     <column name="regdate" type="date" />
     <column name="last_update" type="date" />
 </table>

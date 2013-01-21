@@ -2,7 +2,7 @@
     /**
      * @class  shopController
      * @author NHN (developers@xpressengine.com)
-     * @brief  shop module Controller class
+     *  shop module Controller class
      **/
 
     class shopController extends shop {
@@ -15,7 +15,7 @@
         protected $cartBeforeLogin;
 
         /**
-         * @brief Initialization
+         * Initialization
          **/
         public function init() {
             $this->model = getModel('shop');
@@ -37,6 +37,21 @@
             Context::set('shop',$this->shop);
         }
 
+        public function procShopFilter()
+        {
+            if (!$goto = Context::get('goto') ? Context::get('goto') : $_SERVER['HTTP_REFERER']) {
+                throw new ShopException('Nowhere to go back to');
+            }
+            if (isset($_GET['filter']) && is_array($filters = $_GET['filter'])) {
+                /**
+                 * Context::get doesn't seem to work for arrays (such as filter)
+                 * so we must perform strict input checks to avoid injections.
+                 */
+                $goto = FrontFilters::redirectUrl($goto, $filters);
+            }
+            $this->setRedirectUrl($goto);
+        }
+
         public function procShopSort()
         {
             if (!in_array($sort = Context::get('sort'), array('price_asc', 'price_desc'))) {
@@ -50,14 +65,14 @@
         public function procShopToggleGridView()
         {
             $mode = Context::get('mode');
-            if ($mode == 'grid') $sess = true;
-            elseif ($mode == 'list') $sess = false;
+            if ($mode == 'grid') $sess = TRUE;
+            elseif ($mode == 'list') $sess = FALSE;
             else throw new ShopException("Invalid setting $mode");
             $_SESSION['grid_view'] = $sess;
             $this->setRedirectUrlIfNoReferer(getNotEncodedUrl('', 'act', 'dispShopHome'));
         }
 
-        public function procShopLogin($user_id = null, $password = null, $keep_signed = null) {
+        public function procShopLogin($user_id = NULL, $password = NULL, $keep_signed = NULL) {
             $oMemberController = getController('member');
 
             if(!$user_id) $user_id = Context::get('user_id');
@@ -92,6 +107,32 @@
 			$vid = Context::get('vid');
 			$returnUrl = Context::get('success_return_url') ? Context::get('success_return_url') : getNotEncodedUrl('', 'act', 'dispShopToolDashboard', 'vid', $vid);
 			$this->setRedirectUrl($returnUrl);
+        }
+
+        function updateShopCommentEditor($module_srl, $comment_editor_skin, $comment_editor_colorset) {
+            $oEditorModel = &getModel('editor');
+            $oModuleController = &getController('module');
+
+            $editor_config = $oEditorModel->getEditorConfig($module_srl);
+
+            $editor_config->editor_skin = 'dreditor';
+            $editor_config->content_style = 'default';
+            $editor_config->content_font = null;
+            $editor_config->comment_editor_skin = $comment_editor_skin;
+            $editor_config->sel_editor_colorset = null;
+            $editor_config->sel_comment_editor_colorset = $comment_editor_colorset;
+            $editor_config->enable_html_grant = array(1);
+            $editor_config->enable_comment_html_grant = array(1);
+            $editor_config->upload_file_grant = array(1);
+            $editor_config->comment_upload_file_grant = array(1);
+            $editor_config->enable_default_component_grant = array(1);
+            $editor_config->enable_comment_default_component_grant = array(1);
+            $editor_config->enable_component_grant = array(1);
+            $editor_config->enable_comment_component_grant = array(1);
+            $editor_config->editor_height = 500;
+            $editor_config->comment_editor_height = 100;
+            $editor_config->enable_autosave = 'N';
+            $oModuleController->insertModulePartConfig('editor',$module_srl,$editor_config);
         }
 
         public function procShopSignToNewsletter(){
@@ -207,7 +248,7 @@
 
 
         /**
-         * @brief shop colorset modify
+         * shop colorset modify
          **/
         public function procShopColorsetModify() {
             $oShopModel = $this->model;
@@ -223,11 +264,12 @@
             $this->setTemplateFile('move_myshop');
         }
 
-        /*
-         * brief function for product insert
-         * @author Dan Dragan (dev@xpressengine.org)
+        /**
+         * insert product function
+         * @return Object
          */
-        public function procShopToolInsertProduct(){
+        public function procShopToolInsertProduct()
+        {
             global $lang;
             $shopModel = $this->model;
             $productRepository = $shopModel->getProductRepository();
@@ -259,7 +301,7 @@
                 $oDB = &DB::getInstance();//TODO review this: may fail for a pool of instances?
                 $oDB->begin();
 
-                if($product->product_srl === NULL)
+                if (!$product->isPersisted())
                 {
                     // add a new product
                     $product_srl = $productRepository->insertProduct($product);
@@ -287,8 +329,10 @@
                 {
                     // edit an existing product
 					$product->delete_images = $args->delete;
+
                     $productRepository->updateProduct($product);
-					if($product->isSimple())
+
+                    if ($product->isSimple())
 					{
 						$this->setMessage($lang->simple_product_updated_successfully);
 					}
@@ -335,6 +379,7 @@
 			$product = $productRepository->getProduct($product_srl);
 			$product->title = 'Copy of '.$product->title;
 			$product->sku = 'Copy-'.$product->sku;
+            $product->friendly_url = ($product->friendly_url ? $product->friendly_url : ShopUtils::slugify($product->title)) . "_copy";
 			foreach($product->images as $image){
 				unset($image->image_srl);
 				$path = sprintf('./files/attach/images/shop/%d/product-images/%d/', $image->module_srl , $image->product_srl);
@@ -351,6 +396,32 @@
 			$returnUrl = getNotEncodedUrl('', 'act', 'dispShopToolManageProducts');
 			$this->setRedirectUrl($returnUrl);
 		}
+
+        /**
+         * call it through ajax (json)
+         * @throws ShopException
+         */
+        public function procShopToolCheckFriendlyUrlAvailability()
+        {
+            if (!$type = Context::get('type')) $type = 'product';
+            if (!$slug = Context::get('slug')) {
+                //throw new ShopException('Missing slug');
+                $this->add('notAvailable', FALSE);
+                return;
+            }
+
+            if ($type == 'product') {
+                $repo = new ProductRepository();
+                $object = $repo->getProductByFriendlyUrl($slug);
+            }
+            elseif ($type == 'category') {
+                $repo = new CategoryRepository();
+                $object = $repo->getCategoryByFriendlyUrl($slug);
+            }
+            else throw new ShopException('Invalid entity type');
+
+            $this->add('notAvailable', (boolean) $object);
+        }
 
 		/*
 		* brief function for export products to csv
@@ -433,11 +504,11 @@
             $this->setRedirectUrl($returnUrl);
         }
 
-		/*
-		* brief function for associated products insert
-		* @author Dan Dragan (dev@xpressengine.org)
-		*/
-		public function procShopToolInsertAssociatedProducts(){
+        /**
+         * insert asssociated products
+         * @return Object
+         */
+        public function procShopToolInsertAssociatedProducts(){
 			/**
 			 * @var shopModel $shopModel
 			 */
@@ -461,16 +532,21 @@
 			$this->setRedirectUrl($returnUrl);
 		}
 
-        /*
-         * @brief function for attribute insert
-         * @author Florin Ercus (dev@xpressengine.org)
+        /**
+         * insert attribute
+         * @return Object
          */
-        public function procShopToolInsertAttribute() {
-            $shopModel = $this->model;
-            /** @var $repository AttributeRepository */
-            $repository = $shopModel->getAttributeRepository();
+        public function procShopToolInsertAttribute()
+        {
+            $repository = new AttributeRepository();
 
             $args = Context::getRequestVars();
+            $args->is_filter  = (int)(bool)$args->is_filter;
+            if ($args->is_filter) {
+                if (!in_array($args->type, array(AttributeRepository::TYPE_SELECT, AttributeRepository::TYPE_SELECT_MULTIPLE, AttributeRepository::TYPE_NUMERIC))) {
+                    $args->is_filter = 0;
+                }
+            }
             $args->module_srl = $this->module_info->module_srl;
             $logged_info = Context::get('logged_info');
             $args->member_srl = $logged_info->member_srl;
@@ -480,7 +556,7 @@
             try
             {
                 if ($attribute->attribute_srl) {
-                    $output = $repository->updateAttribute($attribute);
+                    $repository->updateAttribute($attribute);
                     $this->setMessage("success_updated");
                 }
                 else {
@@ -488,7 +564,7 @@
                     $this->setMessage("success_registed");
                 }
             }
-            catch(Exception $e) {
+            catch (Exception $e) {
                 return new Object(-1, $e->getMessage());
             }
 
@@ -496,11 +572,78 @@
             $this->setRedirectUrl($returnUrl);
         }
 
-        /*
-        * @brief function for address insert
-        * @author Dan Dragan (dev@xpressengine.org)
-        */
-        public function procShopToolInsertAddress() {
+        /**
+         * Inserts single codes, generates bulks
+         */
+        public function procShopToolInsertCoupon()
+        {
+            $repository = new CouponRepository();
+            $args = Context::getRequestVars();
+            $args->active = (int) $args->active;
+            $args->module_srl = $this->module_info->module_srl;
+            $logged_info = Context::get('logged_info');
+            if ($logged_info->member_srl) $args->member_srl = $logged_info->member_srl;
+            $args->ip = $_SERVER['REMOTE_ADDR'];
+            $coupon = new Coupon($args);
+            try {
+                /**
+                 * Update [both]
+                 */
+                if ($coupon->isPersisted() && $exists = $repository->get($coupon->srl)) { //
+                    /** @var $exists Coupon */
+                    $coupon->type = $exists->type;
+                    $out = $coupon->save();
+                    $repository->check($out);
+                    if ($coupon->isGroup()) {
+                        $this->setMessage("Updated group <b>{$coupon->name}</b>");
+                    }
+                    elseif ($coupon->isSingle()) {
+                        $this->setMessage("Updated coupon <b>{$coupon->code}</b>");
+                    }
+                }
+                /**
+                 * Group Insert
+                 */
+                elseif (is_numeric($n = Context::get('codes_number')) && $n > 1) {
+                    $coupon->type = Coupon::TYPE_PARENT;
+                    $out = $coupon->save();
+                    $repository->check($out);
+                    $length = Context::get('code_length');
+                    $type = Context::get('code_type');
+                    $pattern = Context::get('code_pattern');
+                    if (!strstr($pattern, 'CODE')) throw new ShopException('Pattern must contain "CODE"');
+                    $pattern = str_replace('CODE', 'X', $pattern);
+                    $separateEvery = Context::get('separate_at');
+                    $coupons = $coupon->generateBulk($n, $length, $type, $pattern, $separateEvery);
+                    $this->setMessage('Generated ' . count($coupons) . ' (grouped) coupons');
+                }
+                /**
+                 * Single insert
+                 */
+                else {
+                    $coupon->type = Coupon::TYPE_SINGLE;
+                    $out = $coupon->save();
+                    $repository->check($out);
+                    $this->setMessage("Generated single coupon with code <b>{$coupon->code}</b>");
+                }
+            }
+            catch (Exception $e) {
+                $msg = $e->getMessage();
+                if (strstr($msg, 'unique_module_code')) {
+                    $msg = "Code '<b>{$coupon->code}</b>' is already in use";
+                }
+                return new Object(-1, $msg);
+            }
+            $this->setRedirectUrl(getNotEncodedUrl('', 'act', 'dispShopToolDiscountCodes', 'highlight', $coupon->srl));
+        }
+
+
+        /**
+         * insert address
+         * @return Object
+         */
+        public function procShopToolInsertAddress()
+        {
             $shopModel = $this->model;
             $addressRepository = $shopModel->getAddressRepository();
 
@@ -526,11 +669,12 @@
             $this->setRedirectUrl($returnUrl);
         }
 
-        /*
-        * @brief function for admin account update
-        * @author Dan Dragan (dev@xpressengine.org)
-        */
-        public function procShopToolAccountUpdate(){
+        /**
+         * update account
+         * @return Object
+         */
+        public function procShopToolAccountUpdate()
+        {
             $oMemberController = &getController('member');
 
             // nickname, email
@@ -550,16 +694,17 @@
             $this->setRedirectUrl($returnUrl);
         }
 
-        /*
-        * @brief function for shop info update
-        * @author Dan Dragan (dev@xpressengine.org)
-        */
-        public function procShopToolInfoUpdate(){
+        /**
+         * info update
+         * @return object
+         */
+        public function procShopToolInfoUpdate()
+        {
             $oModuleController = &getController('module');
             $oModuleModel = &getModel('module');
             $oShopModel = &getModel('shop');
 
-            $args = Context::gets('shop_title','shop_content','shop_email','timezone','telephone','address','currency','VAT','show_VAT','out_of_stock_products','minimum_order');
+            $args = Context::gets('shop_title','shop_content','shop_email','timezone','telephone','address','unit_of_measure','currency','VAT','show_VAT','out_of_stock_products','minimum_order');
             $args->module_srl = $this->module_srl;
             $currencies = require_once(_XE_PATH_.'modules/shop/shop.currencies.php');
             $args->currency_symbol = $currencies[$args->currency]['symbol'];
@@ -596,11 +741,12 @@
             $this->setRedirectUrl($returnUrl);
         }
 
-        /*
-        * @brief function for discount info update
-        * @author Dan Dragan (dev@xpressengine.org)
-        */
-        public function procShopToolDiscountUpdate(){
+        /**
+         * discount update
+         * @return object
+         */
+        public function procShopToolDiscountUpdate()
+        {
             $args = Context::gets('discount_min_amount','discount_type','discount_amount','discount_tax_phase');
             $args->module_srl = $this->module_srl;
             if($args->discount_amount >= $args->discount_min_amount){
@@ -625,7 +771,13 @@
             $this->setRedirectUrl($returnUrl);
         }
 
-        public function insertShopFavicon($module_srl, $source) {
+        /**
+         * insert shop favicon
+         * @param $module_srl
+         * @param $source
+         */
+        public function insertShopFavicon($module_srl, $source)
+        {
             $oShopModel = &getModel('shop');
             $path = $oShopModel->getShopFaviconPath($module_srl);
             if(!is_dir($path)) FileHandler::makeDir($path);
@@ -633,7 +785,12 @@
             move_uploaded_file($source, $filename);
         }
 
-        public function deleteShopFavicon($module_srl){
+        /**
+         * delete shop favicon
+         * @param $module_srl
+         */
+        public function deleteShopFavicon($module_srl)
+        {
             $oShopModel = &getModel('shop');
             $path = $oShopModel->getShopFaviconPath($module_srl);
             $filename = sprintf('%s/favicon.ico', $path);
@@ -653,6 +810,10 @@
             $this->setRedirectUrl($url);
         }
 
+        /**
+         * proc shop renew order
+         * @return Object
+         */
         public function procShopRenewOrder(){
             $shopModel = $this->model;
             $orderRepository = $shopModel->getOrderRepository();
@@ -667,7 +828,7 @@
             }
 
             $order_items = $orderRepository->getOrderProductItems($order);
-            $cart = $cartRepository->getCart($this->module_info->module_srl,null,$logged_info->member_srl, session_id(), true);
+            $cart = $cartRepository->getCart($this->module_info->module_srl,NULL,$logged_info->member_srl, session_id(), TRUE);
             $cartRepository->deleteCartProducts($cart->cart_srl);
             foreach($order_items as $item){
                 $cart->addProduct($item,$item->quantity);
@@ -675,6 +836,136 @@
             $this->setMessage("Ordered renewed");
             $returnUrl = getNotEncodedUrl('', 'act', 'dispShopCart');
             $this->setRedirectUrl($returnUrl);
+        }
+
+        public function procShopPrintOrder(){
+
+            $orderRepo = new OrderRepository();
+            $order = $orderRepo->getOrderBySrl(Context::get('order_srl'));
+            $this->printPDFOrder($order);
+        }
+
+        public function procShopToolPrintOrder(){
+
+            $orderRepo = new OrderRepository();
+            $order = $orderRepo->getOrderBySrl(Context::get('order_srl'));
+            $this->printPDFOrder($order);
+        }
+
+        /**
+         * print PDF order
+         * @param Order $order
+         */
+        private function printPDFOrder(Order $order){
+
+            global $lang;
+            $product_items = $order->getProducts();
+            $shop = new ShopInfo($this->module_srl);
+            $this->model->includeTCPDF();
+
+            // create new PDF document
+            $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, TRUE, 'UTF-8', FALSE);
+
+            // set document information
+            $pdf->SetCreator($shop->getShopTitle());
+            $pdf->SetTitle(sprintf($lang->order_with_number, $order->order_srl));
+            $pdf->SetSubject(sprintf($lang->order_with_number, $order->order_srl));
+
+            $pdf->setPrintHeader(FALSE);
+            $pdf->setPrintFooter(FALSE);
+
+            // set font
+            $pdf->SetFont('dejavusans', '', 10);
+
+            // add a page
+            $pdf->AddPage();
+
+
+            // create HTML content
+            $html = '
+            <div style="float:left; text-align: center;">'.$shop->getShopTitle().'</div>
+            <h1>'.sprintf($lang->order_with_number, $order->order_srl).'</h1>
+            <p></p>
+            Order date: '.zdate($order->regdate,'d-M-y').'
+            <p></p><h3>'.$lang->shipping_address.'</h3>'.$order->shipping_address.'
+            <p></p><h3>'.$lang->billing_address.'</h3>'.$order->billing_address.'
+            <p></p><h3>'.$lang->payment_method_used.'</h3>'.ucwords(str_replace('_', ' ', $order->payment_method)).'
+            <p></p><h3>'.$lang->shipping_method_used.'</h3>'.ucwords(str_replace('_', ' ', $order->shipping_method)).'
+            <p></p><h3>'.$lang->items_ordered.'</h3></br>';
+
+            // output the HTML content
+            $pdf->writeHTML($html, TRUE, FALSE, TRUE, FALSE, '');
+
+            // Colors, line width and bold font
+            $pdf->SetFillColor(38, 74, 108);
+            $pdf->SetTextColor(255);
+            $pdf->SetDrawColor(38, 74, 108);
+            $pdf->SetLineWidth(0.3);
+            $pdf->SetFont('', 'B');
+            // Header
+            $w = array(15, 70, 20, 45, 45);
+            $header= $header = array($lang->product_no_dot, $lang->title, $lang->quantity, $lang->price, $lang->subtotal);
+            $num_headers = count($header);
+            for($i = 0; $i < $num_headers; ++$i) {
+                $pdf->Cell($w[$i], 7, $header[$i], 1, 0, 'C', 1);
+            }
+            $pdf->Ln();
+            // Color and font restoration
+            $pdf->SetFillColor(224, 235, 255);
+            $pdf->SetTextColor(0);
+            $pdf->SetFont('');
+            // Data
+            $fill = 0;
+            $i = 0;
+            foreach($product_items as $product){
+                $i++;
+                $pdf->Cell($w[0], 6, $i, 'LR', 0, 'C', $fill);
+                $pdf->Cell($w[1], 6, $product->getTitle(), 'LR', 0, 'L', $fill);
+                $pdf->Cell($w[2], 6, $product->getQuantity(), 'LR', 0, 'R', $fill);
+                $pdf->Cell($w[3], 6, ShopDisplay::priceFormat($product->getPrice(), $shop->getCurrencySymbol()), 'LR', 0, 'R', $fill);
+                $pdf->Cell($w[4], 6, ShopDisplay::priceFormat($product->getPrice() * $product->getQuantity(), $shop->getCurrencySymbol()), 'LR', 0, 'R', $fill);
+                $pdf->Ln();
+                $fill=!$fill;
+            }
+
+            $pdf->Cell(array_sum($w) - $w[4], 6, $lang->total, 1, 0, 'R',$fill);
+            $pdf->Cell($w[4], 6, ShopDisplay::priceFormat($order->getTotalBeforeDiscount(), $shop->getCurrencySymbol()), 1, 0, 'R',$fill);
+            $fill=!$fill;
+            $pdf->Ln();
+
+            if($order->getDiscountAmount()){
+                $pdf->Cell(array_sum($w) - $w[4], 6, $lang->discount, 1, 0, 'R',$fill);
+                $pdf->Cell($w[4], 6, ShopDisplay::priceFormat(-1 * $order->getDiscountAmount(), $shop->getCurrencySymbol()), 1, 0, 'R',$fill);
+                $fill=!$fill;
+                $pdf->Ln();
+            }
+
+            if($order->getShippingMethodName()){
+                $pdf->Cell(array_sum($w) - $w[4], 6, $lang->shipping, 1, 0, 'R',$fill);
+                $pdf->Cell($w[4], 6, ShopDisplay::priceFormat($order->getShippingCost(), $shop->getCurrencySymbol()), 1, 0, 'R',$fill);
+                $fill=!$fill;
+                $pdf->Ln();
+            }
+
+            $pdf->SetFont('', 'B');
+            $pdf->Cell(array_sum($w) - $w[4], 6, $lang->grand_total, 1, 0, 'R',$fill);
+            $pdf->Cell($w[4], 6, ShopDisplay::priceFormat($order->getTotal(), $shop->getCurrencySymbol()), 1, 0, 'R',$fill);
+            $fill=!$fill;
+            $pdf->Ln();
+            $pdf->SetFont('');
+
+            if($shop->showVAT()){
+                $pdf->Cell(array_sum($w) - $w[4], 6, $lang->taxes, 1, 0, 'R',$fill);
+                $pdf->Cell($w[4], 6, ShopDisplay::priceFormat($order->getVAT(), $shop->getCurrencySymbol()), 1, 0, 'R',$fill);
+                $fill=!$fill;
+                $pdf->Ln();
+            }
+
+            $pdf->Cell(array_sum($w), 0, '', 'T');
+
+
+            //Close and output PDF document
+            $pdf->Output(sprintf($lang->order_with_number, $order->order_srl), 'I');
         }
 
         public function procShopToolManageProducts()
@@ -697,8 +988,10 @@
             $this->setRedirectUrl(call_user_func_array('getNotEncodedUrl', $params));
         }
 
-        /*
-         * @author Florin Ercus (dev@xpressengine.org)
+        /**
+         * checkout login
+         * @return Object|void
+         * @throws ShopException
          */
         public function procShopCheckoutLogin()
         {
@@ -719,76 +1012,141 @@
             else return new Object(-1, 'Username / password?');
         }
 
-        /*
-         * @author Florin Ercus (dev@xpressengine.org)
+        /**
+         * persist cart
+         * @param $cart
+         * @throws ShopException
          */
-        public function procShopToolCheckout()
-        {
-            $cartRepo = new CartRepository();
-            $logged_info = Context::get('logged_info');
+        private function persistCart(&$cart)
+		{
+			$cartRepo = new CartRepository();
+			$logged_info = Context::get('logged_info');
             global $lang;
 
-            //get or create cart:
-            if ($cart = $cartRepo->getCart($this->module_info->module_srl, null, $logged_info->member_srl, session_id(), true))
-            {
-
-                $haveShipping = (Context::get('different_shipping') == 'yes');
-                $shipping = Context::get('shipping');
-                if (!$haveShipping)
+			//get or create cart:
+			if ($cart = $cartRepo->getCart($this->module_info->module_srl, NULL, $logged_info->member_srl, session_id(), TRUE))
+			{
+				$shipping = Context::get('shipping');
+				$usesNewShippingAddress = ($shipping["address"] == "new");
+				$hasDifferentShippng = (Context::get("different_shipping") == "yes");
+				if (!$hasDifferentShippng)
 				{
 					$billing = Context::get('billing');
 					$shipping['address'] = $billing['address'];
 				}
 
-                try {
-                    $cart->checkout(array(
-                        'billing'  => Context::get('billing'),
-                        'new_billing_address' => Context::get('new_billing_address'),
-                        'shipping' => $shipping, // MUST send shipping, otherwise shipping_method is lost
-                        'new_shipping_address' => $haveShipping ? Context::get('new_shipping_address') : null,
-                        'payment'  => Context::get('payment'),
-                    ));
-                }
-                catch (Exception $e) {
-                    return new Object(-1, $e->getMessage());
-                }
-
-                // Get selected payment method name
-                $payment = Context::get('payment');
-                $payment_method_name = $payment['method'];
-
-                // Get payment class
-                $payment_repository = new PaymentMethodRepository();
-                try {
-                    $payment_method = $payment_repository->getPaymentMethod($payment_method_name, $this->module_srl);
-                }
-                catch (Exception $e) {
-                    return new Object(-1, $e->getMessage());
-                }
-
-                $error_message = '';
-                if(!$payment_method->onCheckoutFormSubmit($cart, $error_message))
-                {
-                    //if no error message return, most probably the call timed out
-                    $error_message = (" ( )" == $error_message ? $lang->payment_service_timed_out : $error_message );
-
-                    $this->setMessage($error_message, 'error');
-                    $vid = Context::get('vid');
-                    $return_url = getNotEncodedUrl('', 'vid', $vid, 'act', 'dispShopCheckout');
-                    $this->setRedirectUrl($return_url);
-                }
-                else
-                {
-                    $this->setRedirectUrl(getNotEncodedUrl('', 'act', 'dispShopPlaceOrder'));
-                }
+				$cart->checkout(array(
+					'billing'  => Context::get('billing'),
+					'new_billing_address' => Context::get('new_billing_address'),
+					'shipping' => $shipping, // MUST send shipping, otherwise shipping_method is lost
+					'new_shipping_address' => $usesNewShippingAddress ? Context::get('new_shipping_address') : NULL,
+					'payment'  => Context::get('payment'),
+                    'discount_code' => Context::get('code')
+				));
+			}
+			else {
+                throw new ShopException('No cart');
             }
-            else throw new ShopException('No cart');
+		}
+
+		/**
+		 * Persist the new input values and refreshes dropdown values and all based on new addresses, for example
+		 */
+		public function procShopToolRefreshCheckout()
+		{
+			$cart = NULL;
+			try
+			{
+				$this->persistCart($cart);
+			}
+			catch(Exception $exception)
+			{
+				return new Object(-1, $exception->getMessage());
+			}
+
+			$vid = Context::get('vid');
+			$return_url = getNotEncodedUrl('', 'vid', $vid, 'act', 'dispShopCheckout');
+			$this->setRedirectUrl($return_url);
+		}
+
+		/**
+		 * Persist cart via Ajax
+		 */
+		public function procShopToolUpdateCheckout()
+		{
+			$cart = NULL;
+			try
+			{
+				$this->persistCart($cart);
+			}
+			catch(Exception $exception)
+			{
+				return new Object(-1, $exception->getMessage());
+			}
+
+			$this->add('cart', $cart);
+
+			$shippingRepo = new ShippingMethodRepository();
+			// Init the list of all available methods
+			$shipping_methods = $shippingRepo->getAvailableShippingMethodsAndTheirPrices($this->module_srl, $cart);
+			$this->add('shipping_methods', $shipping_methods);
+
+			// Setup the selected shipping method - check if using default value or value from cart;
+			$selected_shipping_method = $cart->getShippingMethodName();
+			$selected_shipping_method .= $cart->getShippingMethodVariant() ? '__' . $cart->getShippingMethodVariant() : '';
+			$this->add('selected_shipping_method', $selected_shipping_method);
+		}
+
+        /**
+         * checkout
+         * @return Object
+         */
+        public function procShopToolCheckout()
+        {
+			$cart = NULL;
+			try
+			{
+				$this->persistCart($cart);
+			}
+			catch(Exception $exception)
+			{
+				return new Object(-1, $exception->getMessage());
+			}
+
+
+			// Get selected payment method name
+			$payment = Context::get('payment');
+			$payment_method_name = $payment['method'];
+
+			// Get payment class
+			$payment_repository = new PaymentMethodRepository();
+			try {
+				$payment_method = $payment_repository->getPaymentMethod($payment_method_name, $this->module_srl);
+			}
+			catch (Exception $e) {
+				return new Object(-1, $e->getMessage());
+			}
+
+			$error_message = '';
+			if(!$payment_method->onCheckoutFormSubmit($cart, $error_message))
+			{
+				// if no error message return, most probably the call timed out
+				$error_message = (" ( )" == $error_message ? $lang->payment_service_timed_out : $error_message );
+				$this->setMessage($error_message, 'error');
+				$vid = Context::get('vid');
+				$return_url = getNotEncodedUrl('', 'vid', $vid, 'act', 'dispShopCheckout');
+				$this->setRedirectUrl($return_url);
+			}
+			else
+			{
+				$this->setRedirectUrl(getNotEncodedUrl('', 'act', 'dispShopPlaceOrder'));
+			}
         }
 
-        /*
-        * @brief function for holding order
-        * @author Dan Dragan (dev@xpressengine.org)
-        */
+        /**
+         * hold order
+         * @return Object
+         */
         public function procShopToolHoldOrder(){
             $order_srl = Context::get('order_srl');
             $orderRepository = $this->model->getOrderRepository();
@@ -805,10 +1163,10 @@
             $this->setRedirectUrl($return_url);
         }
 
-        /*
-        * @brief function for unholding order
-        * @author Dan Dragan (dev@xpressengine.org)
-        */
+        /**
+         * unhold order
+         * @return Object
+         */
         public function procShopToolUnholdOrder(){
             $order_srl = Context::get('order_srl');
             $orderRepository = $this->model->getOrderRepository();
@@ -826,10 +1184,10 @@
             $this->setRedirectUrl($return_url);
         }
 
-        /*
-        * @brief function for cancelling order
-        * @author Dan Dragan (dev@xpressengine.org)
-        */
+        /**
+         * cancel order
+         * @return Object
+         */
         public function procShopToolCancelOrder(){
             $order_srl = Context::get('order_srl');
             $orderRepository = $this->model->getOrderRepository();
@@ -846,10 +1204,11 @@
             $this->setRedirectUrl($return_url);
         }
 
-        /*
-        * @brief function for adding order invoice
-        * @author Dan Dragan (dev@xpressengine.org)
-        */
+        /**
+         * insert invoice
+         * @return Object
+         * @throws ShopException
+         */
         public function procShopToolInsertInvoice(){
             $order_srl = Context::get('order_srl');
             $orderRepository = $this->model->getOrderRepository();
@@ -859,7 +1218,7 @@
             $args->order_srl = $order_srl;
             $args->module_srl = $order->module_srl;
             $invoice = new Invoice($args);
-            if(!isset($invoice->invoice_srl)) $insert=true;
+            if(!isset($invoice->invoice_srl)) $insert=TRUE;
             $invoice->save();
             if($invoice->invoice_srl){
                 if(isset($order->shipment)) $order->order_status = Order::ORDER_STATUS_COMPLETED;
@@ -885,10 +1244,11 @@
             }
         }
 
-        /*
-        * @brief function for adding order shipment
-        * @author Dan Dragan (dev@xpressengine.org)
-        */
+        /**
+         * insert shipment
+         * @return Object
+         * @throws ShopException
+         */
         public function procShopToolInsertShipment(){
             $order_srl = Context::get('order_srl');
             $orderRepository = $this->model->getOrderRepository();
@@ -899,7 +1259,7 @@
             $args->module_srl = $order->module_srl;
             $shipment = new Shipment($args);
             $shipment->order = $order;
-            if(!isset($shipment->shipment_srl)) $insert = true;
+            if(!isset($shipment->shipment_srl)) $insert = TRUE;
             try{
                 if($insert) {
                     $productsEmptyStocks = $shipment->checkAndUpdateStocks();
@@ -938,11 +1298,15 @@
             }
         }
 
+        /**
+         * place order
+         * @return Object
+         */
         public function procShopPlaceOrder()
         {
             $cartRepo = new CartRepository();
             $logged_info = Context::get('logged_info');
-            $cart = $cartRepo->getCart($this->module_srl, null, $logged_info->member_srl, session_id());
+            $cart = $cartRepo->getCart($this->module_srl, NULL, $logged_info->member_srl, session_id());
 
             // Get payment class
             $payment_repository = new PaymentMethodRepository();
@@ -970,8 +1334,9 @@
             $this->setRedirectUrl(getNotEncodedUrl('', 'act', 'dispShopOrderConfirmation', 'order_srl', $order->order_srl));
         }
 
-        /*
-         * @author Florin Ercus (dev@xpressengine.org)
+        /**
+         * cart add product
+         * @return Object
          */
         public function procShopToolCartAddProduct()
         {
@@ -984,7 +1349,7 @@
                         return new Object(-1, 'msg_invalid_request');
                     }
                     $logged_info = Context::get('logged_info');
-                    $cart = $cartRepository->getCart($this->module_info->module_srl, null, $logged_info->member_srl, session_id(), true);
+                    $cart = $cartRepository->getCart($this->module_info->module_srl, NULL, $logged_info->member_srl, session_id(), TRUE);
                     $quantity = (is_numeric(Context::get('quantity')) && Context::get('quantity') > 0 ? Context::get('quantity') : 1);
                     try {
                         $cart->addProduct($product, $quantity);
@@ -1050,7 +1415,7 @@
         }
 
         /*
-        * @brief function for product delete
+        * function for product delete
         * @author Dan Dragan (dev@xpressengine.org)
         */
         public function procShopToolDeleteProduct() {
@@ -1069,7 +1434,7 @@
         }
 
         /*
-        * @brief function for multiple products delete
+        * function for multiple products delete
         * @author Dan Dragan (dev@xpressengine.org)
         */
         public function procShopToolDeleteProducts(){
@@ -1086,7 +1451,7 @@
         }
 
         /*
-        * @brief function for multiple attributes delete
+        * function for multiple attributes delete
         * @author Florin Ercus (dev@xpressengine.org)
         */
         public function procShopToolDeleteAttributes()
@@ -1098,6 +1463,26 @@
             $repository->deleteAttributes($args);
             $this->setMessage("success_deleted");
             $this->setRedirectUrl(getNotEncodedUrl('', 'act', 'dispShopToolManageAttributes'));
+        }
+
+        public function procShopToolDeleteCoupons()
+        {
+            $repository = new CouponRepository();
+            $srls = explode(',', Context::get('srls'));
+            //check if there are groups among those srls
+            foreach ($srls as $i=>$srl) {
+                /** @var $coupon Coupon */
+                if (is_numeric($srl) && $coupon = $repository->get($srl)) {
+                    if (!$coupon->parent_srl) {
+                        $repository->query('deleteCoupons', array('parent_srl'=>$coupon->srl));
+                        unset($srls[$i]);
+                    }
+                }
+                else unset($srls[$i]);
+            }
+            $repository->delete($srls);
+            $this->setMessage("success_deleted");
+            $this->setRedirectUrl(getNotEncodedUrl('', 'act', 'dispShopToolDiscountCodes'));
         }
 
         public function procShopToolFilterAttributes()
@@ -1146,13 +1531,17 @@
             $this->setRedirectUrlFromArray($params);
         }
 
+        /**
+         * set redirect url from array
+         * @param array $params
+         */
         public function setRedirectUrlFromArray(array $params)
         {
             $this->setRedirectUrl(call_user_func_array('getNotEncodedUrl', $params));
         }
 
         /*
-        * @brief function for customer insertion
+        * function for customer insertion
         * @author Dan Dragan (dev@xpressengine.org)
         */
         public function procShopToolCustomerInsert(){
@@ -1193,10 +1582,10 @@
             $this->setRedirectUrl(getNotEncodedUrl('', 'act', 'dispShopToolManageCustomers'));
         }
 
-        /*
-        * @brief function for multiple customers delete
-        * @author Dan Dragan (dev@xpressengine.org)
-        */
+        /**
+         * delete customers
+         * @return Object
+         */
         public function procShopToolDeleteCustomers()
         {
             $shopModel = $this->model;
@@ -1204,7 +1593,7 @@
             if(!$target_member_srls) return new Object(-1, 'msg_invalid_request');
             $member_srls = explode(',', $target_member_srls);
             $oMemberController = &getController('member');
-            $oMemberController->memberInfo = null;
+            $oMemberController->memberInfo = NULL;
 
             foreach($member_srls as $member) {
                 $output = $oMemberController->deleteMember($member);
@@ -1218,10 +1607,10 @@
             $this->setRedirectUrl(getNotEncodedUrl('', 'act', 'dispShopToolManageCustomers'));
         }
 
-        /*
-        * @brief function for multiple customers unsubscription
-        * @author Dan Dragan (dev@xpressengine.org)
-        */
+        /**
+         * unsubscribe customers
+         * @return Object
+         */
         public function procShopToolUnsubscribeCustomers(){
             $shopModel = $this->model;
             $target_member_srls = Context::get('target_member_srls');
@@ -1241,7 +1630,7 @@
         }
 
         /*
-        * @brief function for multiple newsletter delete
+        * function for multiple newsletter delete
         * @author Dan Dragan (dev@xpressengine.org)
         */
         public function procShopToolDeleteNewsletters(){
@@ -1254,10 +1643,10 @@
             $this->setRedirectUrl(getNotEncodedUrl('', 'act', 'dispShopToolManageNewsletters'));
         }
 
-        /*
-        * @brief function to send and add newsletter
-        * @author Dan Dragan (dev@xpressengine.org)
-        */
+        /**
+         * send newsletter
+         * @return Object
+         */
         public function procShopToolSendNewsletter(){
             $shopModel = $this->model;
             $newsletterRepository = $shopModel->getNewsletterRepository();
@@ -1287,10 +1676,10 @@
         }
 
 
-        /*
-        * @brief function for multiple customers delete
-        * @author Dan Dragan (dev@xpressengine.org)
-        */
+        /**
+         * delete addresses
+         * @return mixed|Object
+         */
         public function procShopToolDeleteAddresses(){
             $shopModel = $this->model;
             $addressRepository = $shopModel->getAddressRepository();
@@ -1312,6 +1701,10 @@
             $this->setRedirectUrl($returnUrl);
         }
 
+        /**
+         * layout config skin
+         * @return Object
+         */
         public function procShopToolLayoutConfigSkin() {
             $oModuleModel = getModel('module');
             $oModuleController = getController('module');
@@ -1349,6 +1742,11 @@
             $this->resetSkin($this->module_srl, $skin);
         }
 
+        /**
+         * reset skin
+         * @param $module_srl
+         * @param null $skin
+         */
         public function resetSkin($module_srl,$skin=NULL){
             if(!$skin) $skin = $this->skin;
             if(!file_exists($this->module_path.'skins/'.$skin)) $skin = $this->skin;
@@ -1357,7 +1755,10 @@
             FileHandler::copyDir($this->module_path.'skins/'.$skin, $oShopModel->getShopPath($module_srl));
         }
 
-
+        /**
+         * layout config edit
+         * @return Object
+         */
         public function procShopToolLayoutConfigEdit() {
             if(in_array(strtolower('dispShopToolLayoutConfigEdit'),$this->custom_menu->hidden_menu)) return new Object(-1,'msg_invalid_request');
 
@@ -1379,6 +1780,10 @@
 			$this->setRedirectUrl($returnUrl);
         }
 
+        /**
+         * user skin export
+         * @return Object
+         */
         public function procShopToolUserSkinExport(){
             if(!$this->module_srl) return new Object('-1','msg_invalid_request');
 
@@ -1398,7 +1803,7 @@
             $tar = new tar();
 
             $replace_path = getNumberingPath($this->module_srl,3);
-            foreach($tar_list as $key => $file) $tar->addFile($file,$replace_path,'__TEXTYLE_SKIN_PATH__');
+            foreach($tar_list as $key => $file) $tar->addFile($file,$replace_path,'__SHOP_SKIN_PATH__');
 
             $stream = $tar->toTarStream();
             $filename = 'ShopUserSkin_' . date('YmdHis') . '.tar';
@@ -1442,13 +1847,17 @@
 
             $replace_path = getNumberingPath($this->module_srl,3);
             foreach($tar->files as $key => $info) {
-                FileHandler::writeFile($skin_path . $info['name'],str_replace('__TEXTYLE_SKIN_PATH__',$replace_path,$info['file']));
+                FileHandler::writeFile($skin_path . $info['name'],str_replace('__SHOP_SKIN_PATH__',$replace_path,$info['file']));
             }
 
             FileHandler::removeFile($tar_file);
         }
 
-
+        /**
+         * check disabled function
+         * @param $str
+         * @return bool
+         */
         public function _checkDisabledFunction($str){
             if(preg_match('!<\?.*\?>!is',$str,$match)) return TRUE;
 
@@ -1482,7 +1891,7 @@
         }
 
         /**
-         * @brief shop insert config
+         * shop insert config
          **/
         public function insertShopConfig($shop) {
             $oModuleController = getController('module');
@@ -1490,7 +1899,7 @@
         }
 
         /**
-         * @brief shop update browser title
+         * shop update browser title
          **/
         public function updateShopBrowserTitle($module_srl, $browser_title) {
             $args = new stdClass();
@@ -1500,7 +1909,7 @@
         }
 
         /**
-         * @brief action forward apply layout
+         * action forward apply layout
          **/
         public function triggerApplyLayout(&$oModule) {
             if(!$oModule || $oModule->getLayoutFile()=='popup_layout.html') return new Object();
@@ -1526,32 +1935,40 @@
             // Load the appropriate layout:
             //  - tool: backend
             //  - service: frontend
-            if(strpos($oModule->act, "ShopTool") !== false || in_array($oModule->act, array('dispMenuAdminSiteMap'))) {
-                $oShopView->initTool($oModule, true);
+            if(strpos($oModule->act, "ShopTool") !== FALSE || in_array($oModule->act, array('dispMenuAdminSiteMap'))) {
+                $oShopView->initTool($oModule, TRUE);
             } else {
                 if(Mobile::isFromMobilePhone())
                 {
                     $oShopView = &getMobile('shop');
                 }
-                $oShopView->initService($oModule, true);
+                $oShopView->initService($oModule, TRUE);
             }
 
             return new Object();
         }
 
+        /**
+         * trigger login before
+         * @param $obj
+         */
         public function triggerLoginBefore($obj)
         {
             $this->module_info = Context::get('site_module_info');
             $this->module_srl = $this->module_info->index_module_srl;
             $cartRepo = new CartRepository();
-            $this->cartBeforeLogin = $cartRepo->getCart($this->module_srl, null, null, session_id(), true);
+            $this->cartBeforeLogin = $cartRepo->getCart($this->module_srl, NULL, NULL, session_id(), TRUE);
         }
 
+        /**
+         * trigger login after
+         * @param $logged_info
+         */
         function triggerLoginAfter($logged_info)
         {
             $cartRepo = new CartRepository();
             if ($this->cartBeforeLogin instanceof Cart) {
-                if ($memberCart = $cartRepo->getCart($this->module_info->module_srl, null, $logged_info->member_srl, session_id()))
+                if ($memberCart = $cartRepo->getCart($this->module_info->module_srl, NULL, $logged_info->member_srl, session_id()))
                 {
                     if ($memberCart->cart_srl != $this->cartBeforeLogin->cart_srl) {
                         $memberCart->merge($this->cartBeforeLogin);
@@ -1564,6 +1981,10 @@
             }
         }
 
+        /**
+         * proc shop tool init
+         * @return Object
+         */
         public function procShopToolInit(){
             if(!$this->site_srl) return new Object(-1,'msg_invalid_request');
 
@@ -1776,7 +2197,11 @@
 
         }
 
-		public function procShopToolSetPaymentMethodAsDefault()
+        /**
+         * set payment method as default
+         * @return Object
+         */
+        public function procShopToolSetPaymentMethodAsDefault()
 		{
 			$name = Context::get('name');
 			if(!$name)
@@ -1847,6 +2272,10 @@
 
         }
 
+        /**
+         * payment method update
+         * @return Object
+         */
         public function procShopPaymentMethodUpdate()
         {
             $name = Context::get('name');
@@ -2196,7 +2625,7 @@
             $output = $oDocumentController->updateDocument($oDocument, $args);
             if(!$output->toBool())
             {
-                ShopLogger::log("Error updating page document: " . print_r($args, true) . ' ' . print_r($output));
+                ShopLogger::log("Error updating page document: " . print_r($args, TRUE) . ' ' . print_r($output));
                 return new Object(-1, 'fail_to_update');
             }
 
@@ -2211,7 +2640,7 @@
                 $output = $oModuleController->updateModule($page_module_info);
                 if(!$output->toBool())
                 {
-                    ShopLogger::log("Error updating page module: " . print_r($page_module_info, true) . ' ' . print_r($output));
+                    ShopLogger::log("Error updating page module: " . print_r($page_module_info, TRUE) . ' ' . print_r($output));
                     $this->setError($output->getError());
                     $this->setMessage($output->getMessage());
                     $error_return_url = Context::get('error_return_url');
@@ -2230,6 +2659,11 @@
         // endregion
 
         // region Shipping
+
+        /**
+         * shipping update
+         * @return Object
+         */
         public function procShopToolShippingUpdate()
         {
             $name = Context::get('name');
@@ -2272,7 +2706,12 @@
             $this->setRedirectUrl(getNotEncodedUrl('', 'vid', $vid, 'mid', $mid, 'act', 'dispShopToolManageShippingMethods'));
         }
 
-		private function updateShippingMethodStatus($status)
+        /**
+         * update shipping method status
+         * @param $status
+         * @return Object
+         */
+        private function updateShippingMethodStatus($status)
 		{
 			$name = Context::get('name');
 			if(!isset($name))
@@ -2318,7 +2757,11 @@
 			$this->updateShippingMethodStatus(0);
 		}
 
-		public function procShopToolSetShippingMethodAsDefault()
+        /**
+         * set shipping method as default
+         * @return Object
+         */
+        public function procShopToolSetShippingMethodAsDefault()
 		{
 			$name = Context::get('name');
 			if(!$name)
@@ -2353,6 +2796,10 @@
 			$this->setRedirectUrl($returnUrl);
 		}
 
+        /**
+         * activate shipping method
+         * @return Object
+         */
         public function procShopServiceActivateShippingMethod()
         {
             $name = Context::get('name');
@@ -2431,7 +2878,7 @@
 			// Don't send anything if sender and receiver email addresses are missing
 			if(!$shop->getEmail() || !$member_args->email_address)
 			{
-				ShopLogger::log("Failed to send welcome email to user. Member email is not set." . print_r($member_args, true));
+				ShopLogger::log("Failed to send welcome email to user. Member email is not set." . print_r($member_args, TRUE));
 				return;
 			}
 
@@ -2452,8 +2899,88 @@
 			$oMail->setTitle($email_subject);
 			$oMail->setContent($email_content);
 			$oMail->setSender($shop->getShopTitle(), $shop->getShopEmail());
-			$oMail->setReceiptor(false, $member_args->email_address);
+			$oMail->setReceiptor(FALSE, $member_args->email_address);
 			$oMail->send();
 		}
+
+        /**
+         * Comment item delete
+         **/
+        public function procShopCommentItemDelete(){
+            $comment_srl = Context::get('comment_srl');
+
+            if($comment_srl<1) return new Object(-1,'error');
+            $comment_srl = explode(',',trim($comment_srl));
+            if(count($comment_srl)<1) return new Object(-1,'msg_invalid_request');
+
+            $oCommentController = &getController('comment');
+
+            for($i=0,$c=count($comment_srl);$i<$c;$i++){
+                $output = $oCommentController->deleteComment($comment_srl[$i], $this->grant->manager);
+                if(!$output->toBool()) return $output;
+            }
+
+            $this->add('mid', Context::get('mid'));
+            $this->add('page', Context::get('page'));
+            $this->add('document_srl', $output->get('document_srl'));
+            $this->setMessage('success_deleted');
+        }
+
+        /**
+         * comment insert
+         **/
+        function procShopInsertComment() {
+            $oDocumentModel = &getModel('document');
+            $oCommentModel = &getModel('comment');
+            $oCommentController = &getController('comment');
+
+            if(!$this->grant->write_comment) return new Object(-1, 'msg_not_permitted');
+
+            $obj = Context::gets('document_srl','comment_srl','parent_srl','content','password','nick_name','member_srl','email_address','homepage','is_secret','notify_message');
+            $obj->module_srl = $this->module_srl;
+
+            $oDocument = $oDocumentModel->getDocument($obj->document_srl);
+            if(!$oDocument->isExists()) return new Object(-1,'msg_not_permitted');
+
+            if(!$obj->comment_srl) $obj->comment_srl = getNextSequence();
+            else $comment = $oCommentModel->getComment($obj->comment_srl, $this->grant->manager);
+
+            if($comment->comment_srl != $obj->comment_srl) {
+                if($obj->parent_srl) {
+                    $parent_comment = $oCommentModel->getComment($obj->parent_srl);
+                    if(!$parent_comment->comment_srl) return new Object(-1, 'msg_invalid_request');
+
+                    $output = $oCommentController->insertComment($obj);
+
+                } else {
+                    $output = $oCommentController->insertComment($obj);
+                }
+
+                if($output->toBool() && $this->module_info->admin_mail) {
+                    $oMail = new Mail();
+                    $oMail->setTitle($oDocument->getTitleText());
+                    $oMail->setContent( sprintf("From : <a href=\"%s#comment_%d\">%s#comment_%d</a><br/>\r\n%s", $oDocument->getPermanentUrl(), $obj->comment_srl, $oDocument->getPermanentUrl(), $obj->comment_srl, $obj->content));
+                    $oMail->setSender($obj->nick_name, $obj->email_address);
+
+                    $target_mail = explode(',',$this->module_info->admin_mail);
+                    for($i=0;$i<count($target_mail);$i++) {
+                        $email_address = trim($target_mail[$i]);
+                        if(!$email_address) continue;
+                        $oMail->setReceiptor($email_address, $email_address);
+                        $oMail->send();
+                    }
+                }
+
+            } else {
+                $obj->parent_srl = $comment->parent_srl;
+                $output = $oCommentController->updateComment($obj, $this->grant->manager);
+                $comment_srl = $obj->comment_srl;
+            }
+            if(!$output->toBool()) return $output;
+
+			$this->setRedirectUrl($_SERVER['HTTP_REFERER']);
+        }
+
+
     }
 ?>

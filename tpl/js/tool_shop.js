@@ -581,6 +581,26 @@ function deleteAttributeItems(page){
     exec_xml('shop', 'procShopToolDeleteAttributes', params, completeReload, response_tags);
 }
 
+function deleteItem(srl, action){
+    if (!confirm(xe.lang.msg_confirm_delete_coupon)) return false;
+    var response_tags = new Array('error','message','page','mid');
+    exec_xml('shop', action, { srls: srl }, completeReload, response_tags);
+}
+function deleteCouponItems(page){
+    if (!confirm(xe.lang.msg_confirm_delete_coupons)) return false;
+    var val, srls = [];
+    jQuery("input[name=srl]:checked").each(function(){
+        val = jQuery(this).val();
+        if(val) srls.push(val);
+    });
+    if (srls.length < 1) return;
+    var response_tags = new Array('error','message','page','mid');
+    var params = {
+        srls: srls.join(','),
+        page: page
+    }
+    exec_xml('shop', 'procShopToolDeleteCoupons', params, completeReload, response_tags);
+}
 
 
 (function($){

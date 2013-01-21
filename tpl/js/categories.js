@@ -13,6 +13,14 @@ function Category()
     this.last_update = null;
 }
 
+
+function slugify(text) {
+    text = text.replace(/[^-a-zA-Z0-9,&\s]+/ig, '');
+    text = text.replace(/-/gi, "_");
+    text = text.replace(/\s/gi, "-");
+    return text;
+}
+
 function fillFormWithCategory($category, $parent_title)
 {
     jQuery("#category_srl").val($category.category_srl);
@@ -74,6 +82,27 @@ function showCategoryForm()
 
 jQuery(document).ready(function($)
 {
+    //friendly url stuff
+    frUrl = $('#friendly_url');
+    if ($('#title').val().length) frUrl.data('xe-changed', true);
+    $('#title').on('keyup', function() {
+        if (!frUrl.data('xe-changed')) {
+            frUrl.val(slugify($(this).val()));
+        }
+    });
+    frUrl.on('keyup', function(){
+        $(this).data('xe-changed', true);
+        if (typeof frTimeout !== 'undefined' && frTimeout) clearTimeout(frTimeout);
+        frTimeout = setTimeout(function(){
+            $.exec_json('shop.procShopToolCheckFriendlyUrlAvailability', {type: 'category', slug: frUrl.val()}, function(data){
+                var av = $('#availability');
+                if (data.notAvailable) av.show(300).removeClass('available').text('not available');
+                else av.hide(300);
+            });
+        }, 1000);
+    });
+    //end friendly url stuff
+
     $("#tree_0 a.add.root").click(function(){
         fillFormWithCategory(new Category());
         $("#categoryFormContainer h4").text("Add product category");

@@ -4,6 +4,9 @@
         <grant name="create" default="member">
             <title xml:lang="en">Create a shop</title>
         </grant>
+        <grant name="write_comment" default="guest">
+            <title xml:lang="en">Write a comment</title>
+        </grant>
     </grants>
     <permissions>
 
@@ -16,6 +19,7 @@
         <permission action="dispShopToolChangePassword" target="manager" />
         <permission action="dispShopToolConfigInfo" target="manager" />
         <permission action="dispShopToolDiscountInfo" target="manager" />
+        <permission action="dispShopToolDiscountCodes" target="manager" />
         <permission action="dispShopToolStatisticsVisitor" target="manager" />
 
 		<permission action="procShopInfoUpdate" target="manager" />
@@ -31,6 +35,7 @@
         <permission action="procShopToolDiscountUpdate" target="manager" />
         <permission action="procShopToolManageProducts" target="manager" />
         <permission action="procShopToolCustomerInsert" target="manager" />
+        <permission action="procShopToolCheckFriendlyUrlAvailability" target="manager" />
 
         <!-- Products -->
         <permission action="dispShopToolManageProducts" target="manager" />
@@ -56,10 +61,17 @@
         <!-- Product attributes -->
         <permission action="dispShopToolManageAttributes" target="manager"/>
         <permission action="dispShopToolAddAttribute" target="manager"/>
+        <permission action="dispShopToolAddCoupon" target="manager"/>
+        <permission action="dispShopToolAddCouponGroup" target="manager"/>
         <permission action="dispShopToolEditAttribute" target="manager"/>
+        <permission action="dispShopToolEditCoupon" target="manager"/>
+        <permission action="dispShopToolEditCouponGroup" target="manager"/>
         <permission action="procShopToolInsertAttribute" target="manager" />
+        <permission action="procShopToolInsertCoupon" target="manager" />
         <permission action="procShopToolDeleteAttributes" target="manager" />
+        <permission action="procShopToolDeleteCoupons" target="manager" />
         <permission action="procShopToolFilterAttributes" target="manager"/>
+        <permission action="procShopToolFilterCoupons" target="manager"/>
 
         <!-- Payment methods -->
         <permission action="dispShopToolManagePaymentMethods" target="manager" />
@@ -122,9 +134,12 @@
         <action name="dispShopMenu" type="view" />
         <action name="dispShopSearch" type="view" />
         <action name="dispShopViewOrder" type="view" />
-
+        <action name="dispCommentEditor" type="view" />
+        <action name="dispReplyComment" type="view" />
+        <action name="dispModifyComment" type="view" />
 
         <action name="procShopLogin" type="controller" ruleset="shop_login" />
+        <action name="procShopFilter" type="controller" />
         <action name="procShopDenyDelete" type="controller" />
         <action name="procShopProfileUpdate" type="controller" />
         <action name="procShopProfileImageUpload" type="controller" />
@@ -134,9 +149,14 @@
         <action name="procShopUnsignToNewsletter" type="controller" />
         <action name="procShopSearch" type="controller"/>
         <action name="procShopRenewOrder" type="controller"/>
+        <action name="procShopPrintOrder" type="controller"/>
+        <action name="procShopToolPrintOrder" type="controller"/>
         <action name="procShopSort" type="controller"/>
+        <action name="procShopCommentItemDelete" type="controller" />
+        <action name="procShopInsertComment" type="controller" ruleset="insert_comment" />
 
         <!-- Shop backend -->
+        <action name="route" type="view" />
         <action name="dispShopToolLogin" type="view" />
 		<action name="dispShopToolLayoutConfigSkin" type="view" />
 		<action name="dispShopToolLayoutConfigEdit" type="view" />
@@ -149,6 +169,7 @@
         <action name="dispShopToolChangePassword" type="view"/>
         <action name="dispShopToolConfigInfo" type="view"/>
         <action name="dispShopToolDiscountInfo" type="view"/>
+        <action name="dispShopToolDiscountCodes" type="view"/>
         <action name="dispShopToolStatisticsVisitor" type="view"/>
 
         <action name="procShopToolLayoutConfigSkin" type="controller" />
@@ -165,6 +186,7 @@
         <action name="procShopToolDiscountUpdate" type="controller" ruleset="discount_update"/>
         <action name="procShopToolCustomerInsert" type="controller" ruleset="insert_customer"/>
         <action name="procShopToolManageProducts" type="controller"/>
+        <action name="procShopToolCheckFriendlyUrlAvailability" type="controller"/>
 
         <action name="procShopAdminCreate" type="controller" standalone="true" ruleset="insert_shop"  />
 		<action name="procShopAdminUpdate" type="controller" standalone="true" ruleset="update_shop" />
@@ -199,10 +221,17 @@
         <!-- Product attributes -->
         <action name="dispShopToolManageAttributes" type="view"/>
         <action name="dispShopToolAddAttribute" type="view" />
+        <action name="dispShopToolAddCoupon" type="view" />
+        <action name="dispShopToolAddCouponGroup" type="view" />
         <action name="dispShopToolEditAttribute" type="view" />
+        <action name="dispShopToolEditCoupon" type="view" />
+        <action name="dispShopToolEditCouponGroup" type="view" />
         <action name="procShopToolInsertAttribute" type="controller" ruleset="insert_attribute"/>
+        <action name="procShopToolInsertCoupon" type="controller" />
         <action name="procShopToolDeleteAttributes" type="controller" />
+        <action name="procShopToolDeleteCoupons" type="controller" />
         <action name="procShopToolFilterAttributes" type="controller"/>
+        <action name="procShopToolFilterCoupons" type="controller"/>
         <action name="procShopToolFilterOrders" type="controller"/>
         <action name="procShopToolFilterInvoices" type="controller"/>
         <action name="procShopToolFilterCustomers" type="controller"/>
@@ -278,6 +307,8 @@
         <action name="procShopCartUpdateProducts" type="controller" />
         <action name="procShopToolCheckout" type="controller" ruleset="checkout" />
         <action name="procShopCheckoutLogin" type="controller" ruleset="checkout_login" />
+        <action name="procShopToolRefreshCheckout" type="controller" ruleset="checkout" />
+        <action name="procShopToolUpdateCheckout" type="controller" />
 
         <!-- Orders -->
         <action name="dispShopToolManageOrders" type="view"/>
@@ -292,6 +323,7 @@
         <action name="procShopToolInsertShipment" type="controller"/>
         <action name="procShopToggleGridView" type="controller"/>
         <action name="dispShopToolShipOrder" type="view"/>
+        <action name="procShopToolPrintOrder" type="controller"/>
 
     </actions>
 </module>
